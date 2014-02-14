@@ -1,0 +1,37 @@
+include mixins/cog
+
+.header.row
+  .col-md-4
+    h2 lucass-macbook-air.local
+  .col-md-8
+    h5 EKG
+
+.row
+  .col-md-4
+    h3 shell
+    textarea
+
+    .col-md-4
+      h3 databases {{databases.length}}
+
+      ul
+        li(ng-repeat='database in databases')
+          .dropdown
+            a {{database.name}}
+            +cog(['repair', 'drop', 'clone', 'what else?'])
+
+      h3 minitop
+
+      h3 log
+
+    .col-md-2
+      h3 easybutton
+
+      h3 tach
+
+      img(height='100', src='img/gauge-graphic.png')
+      br
+      img(height='100', src='img/gauge-graphic.png')
+      br
+      img(height='100', src='img/gauge-graphic.png')
+      br

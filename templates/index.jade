@@ -1,0 +1,43 @@
+doctype html
+html(lang='en')
+  head
+    title mongoscope
+    link(rel='icon' href='img/favicon.ico' type='image/x-icon')
+  body.mmsBody
+    #wrapper
+      include includes/loading-indicator
+      #page.default
+        .navbar.navbar-inverse.navbar-fixed-top.mms-navbar
+          .navbar-header
+            a.navbar-brand(style='text-indent: 0;background: none;color: white;font-weight: bold;') mongoscope
+
+        //
+          Primary sidebar nav to hop to any section.  For simplicity,
+          removed secondary bar/miniview used in MMS.
+        ul.nav.navbar-nav.side-nav
+          - for section in ['health', 'dbs']
+            li
+              a(href='##{section}')
+                i.custom-icon
+                br
+                span.text= section
+
+          li.nav-footer
+            button#featureRequestToggle.btn.btn-primary(data-toggle='modal' data-target='#feedbackModal')
+              i.custom-icon
+              br
+              span.text feedback
+
+        // Links and controls in the top right corner of the page
+        ul.nav.navbar-nav.navbar-right.secondary
+          li
+            a.muted(href='/help') Help &amp; Support
+
+        // Container to show flash messages from app.
+        #uiMsgs.navbar-alert.alert.alert-warning.jshide
+
+        // And finally the main view where the party actually happens.
+        #pageWrapper
+          #mongomin
+
+  script(src='app.js')

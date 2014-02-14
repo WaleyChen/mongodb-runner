@@ -1,0 +1,29 @@
+{
+  "name": "mongoscope",
+  "description": "Gleefully work with MongoDB in your browser.",
+  "scripts": {
+    "start": "gulp dev",
+    "test": "mocha"
+  },
+  "dependencies": {
+    "underscore": "~1.5.2",
+    "backbone": "~1.1.0",
+    "jade": "~1.1.5",
+    "marked": "~0.3.1",
+    "jquery": "~2.1.0",
+    "brace": "~0.2.0"
+  },
+  "devDependencies": {
+    "browserify": "~3.24.13",
+    "jadeify": "~2.1.1",
+    "marked": "~0.3.1",
+    "ecstatic": "~0.4.13",
+    "gulp": "~3.5.1",
+    "gulp-uglify": "~0.2.1",
+    "gulp-browserify": "~0.4.2",
+    "gulp-jade": "~0.4.1",
+    "gulp-concat": "~2.1.7",
+    "gulp-todo": "~0.1.1",
+    "debug": "https://github.com/Buritica/debug/archive/v0.7.4.tar.gz"
+  }
+}

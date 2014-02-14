@@ -1,0 +1,26 @@
+h2 diagnostics
+
+- mongodb = {version: '2.5.6', sha: null, installOrigin: 'official binary'}
+h3 mongodb #{mongodb.version} (#{mongodb.installOrigin})
+
+- platform = {name: 'Ubuntu', version: '13.04', bits: 64, family: 'debian'}
+h4 #{platform.name} #{platform.version} #{platform.bits}bit (#{platform.family})
+
+- ram = {available: 8589934592, used: 6607641993}
+h5 #{Math.round(ram.used / ram.available * 100, 2)}% of memory is in use
+
+- cpus = [{id: 0, available: 100, used: 14}]
+h5 #{cpus.length} cpus available
+ul
+ - for cpu in cpus
+  li cpu#{cpu.id} #{Math.round(cpu.used / cpu.available * 100, 2)}% in use
+
+
+h3 buildInfo
+
+// Attribute names of build info we want to show in a list
+- names = 'version gitVersion sysInfo loaderFlags allocator debug maxBsonObjectSize'.split(' ')
+
+ul
+ - for key in names
+  li #{key}: #{buildInfo[key]}

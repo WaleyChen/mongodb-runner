@@ -1,0 +1,13 @@
+//
+  Build the little cog dropdown to take actions on list items.
+mixin cog(menuItems)
+  span
+    a.btn.btn-default.dropdown-toggle(href='#')
+      span.glyphicon.glyphicon-cog
+      b.caret
+    ul
+      li .dropdown-menu
+
+    - for item in menuItems
+      li
+        a= item
