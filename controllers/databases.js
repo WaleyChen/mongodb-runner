@@ -1,12 +1,39 @@
-/*module.exports = new OneShot({
-  tpl: require('./templates/databases.jade'),
-  model: {
-    databases: [{name: 'admin'}],
-    collections: [],
-    indexes: []
+var Backbone = require('Backbone'),
+  $ = Backbone.$,
+  models = require('../models'),
+  debug = require('debug')('mongoscope:databases');
+
+module.exports = Backbone.View.extend({
+  tpl: require('../templates/databases.jade'),
+  initialize: function(){
+    this.$el = $('#mongoscope');
+    this.el = this.$el.get(0);
+
+    this.databases = new models.Databases()
+      .on('sync', this.render, this)
+      .on('error', this.render, this);
+
+    this.collections = new models.Collections()
+      .on('sync', this.render, this)
+      .on('error', this.render, this);
+
+    this.indexes = new models.Indexes()
+      .on('sync', this.render, this)
+      .on('error', this.render, this);
   },
-  // @todo: Not actually a one `OneShot` because we would need multiple calls.
-  // what's the best way to handle that?  Collection of polymorphic models?
-  source: 'listDatabases'
+  show: function(){
+    this.databases.fetch();
+  },
+  render: function(){
+    var self = this;
+    requestAnimationFrame(function(){
+      var ctx = {
+        'databases': self.databases.toJSON(),
+        'collections': self.collections.toJSON(),
+        'indexes': self.indexes.toJSON()
+      };
+      self.$el.html(self.tpl(ctx));
+    });
+  }
 });
-*/
+

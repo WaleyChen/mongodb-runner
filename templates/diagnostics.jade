@@ -1,12 +1,16 @@
+include mixins/bytes
+
 ul
   li #{host.hostname}
   li MongoDB #{build.version}
-    a.btn(href=build.commit_url, title="View commit on github") #{build.commit.substr(0, 8)}
+    a.btn.btn-default(href=build.commit_url) #{build.commit.substr(0, 8)}
   li System Time #{host.system_time}
   li #{host.os}
   li #{host.cpu_string} #{host.cpu_bits}bit
   li #{host.cpu_cores} cores (#{host.cpu_cores_physical} physical)
-  li #{host.memory_bits} RAM
+  li
+    +bytes(host.memory_bits)
+    | &nbsp;physical RAM
   li debug #{build.debug ? 'on' : 'off'}
   li JS Engine #{build.javascript_engine}
   li allocator #{build.allocator}

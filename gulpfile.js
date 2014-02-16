@@ -8,7 +8,7 @@ var gulp = require('gulp'),
 gulp.task('js', function(){
   gulp.src('app.js')
     .pipe(browserify({
-      debug : true,
+      debug : false,
       transform: ['jadeify']
     }))
     .pipe(gulp.dest('./static'));
@@ -23,7 +23,7 @@ gulp.task('css', function(){
 
 // Set up watchers to reprocess CSS and JS when files are changed
 gulp.task('watch', function (){
-  gulp.watch(['./*.js', './lib/*.js', './controllers/*.js'], ['js']);
+  gulp.watch(['./*.js', './lib/*.js', './controllers/*.js', './templates/{*.jade,**/*.jade}'], ['js']);
   gulp.watch(['../css/*.css'], ['css']);
 });
 

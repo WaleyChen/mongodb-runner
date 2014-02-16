@@ -1,23 +1,17 @@
 include mixins/cog
+include mixins/bytes
 
 h2 databases
+
+a.btn.btn-primary(data-action='create', title='create new database')
+  i.glyphicon.glyphicon-plus
+  | create
+
 
 ul
  - for database in databases
   li
-    a= database.name
-    +cog(['repair', 'drop', 'clone', 'what else?'])
-
-h3 collections
-ul
- - for collection in collections
-  li
-    a= collection.name
-    +cog(['.validate()', 'datasize', 'indexsize', 'clone/copy', 'what else?'])
-
-h3 indexes
-ul
- - for index in indexes
-  li
-    a= index.name
-    +cog(['all the things you\'d want to do to an index'])
+    a(href='#dbs/#{database.name}')
+      | #{database.name}&nbsp;
+      +bytes(database.sizeOnDisk)
+    +cog('#dbs/#{database.name}', ['repair', 'drop', 'clone', 'fsync'])

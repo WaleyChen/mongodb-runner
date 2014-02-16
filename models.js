@@ -74,3 +74,46 @@ module.exports.HostInfo = Base.extend({
 module.exports.Top = Base.extend({
   service: 'top'
 });
+
+
+var BaseCollection = Backbone.Collection.extend({
+  service: '',
+  // @todo Support declaring args to pass to service,
+  // eg pass database name to list collections.
+  sync: function(method, model, options){
+    instance.backend[this.service](function(err, data){
+      if(err) return options.error(err);
+      options.success(data);
+    });
+  }
+});
+
+module.exports.Databases = BaseCollection.extend({
+  model: Backbone.Model.extend({
+    defaults: {
+      name: 'admin',
+      sizeOnDisk: 1,
+      empty: true
+    }
+  }),
+  service: 'databases'
+});
+
+module.exports.Collections = BaseCollection.extend({
+  model: Backbone.Model.extend({
+    defaults: {
+      _id: 'something',
+      database: 'admin'
+    }
+  })
+});
+
+module.exports.Indexes = BaseCollection.extend({
+  model: Backbone.Model.extend({
+    defaults: {
+      _id: '_id',
+      database: 'admin',
+      collection: 'something'
+    }
+  })
+});

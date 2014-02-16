@@ -1,3 +1,4 @@
 module.exports = {
-  diagnostics:  new (require('./diagnostics'))()
+  info:  new (require('./diagnostics'))(),
+  databases:  new (require('./databases'))(),
 };

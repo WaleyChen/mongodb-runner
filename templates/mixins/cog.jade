@@ -1,13 +1,14 @@
 //
   Build the little cog dropdown to take actions on list items.
-mixin cog(menuItems)
+  URL's for each action are appended to `base`, for example
+  with base `dbs/local` -> `dbs/local/repair`
+mixin cog(base, actions)
   span
     a.btn.btn-default.dropdown-toggle(href='#')
       span.glyphicon.glyphicon-cog
       b.caret
-    ul
-      li .dropdown-menu
 
-    - for item in menuItems
+    ul.dropdown-menu
+     - each action in actions
       li
-        a= item
+        a(href='##{base}/#{action}') #{action}
