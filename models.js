@@ -91,9 +91,7 @@ var BaseCollection = Backbone.Collection.extend({
 module.exports.Databases = BaseCollection.extend({
   model: Backbone.Model.extend({
     defaults: {
-      name: 'admin',
-      sizeOnDisk: 1,
-      empty: true
+      name: 'mongoscope'
     }
   }),
   service: 'databases'
@@ -102,8 +100,8 @@ module.exports.Databases = BaseCollection.extend({
 module.exports.Collections = BaseCollection.extend({
   model: Backbone.Model.extend({
     defaults: {
-      _id: 'something',
-      database: 'admin'
+      _id: 'analytics',
+      database: 'mongoscope'
     }
   })
 });
@@ -112,8 +110,8 @@ module.exports.Indexes = BaseCollection.extend({
   model: Backbone.Model.extend({
     defaults: {
       _id: '_id',
-      database: 'admin',
-      collection: 'something'
+      database: 'analytics',
+      collection: 'mongoscope'
     }
   })
 });

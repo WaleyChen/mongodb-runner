@@ -2,7 +2,8 @@ doctype html
 html(lang='en')
   head
     title mongoscope
-    link(rel='icon' href='img/favicon.ico' type='image/x-icon')
+    link(rel='stylesheet', href='app.css')
+    link(rel='icon', href='img/favicon.ico', type='image/x-icon')
   body.mmsBody
     #wrapper
       include includes/loading-indicator
@@ -15,7 +16,7 @@ html(lang='en')
           Primary sidebar nav to hop to any section.  For simplicity,
           removed secondary bar/miniview used in MMS.
         ul.nav.navbar-nav.side-nav
-          - for section in ['info', 'dbs']
+          - for section in ['info', 'dbs', 'top', 'log', 'io']
             li
               a(href='##{section}')
                 i.custom-icon

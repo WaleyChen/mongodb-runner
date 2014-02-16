@@ -11,7 +11,5 @@ a.btn.btn-primary(data-action='create', title='create new database')
 ul
  - for database in databases
   li
-    a(href='#dbs/#{database.name}')
-      | #{database.name}&nbsp;
-      +bytes(database.sizeOnDisk)
+    a(href='#dbs/#{database.name}')= database.name
     +cog('#dbs/#{database.name}', ['repair', 'drop', 'clone', 'fsync'])

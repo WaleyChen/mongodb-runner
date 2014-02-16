@@ -4,23 +4,22 @@ _Goal_ concrete things to point at on a screen and talk about
 
 ## Punchlist
 
-- [ ] wrapper for getting data from the instance:
-  - [ ] mine [storage viz](http://github.com/10gen-labs/storage-viz)
-  - [ ] mine tyler's prototype
-  - just some basics to hide some implementation from the controllers
+- [x] wrapper for getting data from the instance:
+  - [x] mine [storage viz](http://github.com/10gen-labs/storage-viz)
+  - [x] mine tyler's prototype
 - [x] node.js proxy for CORS before C++ work
+- [x] diagnostics
+  - [x] platform name, version and family
+  - [x] MongoDB version and git commit
+  - [x] cpu stats
+  - [x] physical memory stats
 - [ ] show global log
-- [ ] basic styling
-  - [ ] cut fat out of the mms stylesheets
-  - [ ] make the basics lineup and semi-presentable
 - [ ] mongotop
 - [ ] mongostat
 - [ ] cursor list
-- [ ] diagnostics
-  - [ ] platform name, version and family
-  - [ ] MongoDB version and git commit
-  - [ ] cpu stats
-  - [ ] physical memory stats
+- [ ] basic styling
+  - [ ] cut fat out of the mms stylesheets
+  - [ ] make the basics lineup and semi-presentable
 
 ## Stretch
 

@@ -49,11 +49,5 @@ gulp.task('proxy', function(){
   });
 });
 
-gulp.task('todo', function(){
-      gulp.src(['./*.js', './lib/*.js', '../css/*.css'])
-        .pipe(todo({fileName: 'TODO.md'}))
-        .pipe(gulp.dest('./'));
-});
-
 // What we'll call from `npm start` to work on this project
 gulp.task('dev', ['appshell', 'js', 'css', 'serve', 'proxy', 'watch']);
