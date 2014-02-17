@@ -49,5 +49,7 @@ gulp.task('proxy', function(){
   });
 });
 
+gulp.task('build', ['appshell', 'js', 'css']);
+
 // What we'll call from `npm start` to work on this project
-gulp.task('dev', ['appshell', 'js', 'css', 'serve', 'proxy', 'watch']);
+gulp.task('dev', ['build', 'serve', 'proxy', 'watch']);

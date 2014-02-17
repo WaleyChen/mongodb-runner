@@ -24,6 +24,12 @@ more details are available in the [`gulpfile`](./blob/master/gulpfile.js)
 
     npm test
 
+### deploy
+
+to update [10gen.github.io/mongoscope/](10gen.github.io/mongoscope/)
+
+  npm run-script deploy
+
 ## code tour
 
 [browserify](http://browserify.org) uses the main entrypoint

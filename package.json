@@ -3,7 +3,8 @@
   "description": "Gleefully work with MongoDB in your browser.",
   "scripts": {
     "start": "gulp dev",
-    "test": "mocha"
+    "test": "mocha",
+    "deploy": "./bin/deploy.sh"
   },
   "dependencies": {
     "underscore": "~1.5.2",
