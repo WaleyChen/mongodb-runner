@@ -24,7 +24,7 @@ gulp.task('css', function(){
 // Set up watchers to reprocess CSS and JS when files are changed
 gulp.task('watch', function (){
   gulp.watch(['./*.js', './lib/*.js', './controllers/*.js', './templates/{*.jade,**/*.jade}'], ['js']);
-  gulp.watch(['../css/*.css'], ['css']);
+  gulp.watch(['./static/css/*.css'], ['css']);
 });
 
 // Compile the html container template

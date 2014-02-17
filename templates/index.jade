@@ -12,6 +12,10 @@ html(lang='en')
           .navbar-header
             a.navbar-brand(style='text-indent: 0;background: none;color: white;font-weight: bold;') mongoscope
 
+          ul.nav.navbar-nav.navbar-right.secondary
+            li
+              a.muted(href='/help') Help &amp; Support
+
         //
           Primary sidebar nav to hop to any section.  For simplicity,
           removed secondary bar/miniview used in MMS.
@@ -28,11 +32,6 @@ html(lang='en')
               i.custom-icon
               br
               span.text feedback
-
-        // Links and controls in the top right corner of the page
-        ul.nav.navbar-nav.navbar-right.secondary
-          li
-            a.muted(href='/help') Help &amp; Support
 
         // Container to show flash messages from app.
         #uiMsgs.navbar-alert.alert.alert-warning.jshide
