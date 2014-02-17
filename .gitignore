@@ -3,3 +3,4 @@ node_modules
 static/index.html
 static/app.css
 static/app.js
+static/app.manifest

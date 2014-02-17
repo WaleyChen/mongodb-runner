@@ -3,6 +3,7 @@ var gulp = require('gulp'),
   jade = require('gulp-jade'),
   concat = require('gulp-concat'),
   todo = require('gulp-todo'),
+  manifest = require('gulp-manifest'),
   mongoProxy = require('./mongodb-api-proxy');
 
 gulp.task('js', function(){
@@ -23,8 +24,9 @@ gulp.task('css', function(){
 
 // Set up watchers to reprocess CSS and JS when files are changed
 gulp.task('watch', function (){
-  gulp.watch(['./*.js', './lib/*.js', './controllers/*.js', './templates/{*.jade,**/*.jade}'], ['js']);
-  gulp.watch(['./static/css/*.css'], ['css']);
+  gulp.watch(['./*.js', './{controllers,lib}/*.js', './templates/{*.jade,**/*.jade}'], ['js', 'manifest']);
+  gulp.watch(['./static/css/*.css'], ['css', 'manifest']);
+  gulp.watch(['./templates/index.jade'], ['appshell']);
 });
 
 // Compile the html container template
@@ -49,7 +51,17 @@ gulp.task('proxy', function(){
   });
 });
 
-gulp.task('build', ['appshell', 'js', 'css']);
+gulp.task('build', ['appshell', 'js', 'css', 'manifest']);
+
+gulp.task('manifest', function(){
+  gulp.src(['static/*', '!static/*.manifest', 'static/{fonts,img}/*'])
+    .pipe(manifest({
+      hash: true,
+      preferOnline: false,
+      network: ['*']
+     }))
+    .pipe(gulp.dest('./static/app.manifest'));
+});
 
 // What we'll call from `npm start` to work on this project
 gulp.task('dev', ['build', 'serve', 'proxy', 'watch']);
