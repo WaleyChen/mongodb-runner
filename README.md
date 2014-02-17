@@ -30,6 +30,9 @@ to update [10gen.github.io/mongoscope/](10gen.github.io/mongoscope/)
 
   npm run-script deploy
 
+quite soon, i'll setup wercker to just do this automatically when changes
+merged into master.
+
 ## code tour
 
 [browserify](http://browserify.org) uses the main entrypoint
