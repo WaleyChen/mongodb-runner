@@ -1,5 +1,6 @@
 var Backbone = require('backbone'),
   Service = require('./lib/service'),
+  roar = require('./lib/roar'),
   debug = require('debug')('mongoscope:models');
 
 
@@ -75,7 +76,6 @@ module.exports.Top = Base.extend({
   service: 'top'
 });
 
-
 var BaseCollection = Backbone.Collection.extend({
   service: '',
   // @todo Support declaring args to pass to service,
@@ -86,6 +86,17 @@ var BaseCollection = Backbone.Collection.extend({
       options.success(data);
     });
   }
+});
+
+module.exports.Log = BaseCollection.extend({
+  model: Backbone.Model.extend({
+    defaults: {
+      name: 'websrv',
+      message: 'listening for connections',
+      date: new Date()
+    }
+  }),
+  service: 'log'
 });
 
 module.exports.Databases = BaseCollection.extend({

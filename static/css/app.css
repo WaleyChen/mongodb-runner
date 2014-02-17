@@ -5,3 +5,31 @@
 #wrapper{
   padding-left: 100px;
 }
+
+.log > span {
+  display: block;
+  max-height: 18px;
+  overflow: hidden;
+}
+
+.log .name {
+  font-size: 80%;
+  width: 80px;
+  display: block;
+  float: left;
+  text-align: right;
+  margin-right: 10px;
+}
+
+.log .initandlisten > .name{
+  color: #868686;
+}
+
+.log .websvr > .name {
+  color: #2F9C33;
+}
+
+.log .clientcursormon > .name {
+  color: #812A92;
+}
+

@@ -17,5 +17,6 @@ var splint = require('./lib'),
 module.exports = splint({
   '': controllers.info,
   'info': controllers.info,
-  'dbs': controllers.databases
+  'dbs': controllers.databases,
+  'log': controllers.log,
 });
