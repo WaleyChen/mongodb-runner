@@ -11,11 +11,13 @@ var Backbone = require('backbone');
 // `opts`
 // - **index** {Boolean}, Should this be used as the default controller?
 //
-// @param {Array} specs
+// @param {Array} ... The specs
 // @return {Backbone.Router}
 // @api private
-function splint(specs){
-  var router = new Backbone.Router();
+function splint(){
+  var specs = Array.prototype.slice.call(arguments, 0),
+    router = new Backbone.Router();
+
   router._current = null;
   router._nameToHandler = {};
 
