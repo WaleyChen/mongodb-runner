@@ -24,8 +24,8 @@ gulp.task('css', function(){
 
 // Set up watchers to reprocess CSS and JS when files are changed
 gulp.task('watch', function (){
-  gulp.watch(['./*.js', './{controllers,lib}/*.js', './templates/{*.jade,**/*.jade}'], ['js', 'manifest']);
-  gulp.watch(['./static/css/*.css'], ['css', 'manifest']);
+  gulp.watch(['./*.js', './{controllers,lib}/*.js', './templates/{*.jade,**/*.jade}'], ['js']);
+  gulp.watch(['./static/css/*.css'], ['css']);
   gulp.watch(['./templates/index.jade'], ['appshell']);
 });
 
@@ -57,8 +57,9 @@ gulp.task('manifest', function(){
   gulp.src(['static/*', '!static/*.manifest', 'static/{fonts,img}/*'])
     .pipe(manifest({
       hash: true,
-      preferOnline: false,
-      network: ['*']
+      preferOnline: true,
+      network: ['*'],
+      timestamp: true
      }))
     .pipe(gulp.dest('./static/app.manifest'));
 });
