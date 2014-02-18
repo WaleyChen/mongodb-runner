@@ -18,10 +18,11 @@ module.exports = Backbone.View.extend({
     this.host.on('sync', this.render, this)
       .on('error', this.render, this);
   },
-  show: function(){
+  activate: function(){
     this.host.fetch();
     this.build.fetch();
   },
+  deactivate: function(){},
   render: function(){
     var self = this;
     requestAnimationFrame(function(){

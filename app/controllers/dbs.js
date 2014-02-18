@@ -21,9 +21,10 @@ module.exports = Backbone.View.extend({
       .on('sync', this.render, this)
       .on('error', this.render, this);
   },
-  show: function(){
+  activate: function(){
     this.databases.fetch();
   },
+  deactivate: function(){},
   render: function(){
     var self = this;
     requestAnimationFrame(function(){

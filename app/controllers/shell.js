@@ -9,5 +9,7 @@ module.exports = Backbone.View.extend({
     this.editor = ace.edit('javascript-editor');
     this.editor.getSession().setMode('ace/mode/javascript');
     this.editor.setTheme('ace/theme/monokai');
-  }
+  },
+  activate: function(){},
+  deactivate: function(){}
 });

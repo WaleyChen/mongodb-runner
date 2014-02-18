@@ -14,9 +14,10 @@ module.exports = Backbone.View.extend({
       .on('sync', this.render, this)
       .on('error', this.render, this);
   },
-  show: function(){
+  activate: function(){
     this.log.fetch();
   },
+  deactivate: function(){},
   render: function(){
     var self = this;
     // @todo: Use webworker for log processing instead of animation frame?
