@@ -1,16 +1,7 @@
 var $ = require('jquery'),
   _ = require('underscore'),
-  roar = require('./roar'),
+  regret = require('regret'),
   debug = require('debug')('mongoscope:service');
-
-var _bson_type_deserializers = {
-  $date: function(v){
-    return new Date(v);
-  },
-  $numberLong: function(v){
-    return v + '';
-  }
-};
 
 // If the value is a struct just for the purposes of including
 // type info, recursively collapse down to an instance of the
@@ -38,6 +29,24 @@ function collapseBsonTypes(data){
   });
   return data;
 }
+var _bson_type_deserializers = {
+  $date: function(v){
+    return new Date(v);
+  },
+  $numberLong: function(v){
+    return v + '';
+  }
+};
+
+// Register regexes with regret.
+regret.add('isoDate',
+  /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+-[0-5]\d/,
+  '2014-02-13T18:00:04.709-0500');
+
+regret.add('mongodbLogLine',
+  /({{isoDate}}+) \[(\w+)\](?:\s{2})(.*)/,
+  '2014-02-13T18:00:04.709-0500 [initandlisten] db version v2.5.6-pre-',
+  ['date', 'name', 'message']);
 
 // Wrap the MongoDB REST API in a pretty interface.
 //
@@ -174,7 +183,7 @@ Service.prototype.log = function(name, fn){
     if(err) return fn(err);
 
     var res = _.map(lines, function(line){
-      return roar('mongodbLogLine', line);
+      return regret('mongodbLogLine', line);
     });
 
     fn(null, _.filter(res, function(item){

@@ -13,10 +13,11 @@ _Goal_ concrete things to point at on a screen and talk about
   - [x] MongoDB version and git commit
   - [x] cpu stats
   - [x] physical memory stats
-- [ ] show global log
-- [ ] mongotop
-- [ ] mongostat
-- [ ] cursor list
+- [x] show global log
+- [x] mongotop + mongostat
+  - [ ] top shows delta values only
+  - [ ] top shows graph when clicking on a row?
+- [ ] cursor list?
 - [ ] basic styling
   - [ ] cut fat out of the mms stylesheets
   - [ ] make the basics lineup and semi-presentable

@@ -15,7 +15,14 @@ module.exports = Backbone.View.extend({
       .on('error', this.render, this);
   },
   show: function(){
-    this.top.fetch();
+    var self = this;
+    self.top.fetch();
+/*    if(!self.interval){
+      self.interval = setInterval(function(){
+        self.top.fetch();
+      }, 1000);
+    }*/
+
   },
   render: function(){
     var self = this;

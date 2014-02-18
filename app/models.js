@@ -1,6 +1,5 @@
 var Backbone = require('backbone'),
-  Service = require('./lib/service'),
-  roar = require('./lib/roar'),
+  Service = require('./service'),
   debug = require('debug')('mongoscope:models');
 
 
