@@ -36,49 +36,35 @@ merged into master.
 ## code tour
 
 [browserify](http://browserify.org) uses the main entrypoint
-[`app.js`](./blob/master/app.js) to create the
-`./static/app.js` which is actually served to the browser and should not
+[`./app/index.js`](./blob/master/app/index.js) to create the
+`./.build/app/index.js` which is actually served to the browser and should not
 be checked in.
 
 ### app
 
-- [`./controllers/*`](./blob/master/controllers)
+- [`./app/index.js`](./blob/master/app/index.js) main entrypoint
+- [`./app/controllers/*`](./blob/master/app/controllers)
   [backbone.js](http://backbonejs.org) views that pull json from the rest api
   and handle all the event binding and template rendering
-- [`./models.js`](./blob/master/models.js) [backbone.js](http://backbonejs.org)
+- [`./app/models.js`](./blob/master/app/models.js) [backbone.js](http://backbonejs.org)
   models the controllers use for their data
-- [`./app.js`](./blob/master/app.js) defines the URL routing as well as serving
-  as the main entrypoint
-- [`./static`](./blob/master/static) all dependency assets like fonts and css.
-  this folder can just be dropped and served somewhere
-- [`./templates`](./blob/master/templates) [jade](http://jade-lang.com/) is
+- [`./app/service.js`](./blob/master/app/service.js) abstracts away all of
+  the mongod rest api calls and makes their responses easier to reason about
+- [`./app/templates`](./blob/master/app/templates) [jade](http://jade-lang.com/) is
   mongoscope's templating engine
 
 
 ### templating
 
-- [`./templates/index.jade`](./blob/master/templates/index.jade) creates the
+- [`./app/templates/index.jade`](./blob/master/app/templates/index.jade) creates the
   HTML shell for the app
-- [`./templates/*.jade`](./blob/master/templates) are precompiled by the
+- [`./app/templates/*.jade`](./blob/master/app/templates) are precompiled by the
   [jadeify](https://github.com/domenic/jadeify) transform
 
 ### meta
 
-- [`./docs/*`](./blob/master/controllers) collection of markdown docs with
+- [`./docs/*`](./blob/master/docs) collection of markdown docs with
   brainstorming, roadmap, and process notes
-
-
-
-### things to move to their own modules
-
-- [`./mongodb-api-proxy`](./blob/master/mongodb-api-proxy) instead of
-  having to wait for features to be implemented in C++ land a stupid-simple
-  proxy for living in the future and experimenting before committing
-- [`./lib/service.js`](./blob/master/lib/service.js) abstracts away all of
-  the mongod rest api calls and makes their responses easier to reason about
-- [`./lib/roar.js`](./blob/master/lib/roar.js) mongoscope has a lot of regex
-  action and roar provides a way to organize them in a non-shitty way and
-  provide some higher level functionality for them as in other languages
 
 
 [node-install]: https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager
