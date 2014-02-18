@@ -44,7 +44,7 @@ regret.add('isoDate',
   '2014-02-13T18:00:04.709-0500');
 
 regret.add('mongodbLogLine',
-  /({{isoDate}}+) \[(\w+)\](?:\s{2})(.*)/,
+  /({{isoDate}}+) \[(\w+)\] (.*)/,
   '2014-02-13T18:00:04.709-0500 [initandlisten] db version v2.5.6-pre-',
   ['date', 'name', 'message']);
 
