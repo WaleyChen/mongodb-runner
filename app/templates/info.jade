@@ -1,20 +1,42 @@
 include mixins/bytes
 
-ul
-  li #{host.hostname}
-  li MongoDB #{build.version}
-    a.btn.btn-default(href=build.commit_url) #{build.commit.substr(0, 8)}
-  li System Time #{host.system_time}
-  li #{host.os}
-  li #{host.cpu_string} #{host.cpu_bits}bit
-  li #{host.cpu_cores} cores (#{host.cpu_cores_physical} physical)
-  li
-    +bytes(host.memory_bits)
-    | &nbsp;physical RAM
-  li debug #{build.debug ? 'on' : 'off'}
-  li JS Engine #{build.javascript_engine}
-  li allocator #{build.allocator}
-  li openssl version #{build.openssl_version}
-  li boost version #{build.boost_version}
+mixin health_bar(build)
+  ul.list-inline
+    li(class="label #{host.cpu_bits === 64 ? 'label-success' : 'label-warning'}") #{host.cpu_bits}bit
+    li(class="label #{build.debug === false ? 'label-success' : 'label-warning'}")
+      | debug #{build.debug ? 'on' : 'off'}
+    li(class="label #{build.javascript_engine === 'V8' ? 'label-success' : 'label-warning'}")
+      | #{build.javascript_engine}
+    li(class="label #{build.allocator === 'tcmalloc' ? 'label-success' : 'label-warning'}")
+      | #{build.allocator}
+    li.label.label-success boost #{build.boost_version}
 
+    li(class="label #{build.openssl_version ? 'label-success' : 'label-warning'}")
+      | openssl #{build.openssl_version || 'N/A'}
 
+.row
+  .col-md-offset-2
+    ul.list-unstyled
+      li
+        h3 #{host.hostname}
+
+      li
+        +health_bar(build)
+
+    dl.dl-horizontal
+      dt MongoDB
+      dd
+        a(href=build.commit_url, title="View commit #{build.commit.substr(0, 8)} on github") #{build.version}
+
+      dt Software
+      dd #{host.os}
+
+      dt Memory
+      dd
+        +bytes(host.memory_bits)
+
+      dt Processor
+      dd #{host.cpu_cores_physical} core #{host.cpu_string}
+
+      dt System Time
+      dd #{host.system_time}

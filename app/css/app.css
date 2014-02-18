@@ -6,6 +6,9 @@
   padding-left: 100px;
 }
 
+/**
+ * Log
+ */
 .log > span {
   display: block;
   max-height: 18px;
@@ -36,4 +39,15 @@
 .filter-bar {
   margin-top: 20px;
   margin-bottom: 20px;
+}
+
+/**
+ * Info
+ */
+.dl-horizontal dt {
+  width: 90px !important;
+}
+
+.dl-horizontal dd {
+  margin-left: 110px !important;
 }
