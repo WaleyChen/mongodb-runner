@@ -18,12 +18,12 @@ gulp.task('js', function(){
 // Jam all the various MMS stylesheets and our overrides into one css file
 gulp.task('css', function(){
   gulp.src('./app/css/*.css')
-    .pipe(concat('app.css'))
+    .pipe(concat('index.css'))
     .pipe(gulp.dest('./.build'));
 });
 
 gulp.task('copyAssets', function(){
-  gulp.src(['./app/{css,img,fonts}/*'])
+  gulp.src(['./app/{img,fonts}/*'])
     .pipe(gulp.dest('./.build/'));
 });
 
@@ -32,6 +32,7 @@ gulp.task('watch', function (){
   gulp.watch(['./app/{*,**/*}.{js,jade}',], ['js']);
   gulp.watch(['./app/css/*.css'], ['css']);
   gulp.watch(['./app/templates/index.jade'], ['appshell']);
+  gulp.watch(['./app/{img,fonts}/*'], ['copyAssets']);
 });
 
 // Compile the html container template
@@ -50,24 +51,31 @@ gulp.task('serve', function(){
   console.log('scope running at', 'http://localhost:3000/');
 });
 
-gulp.task('mongodbproxy', function(){
-  mongodbProxy.listen(mongodbProxy.port, function(){
+gulp.task('mongod', function(){
+  var mongod = process.env.MONGOD || '/srv/mongo/bin/mongod',
+    dbpath = process.env.DBPATH || '/srv/mongo/data/',
+    cmd = mongod + ' --dbpath ' + dbpath + ' --rest';
+
+  console.log('starting mongod `' + cmd + '`');
+
+  require('child_process').exec(cmd);
+    mongodbProxy.listen(mongodbProxy.port, function(){
     console.log('mongo api proxy running on', mongodbProxy.port);
   });
 });
 
 gulp.task('manifest', function(){
-  gulp.src(['!./.build/*.manifest', './.build/{*,**/*}'])
+  gulp.src(['!./.build/*.manifest', './.build/**/*'])
     .pipe(manifest({
       hash: true,
       preferOnline: true,
       network: ['*'],
       timestamp: true
      }))
-    .pipe(gulp.dest('./.build/app.manifest'));
+    .pipe(gulp.dest('./.build/index.manifest'));
 });
 
-gulp.task('build', ['appshell', 'js', 'css', 'manifest']);
+gulp.task('build', ['appshell', 'copyAssets', 'js', 'css', 'manifest']);
 
 // What we'll call from `npm start` to work on this project
-gulp.task('dev', ['build', 'serve', 'mongodbproxy', 'watch']);
+gulp.task('dev', ['build', 'serve', 'mongod', 'watch']);
