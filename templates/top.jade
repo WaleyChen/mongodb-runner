@@ -1,0 +1,15 @@
+h2 top
+- var keys = ['name', 'total', 'read', 'write', 'lock', 'readLock', 'writeLock', 'queries', 'getmore', 'insert', 'update', 'remove', 'commands']
+table.grid
+  thead
+    tr
+     - for k in keys
+      th= k
+  tbody
+   - for ns in namespaces
+    tr
+     - for k in keys
+      if k === 'name'
+        td #{ns[k]}
+      else
+        td #{ns[k].count} (#{ns[k].time}μs)
