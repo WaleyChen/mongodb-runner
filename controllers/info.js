@@ -1,10 +1,10 @@
 var Backbone = require('Backbone'),
   $ = Backbone.$,
   models = require('../models'),
-  debug = require('debug')('mongoscope:diagnostics');
+  debug = require('debug')('mongoscope:info');
 
 module.exports = Backbone.View.extend({
-  tpl: require('../templates/diagnostics.jade'),
+  tpl: require('../templates/info.jade'),
   initialize: function(){
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);
