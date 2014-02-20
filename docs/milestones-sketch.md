@@ -4,7 +4,7 @@ _Goal_ concrete things to point at on a screen and talk about
 
 ## Punchlist
 
-- [x] wrapper for getting data from the instance:
+- [x] `service` for getting data from the instance:
   - [x] mine [storage viz](http://github.com/10gen-labs/storage-viz)
   - [x] mine tyler's prototype
 - [x] node.js proxy for CORS before C++ work
@@ -15,14 +15,37 @@ _Goal_ concrete things to point at on a screen and talk about
   - [x] physical memory stats
 - [x] show global log
 - [x] mongotop + mongostat
-  - [ ] top shows delta values only
-  - [ ] top shows graph when clicking on a row?
-- [ ] cursor list?
-- [ ] basic styling
-  - [ ] cut fat out of the mms stylesheets
-  - [ ] make the basics lineup and semi-presentable
-
-## Stretch
-
+- [x] make the basic styles lineup and semi-presentable
+- [ ] bootloader
+- [ ] move to LESS and chop up MMS styles instead of copying this monster around
+- [ ] wire in `bootstrap.js` plugins (wants the drop-downs and modals we does)
 - [ ] basic shell to run queries
-- [ ] point at any mongod (for testing)
+- [ ] top shows delta values only
+
+
+### bootloader
+
+Want to have something in the C++ by the end of the week to start playing around
+with that doesn't involve a dev changing anything; no proxy or nodejs install,
+just start mongod and open localhost:28017.  Short-term, would be fastest and
+easiest solution: modify C++ to serve 1 file and make `MiniWebServer` always
+send CORS headers. Very fortunately, this is also a big part of the long-term
+solution for `full embed`.
+
+In mongoscope, we'll refer to this as the `bootloader`:
+
+- show a nice little loading dialog
+- see if there are changes to `mongoscope`
+  - no changes? -> serve local cache
+  - has changes? -> pull down new versions of assets, execute them and cache for
+  later
+
+- [x] create `bootloader.js` that configures sterno
+- [ ] make a nice `bootstrap.jade` splash screen
+- [ ] decouple app shell from being `index.html`
+- [ ] gulp task generates a sterno manifest
+- [ ] use [juice](https://github.com/learnboost/juice) to inline all the styles
+  from `bootloader.css`
+- [ ] inline base64 encoded `bootloader.js` and `favicon.ico`
+- [ ] update C++ to always send back CORS headers and serve `bootloader.html` as
+  the root for `http://localhost:28017`
