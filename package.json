@@ -13,7 +13,8 @@
     "marked": "~0.3.1",
     "jquery": "~2.1.0",
     "brace": "~0.2.0",
-    "moment": "~2.5.1"
+    "moment": "~2.5.1",
+    "sterno": "imlucas/node-sterno"
   },
   "devDependencies": {
     "browserify": "~3.24.13",

@@ -31,13 +31,13 @@ gulp.task('copyAssets', function(){
 gulp.task('watch', function (){
   gulp.watch(['./app/{*,**/*}.{js,jade}',], ['js']);
   gulp.watch(['./app/css/*.css'], ['css']);
-  gulp.watch(['./app/templates/index.jade'], ['appshell']);
+  gulp.watch(['./app/templates/index.jade'], ['pages']);
   gulp.watch(['./app/{img,fonts}/*'], ['copyAssets']);
 });
 
 // Compile the html container template
-gulp.task('appshell', function(){
-  gulp.src('./app/templates/index.jade')
+gulp.task('pages', function(){
+  gulp.src('./app/templates/{index,bootloader}.jade')
     .pipe(jade({pretty: true}))
     .pipe(gulp.dest('./.build/'));
 });
@@ -75,7 +75,16 @@ gulp.task('manifest', function(){
     .pipe(gulp.dest('./.build/index.manifest'));
 });
 
-gulp.task('build', ['appshell', 'copyAssets', 'js', 'css', 'manifest']);
+gulp.task('bootloader', function(){
+  gulp.src('./app/bootloader.js')
+    .pipe(browserify({debug : false}))
+    .pipe(gulp.dest('./.build'));
+
+  gulp.src(['./app/css/bootloader.css'])
+    .pipe(gulp.dest('./.build/'));
+});
+
+gulp.task('build', ['pages', 'copyAssets', 'js', 'css', 'manifest']);
 
 // What we'll call from `npm start` to work on this project
 gulp.task('dev', ['build', 'serve', 'mongod', 'watch']);
