@@ -3,6 +3,7 @@ var gulp = require('gulp'),
   jade = require('gulp-jade'),
   concat = require('gulp-concat'),
   manifest = require('gulp-sterno-manifest'),
+  juice = require('gulp-juice'),
   mongodbProxy = require('mongodb-rest-proxy');
 
 gulp.task('js', function(){
@@ -66,10 +67,18 @@ gulp.task('mongod', function(){
 gulp.task('bootloader', function(){
   gulp.src('./app/bootloader.js')
     .pipe(browserify({debug : false}))
-    .pipe(gulp.dest('./.build'));
+    .pipe(gulp.dest('./.build/'));
 
   gulp.src(['./app/css/bootloader.css'])
     .pipe(gulp.dest('./.build/'));
+
+  // Render the template
+  gulp.src('./app/templates/bootloader.jade')
+    .pipe(jade({pretty: true}))
+    .pipe(gulp.dest('./.build'))
+    // Then inline all of the css
+    .pipe(juice())
+    .pipe(gulp.dest('./.build'));
 });
 
 gulp.task('manifest', function(){
@@ -80,8 +89,7 @@ gulp.task('manifest', function(){
     .pipe(gulp.dest('./.build/sterno-manifest.json'));
 });
 
-
-gulp.task('build', ['pages', 'copyAssets', 'js', 'css', 'manifest']);
+gulp.task('build', ['pages', 'copyAssets', 'js', 'css', 'manifest', 'bootloader']);
 
 // What we'll call from `npm start` to work on this project
 gulp.task('dev', ['build', 'serve', 'mongod', 'watch']);
