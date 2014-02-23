@@ -41,11 +41,11 @@ In mongoscope, we'll refer to this as the `bootloader`:
   later
 
 - [x] create `bootloader.js` that configures sterno
-- [ ] make a nice `bootstrap.jade` splash screen
-- [ ] decouple app shell from being `index.html`
-- [ ] gulp task generates a sterno manifest
+- [x] make a nice `bootstrap.jade` splash screen
+- [x] gulp task generates a sterno manifest
 - [ ] use [juice](https://github.com/learnboost/juice) to inline all the styles
   from `bootloader.css`
 - [ ] inline base64 encoded `bootloader.js` and `favicon.ico`
 - [ ] update C++ to always send back CORS headers and serve `bootloader.html` as
   the root for `http://localhost:28017`
+- [ ] decouple app shell from being `index.html`

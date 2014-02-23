@@ -2,8 +2,7 @@ var gulp = require('gulp'),
   browserify = require('gulp-browserify'),
   jade = require('gulp-jade'),
   concat = require('gulp-concat'),
-  todo = require('gulp-todo'),
-  manifest = require('gulp-manifest'),
+  manifest = require('gulp-sterno-manifest'),
   mongodbProxy = require('mongodb-rest-proxy');
 
 gulp.task('js', function(){
@@ -59,20 +58,9 @@ gulp.task('mongod', function(){
   console.log('starting mongod `' + cmd + '`');
 
   require('child_process').exec(cmd);
-    mongodbProxy.listen(mongodbProxy.port, function(){
+  mongodbProxy.listen(mongodbProxy.port, function(){
     console.log('mongo api proxy running on', mongodbProxy.port);
   });
-});
-
-gulp.task('manifest', function(){
-  gulp.src(['!./.build/*.manifest', './.build/**/*'])
-    .pipe(manifest({
-      hash: true,
-      preferOnline: true,
-      network: ['*'],
-      timestamp: true
-     }))
-    .pipe(gulp.dest('./.build/index.manifest'));
 });
 
 gulp.task('bootloader', function(){
@@ -83,6 +71,15 @@ gulp.task('bootloader', function(){
   gulp.src(['./app/css/bootloader.css'])
     .pipe(gulp.dest('./.build/'));
 });
+
+gulp.task('manifest', function(){
+  gulp.src('./.build/**/*')
+    .pipe(manifest({
+      version: '0.0.1'
+    }))
+    .pipe(gulp.dest('./.build/sterno-manifest.json'));
+});
+
 
 gulp.task('build', ['pages', 'copyAssets', 'js', 'css', 'manifest']);
 
