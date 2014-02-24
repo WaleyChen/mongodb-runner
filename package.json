@@ -31,6 +31,8 @@
     "gulp-less": "~1.2.1",
     "mongodb-rest-proxy": "~0.0.1",
     "gulp-sterno-manifest": "~0.0.1",
-    "gulp-juice": "~0.0.2"
+    "gulp-juice": "~0.0.2",
+    "local-tld-lib": "~1.0.2",
+    "gulp-util": "~2.2.14"
   }
 }

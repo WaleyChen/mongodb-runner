@@ -1,10 +1,12 @@
 var gulp = require('gulp'),
+  gutil = require('gulp-util'),
   browserify = require('gulp-browserify'),
   jade = require('gulp-jade'),
   concat = require('gulp-concat'),
   manifest = require('gulp-sterno-manifest'),
   juice = require('gulp-juice'),
-  mongodbProxy = require('mongodb-rest-proxy');
+  mongodbProxy = require('mongodb-rest-proxy'),
+  ltld = require('local-tld-lib');
 
 gulp.task('js', function(){
   gulp.src('./app/index.js')
@@ -44,11 +46,12 @@ gulp.task('pages', function(){
 
 // Treat `./static` as our web root and serve things up locally on port 3000
 gulp.task('serve', function(){
+  var port = ltld.getPort('mongoscope') || 3000;
   require('http').createServer(
     require('ecstatic')({ root: __dirname + '/.build' })
-  ).listen(3000);
+  ).listen(port);
 
-  console.log('scope running at', 'http://localhost:3000/');
+  gutil.log('scope running at', 'http://mongoscope.dev/');
 });
 
 gulp.task('mongod', function(){
@@ -56,11 +59,11 @@ gulp.task('mongod', function(){
     dbpath = process.env.DBPATH || '/srv/mongo/data/',
     cmd = mongod + ' --dbpath ' + dbpath + ' --rest';
 
-  console.log('starting mongod `' + cmd + '`');
+  gutil.log('starting mongod `' + cmd + '`');
 
   require('child_process').exec(cmd);
   mongodbProxy.listen(mongodbProxy.port, function(){
-    console.log('mongo api proxy running on', mongodbProxy.port);
+    gutil.log('mongo api proxy running on', mongodbProxy.port);
   });
 });
 
