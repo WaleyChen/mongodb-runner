@@ -1032,9 +1032,8 @@ body {
   margin: 6px 15px 0 0;
 }
 .navbar-brand {
-  background: url("/static/images/logo-mms-white-landing.png") center center no-repeat;
   background-size: 56px 20px;
-  margin: 5px 0 0 10px;
+  margin: 0px 0 0 10px;
   width: 56px;
   height: 20px;
   text-indent: -9999px;

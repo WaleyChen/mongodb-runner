@@ -33,6 +33,9 @@
     "gulp-sterno-manifest": "~0.0.1",
     "gulp-juice": "~0.0.2",
     "local-tld-lib": "~1.0.2",
-    "gulp-util": "~2.2.14"
+    "gulp-util": "~2.2.14",
+    "inliner": "imlucas/inliner",
+    "event-stream": "~3.1.0",
+    "wordwrap": "0.0.2"
   }
 }

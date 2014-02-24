@@ -6,7 +6,9 @@ var gulp = require('gulp'),
   manifest = require('gulp-sterno-manifest'),
   juice = require('gulp-juice'),
   mongodbProxy = require('mongodb-rest-proxy'),
-  ltld = require('local-tld-lib');
+  ltld = require('local-tld-lib'),
+  Inliner = require('inliner'),
+  es = require('event-stream');
 
 gulp.task('js', function(){
   gulp.src('./app/index.js')
@@ -35,12 +37,14 @@ gulp.task('watch', function (){
   gulp.watch(['./app/css/*.css'], ['css']);
   gulp.watch(['./app/templates/index.jade'], ['pages']);
   gulp.watch(['./app/{img,fonts}/*'], ['copyAssets']);
+
+  gutil.log('watching for changes');
 });
 
 // Compile the html container template
 gulp.task('pages', function(){
   gulp.src('./app/templates/{index,bootloader}.jade')
-    .pipe(jade({pretty: true}))
+    .pipe(jade({pretty: false}))
     .pipe(gulp.dest('./.build/'));
 });
 
@@ -59,12 +63,7 @@ gulp.task('mongod', function(){
     dbpath = process.env.DBPATH || '/srv/mongo/data/',
     cmd = mongod + ' --dbpath ' + dbpath + ' --rest';
 
-  gutil.log('starting mongod `' + cmd + '`');
-
-  require('child_process').exec(cmd);
-  mongodbProxy.listen(mongodbProxy.port, function(){
-    gutil.log('mongo api proxy running on', mongodbProxy.port);
-  });
+  gutil.log('to start mongod: ' + cmd);
 });
 
 gulp.task('bootloader', function(){
@@ -79,9 +78,30 @@ gulp.task('bootloader', function(){
   gulp.src('./app/templates/bootloader.jade')
     .pipe(jade({pretty: true}))
     .pipe(gulp.dest('./.build'))
-    // Then inline all of the css
-    .pipe(juice())
+    .pipe(function inliner(){
+      var opts = Inliner.defaults();
+      return es.map(function(file, fn){
+        opts.html = file.contents;
+
+        new Inliner(file.path, opts, function (html){
+          file.contents = new Buffer(html);
+          fn(null, file);
+        });
+      });
+    }())
+    .pipe(gulp.dest('./.build'))
+    .pipe(function(cols){
+      return es.map(function(file, fn){
+        var lines = require('wordwrap').hard(80)(file.contents.toString()).split('\n').map(function(l){
+          return 'ss << "' + l.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '";';
+        });
+        file.contents = new Buffer(lines.join('\n'));
+        file.path = './.build/bootloader.cpp';
+        fn(null, file);
+      });
+    }())
     .pipe(gulp.dest('./.build'));
+
 });
 
 gulp.task('manifest', function(){
@@ -95,4 +115,4 @@ gulp.task('manifest', function(){
 gulp.task('build', ['pages', 'copyAssets', 'js', 'css', 'manifest', 'bootloader']);
 
 // What we'll call from `npm start` to work on this project
-gulp.task('dev', ['build', 'serve', 'mongod', 'watch']);
+gulp.task('dev', ['mongod', 'build', 'serve', 'watch']);

@@ -56,11 +56,11 @@ regret.add('mongodbLogLine',
 // @todo Backbone friendly adapter?
 //
 // @param {String, default:localhost} Hostname of the instance
-// @param {Number, default:3001} Port mongodb-api-proxy is listening on.
+// @param {Number, default:28017} Port mongodb-api-proxy is listening on.
 // @api public
 function Service(hostname, port){
   this.hostname = hostname || 'localhost';
-  this.port = port || 3001;
+  this.port = port || 28017;
   this.origin = 'http://' + this.hostname + ':' + this.port;
 }
 

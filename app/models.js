@@ -6,7 +6,7 @@ var Backbone = require('backbone'),
 var Instance = Backbone.Model.extend({
   defaults: {
     host: window.document.hostname,
-    port: 3001
+    port: 28017
   },
   initialize: function(){
     this.backend = new Service(this.get('host'), this.get('port'));

@@ -17,6 +17,17 @@ _Goal_ concrete things to point at on a screen and talk about
 - [x] mongotop + mongostat
 - [x] make the basic styles lineup and semi-presentable
 - [ ] bootloader
+  - [x] create `bootloader.js` that configures sterno
+  - [x] make a nice `bootstrap.jade` splash screen
+  - [x] gulp task generates a sterno manifest
+  - [x] use [juice](https://github.com/learnboost/juice) to inline all the
+    styles from `bootloader.css`
+  - [ ] tweaking on sterno for this use case (eg FS api's have changed in chrome)
+  - [ ] inline base64 encoded `bootloader.js` and `favicon.ico` with
+    [inliner](https://github.com/remy/inliner)?
+  - [ ] update C++ to always send back CORS headers and serve `bootloader.html`
+    as the root for `http://localhost:28017`
+  - [ ] decouple app shell from being `index.html`
 - [ ] move to LESS and chop up MMS styles instead of copying this monster around
 - [ ] wire in `bootstrap.js` plugins (wants the drop-downs and modals we does)
 - [ ] basic shell to run queries
@@ -39,13 +50,3 @@ In mongoscope, we'll refer to this as the `bootloader`:
   - no changes? -> serve local cache
   - has changes? -> pull down new versions of assets, execute them and cache for
   later
-
-- [x] create `bootloader.js` that configures sterno
-- [x] make a nice `bootstrap.jade` splash screen
-- [x] gulp task generates a sterno manifest
-- [x] use [juice](https://github.com/learnboost/juice) to inline all the styles
-  from `bootloader.css`
-- [ ] inline base64 encoded `bootloader.js` and `favicon.ico`
-- [ ] update C++ to always send back CORS headers and serve `bootloader.html` as
-  the root for `http://localhost:28017`
-- [ ] decouple app shell from being `index.html`

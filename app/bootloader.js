@@ -5,8 +5,8 @@
 //
 // @author Lucas Hrabovsky<lucas@mongodb.com>
 var sterno = require('sterno'),
-  /*origin = localStorage.getItem('mongoscope:origin') || 'http://10gen.github.io/mongoscope',*/
-  origin = localStorage.getItem('mongoscope:origin') || 'http://mongoscope.dev',
+  origin = localStorage.getItem('mongoscope:origin') || 'http://10gen.github.io/mongoscope',
+  // origin = localStorage.getItem('mongoscope:origin') || 'http://mongoscope.dev',
   assets = JSON.parse(localStorage.getItem('mongoscope:assets') || '["/index.js", "/index.css"]');
 
-sterno(origin, assets, {manifest: '/sterno-manifest.json'});
+sterno(origin, assets);
