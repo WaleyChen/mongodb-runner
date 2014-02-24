@@ -34,7 +34,11 @@ body {
   margin: 0;
   display: block;
   color: #313030;
-  font-family: 'PT Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: "PT Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.bootloader.error {
+  color: #d9534f;
 }
 
 .bootloader img {
