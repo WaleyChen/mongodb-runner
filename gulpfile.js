@@ -10,12 +10,19 @@ var gulp = require('gulp'),
   Inliner = require('inliner'),
   es = require('event-stream');
 
+// "form of: a webapp!"
+gulp.task('build', ['pages', 'assets', 'js', 'css', 'manifest', 'bootloader']);
+
+// What we'll call from `npm start` to work on this project
+gulp.task('dev', ['mongod', 'build', 'serve', 'watch', 'ready']);
+
+gulp.task('ready', function(){
+    gutil.log('mongoscope ready to use!', 'http://mongoscope.dev/');
+});
+
 gulp.task('js', function(){
   gulp.src('./app/index.js')
-    .pipe(browserify({
-      debug : false,
-      transform: ['jadeify']
-    }))
+    .pipe(browserify({debug : false, transform: ['jadeify']}))
     .pipe(gulp.dest('./.build'));
 });
 
@@ -26,19 +33,9 @@ gulp.task('css', function(){
     .pipe(gulp.dest('./.build'));
 });
 
-gulp.task('copyAssets', function(){
+gulp.task('assets', function(){
   gulp.src(['./app/{img,fonts}/*'])
     .pipe(gulp.dest('./.build/'));
-});
-
-// Set up watchers to reprocess CSS and JS when files are changed
-gulp.task('watch', function (){
-  gulp.watch(['./app/{*,**/*}.{js,jade}',], ['js']);
-  gulp.watch(['./app/css/*.css'], ['css']);
-  gulp.watch(['./app/templates/index.jade'], ['pages']);
-  gulp.watch(['./app/{img,fonts}/*'], ['copyAssets']);
-
-  gutil.log('watching for changes');
 });
 
 // Compile the html container template
@@ -54,18 +51,18 @@ gulp.task('serve', function(){
   require('http').createServer(
     require('ecstatic')({ root: __dirname + '/.build' })
   ).listen(port);
-
-  gutil.log('scope running at', 'http://mongoscope.dev/');
 });
 
+// First up mongod built from the mongoscope branch.
 gulp.task('mongod', function(){
   var mongod = process.env.MONGOD || '/srv/mongo/bin/mongod',
     dbpath = process.env.DBPATH || '/srv/mongo/data/',
     cmd = mongod + ' --dbpath ' + dbpath + ' --rest';
 
-  gutil.log('to start mongod: ' + cmd);
+  require('child_process').exec(cmd);
 });
 
+// App within the app that takes care of bootstrapping from a single HTML file.
 gulp.task('bootloader', function(){
   gulp.src('./app/bootloader.js')
     .pipe(browserify({debug : false}))
@@ -74,19 +71,25 @@ gulp.task('bootloader', function(){
   gulp.src(['./app/css/bootloader.css'])
     .pipe(gulp.dest('./.build/'));
 
-  // Render the template
   gulp.src('./app/templates/bootloader.jade')
     .pipe(jade({pretty: true}))
     .pipe(gulp.dest('./.build'));
-
 });
 
+
+// Generate the sterno manifest for bootloader
 gulp.task('manifest', function(){
   gulp.src('./.build/**/*')
-    .pipe(manifest({
-      version: '0.0.1'
-    }))
+    .pipe(manifest({version: '0.0.1'}))
     .pipe(gulp.dest('./.build/sterno-manifest.json'));
+});
+
+// Set up watchers to reprocess CSS and JS when files are changed
+gulp.task('watch', function (){
+  gulp.watch(['./app/{*,**/*}.{js,jade}',], ['js']);
+  gulp.watch(['./app/css/*.css'], ['css']);
+  gulp.watch(['./app/templates/index.jade'], ['pages']);
+  gulp.watch(['./app/{img,fonts}/*'], ['assets']);
 });
 
 // Inline all images, css, and JS on a page.
@@ -112,8 +115,3 @@ function cppStringify(cols){
     fn(null, file);
   });
 }
-
-gulp.task('build', ['pages', 'copyAssets', 'js', 'css', 'manifest', 'bootloader']);
-
-// What we'll call from `npm start` to work on this project
-gulp.task('dev', ['mongod', 'build', 'serve', 'watch']);
