@@ -22,14 +22,12 @@ _Goal_ concrete things to point at on a screen and talk about
   - [x] gulp task generates a sterno manifest
   - [x] use [juice](https://github.com/learnboost/juice) to inline all the
     styles from `bootloader.css`
-  - [ ] tweaking on sterno for this use case (eg FS api's have changed in chrome)
-  - [ ] inline base64 encoded `bootloader.js` and `favicon.ico` with
-    [inliner](https://github.com/remy/inliner)?
-  - [ ] update C++ to always send back CORS headers and serve `bootloader.html`
+  - [x] inline css and js
+  - [x] update C++ to always send back CORS headers and serve `bootloader.html`
     as the root for `http://localhost:28017`
-  - [ ] decouple app shell from being `index.html`
+  - [ ] bootloader transitions to app
 - [ ] move to LESS and chop up MMS styles instead of copying this monster around
-- [ ] wire in `bootstrap.js` plugins (wants the drop-downs and modals we does)
+- [ ] wire in `bootstrap.js` plugins
 - [ ] basic shell to run queries
 - [ ] top shows delta values only
 
