@@ -126,17 +126,16 @@ module.exports.Log = List.extend({
   service: 'log'
 });
 
-function parseNamespace(ns){
-  var db = ns.split('.').shift();
-  return {
-    db: db,
-    collection: ns.replace(db + '.', '')
-  };
+function parseNamespace(ns, key){
+  var db = ns.split('.').shift(),
+    res = {db: db};
+  res[key] = ns.replace(db + '.', '');
+  return res;
 }
 
 var Index = Model.extend({
   initialize: function(opts){
-    this.set(parseNamespace(this.get('ns')));
+    this.set(parseNamespace(this.get('ns'), 'collection'));
   },
   defaults: {
     v: 1,
@@ -149,8 +148,12 @@ var Index = Model.extend({
 });
 
 var Collection = Model.extend({
+initialize: function(opts){
+    this.set(parseNamespace(this.get('ns'), 'name'));
+  },
   defaults: {
-    name: 'mongomin.fixtures',
+    ns: 'mongomin.fixtures',
+    name: 'fixtures',
     db: 'mongomin'
   },
   service: function(){
