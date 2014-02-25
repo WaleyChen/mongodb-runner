@@ -43,7 +43,7 @@ gulp.task('watch', function (){
 
 // Compile the html container template
 gulp.task('pages', function(){
-  gulp.src('./app/templates/{index,bootloader}.jade')
+  gulp.src('./app/templates/index.jade')
     .pipe(jade({pretty: false}))
     .pipe(gulp.dest('./.build/'));
 });
@@ -77,29 +77,6 @@ gulp.task('bootloader', function(){
   // Render the template
   gulp.src('./app/templates/bootloader.jade')
     .pipe(jade({pretty: true}))
-    .pipe(gulp.dest('./.build'))
-    .pipe(function inliner(){
-      var opts = Inliner.defaults();
-      return es.map(function(file, fn){
-        opts.html = file.contents;
-
-        new Inliner(file.path, opts, function (html){
-          file.contents = new Buffer(html);
-          fn(null, file);
-        });
-      });
-    }())
-    .pipe(gulp.dest('./.build'))
-    .pipe(function(cols){
-      return es.map(function(file, fn){
-        var lines = require('wordwrap').hard(80)(file.contents.toString()).split('\n').map(function(l){
-          return 'ss << "' + l.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '";';
-        });
-        file.contents = new Buffer(lines.join('\n'));
-        file.path = './.build/bootloader.cpp';
-        fn(null, file);
-      });
-    }())
     .pipe(gulp.dest('./.build'));
 
 });
@@ -111,6 +88,30 @@ gulp.task('manifest', function(){
     }))
     .pipe(gulp.dest('./.build/sterno-manifest.json'));
 });
+
+// Inline all images, css, and JS on a page.
+function inliner(){
+  var opts = Inliner.defaults();
+  return es.map(function(file, fn){
+    opts.html = file.contents;
+    new Inliner(file.path, opts, function (html){
+      file.contents = new Buffer(html);
+      fn(null, file);
+    });
+  });
+}
+
+// Take inlined html, and make it safe to copy and paste into a cpp file :P
+function cppStringify(cols){
+  return es.map(function(file, fn){
+    var lines = require('wordwrap').hard(cols)(file.contents.toString()).split('\n').map(function(l){
+      return 'ss << "' + l.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '";';
+    });
+    file.contents = new Buffer(lines.join('\n'));
+    file.path = './.build/bootloader.cpp';
+    fn(null, file);
+  });
+}
 
 gulp.task('build', ['pages', 'copyAssets', 'js', 'css', 'manifest', 'bootloader']);
 
