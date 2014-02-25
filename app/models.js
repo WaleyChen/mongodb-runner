@@ -15,7 +15,7 @@ var Instance = Backbone.Model.extend({
 
 var instance = module.exports = new Instance();
 
-var Base = Backbone.Model.extend({
+var Model = Backbone.Model.extend({
   service: '',
   sync: function(method, model, options){
     instance.backend[this.service](function(err, data){
@@ -25,7 +25,7 @@ var Base = Backbone.Model.extend({
   }
 });
 
-module.exports.BuildInfo = Base.extend({
+module.exports.BuildInfo = Model.extend({
   defaults: {
     version: '2.5.6-pre-',
     commit: '518cbb85a00e4e9ac7dc419569aacc3216db45d2',
@@ -43,7 +43,7 @@ module.exports.BuildInfo = Base.extend({
   service: 'buildInfo'
 });
 
-module.exports.HostInfo = Base.extend({
+module.exports.HostInfo = Model.extend({
   service: 'hostInfo',
   defaults: {
     system_time: new Date("2014-02-16T00:40:22.929Z"),
@@ -71,11 +71,11 @@ module.exports.HostInfo = Base.extend({
   }
 });
 
-module.exports.Top = Base.extend({
+module.exports.Top = Model.extend({
   service: 'top'
 });
 
-module.exports.DatabaseStat = Base.extend({
+var DatabaseStat = module.exports.DatabaseStat = Model.extend({
   service: function(){
     return ['databaseStat', this.get('name')];
   },
@@ -96,7 +96,7 @@ module.exports.DatabaseStat = Base.extend({
   }
 });
 
-var BaseCollection = Backbone.Collection.extend({
+var List = Backbone.Collection.extend({
   service: '',
   sync: function(method, model, options){
     var serviceName = this.service,
@@ -115,7 +115,7 @@ var BaseCollection = Backbone.Collection.extend({
   }
 });
 
-module.exports.Log = BaseCollection.extend({
+module.exports.Log = List.extend({
   model: Backbone.Model.extend({
     defaults: {
       name: 'websrv',
@@ -126,43 +126,98 @@ module.exports.Log = BaseCollection.extend({
   service: 'log'
 });
 
-module.exports.Databases = BaseCollection.extend({
-  model: Backbone.Model.extend({
-    defaults: {
-      name: 'mongoscope'
-    }
-  }),
-  service: 'databases'
-});
+function parseNamespace(ns){
+  var db = ns.split('.').shift();
+  return {
+    db: db,
+    collection: ns.replace(db + '.', '')
+  };
+}
 
-// Collections of things under a database.
-var DatabaseAttributeCollection = BaseCollection.extend({
+var Index = Model.extend({
   initialize: function(opts){
-    this.set('db', opts.db);
+    this.set(parseNamespace(this.get('ns')));
+  },
+  defaults: {
+    v: 1,
+    key: {_id: 1},
+    name: '_id_',
+    ns: 'mongomin.fixture',
+    db: 'mongomin',
+    collection: 'fixture'
   }
 });
 
-module.exports.Collections = DatabaseAttributeCollection.extend({
-  model: Backbone.Model.extend({
-    defaults: {
-      name: 'mongomin.fixtures'
-    }
-  }),
+var Collection = Model.extend({
+  defaults: {
+    name: 'mongomin.fixtures',
+    db: 'mongomin'
+  },
   service: function(){
     return ['collections', this.get('db')];
   }
 });
 
-module.exports.Indexes = DatabaseAttributeCollection.extend({
-  model: Backbone.Model.extend({
-    defaults: {
-      v: 1,
-      key: {_id: 1},
-      name: '_id_',
-      ns: 'mongomin.fixture'
-    }
-  }),
+var IndexList = List.extend({
+  initialize: function(opts){
+    this.database = opts.database;
+  },
+  model: Index,
   service: function(){
-    return ['indexes', this.get('db')];
+    return ['indexes', this.database.get('name')];
   }
+});
+
+var CollectionList = List.extend({
+  initialize: function(opts){
+    this.database = opts.database;
+  },
+  model: Collection,
+  service: function(){
+    return ['collections', this.database.get('name')];
+  }
+});
+
+// var databases = new models.Databases();
+// databases.on('sync', this.render, this);
+// databases.fetch();
+
+var Database = Model.extend({
+  defaults: {
+    name: 'mongoscope',
+    indexes: IndexList,
+    collections: CollectionList
+  },
+  initialize: function(opts){
+    this.set({
+      'indexes': new IndexList({db: this.get('name')}),
+      'collections': new CollectionList({db: this.get('name')}),
+    });
+  },
+  service: function(){
+    return ['databaseStat', this.get('name')];
+  }
+});
+
+// @todo: Should this just be a singleton on the app level that's updated on
+//        an interval?
+module.exports.Databases = List.extend({
+  model: Database,
+  service: 'databases'
+});
+
+// Collections of things under a database.
+var DatabaseAttributeCollection = List.extend({
+  initialize: function(opts){
+    this.set('db', opts.db);
+  }
+});
+
+// @todo: rather than refetching,
+module.exports.Collections = List.extend({
+  model: Collection
+});
+
+module.exports.Indexes = List.extend({
+  model: Index
 });
