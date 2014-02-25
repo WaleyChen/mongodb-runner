@@ -75,15 +75,43 @@ module.exports.Top = Base.extend({
   service: 'top'
 });
 
+module.exports.DatabaseStat = Base.extend({
+  service: function(){
+    return ['databaseStat', this.get('name')];
+  },
+  defaults: {
+    name: 'mongomin',
+    collections: 3,
+    objects: 5,
+    avgObjSize: 60.8,
+    dataSize: 304,
+    storageSize: 24576,
+    numExtents: 3,
+    indexes: 1,
+    indexSize: 8176,
+    fileSize: 67108864,
+    nsSizeMB: 16,
+    dataFileVersion: {major: 4, minor: 5},
+    extentFreeList: {num: 0, totalSize: 0}
+  }
+});
+
 var BaseCollection = Backbone.Collection.extend({
   service: '',
-  // @todo Support declaring args to pass to service,
-  // eg pass database name to list collections.
   sync: function(method, model, options){
-    instance.backend[this.service](function(err, data){
+    var serviceName = this.service,
+      args = [];
+
+    if(typeof serviceName === 'function'){
+      args = serviceName();
+      serviceName = args.shift();
+    }
+
+    args.push(function(err, data){
       if(err) return options.error(err);
       options.success(data);
     });
+    instance.backend[this.service].apply(instance.backend, args);
   }
 });
 

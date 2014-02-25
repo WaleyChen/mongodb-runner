@@ -123,12 +123,13 @@ Service.prototype.buildInfo = function(fn){
 
 // Run an admin command.
 //
+// @param {String} db Database name
 // @param {String} name Command name
 // @param {Number|String, default:1} [value] pass as arg to the command
 // @param {String, default:''} [path] dot string to the key in the response we want
 // @param {Function} fn
 // @api private
-Service.prototype.cmd = function(name, value, path, fn){
+Service.prototype.cmd = function(db, name, value, path, fn){
   if(typeof value === 'function'){
     fn = value;
     path = '';
@@ -143,7 +144,7 @@ Service.prototype.cmd = function(name, value, path, fn){
 
   params = {limit: 1};
   params['filter_' + name] = value;
-  this.read('/admin/$cmd/', params, function(err, data){
+  this.read('/' + db + '/$cmd/', params, function(err, data){
     if(err) return fn(err);
     var res = data,
       parts = path.split('.'),
@@ -179,7 +180,7 @@ Service.prototype.log = function(name, fn){
     fn = name;
     name = 'global';
   }
-  this.cmd('getLog', name, 'rows.0.log', function(err, lines){
+  this.cmd('admin', 'getLog', name, 'rows.0.log', function(err, lines){
     if(err) return fn(err);
 
     var res = _.map(lines, function(line){
@@ -210,7 +211,7 @@ Service.prototype.log = function(name, fn){
 //
 // @todo Subsequent reads can be done here so controllers stay simple.
 Service.prototype.databases = function(fn){
-  this.cmd('listDatabases', 'rows.0.databases', function(err, dbs){
+  this.cmd('admin', 'listDatabases', 'rows.0.databases', function(err, dbs){
     if(err) return fn(err);
     dbs = dbs.filter(function(db){
       return !db.empty && db.name !== 'local';
@@ -218,6 +219,39 @@ Service.prototype.databases = function(fn){
       return {name: db.name};
     });
     fn(null, dbs);
+  });
+};
+
+
+// Run `dbstats` on `name` and calls `fn(err, stat)` when complete.
+//
+// `stat` has the schema:
+//
+//    {
+//      name: 'mongomin',
+//      collections: 3,
+//      objects: 5,
+//      avgObjSize: 60.8,
+//      dataSize: 304,
+//      storageSize: 24576,
+//      numExtents: 3,
+//      indexes: 1,
+//      indexSize: 8176,
+//      fileSize: 67108864,
+//      nsSizeMB: 16,
+//      dataFileVersion: {major: 4, minor: 5},
+//      extentFreeList: {num: 0, totalSize: 0}
+//    }
+//
+// @param {String} name A database name
+// @param {Function} fn `fn(err, stat)`
+// @api public
+Service.prototype.databaseStat = function(name, fn){
+  this.cmd(name, 'dbstats', 'rows.0', function(err, stat){
+    if(err) return fn(err);
+    stat.name = stat.db;
+    delete stat.db;
+    fn(null, stat);
   });
 };
 
