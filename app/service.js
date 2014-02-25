@@ -170,6 +170,8 @@ Service.prototype.cmd = function(db, name, value, path, fn){
   });
 };
 
+
+
 // Get a list of log `line` strings.
 //
 // @param {String, default:global} optional log name to restrict to (default: global).
@@ -223,7 +225,7 @@ Service.prototype.databases = function(fn){
 };
 
 
-// Run `dbstats` on `name` and calls `fn(err, stat)` when complete.
+// Run `dbstats` on `name` and call `fn(err, stat)` when complete.
 //
 // `stat` has the schema:
 //
@@ -243,15 +245,107 @@ Service.prototype.databases = function(fn){
 //      extentFreeList: {num: 0, totalSize: 0}
 //    }
 //
-// @param {String} name A database name
+// @param {String} db A database name
 // @param {Function} fn `fn(err, stat)`
 // @api public
-Service.prototype.databaseStat = function(name, fn){
-  this.cmd(name, 'dbstats', 'rows.0', function(err, stat){
+Service.prototype.databaseStat = function(db, fn){
+  this.cmd(db, 'dbstats', 'rows.0', function(err, stat){
     if(err) return fn(err);
     stat.name = stat.db;
     delete stat.db;
     fn(null, stat);
+  });
+};
+
+// Run `collstats` command on `db` and call `fn(err, stat)` when complete.
+//
+// `stat` has the schema:
+//
+//    {
+//      name: 'mongomin',
+//      collections: 3,
+//      objects: 5,
+//      avgObjSize: 60.8,
+//      dataSize: 304,
+//      storageSize: 24576,
+//      numExtents: 3,
+//      indexes: 1,
+//      indexSize: 8176,
+//      fileSize: 67108864,
+//      nsSizeMB: 16,
+//      dataFileVersion: {major: 4, minor: 5},
+//      extentFreeList: {num: 0, totalSize: 0}
+//    }
+//
+// @param {String} db A database name
+// @param {Function} fn `fn(err, stat)`
+// @api public
+Service.prototype.collectionStat = function(db, name, fn){
+  this.cmd(db, {'collstats': name}, 'rows.0', function(err, stat){
+    if(err) return fn(err);
+    fn(null, stat);
+  });
+};
+
+// @param {String} db database name
+// @param {String} name collection name
+// @param {String, default:{}} [spec] query spec to use
+// @param {Function} fn `(err, docs)`
+// @api private
+Service.prototype.find = function(db, name, spec, fn){
+  if(typeof spec === 'function'){
+    fn = spec;
+    spec = {};
+  }
+
+  var params = {};
+  this.read('/' + db + '/' + name + '/', params, function(err, data){
+    if(err) return fn(err);
+    var res = data.rows;
+    fn(null, res);
+  });
+
+};
+
+// Get all collections in `db` and call `fn(err, collections)` when complete.
+//
+// `collections` looks like:
+//
+//     [
+//       {
+//         name: 'mongomin.fixture'
+//       }
+//     ]
+// @param {String} db A database name
+// @param {Function} fn `fn(err, collections)`
+// @api public
+Service.prototype.collections = function(db, fn){
+  this.find(db, 'system.namespaces', function(err, collections){
+    if(err) return fn(err);
+    fn(null, collections);
+  });
+};
+
+// Get indexes in `db` and call `fn(err, indexes)` when complete.
+//
+// `indexes` looks like:
+//
+//     [
+//       {
+//         v: 1,
+//         key: {_id: 1},
+//         name: "_id_",
+//         ns: "mongomin.fixture"
+//       }
+//     ]
+//
+// @param {String} db A database name
+// @param {Function} fn `fn(err, indexes)`
+// @api public
+Service.prototype.indexes = function(db, fn){
+  this.find(db, 'system.indexes', function(err, indexes){
+    if(err) return fn(err);
+    fn(null, indexes);
   });
 };
 

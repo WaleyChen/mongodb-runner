@@ -135,21 +135,34 @@ module.exports.Databases = BaseCollection.extend({
   service: 'databases'
 });
 
-module.exports.Collections = BaseCollection.extend({
-  model: Backbone.Model.extend({
-    defaults: {
-      _id: 'analytics',
-      database: 'mongoscope'
-    }
-  })
+// Collections of things under a database.
+var DatabaseAttributeCollection = BaseCollection.extend({
+  initialize: function(opts){
+    this.set('db', opts.db);
+  }
 });
 
-module.exports.Indexes = BaseCollection.extend({
+module.exports.Collections = DatabaseAttributeCollection.extend({
   model: Backbone.Model.extend({
     defaults: {
-      _id: '_id',
-      database: 'analytics',
-      collection: 'mongoscope'
+      name: 'mongomin.fixtures'
     }
-  })
+  }),
+  service: function(){
+    return ['collections', this.get('db')];
+  }
+});
+
+module.exports.Indexes = DatabaseAttributeCollection.extend({
+  model: Backbone.Model.extend({
+    defaults: {
+      v: 1,
+      key: {_id: 1},
+      name: '_id_',
+      ns: 'mongomin.fixture'
+    }
+  }),
+  service: function(){
+    return ['indexes', this.get('db')];
+  }
 });
