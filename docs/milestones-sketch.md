@@ -28,5 +28,9 @@ _Goal_ concrete things to point at on a screen and talk about
   - [ ] bootloader transitions to app
 - [ ] move to LESS and chop up MMS styles instead of copying this monster around
 - [ ] wire in `bootstrap.js` plugins
+
+
+## Stretch
+
 - [ ] basic shell to run queries
 - [ ] top shows delta values only
