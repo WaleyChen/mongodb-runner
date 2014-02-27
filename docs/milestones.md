@@ -1,5 +1,5 @@
 # Milestones
 
-## [Sketch](./milestones-sketch.md)
+## [Sketch](./milestones/sketch.md)
 
-## [MVP](./milestones-mvp.md)
+## [MVP](./milestones/mvp.md)

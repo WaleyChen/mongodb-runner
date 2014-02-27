@@ -29,7 +29,7 @@ micro-framework for thinking about how to tackle this product and remove bias:
 - allows for plenty of room for innovative solutions that would not have been
   included in an official Product Requirements Document or Axure Mock-Up
 
-[persona]: ./ux-personas.md
-[task]: ./ux-tasks.md
-[scenario]: ./ux-scenarios.md
-[taxonomy]: ./ux-taxonomy.md
+[persona]: ./ux/personas.md
+[task]: ./ux/tasks.md
+[scenario]: ./ux/scenarios.md
+[taxonomy]: ./ux/taxonomy.md

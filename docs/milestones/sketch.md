@@ -1,4 +1,4 @@
-# Sketch [Milestone](./milestones.md)
+# Sketch [Milestone](../milestones.md)
 
 _Goal_ concrete things to point at on a screen and talk about
 

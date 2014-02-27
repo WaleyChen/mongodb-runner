@@ -1,4 +1,4 @@
-# MVP [Milestone](./milestones.md)
+# MVP [Milestone](../milestones.md)
 
 _Goal_ Something usable
 

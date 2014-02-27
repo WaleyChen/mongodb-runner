@@ -56,6 +56,6 @@ Don't include:
   chrome console and make their own thing
 
 
-[task]: ./ux-tasks.md
-[scenario]: ./ux-scenarios.md
-[taxonomy]: ./ux-taxonomy.md
+[task]: ./ux/tasks.md
+[scenario]: ./ux/scenarios.md
+[taxonomy]: ./ux/taxonomy.md
