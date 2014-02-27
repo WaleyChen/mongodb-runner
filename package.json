@@ -1,6 +1,7 @@
 {
   "name": "mongoscope",
   "description": "Gleefully work with MongoDB in your browser.",
+  "version": "0.0.1",
   "scripts": {
     "start": "gulp dev",
     "test": "mocha",
