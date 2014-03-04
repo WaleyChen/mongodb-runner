@@ -4,10 +4,55 @@ var stream = require('stream'),
   util = require('util'),
   debug = require('debug')('mongorest:top');
 
-
-function TopStream(db, opts){
+function MongoStream(db, cmd, opts){
   opts = opts || {};
   this.db = db;
+  this.cmd = cmd;
+
+  // How often to sample mongod
+  this.interval = opts.interval || 500;
+  this.intervalId = null;
+  this.readable = false;
+  this.writable = false;
+
+  stream.Readable.call(this, {objectMode: true});
+}
+util.inherits(MongoStream, stream.Readable);
+
+MongoStream.prototype._pause = function(){
+  clearTimeout(this.intervalId);
+};
+
+MongoStream.prototype._resume = function(){
+  var self = this;
+  this.intervalId = setInterval(function(){
+    self.sample(function(err, data){
+      if(err) return self.emit('error', err);
+      self.emit('sample', data);
+    });
+  }, this.interval);
+};
+
+MongoStream.prototype._read = function(){
+  var self = this;
+  this.sample(function(err, data){
+    if(err) return self.emit('error', err);
+    self.emit('first sample', data);
+    self.readble = true;
+    self._resume();
+  });
+};
+
+MongoStream.prototype.sample = function(fn){
+  var self = this;
+  self.db.command(self.cmd, {}, function(err, data){
+    if(err) return fn(err);
+    fn(null, data);
+  });
+};
+
+function TopStream(db, opts){
+  this.prev = null;
   this.computedProperties = {
     'read': ['queries', 'getmore'],
     'write': ['insert', 'update', 'remove'],
@@ -26,50 +71,17 @@ function TopStream(db, opts){
   // regex of namespaces to exclude
   this.exclude = opts.exclude || /^(local|admin)/;
 
-  // How often to poll mongod
-  this.interval = opts.interval || 500;
+  this.on('first sample', function(data){
+    self.prev = self.normalize(data.documents[0].totals);
+  });
 
-  this.prev = null;
-  this.intervalId = null;
-  this.readable = false;
-  this.writable = false;
-
-  stream.Readable.call(this, {objectMode: true});
+  this.on('sample', function(data){
+    self.emit('data', self.calculateDeltas(
+      self.normalize(data.documents[0].totals)));
+  });
+  MongoStream.call(this, db, {top: 1}, opts);
 }
-util.inherits(TopStream, stream.Readable);
-
-TopStream.prototype._pause = function(){
-  clearTimeout(this.intervalId);
-};
-
-TopStream.prototype._resume = function(){
-  var self = this;
-  this.intervalId = setInterval(function(){
-    self.poll(function(err, data){
-      if(err) return self.emit('error', err);
-      self.emit('data', self.calculateDeltas(data));
-    });
-  }, this.interval);
-};
-
-TopStream.prototype._read = function(){
-  var self = this;
-  this.poll(function(err, data){
-    if(err) return self.emit('error', err);
-    self.prev = data;
-    self.readble = true;
-    self._resume();
-  });
-};
-
-TopStream.prototype.poll = function(fn){
-  var self = this;
-
-  self.db.command({top: 1}, {}, function(err, data){
-    if(err) return fn(err);
-    fn(null, self.normalize(data.documents[0].totals));
-  });
-};
+util.inherits(TopStream, MongoStream);
 
 TopStream.prototype.calculateDeltas = function(data){
   var deltas = {}, self = this;
