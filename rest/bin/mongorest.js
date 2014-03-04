@@ -10,7 +10,7 @@ var nconf = require('nconf'),
 
 nconf.env().argv().defaults({
   'url': 'mongodb://localhost',
-  'use': ['log', 'api'],
+  'use': ['log', 'top', 'api'],
   'port': 3000,
   'host': '127.0.0.1'
 });
