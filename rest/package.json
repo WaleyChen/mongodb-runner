@@ -7,7 +7,8 @@
   },
   "scripts": {
     "start": "NODE_ENV=development DEBUG=mongorest:* supervisor ./bin/mongorest.js",
-    "dist": "lone"
+    "dist": "lone",
+    "test": "mocha"
   },
   "dependencies": {
     "express": "~3.4.8",
@@ -18,10 +19,11 @@
     "async": "^0.2.10",
     "debug": "^0.7.4",
     "forever-monitor": "^1.2.3",
-    "underscore": "^1.6.0"
+    "underscore": "^1.6.0",
+    "gauss": "^0.2.9"
   },
   "devDependencies": {
-    "mocha": "~1.17.1",
+    "mocha": "^1.17.1",
     "supervisor": "^0.5.7"
   }
 }
