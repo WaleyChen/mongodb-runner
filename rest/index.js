@@ -32,7 +32,7 @@ module.exports.start = function(){
     debug('connected to mongod');
 
     nconf.get('use').map(function(name){
-      require('./' + name).routes(app);
+      require('./lib/' + name).routes(app);
     });
 
     app.server.listen(nconf.get('port'), function(){
