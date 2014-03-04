@@ -1,11 +1,9 @@
 "use strict";
 
-var stream = require('stream'),
-  util = require('util'),
-  smongo = require('./smongo'),
+var smongo = require('../smongo'),
   debug = require('debug')('mongorest:top');
 
-module.exports.routes = function(app){
+module.exports = function(app){
   var io = app.get('io'),
     top = smongo.createTopStream(app.get('db').admin());
 

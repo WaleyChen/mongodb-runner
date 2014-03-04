@@ -10,7 +10,7 @@ var express = require('express'),
 
 nconf.env().argv().defaults({
   'url': 'mongodb://localhost',
-  'use': ['log', 'top', 'api'],
+  'use': ['api'],
   'port': 3000,
   'host': '127.0.0.1',
   'mongod': '/srv/mongo/bin/mongod',
@@ -29,7 +29,7 @@ module.exports.start = function(){
     debug('connected to mongod');
 
     nconf.get('use').map(function(name){
-      require('./lib/' + name).routes(app);
+      require('./lib/' + name)(app);
     });
 
     app.server.listen(nconf.get('port'), function(){
