@@ -1,14 +1,19 @@
-# Server Features
+# mongorest
 
-Wishlist:
-
+- [ ] compile node app to standalone binary
+- [ ] Get it done: -> pull as much as possible
+    - js
+        - https://github.com/tdegrunt/mongodb-rest
+        - https://github.com/louischatriot/mongo-edit
+        - https://github.com/dealancer/backbone-mongodb
+    - python
+        - https://github.com/fatiherikli/kule
+        - https://github.com/10gen-labs/sleepy.mongoose
 - [ ] CORS
-- [ ] REST API Security thorough and reliable
-- [ ] Versioned REST API URL's
-- [ ] Include mongoscope in binary and static file serving or serve from GridFS?
-- [ ] HTTPS
-- [ ] REST API endpoint to GridFS
-- [ ] REST API endpoint `eval` JS synchronously
-- [ ] Websocket
-- [ ] Use Websocket to `eval` JS asynchronously
-- [ ] HTTP Client JS Client bindings to complete The Ultimate MongoDB Demo
+- [ ] Token based auth
+- [ ] socket.io
+- [ ] Versioned URL's
+- [ ] GridFS as REST
+- [ ] Security Checklist: CSP, XSS, FrameDeny, ClickJack, etc
+- [ ] The Ultimate MongoDB Demo (provides the middleman and node already
+      has everything we need!)

@@ -1,0 +1,23 @@
+{
+  "name": "mongorest",
+  "description": "Wouldn't it be great if monogo just had this stuff builtin instead of rolling it yourself?",
+  "version": "0.0.1",
+  "bin": {
+    "mongorest": "./bin/mongorest.js"
+  },
+  "scripts": {
+    "dist": "lone"
+  },
+  "dependencies": {
+    "express": "~3.4.8",
+    "mongodb": "~1.3.23",
+    "nconf": "~0.6.9",
+    "socket.io": "~0.9.16",
+    "yargs": "^1.2.1",
+    "async": "^0.2.10",
+    "debug": "^0.7.4"
+  },
+  "devDependencies": {
+    "mocha": "~1.17.1"
+  }
+}
