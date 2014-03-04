@@ -7,4 +7,15 @@ module.exports.routes = function(app){
   }
   app.get('/api/v1/log', getLog);
   app.get('/api/v1/log/:name', getLog);
+
+  var io = app.get('io'),
+    top = smongo.createLogStream(app.get('db').admin());
+
+  io.sockets.on('connection', function(socket){
+    socket.on('/log', function(){
+      log.on('data', function(lines){
+        socket.emit('log', lines);
+      });
+    });
+  });
 };

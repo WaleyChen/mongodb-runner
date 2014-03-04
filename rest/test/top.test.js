@@ -1,4 +1,4 @@
-var TopStream = require('../lib/top'),
+var smongo = require('../lib/smongo'),
   connect = require('mongodb').MongoClient.connect,
   assert = require('assert');
 
@@ -14,7 +14,7 @@ describe('top', function(){
     });
   });
   it('should work', function(done){
-    new TopStream(db.admin(), {interval: 50}).on('error', done)
+    smongo.createTopStream(db.admin(), {interval: 50}).on('error', done)
       .on('data', function(data){
         assert(data['admin.total_count'] === undefined,
           'should have excluded admin');
