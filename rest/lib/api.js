@@ -1,53 +1,11 @@
 "use strict";
 
 var async = require('async'),
+  mw = require('./middleware'),
   debug = require('debug')('mongorest:api');
 
-function firstDoc(cb){
-  return function(err, data){
-    if(err) return cb(err);
-    cb(null, data.documents[0] || data.documents);
-  };
-}
-
-function admin(){
-  return function(req, res, next){
-    req.database = req.mongo.admin();
-    next();
-  };
-}
-
-function database(name){
-  return function(req, res, next){
-    req.database = req.mongo.db(name || req.param('database_name'));
-    next();
-  };
-}
-
-function collection(name){
-  return function(req, res, next){
-    req.database.collection(name || req.param('collection_name'), function(err, collection){
-      if(err) return next(err);
-
-      req.collection = collection;
-      next();
-    });
-  };
-}
-
-function find(db, name, spec, fn){
-  db.collection(name, function(err, coll){
-    coll.find({}, function(err, data){
-      if(err) return fn(err);
-      data.toArray(function(err, data){
-        fn(null, data);
-      });
-    });
-  });
-}
-
 module.exports.routes = function(app){
-  app.get('/api/v1', admin(), function(req, res, next){
+  app.get('/api/v1', mw.admin(), function(req, res, next){
     var cmds = {
         build: function(cb){
           req.database.buildInfo(function(err, data){
@@ -121,7 +79,7 @@ module.exports.routes = function(app){
     });
   });
 
-  app.get('/api/v1/:database_name', database(), function(req, res, next){
+  app.get('/api/v1/:database_name', mw.database(), function(req, res, next){
     var cmds = {
       stats: function(cb){
         req.database.command({dbStats: 1}, {}, function(err, data){
@@ -168,7 +126,7 @@ module.exports.routes = function(app){
     });
   });
 
-  app.get('/api/v1/:database_name/:collection_name', database(), collection(), function(req, res, next){
+  app.get('/api/v1/:database_name/:collection_name', mw.database(), mw.collection(), function(req, res, next){
     var ns = req.param('collection_name') + '.' + req.param('database_name'),
       cmds = {
         stats: function(cb){

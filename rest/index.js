@@ -24,10 +24,7 @@ module.exports.start = function(){
   connect(nconf.get('url'), {}, function(err, db){
     app.set('db', db);
 
-    app.use(function(req, res, next){
-      req.mongo = db;
-      next();
-    });
+    app.use(require('./lib/middleware')());
 
     debug('connected to mongod');
 
