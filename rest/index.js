@@ -40,6 +40,7 @@ module.exports.start = function(){
 
     app.server.listen(nconf.get('port'), function(){
       debug('listening', 'http://' + nconf.get('host') + ':' + nconf.get('port'));
+      app.emit('ready', {port: nconf.get('port')});
     });
   });
 };

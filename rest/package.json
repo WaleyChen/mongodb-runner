@@ -2,11 +2,8 @@
   "name": "mongorest",
   "description": "Wouldn't it be great if monogo just had this stuff builtin instead of rolling it yourself?",
   "version": "0.0.1",
-  "bin": {
-    "mongorest": "./bin/mongorest.js"
-  },
   "scripts": {
-    "start": "NODE_ENV=development DEBUG=mongorest:* supervisor ./bin/mongorest.js",
+    "start": "NODE_ENV=development DEBUG=mongorest:* node index",
     "dist": "lone",
     "test": "mocha"
   },

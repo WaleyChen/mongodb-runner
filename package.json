@@ -2,7 +2,17 @@
   "name": "mg",
   "version": "0.0.0",
   "description": "MongoDB Launcher",
-  "dependencies": {},
+  "dependencies": {
+    "yargs": "^1.2.1",
+    "debug": "^0.7.4"
+  },
+  "scripts": {
+    "dist": "lone",
+    "start": "DEBUG=mg:* ./bin/mg.js"
+  },
+  "devDependencies": {
+    "lone": "imlucas/lone"
+  },
   "bin": {
     "mg": "./bin/mg.js"
   }

@@ -7,7 +7,7 @@ var forever = require('forever-monitor'),
   mongolog = require('./mongolog'),
   debug = require('debug')('mg:mongod');
 
-module.exports = function(){
+module.exports.start = function(){
   debug('starting', nconf.get('mongod') + ' --dbpath ' + nconf.get('mongod_dbpath'));
   return new MongodMonitor({
     options: ['--dbpath', nconf.get('mongod_dbpath')],
