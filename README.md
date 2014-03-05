@@ -1,0 +1,3 @@
+# mg
+
+mongodb launcher

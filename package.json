@@ -1,0 +1,9 @@
+{
+  "name": "mg",
+  "version": "0.0.0",
+  "description": "MongoDB Launcher",
+  "dependencies": {},
+  "bin": {
+    "mg": "./bin/mg.js"
+  }
+}

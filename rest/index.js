@@ -6,7 +6,7 @@ var express = require('express'),
   io = require('socket.io').listen(server),
   nconf = require('nconf'),
   connect = require('mongodb').MongoClient.connect,
-  debug = require('debug')('mongorest:app');
+  debug = require('debug')('mg:app:app');
 
 nconf.env().argv().defaults({
   'url': 'mongodb://localhost',
