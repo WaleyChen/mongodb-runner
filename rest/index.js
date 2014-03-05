@@ -8,15 +8,6 @@ var express = require('express'),
   connect = require('mongodb').MongoClient.connect,
   debug = require('debug')('mg:mongorest');
 
-nconf.env().argv().defaults({
-  'url': 'mongodb://localhost',
-  'use': ['api'],
-  'port': 3000,
-  'host': '127.0.0.1',
-  'mongod': '/srv/mongo/bin/mongod',
-  'mongod_dbpath': '/srv/mongo/data/'
-});
-
 module.exports = app;
 module.exports.start = function(){
   app.set('io', io);
