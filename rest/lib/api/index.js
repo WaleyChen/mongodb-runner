@@ -4,22 +4,22 @@ var mw = require('../middleware'),
   debug = require('debug')('mongorest:api');
 
 module.exports = function(app){
-  app.get('/api/v1', mw.admin(), host, database_names, build, function(req, res, next){
+  app.get('/api/v1', host, database_names, build, function(req, res, next){
     res.send({
       database_names: req.mongo.database_names,
       host: req.mongo.host,
       build: req.mongo.build
     });
   });
+
   require('./log')(app);
   require('./top')(app);
-
-  require('./databases')(app);
-  require('./collections')(app);
+  require('./database')(app);
+  require('./collection')(app);
 };
 
 var host = module.exports.host = function host(req, res, next){
-  req.database.command({hostInfo: 1}, {}, function(err, data){
+  req.mongo.admin().command({hostInfo: 1}, {}, function(err, data){
     if(err) return next(err);
 
     data = data.documents[0];
@@ -51,7 +51,7 @@ var host = module.exports.host = function host(req, res, next){
 };
 
 var database_names = module.exports.database_names = function(req, res, next){
-  req.database.listDatabases(function(err, data){
+  req.mongo.admin().listDatabases(function(err, data){
     if(err) return next(err);
 
    req.mongo.database_names = data.databases.filter(function(db){
@@ -64,7 +64,7 @@ var database_names = module.exports.database_names = function(req, res, next){
 };
 
 var build = module.exports.build = function(req, res, next){
-  req.database.buildInfo(function(err, data){
+  req.mongo.admin().buildInfo(function(err, data){
     if(err) return next(err);
 
     req.mongo.build = {

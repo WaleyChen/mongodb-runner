@@ -20,16 +20,22 @@ nconf.env().argv().defaults({
 module.exports = app;
 module.exports.start = function(){
   app.set('io', io);
-  debug('connecting', nconf.get('url'));
+  debug('waiting for connection', nconf.get('url'));
   connect(nconf.get('url'), {}, function(err, db){
     app.set('db', db);
 
-    app.use(require('./lib/middleware')());
+    app.use(require('./lib/middleware')(db));
 
     debug('connected to mongod');
 
     nconf.get('use').map(function(name){
       require('./lib/' + name)(app);
+    });
+
+    app.use(function(err, req, res, next){
+      // Handle http errors bubbled up from middlewares.
+      if(!err.http) return next(err);
+      res.send(err.code, err.message);
     });
 
     app.server.listen(nconf.get('port'), function(){

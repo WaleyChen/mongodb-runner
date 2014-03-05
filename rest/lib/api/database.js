@@ -1,9 +1,12 @@
 "use strict";
 
-var mw = require('../middleware');
+var mw = require('../middleware'),
+  errors = mw.errors,
+  debug = require('debug')('mongorest:database');
 
 module.exports = function(app){
   app.get('/api/v1/:database_name', mw.database(), stats, collection_names, function(req, res, next){
+    debug('building response');
     res.send({
       name: req.param('database_name'),
       collection_names: req.database.collection_names,
@@ -19,6 +22,7 @@ module.exports = function(app){
 };
 
 var stats = module.exports.stats = function(req, res, next){
+  debug('fetching stats');
   req.database.command({dbStats: 1}, {}, function(err, data){
     if(err) return next(err);
 
@@ -39,6 +43,7 @@ var stats = module.exports.stats = function(req, res, next){
 };
 
 var collection_names = module.exports.collection_names = function(req, res, next){
+  debug('fetching collection names');
   req.mongo.find(req.database, 'system.namespaces', {}, function(err, data){
     if(err) return next(err);
 
@@ -47,25 +52,28 @@ var collection_names = module.exports.collection_names = function(req, res, next
     }).map(function(col){
       return col.name.replace(req.database.databaseName + '.', '');
     });
+    next();
   });
 };
 
+// @todo: dont allow creating databases with stupid names like 'databases'.
+// it will just be confusing.
 function create(req, res, next){
-  next(new Error('not implemented'));
+  next(new errors.NotImplemented());
 }
 
 function clone(req, res, next){
-  next(new Error('not implemented'));
+  next(new errors.NotImplemented());
 }
 
 function drop(req, res, next){
-  next(new Error('not implemented'));
+  next(new errors.NotImplemented());
 }
 
 function repair(req, res, next){
-  next(new Error('not implemented'));
+  next(new errors.NotImplemented());
 }
 
 function fsync(req, res, next){
-  next(new Error('not implemented'));
+  next(new errors.NotImplemented());
 }

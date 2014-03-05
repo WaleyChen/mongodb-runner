@@ -1,6 +1,7 @@
 "use strict";
 
-var mw = require('../middleware');
+var mw = require('../middleware'),
+  errors = mw.errors;
 
 module.exports = function(app){
   app.get('/api/v1/:database_name/:collection_name', mw.database(),
@@ -63,27 +64,27 @@ var indexes = module.exports.indexes = function(req, res, next){
 };
 
 function clone(req, res, next){
-  next(new Error('not implemented'));
+  next(new errors.NotImplemented());
 }
 function rename(req, res, next){
-  next(new Error('not implemented'));
+  next(new errors.NotImplemented());
 }
 function remove(req, res, next){
-  next(new Error('not implemented'));
+  next(new errors.NotImplemented());
 }
 function dropIndexes(req, res, next){
-  next(new Error('not implemented'));
+  next(new errors.NotImplemented());
 }
 function compact(req, res, next){
-  next(new Error('not implemented'));
+  next(new errors.NotImplemented());
 }
 function reindex(req, res, next){
-  next(new Error('not implemented'));
+  next(new errors.NotImplemented());
 }
 function touch(req, res, next){
-  next(new Error('not implemented'));
+  next(new errors.NotImplemented());
 }
 function validate(req, res, next){
-  next(new Error('not implemented'));
+  next(new errors.NotImplemented());
 }
 

@@ -61,6 +61,7 @@ CommandStream.prototype.sample = function(fn){
 };
 
 function TopStream(db, opts){
+  opts = opts || {};
   this.prev = null;
   this.computedProperties = {
     'read': ['queries', 'getmore'],
@@ -197,4 +198,5 @@ function LogStream(db, opts){
 
   this.debug = require('debug')('smongo:log');
 }
+util.inherits(LogStream, CommandStream);
 

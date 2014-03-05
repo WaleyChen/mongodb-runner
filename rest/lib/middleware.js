@@ -1,5 +1,7 @@
 "use strict";
 
+var errors = require('./errors');
+
 module.exports = function(db){
   return function(req, res, next){
     req.mongo = db;
@@ -17,6 +19,8 @@ module.exports = function(db){
   };
 };
 
+module.exports.errors = errors;
+
 module.exports.admin = function(){
   return function(req, res, next){
     req.database = req.mongo.admin();
@@ -24,16 +28,18 @@ module.exports.admin = function(){
   };
 };
 
-module.exports.database = function(name){
+module.exports.database = function(){
   return function(req, res, next){
-    req.database = req.mongo.db(name || req.param('database_name'));
+    var name = req.param('database_name');
+    req.database = req.mongo.db(name);
     next();
   };
 };
 
-module.exports.collection = function(name){
+module.exports.collection = function(){
   return function(req, res, next){
-    req.database.collection(name || req.param('collection_name'), function(err, collection){
+    var name = req.param('collection_name');
+    req.database.collection(name, function(err, collection){
       if(err) return next(err);
 
       req.collection = collection;
