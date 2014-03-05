@@ -4,6 +4,7 @@ var forever = require('forever-monitor'),
   nconf = require('nconf'),
   util = require('util'),
   spawn = require('child_process').spawn,
+  mongolog = require('./mongolog'),
   debug = require('debug')('mg:mongod');
 
 module.exports = function(){
@@ -11,7 +12,7 @@ module.exports = function(){
   return new MongodMonitor({
     options: ['--dbpath', nconf.get('mongod_dbpath')],
     command: nconf.get('mongod'),
-    max: 3
+    max: 1
   }).on('exit', function(){
     debug('failed to start');
   }).start();
@@ -43,16 +44,13 @@ MongodMonitor.prototype.trySpawn = function(){
   mongod.stdio[2].setEncoding('utf8');
 
   mongod.stdio[1].on('data', function (data){
-    data.split('\n').map(function(line){
-      if(line.length > 0){
-        mongod.debug(line);
-        if(line.indexOf('waiting for connections') > -1){
-          debug('sending ready');
-          self.emit('ready');
-        }
-        else if(line.indexOf('exception') > -1){
-          mongod.debugErr(line);
-        }
+    mongolog.parse(data.split('\n')).map(function(line){
+      if(line.message.length === 0) return;
+      mongod.debug(line.message);
+
+      if(line.event){
+        debug('emitting', line.event);
+        self.emit(line.event.name, line.event.data);
       }
     });
   });
@@ -63,5 +61,8 @@ MongodMonitor.prototype.trySpawn = function(){
     });
   });
 
+  self.on('error', function(err){
+    console.error('error starting mongod:', err.message);
+  });
   return mongod;
 };

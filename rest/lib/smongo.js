@@ -2,7 +2,7 @@
 
 var stream = require('stream'),
   util = require('util'),
-  regret = require('regret');
+  mongolog = require('./mongolog');
 
 module.exports.createTopStream = function(db, opts){
   return new TopStream(db, opts);
@@ -11,15 +11,6 @@ module.exports.createTopStream = function(db, opts){
 module.exports.createLogStream = function(db, opts){
   return new LogStream(db, opts);
 };
-
-regret.add('isoDate',
-  /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+-[0-5]\d/,
-  '2014-02-13T18:00:04.709-0500');
-
-regret.add('mongodbLogLine',
-  /({{isoDate}}+) \[(\w+)\] (.*)/,
-  '2014-02-13T18:00:04.709-0500 [initandlisten] db version v2.5.6-pre-',
-  ['date', 'name', 'message']);
 
 function CommandStream(db, cmd, opts){
   opts = opts || {};
@@ -112,17 +103,23 @@ TopStream.prototype.calculateDeltas = function(data){
 };
 
 TopStream.prototype.compute = function(ns, data){
-  var self = this;
+  var self = this,
+    summer = function(a, b){
+      return a + b;
+    };
   this.debug('calculating computed properties', ns);
 
   Object.keys(this.computedProperties).map(function(name){
-    data[ns + '/computed_' + name + '/count'] = self.computedProperties[name].map(function(k){
-      return data[ns + '/' + k + '/count'];
-    }).reduce(function(a, b){ return a + b; });
+    var propCount = self.computedProperties[name].length,
+      counts = [], times = [];
 
-    data[ns + '/computed_' + name + '/time'] =  self.computedProperties[name].map(function(k){
-      return data[ns + '/' + k + '/time'];
-    }).reduce(function(a, b){ return a + b; }) / self.computedProperties[name].length;
+    self.computedProperties[name].map(function(k){
+      counts.push(data[ns + '.' + k + '.count']);
+      times.push(data[ns + '.' + k + '.time']);
+    });
+
+    data[ns + '.computed_' + name + '.count'] = counts.reduce(summer);
+    data[ns + '.computed_' + name + '.time'] =  times.reduce(summer) / propCount;
   });
 };
 
@@ -157,9 +154,9 @@ TopStream.prototype.normalize = function(data){
     }
 
     keys.map(function(k){
-      var destKey = ns + '/' + k.toLowerCase();
-      res[destKey + '/count'] = data[ns][k].count;
-      res[destKey + '/time'] = data[ns][k].time;
+      var destKey = ns + '.' + k.toLowerCase();
+      res[destKey + '.count'] = data[ns][k].count;
+      res[destKey + '.time'] = data[ns][k].time;
     });
     self.compute(ns, res);
   });
@@ -170,17 +167,10 @@ function LogStream(db, opts){
   opts = opts || {};
   this.prev = null;
 
-
-  function parse(lines){
-    return lines.map(function(line){
-      return regret('mongodbLogLine', line);
-    });
-  }
-
   var self = this;
   this.on('first sample', function(data){
-    var lines = parse(data.documents[0].log);
-    self.prev = lines[lines.length-1];
+    var lines = mongolog.parse(data.documents[0].log);
+    self.prev = lines[lines.length - 1];
     self.emit('data', lines);
   });
 
@@ -190,7 +180,7 @@ function LogStream(db, opts){
       lines = data.documents[0].log;
 
     while(!converged){
-      var line = parse(lines.pop());
+      var line = mongolog.parse(lines.pop());
       if(line.message === self.prev.message){
         converged = true;
         return;
@@ -199,7 +189,6 @@ function LogStream(db, opts){
     }
 
     if(newLines.length > 0){
-      newLines.reverse();
       self.emit(newLines);
     }
   });
