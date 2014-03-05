@@ -1,7 +1,7 @@
 "use strict";
 
 var mw = require('../middleware'),
-  debug = require('debug')('mongorest:api');
+  debug = require('debug')('mg:mongorest:api');
 
 module.exports = function(app){
   app.get('/api/v1', host, database_names, build, function(req, res, next){

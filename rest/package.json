@@ -18,7 +18,9 @@
     "forever-monitor": "^1.2.3",
     "underscore": "^1.6.0",
     "gauss": "^0.2.9",
-    "regret": "^0.1.1"
+    "regret": "^0.1.1",
+    "mongolog": "0.0.1",
+    "mongodmon": "0.0.1"
   },
   "devDependencies": {
     "mocha": "^1.17.1",

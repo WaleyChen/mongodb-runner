@@ -1,7 +1,7 @@
 "use strict";
 
 var smongo = require('../smongo'),
-  debug = require('debug')('mongorest:top');
+  debug = require('debug')('mg:mongorest:top');
 
 module.exports = function(app){
   var io = app.get('io'),

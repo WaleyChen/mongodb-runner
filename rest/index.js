@@ -6,7 +6,7 @@ var express = require('express'),
   io = require('socket.io').listen(server),
   nconf = require('nconf'),
   connect = require('mongodb').MongoClient.connect,
-  debug = require('debug')('mg:app:app');
+  debug = require('debug')('mg:mongorest');
 
 nconf.env().argv().defaults({
   'url': 'mongodb://localhost',
@@ -33,7 +33,7 @@ module.exports.start = function(){
     });
 
     app.use(function(err, req, res, next){
-      // Handle http errors bubbled up from middlewares.
+      // handle http errors bubbled up from middlewares.
       if(!err.http) return next(err);
       res.send(err.code, err.message);
     });

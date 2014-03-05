@@ -9,7 +9,7 @@ var yargs = require('yargs')
   argv = yargs.argv,
   debug = require('debug')('mg'),
   apps = {
-    'mongod': require('../rest/lib/mongod'),
+    'mongod': require('mongodmon'),
     'mongorest': require('../rest')
   },
   all = Object.keys(apps),

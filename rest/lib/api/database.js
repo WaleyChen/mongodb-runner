@@ -2,7 +2,7 @@
 
 var mw = require('../middleware'),
   errors = mw.errors,
-  debug = require('debug')('mongorest:database');
+  debug = require('debug')('mg:mongorest:database');
 
 module.exports = function(app){
   app.get('/api/v1/:database_name', mw.database(), stats, collection_names, function(req, res, next){

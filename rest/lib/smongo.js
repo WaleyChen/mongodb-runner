@@ -2,7 +2,7 @@
 
 var stream = require('stream'),
   util = require('util'),
-  mongolog = require('./mongolog');
+  mongolog = require('mongolog');
 
 module.exports.createTopStream = function(db, opts){
   return new TopStream(db, opts);
@@ -16,7 +16,7 @@ function CommandStream(db, cmd, opts){
   opts = opts || {};
   this.db = db;
   this.cmd = cmd;
-  this.debug = require('debug')('smongo:command');
+  this.debug = require('debug')('mg:smongo:command');
 
   // How often to sample mongod
   this.interval = opts.interval || 500;
@@ -91,7 +91,7 @@ function TopStream(db, opts){
   });
   CommandStream.call(this, db, {top: 1}, opts);
 
-  this.debug = require('debug')('smongo:top');
+  this.debug = require('debug')('mg:smongo:top');
 }
 util.inherits(TopStream, CommandStream);
 
@@ -196,7 +196,7 @@ function LogStream(db, opts){
 
   CommandStream.call(this, db, {getLog: opts.name || 'global'}, opts);
 
-  this.debug = require('debug')('smongo:log');
+  this.debug = require('debug')('mg:smongo:log');
 }
 util.inherits(LogStream, CommandStream);
 
