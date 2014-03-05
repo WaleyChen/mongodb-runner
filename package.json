@@ -8,7 +8,9 @@
   },
   "scripts": {
     "dist": "lone",
-    "start": "DEBUG=mg:* ./bin/mg.js"
+    "start": "DEBUG=mg:* ./bin/mg.js",
+    "test": "cd rest && npm test && cd ../; cd scope && npm test && cd ../;",
+    "install": "npm link rest/; npm link scope/;"
   },
   "devDependencies": {
     "lone": "imlucas/lone"
