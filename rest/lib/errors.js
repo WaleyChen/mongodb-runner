@@ -7,6 +7,7 @@ var http = function(code, message, ref){
   Error.captureStackTrace(err, ref);
   return err;
 };
+
 module.exports.NotImplemented = function(){
   return http(418, 'Coming Soon', module.exports.NotImplemented);
 };
