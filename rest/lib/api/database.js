@@ -1,6 +1,6 @@
 "use strict";
 
-var mw = require('../middleware'),
+var mw = require('../db-middleware'),
   errors = mw.errors,
   debug = require('debug')('mg:mongorest:database');
 

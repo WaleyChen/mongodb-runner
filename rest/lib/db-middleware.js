@@ -1,10 +1,11 @@
 "use strict";
 
-var errors = require('./errors');
+"use strict";
 
-module.exports = function(db){
+module.exports = function(app){
   return function(req, res, next){
-    req.mongo = db;
+    req.mongo = app.get('db');
+
     req.mongo.find = function find(db, name, spec, fn){
       db.collection(name, function(err, coll){
         coll.find({}, function(err, data){
@@ -18,8 +19,6 @@ module.exports = function(db){
     next();
   };
 };
-
-module.exports.errors = errors;
 
 module.exports.admin = function(){
   return function(req, res, next){

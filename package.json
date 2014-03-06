@@ -5,8 +5,8 @@
   "dependencies": {
     "yargs": "^1.2.1",
     "debug": "^0.7.4",
-    "mongodmon": "0.0.1",
-    "nconf": "^0.6.9"
+    "mongodmon": "^0.1.1",
+    "underscore": "^1.6.0"
   },
   "scripts": {
     "dist": "lone",

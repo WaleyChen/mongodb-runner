@@ -1,5 +1,6 @@
+"use strict";
+
 var http = function(code, message, ref){
-  console.log('http called', message, code, ref);
   var err = new Error();
   err.code = code;
   err.http = true;
