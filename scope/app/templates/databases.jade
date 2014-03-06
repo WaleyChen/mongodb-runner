@@ -1,39 +1,14 @@
 include mixins/cog
 include mixins/bytes
 
-
 .row
   .col-md-4
     .panel.panel-default
       .panel-heading
         h2 databases
-          a.btn.btn-primary.pull-right(data-action='create', title='create new database')
-            i.glyphicon.glyphicon-plus
-            | create
 
       ul.list-group.panel-body
        - for database in databases
         li.list-group-item
-          a(href='#dbs/#{database.name}')
-            h3.pull-left(style='margin: 0px;') #{database.name}
-
-  .col-md-4
-    .panel.panel-default
-      .panel-heading
-        h2 collections
-
-      ul.list-group.panel-body
-       - for collection in collections
-        li.list-group-item
-          a(href='#collections/#{collection.db}/#{collection.name}')
-            h3.pull-left(style='margin: 0px;') #{collection.db}.#{collection.name}
-  .col-md-4
-    .panel.panel-default
-      .panel-heading
-        h2 indexes
-
-      ul.list-group.panel-body
-       - for index in indexes
-        li.list-group-item
-          a(href='#indexes/#{index.db}/#{index.collection}/#{index.name}')
-            h3.pull-left(style='margin: 0px;') #{index.db}.#{index.collection}.#{index.name}
+          a(href='#dbs/#{database_name}')
+            h3.pull-left(style='margin: 0px;') #{database_name}
