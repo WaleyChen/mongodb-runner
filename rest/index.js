@@ -67,6 +67,7 @@ function middleware(){
     if(!err.http) return next(err);
     res.send(err.code, err.message);
   });
+  listen();
 }
 
 function listen(){
