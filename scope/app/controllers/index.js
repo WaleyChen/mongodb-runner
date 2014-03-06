@@ -57,6 +57,8 @@ function splint(){
   return router;
 }
 
+require('../models')({host: '127.0.0.1', port: 3000});
+
 module.exports = function(opts){
   return splint(
     ['info',  new (require('./info'))()],
