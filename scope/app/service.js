@@ -33,7 +33,7 @@ Service.prototype.read = function(pathname, params, fn){
 
   debug('get', this.origin + '/api/v1' + pathname, params);
 
-  $.get(this.origin + pathname, params, function(data){
+  $.get(this.origin + '/api/v1' + pathname, params, function(data){
     if(typeof data === 'string'){
       data = JSON.parse(data);
     }

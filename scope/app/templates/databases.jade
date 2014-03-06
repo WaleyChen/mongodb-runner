@@ -8,7 +8,7 @@ include mixins/bytes
         h2 databases
 
       ul.list-group.panel-body
-       - for database in databases
+       - for database_name in instance.database_names
         li.list-group-item
           a(href='#dbs/#{database_name}')
             h3.pull-left(style='margin: 0px;') #{database_name}

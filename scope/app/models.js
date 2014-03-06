@@ -2,12 +2,20 @@ var Backbone = require('backbone'),
   Service = require('./service'),
   debug = require('debug')('mg:scope:models');
 
-var settings, instance;
+
+module.exports = function(opts){
+  module.exports.settings = new Settings(opts);
+  module.exports.instance = new Instance({settings: module.exports.settings});
+  return module.exports.instance;
+};
+
+module.exports.settings = null;
+module.exports.instance = null;
 
 var Model = Backbone.Model.extend({
     service: null,
     sync: function(method, model, options){
-      instance.backend[this.service](function(err, data){
+      module.exports.instance.backend[this.service](function(err, data){
         if(err) return options.error(err);
         options.success(data);
       });
@@ -28,16 +36,17 @@ var Model = Backbone.Model.extend({
         if(err) return options.error(err);
         options.success(data);
       });
-      instance.backend[this.service].apply(instance.backend, args);
+      module.exports.instance.backend[this.service].apply(instance.backend, args);
     }
   });
 
-var Settings = Backbond.Model.extend({
+var Settings = Backbone.Model.extend({
     defaults: {
       host: window.document.hostname,
       port: 3000
     }
-  }),Instance = Backbone.Model.extend({
+  }),
+  Instance = Backbone.Model.extend({
     defaults: {
       database_names: ['mongomin'],
       host: {
@@ -76,6 +85,7 @@ var Settings = Backbond.Model.extend({
       }
     },
     initialize: function(opts){
+      debug('instance options', opts);
       this.settings = opts.settings;
       this.backend = new Service(opts.settings.get('host'), opts.settings.get('port'));
       this.fetch();
@@ -87,12 +97,6 @@ var Settings = Backbond.Model.extend({
       });
     }
   });
-
-module.exports = function(opts){
-  settings = new Settings(opts);
-  instance = new Instance(settings);
-  return instance;
-};
 
 module.exports.Database = Model.extend({
   service: function(){
@@ -164,5 +168,3 @@ module.exports.Log = List.extend({
   }),
   service: 'log'
 });
-
-module.exports.instance = instance;
