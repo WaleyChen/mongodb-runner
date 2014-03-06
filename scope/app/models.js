@@ -36,7 +36,7 @@ var Model = Backbone.Model.extend({
         if(err) return options.error(err);
         options.success(data);
       });
-      module.exports.instance.backend[this.service].apply(instance.backend, args);
+      module.exports.instance.backend[this.service].apply(module.exports.instance.backend, args);
     }
   });
 

@@ -61,6 +61,7 @@ require('../models')({host: '127.0.0.1', port: 3000});
 
 module.exports = function(opts){
   return splint(
-    ['dbs',  new (require('./dbs'))(), {index: true}]
+    ['dbs',  new (require('./dbs'))(), {index: true}],
+    ['log',  new (require('./log'))()]
   );
 };

@@ -1,6 +1,7 @@
 "use strict";
 
-var smongo = require('../smongo');
+var smongo = require('../smongo'),
+  mongolog = require('mongolog');
 
 module.exports = function(app){
   app.get('/api/v1/log', get);
@@ -21,6 +22,6 @@ module.exports = function(app){
 var get = module.exports.get = function(req, res, next){
   req.mongo.admin().command({getLog: req.param('name', 'global')}, function(err, data){
     if(err) return next(err);
-    res.send(data.documents[0].log);
+    res.send(mongolog.parse(data.documents[0].log));
   });
 };
