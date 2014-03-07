@@ -1,3 +1,5 @@
+"use strict";
+
 var smongo = require('../lib/smongo'),
   connect = require('mongodb').MongoClient.connect,
   assert = require('assert');
@@ -14,13 +16,18 @@ describe('top', function(){
   });
   it('should work', function(done){
     smongo.createTopStream(db.admin(), {interval: 10}).on('error', done)
-      .on('data', function(data){
-        var adminKeys = Object.keys(data).filter(function(k){
+      .on('data', function(res){
+        var adminKeys = Object.keys(res.deltas).filter(function(k){
               return (/^admin/).test(k);
             }),
-            nans = Object.keys(data).filter(function(k){
-              return isNaN(data[k]);
+            nans = Object.keys(res.deltas).filter(function(k){
+              return isNaN(res.deltas[k]);
             });
+        assert(res.namespaces.length > 0,
+          'no namespaces: ' + res.namespaces);
+
+        assert(Object.keys(res.deltas).length > 0,
+          'no deltas: ' + JSON.stringify(res.deltas));
 
         assert(adminKeys.length === 0, 'exclude admin namespaces: ' + adminKeys);
         assert(nans.length === 0, 'contains NaNs: ' + nans);

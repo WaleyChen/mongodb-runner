@@ -2,7 +2,8 @@
 
 var stream = require('stream'),
   util = require('util'),
-  mongolog = require('mongolog');
+  mongolog = require('mongolog'),
+  debug = require('debug')('mg:smongo');
 
 module.exports.createTopStream = function(db, opts){
   return new TopStream(db, opts);
@@ -63,7 +64,6 @@ CommandStream.prototype.sample = function(fn){
 function TopStream(db, opts){
   opts = opts || {};
   this.prev = null;
-  this.namespaces = [];
 
   this.computedProperties = {
     'read': ['queries', 'getmore'],
@@ -84,7 +84,10 @@ function TopStream(db, opts){
   this.exclude = opts.exclude || /(^(local|admin)|(system\.indexes|system\.namespaces))/;
 
   this.on('first sample', function(data){
-    self.prev = self.normalize(data.documents[0].totals);
+    var res = self.prev = self.normalize(data.documents[0].totals);
+    debug('#firstsample');
+    debug('mongodmon.namespaces.count', res.namespaces.length);
+    debug('mongodmon.metrics.count', res.metric_count);
   });
 
 
@@ -92,26 +95,41 @@ function TopStream(db, opts){
   // data[collection_name]['total']['count'] and data[collection_name]['total']['time']
   // values against those in prev and only do normalization, computation, and
   // emit if there was actually a change.
+  //
+  // @todo: if new metrics were added in this sample, pull them out
+  // to their own key?
   this.on('sample', function(data){
-    var deltas = self.calculateDeltas(self.normalize(data.documents[0].totals));
-    self.emit('data', {namespaces: self.namespaces, deltas: deltas});
+    var res = self.normalize(data.documents[0].totals);
+
+    if(res.metrics.length === 0) return debug('empty instance');
+
+    debug('#sample');
+    debug('mongodmon.namespaces.count', res.namespaces.length);
+    debug('mongodmon.metrics.count', res.metric_count);
+
+    self.emit('data', {
+      namespaces: res.namespaces,
+      deltas: self.calculateDeltas(res.metrics)
+    });
+
+    self.prev = res;
   });
+
   CommandStream.call(this, db, {top: 1}, opts);
 
   this.debug = require('debug')('mg:smongo:top');
 }
 util.inherits(TopStream, CommandStream);
 
-TopStream.prototype.calculateDeltas = function(data){
+TopStream.prototype.calculateDeltas = function(metrics){
   var deltas = {}, self = this;
-  Object.keys(data).map(function(key){
-    // deltas[key + '_src'] = data[key];
-    deltas[key] = data[key] - self.prev[key];
+  Object.keys(metrics).map(function(key){
+    deltas[key] = metrics[key] - self.prev.metrics[key];
   });
   return deltas;
 };
 
-TopStream.prototype.compute = function(ns, data){
+TopStream.prototype.compute = function(ns, res){
   var self = this,
     summer = function(a, b){
       return a + b;
@@ -122,12 +140,12 @@ TopStream.prototype.compute = function(ns, data){
       counts = [], times = [];
 
     self.computedProperties[name].map(function(k){
-      counts.push(data[ns + '.' + k + '.count']);
-      times.push(data[ns + '.' + k + '.time']);
+      counts.push(res.metrics[ns + '.' + k + '.count']);
+      times.push(res.metrics[ns + '.' + k + '.time']);
     });
 
-    data[ns + '.' + name + '.count'] = counts.reduce(summer);
-    data[ns + '.' + name + '.time'] =  times.reduce(summer) / propCount;
+    res.metrics[ns + '.' + name + '.count'] = counts.reduce(summer);
+    res.metrics[ns + '.' + name + '.time'] =  times.reduce(summer) / propCount;
   });
 };
 
@@ -148,8 +166,11 @@ TopStream.prototype.normalize = function(data){
       'commands'
     ],
     self = this,
-    res = {};
-  this.namespaces = [];
+    res = {
+      namespaces: [],
+      metrics: {},
+      metric_count: 0
+    };
 
   Object.keys(data).map(function(ns){
     if(ns === ''){
@@ -157,12 +178,13 @@ TopStream.prototype.normalize = function(data){
       return;
     }
     if(self.exclude.test(ns)) return;
-    self.namespaces.push(ns);
+    res.namespaces.push(ns);
 
     keys.map(function(k){
-      var destKey = ns + '.' + k.toLowerCase();
-      res[destKey + '.count'] = data[ns][k].count;
-      res[destKey + '.time'] = data[ns][k].time;
+      var metric = ns + '.' + k.toLowerCase();
+      res.metrics[metric + '.count'] = data[ns][k].count;
+      res.metrics[metric + '.time'] = data[ns][k].time;
+      res.metric_count++;
     });
     self.compute(ns, res);
   });

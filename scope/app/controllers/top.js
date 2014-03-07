@@ -15,7 +15,9 @@ module.exports = Backbone.View.extend({
       .on('error', this.render, this);
   },
   activate: function(){
-    this.top.subscribe();
+    this.top
+      .subscribe()
+      .fetch();
   },
   deactivate: function(){
     this.top.unsubscribe();

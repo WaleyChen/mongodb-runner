@@ -50,14 +50,14 @@ Service.prototype.read = function(pathname, params, fn){
     params = {};
   }
 
-  debug('get', this.origin + '/api/v1' + pathname, params);
+  debug('$get  ' + pathname, params);
 
   $.get(this.origin + '/api/v1' + pathname, params, function(data){
     if(typeof data === 'string'){
       data = JSON.parse(data);
     }
 
-    debug('res', data);
+    debug('$res  ' + pathname, data);
     fn(null, data);
   });
 };
@@ -182,21 +182,25 @@ var mixins = {
       uri: _.result(this, 'uri')
     });
 
+    debug('$sub  ' + options.uri);
     srv.io
       .on(options.uri, this.iohandler.bind(this))
       .emit(options.uri);
     this.trigger('subscribed', this, srv.io, options);
+    return this;
   },
   unsunscribe: function(options){
     _.defaults(options || (options = {}), {
       uri: _.result(this, 'uri')
     });
 
+    debug('$unsub ' + options.uri);
     srv.io
       .off(options.uri, this.iohandler.bind(this))
       .emit(_.result(this, 'url') + '/unsubscribe');
 
     this.trigger('unsubscribed', this, srv.io, options);
+    return this;
   }
 };
 
