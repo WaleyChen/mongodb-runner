@@ -63,6 +63,8 @@ CommandStream.prototype.sample = function(fn){
 function TopStream(db, opts){
   opts = opts || {};
   this.prev = null;
+  this.namespaces = [];
+
   this.computedProperties = {
     'read': ['queries', 'getmore'],
     'write': ['insert', 'update', 'remove'],
@@ -79,15 +81,20 @@ function TopStream(db, opts){
   }
 
   // regex of namespaces to exclude
-  this.exclude = opts.exclude || /^(local|admin)/;
+  this.exclude = opts.exclude || /(^(local|admin)|(system\.indexes|system\.namespaces))/;
 
   this.on('first sample', function(data){
     self.prev = self.normalize(data.documents[0].totals);
   });
 
+
+  // @todo: we can just check compare the raw
+  // data[collection_name]['total']['count'] and data[collection_name]['total']['time']
+  // values against those in prev and only do normalization, computation, and
+  // emit if there was actually a change.
   this.on('sample', function(data){
-    self.emit('data', self.calculateDeltas(
-      self.normalize(data.documents[0].totals)));
+    var deltas = self.calculateDeltas(self.normalize(data.documents[0].totals));
+    self.emit('data', {namespaces: self.namespaces, deltas: deltas});
   });
   CommandStream.call(this, db, {top: 1}, opts);
 
@@ -98,6 +105,7 @@ util.inherits(TopStream, CommandStream);
 TopStream.prototype.calculateDeltas = function(data){
   var deltas = {}, self = this;
   Object.keys(data).map(function(key){
+    // deltas[key + '_src'] = data[key];
     deltas[key] = data[key] - self.prev[key];
   });
   return deltas;
@@ -108,7 +116,6 @@ TopStream.prototype.compute = function(ns, data){
     summer = function(a, b){
       return a + b;
     };
-  this.debug('calculating computed properties', ns);
 
   Object.keys(this.computedProperties).map(function(name){
     var propCount = self.computedProperties[name].length,
@@ -119,13 +126,12 @@ TopStream.prototype.compute = function(ns, data){
       times.push(data[ns + '.' + k + '.time']);
     });
 
-    data[ns + '.computed_' + name + '.count'] = counts.reduce(summer);
-    data[ns + '.computed_' + name + '.time'] =  times.reduce(summer) / propCount;
+    data[ns + '.' + name + '.count'] = counts.reduce(summer);
+    data[ns + '.' + name + '.time'] =  times.reduce(summer) / propCount;
   });
 };
 
 TopStream.prototype.normalize = function(data){
-  this.debug('normalizing server response');
   // this.total = data[':'];
   delete data[':'];
   delete data.note;
@@ -143,16 +149,15 @@ TopStream.prototype.normalize = function(data){
     ],
     self = this,
     res = {};
+  this.namespaces = [];
 
   Object.keys(data).map(function(ns){
     if(ns === ''){
       // Exclude total
       return;
     }
-    if(self.exclude.test(ns)){
-      self.debug('excluding', ns);
-      return;
-    }
+    if(self.exclude.test(ns)) return;
+    self.namespaces.push(ns);
 
     keys.map(function(k){
       var destKey = ns + '.' + k.toLowerCase();

@@ -7,6 +7,13 @@ module.exports = function(app){
   var io = app.get('io'),
     top = smongo.createTopStream(app.get('db').admin());
 
+  app.get('/api/v1/top', function(req, res, next){
+    top.once('data', function(d){
+      res.send(d);
+    });
+    top.read();
+  });
+
   io.sockets.on('connection', function(socket){
     socket.on('/top', function(){
       top.on('data', function(topDeltas){

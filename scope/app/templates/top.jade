@@ -1,16 +1,18 @@
-h2
-- var keys = ['name', 'total', 'read', 'write', 'lock', 'readLock', 'writeLock', 'queries', 'getmore', 'insert', 'update', 'remove', 'commands']
-
 table.grid.table.table-condensed.table-hover
   thead
     tr
-     - for k in keys
-      th= k
+      th &nbsp;
+      th #total/#lock
+      th lock time
+      th #readlock/#writelock
+      th #read/#write
+      th #insert/#update
   tbody
    - for ns in namespaces
     tr
-     - for k in keys
-      if k === 'name'
-        td #{ns[k]}
-      else
-        td #{ns[k].count} (#{ns[k].time}μs)
+      td #{ns}
+      td #{deltas[ns + '.total.count']}/#{deltas[ns + '.lock.count']}
+      td #{deltas[ns + '.lock.time']}µs
+      td #{deltas[ns + '.readlock.count']}/#{deltas[ns + '.writelock.count']}
+      td #{deltas[ns + '.read.count']}/#{deltas[ns + '.write.count']}
+      td #{deltas[ns + '.insert.count']}/#{deltas[ns + '.update.count']}

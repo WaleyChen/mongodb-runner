@@ -42,22 +42,6 @@ function mg(argv){
     }
   });
 }
-//   var names = ['mongod', 'mongorest'], prev;
-
-//   debug('starting ' + names.length + ' apps....');
-//   // prev = module.exports[names.shift()]();
-
-  // while(names.length > 0){
-  //   var name = names.shift();
-  //   debug('start', name);
-  // }
-//     if(prev){
-//       debug('waiting until previous app says it is ready...');
-//       prev.on('ready', function(){
-//         debug('starting ' + name);
-//         prev = apps[name].start();
-//       });
-//     }
 
 mg.settings = {
   examples: [

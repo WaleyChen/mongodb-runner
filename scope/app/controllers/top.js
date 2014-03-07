@@ -17,22 +17,16 @@ module.exports = Backbone.View.extend({
   activate: function(){
     var self = this;
     self.top.fetch();
-    if(!self.interval){
-      self.interval = setInterval(function(){
-        self.top.fetch();
-      }, 1000);
-    }
+    this.top.subscribe('top');
   },
   deactivate: function(){
-    if(this.interval){
-      clearInterval(this.interval);
-    }
+    this.top.unsubscribe('top');
   },
   render: function(){
-    var self = this;
-    // @todo: Use webworker for log processing instead of animation frame?
+    var self = this,
+      ctx = self.top.toJSON();
+
     requestAnimationFrame(function(){
-      var ctx = self.top.toJSON();
       self.$el.html(self.tpl(ctx));
       return self;
     });

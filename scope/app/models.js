@@ -14,6 +14,19 @@ module.exports.instance = null;
 
 var Model = Backbone.Model.extend({
     service: null,
+    iohandler: function(data){
+      if (!this.set(data)) return false;
+      this.trigger('sync', this, data, {});
+    },
+    subscribe: function(name){
+      var io = module.exports.instance.backend.io;
+      io.on(name, this.iohandler.bind(this));
+      io.emit('/' + name);
+    },
+    unsunscribe: function(name){
+      io.off(name, this.iohandler.bind(this));
+      io.emit('/' + name + '/unsubscribe');
+    },
     sync: function(method, model, options){
       module.exports.instance.backend[this.service](function(err, data){
         if(err) return options.error(err);

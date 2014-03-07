@@ -29,6 +29,7 @@ module.exports = function(name){
       delete argv[k];
     }
   });
+
   app(argv);
 };
 

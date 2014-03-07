@@ -1,7 +1,7 @@
 "use strict";
 
 var mw = require('../db-middleware'),
-  errors = mw.errors,
+  errors = require('./errors'),
   debug = require('debug')('mg:mongorest:database');
 
 module.exports = function(app){
@@ -25,7 +25,7 @@ var stats = module.exports.stats = function(req, res, next){
   debug('fetching stats');
   req.database.command({dbStats: 1}, {}, function(err, data){
     if(err) return next(err);
-
+    if(!data.extentFreeList) return next(errors.NotFound('unknown database ' + req.database.databaseName));
     req.database.stats = {
       object_count: data.objects,
       object_size: data.dataSize,

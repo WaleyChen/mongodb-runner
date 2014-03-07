@@ -1,7 +1,8 @@
 "use strict";
 
 var $ = require('jquery'),
-  debug = require('debug')('mg:scope:service');
+  debug = require('debug')('mg:scope:service'),
+  socketio = require('socket.io-client');
 
 // Wrap the MongoDB REST API in a pretty interface.
 //
@@ -17,6 +18,15 @@ function Service(hostname, port){
   this.hostname = hostname || 'localhost';
   this.port = port || 3000;
   this.origin = 'http://' + this.hostname + ':' + this.port;
+
+  this.io = socketio.connect(this.origin);
+  this.io.on('connect', function(){
+    debug('socketio connected');
+  });
+
+  this.io.on('connect_error', function(err){
+    debug('socketio connection error :(', err);
+  });
 }
 
 // Get parsed JSON from `pathname` and call `fn(err, data)` when complete.
