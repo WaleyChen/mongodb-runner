@@ -12,7 +12,7 @@ module.exports = function(app){
     top.once('data', function(d){
       res.send(d);
     });
-    top.read();
+    top.read(1);
   });
 
   function pipe(uri, io, readable){

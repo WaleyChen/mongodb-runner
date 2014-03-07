@@ -15,7 +15,7 @@ describe('top', function(){
     });
   });
   it('should work', function(done){
-    smongo.createTopStream(db.admin(), {interval: 10}).on('error', done)
+    smongo.createTopStream(db.admin(), {interval: 100}).on('error', done)
       .on('data', function(res){
         var adminKeys = Object.keys(res.deltas).filter(function(k){
               return (/^admin/).test(k);

@@ -175,6 +175,10 @@ var mixins = {
   service: null,
   iohandler: function(data){
     if (!this.set(data)) return false;
+
+    if(this.hasChanged('deltas')){
+      debug('$chang', 'deltas');
+    }
     this.trigger('sync', this, data, {});
   },
   subscribe: function(options){

@@ -33,23 +33,27 @@ CommandStream.prototype._pause = function(){
   clearTimeout(this.intervalId);
 };
 
-CommandStream.prototype._resume = function(){
+CommandStream.prototype._resume = function(size){
   var self = this;
-  this.intervalId = setInterval(function(){
+  function go(){
     self.sample(function(err, data){
       if(err) return self.emit('error', err);
       self.emit('sample', data);
     });
+  }
+
+  this.intervalId = setInterval(function(){
+    go();
   }, this.interval);
 };
 
-CommandStream.prototype._read = function(){
+CommandStream.prototype._read = function(size){
   var self = this;
   this.sample(function(err, data){
     if(err) return self.emit('error', err);
     self.emit('first sample', data);
     self.readble = true;
-    self._resume();
+    self._resume(size);
   });
 };
 
@@ -64,6 +68,7 @@ CommandStream.prototype.sample = function(fn){
 function TopStream(db, opts){
   opts = opts || {};
   this.prev = null;
+  this.sampleCount = 0;
 
   this.computedProperties = {
     'read': ['queries', 'getmore'],
@@ -85,32 +90,27 @@ function TopStream(db, opts){
 
   this.on('first sample', function(data){
     var res = self.prev = self.normalize(data.documents[0].totals);
-    debug('#firstsample');
+    debug('#sample', -1);
     debug('mongodmon.namespaces.count', res.namespaces.length);
     debug('mongodmon.metrics.count', res.metric_count);
   });
 
 
-  // @todo: we can just check compare the raw
-  // data[collection_name]['total']['count'] and data[collection_name]['total']['time']
-  // values against those in prev and only do normalization, computation, and
-  // emit if there was actually a change.
-  //
   // @todo: if new metrics were added in this sample, pull them out
   // to their own key?
-  this.on('sample', function(data){
+  this.on('sample', function(data, force){
     var res = self.normalize(data.documents[0].totals);
 
     if(res.metrics.length === 0) return debug('empty instance');
 
-    debug('#sample');
-    debug('mongodmon.namespaces.count', res.namespaces.length);
-    debug('mongodmon.metrics.count', res.metric_count);
-
     self.emit('data', {
       namespaces: res.namespaces,
       deltas: self.calculateDeltas(res.metrics)
-    });
+    }, force);
+    // debug('#sample', self.sampleCount);
+    // debug('mongodmon.namespaces.count', res.namespaces.length);
+    // debug('mongodmon.metrics.count', res.metric_count);
+    self.sampleCount++;
 
     self.prev = res;
   });
@@ -150,7 +150,7 @@ TopStream.prototype.compute = function(ns, res){
 };
 
 TopStream.prototype.normalize = function(data){
-  // this.total = data[':'];
+  var totals = data[':'];
   delete data[':'];
   delete data.note;
 
@@ -167,27 +167,42 @@ TopStream.prototype.normalize = function(data){
     ],
     self = this,
     res = {
+      time: new Date(),
       namespaces: [],
       metrics: {},
       metric_count: 0
     };
 
   Object.keys(data).map(function(ns){
+    if(self.exclude.test(ns)) return;
+
+    var src = ns, dest = ns;
     if(ns === ''){
-      // Exclude total
+      dest = 'total';
+    }
+
+    // @todo: bit confusing right now, so just comment out to turn back on
+    if(dest === 'total'){
       return;
     }
-    if(self.exclude.test(ns)) return;
-    res.namespaces.push(ns);
+    res.namespaces.push(dest);
 
     keys.map(function(k){
-      var metric = ns + '.' + k.toLowerCase();
-      res.metrics[metric + '.count'] = data[ns][k].count;
-      res.metrics[metric + '.time'] = data[ns][k].time;
+      var metric = dest + '.' + k.toLowerCase();
+      res.metrics[metric + '.count'] = data[src][k].count;
+      res.metrics[metric + '.time'] = data[src][k].time;
       res.metric_count++;
     });
-    self.compute(ns, res);
+
+    if(dest !== 'total'){
+      self.compute(ns, res);
+    }
   });
+
+  res.changed = self.prev && (
+    this.prev.metrics['total.count'] !== res.metrics['total.count'] ||
+    this.prev.metrics['total.time'] !== res.metrics['total.time']);
+
   return res;
 };
 
