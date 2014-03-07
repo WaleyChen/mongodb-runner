@@ -1,57 +1,22 @@
+"use strict";
+
 var Backbone = require('backbone'),
-  Service = require('./service'),
+  Model = require('./service').Model,
+  List = require('./service').List,
   debug = require('debug')('mg:scope:models');
 
+// singletons.
+var service, settings, instance;
 
 module.exports = function(opts){
-  module.exports.settings = new Settings(opts);
-  module.exports.instance = new Instance({settings: module.exports.settings});
-  return module.exports.instance;
+  module.exports.settings = settings = new Settings(opts);
+
+  service = require('./service')(settings.get('host'), settings.get('port'));
+  module.exports.instance = instance = new Instance();
+  instance.fetch();
+
+  return service;
 };
-
-module.exports.settings = null;
-module.exports.instance = null;
-
-var Model = Backbone.Model.extend({
-    service: null,
-    iohandler: function(data){
-      if (!this.set(data)) return false;
-      this.trigger('sync', this, data, {});
-    },
-    subscribe: function(name){
-      var io = module.exports.instance.backend.io;
-      io.on(name, this.iohandler.bind(this));
-      io.emit('/' + name);
-    },
-    unsunscribe: function(name){
-      io.off(name, this.iohandler.bind(this));
-      io.emit('/' + name + '/unsubscribe');
-    },
-    sync: function(method, model, options){
-      module.exports.instance.backend[this.service](function(err, data){
-        if(err) return options.error(err);
-        options.success(data);
-      });
-    }
-  }),
-  List = Backbone.Collection.extend({
-    service: null,
-    sync: function(method, model, options){
-      var serviceName = this.service,
-        args = [];
-
-      if(typeof serviceName === 'function'){
-        args = serviceName();
-        serviceName = args.shift();
-      }
-
-      args.push(function(err, data){
-        if(err) return options.error(err);
-        options.success(data);
-      });
-      module.exports.instance.backend[this.service].apply(module.exports.instance.backend, args);
-    }
-  });
 
 var Settings = Backbone.Model.extend({
     defaults: {
@@ -97,23 +62,12 @@ var Settings = Backbone.Model.extend({
         max_bson_object_size: 16777216
       }
     },
-    initialize: function(opts){
-      debug('instance options', opts);
-      this.settings = opts.settings;
-      this.backend = new Service(opts.settings.get('host'), opts.settings.get('port'));
-      this.fetch();
-    },
-    sync: function(method, model, options){
-      this.backend.instance(function(err, data){
-        if(err) return options.error(err);
-        options.success(data);
-      });
-    }
+    service: 'instance'
   });
 
 module.exports.Database = Model.extend({
   service: function(){
-    return ['database', this.get('name')];
+    return {name: 'database', args: this.get('name')};
   },
   defaults: {
     name: 'mongomin',
@@ -163,12 +117,16 @@ module.exports.Collection = Model.extend({
     }
   },
   service: function(){
-    return ['collection', this.get('database')];
+    return {name: 'collection', args: [this.get('database')]};
+  },
+  uri: function(){
+    return this.get('database') + '/' + this.get('name');
   }
 });
 
 module.exports.Top = Model.extend({
-  service: 'top'
+  service: 'top',
+  uri: '/top'
 });
 
 module.exports.Log = List.extend({
@@ -179,5 +137,6 @@ module.exports.Log = List.extend({
       date: new Date()
     }
   }),
-  service: 'log'
+  service: 'log',
+  uri: '/log'
 });

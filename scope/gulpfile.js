@@ -22,7 +22,7 @@ gulp.task('ready', function(){
 
 gulp.task('js', function(){
   gulp.src('./app/index.js')
-    .pipe(browserify({debug : false, transform: ['jadeify']}))
+    .pipe(browserify({debug : true, transform: ['jadeify']}))
     .pipe(gulp.dest('./.build'));
 });
 

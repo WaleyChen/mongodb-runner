@@ -4,30 +4,39 @@ var $ = require('jquery'),
   debug = require('debug')('mg:scope:service'),
   socketio = require('socket.io-client');
 
+var srv;
+
+module.exports = function(hostname, port){
+  if(!srv) srv = new Service(hostname, port).connect();
+  return srv;
+};
+
 // Wrap the MongoDB REST API in a pretty interface.
 //
-// @note: You must start mongod with `--rest` and use
-// `mongodb-api-proxy <http://github.com/imlucas/mongodb-api-proxy>` for now.
-//
-// @todo Backbone friendly adapter?
-//
-// @param {String, default:localhost} Hostname of the instance
-// @param {Number, default:3000} Port mongodb-api-proxy is listening on.
+// @param {String} Hostname of the instance
+// @param {Number} port mongorest is listening on.
 // @api public
 function Service(hostname, port){
-  this.hostname = hostname || 'localhost';
-  this.port = port || 3000;
+  this.hostname = hostname;
+  this.port = port;
+  this.connected = false;
+}
+
+Service.prototype.connect = function(){
+  if(this.connected) return this;
+
   this.origin = 'http://' + this.hostname + ':' + this.port;
 
-  this.io = socketio.connect(this.origin);
-  this.io.on('connect', function(){
-    debug('socketio connected');
-  });
+  this.io = socketio.connect(this.origin)
+    .on('connect', function(){
+      debug('socketio connected');
+    }).on('connect_error', function(err){
+      debug('socketio connection error :(', err);
+    });
 
-  this.io.on('connect_error', function(err){
-    debug('socketio connection error :(', err);
-  });
-}
+  this.connected = true;
+  return this;
+};
 
 // Get parsed JSON from `pathname` and call `fn(err, data)` when complete.
 //
@@ -88,7 +97,7 @@ Service.prototype.log = function(name, fn){
   var path;
   if(typeof name === 'function'){
     fn = name;
-    path = '/log/global';
+    path = '/log';
   }
   else {
     path = '/log/' + name;
@@ -143,4 +152,53 @@ Service.prototype.indexes = function(db, fn){
   return fn(new Error('deprecated.  indexes returned via this.collection.'));
 };
 
-module.exports = Service;
+var Backbone = require('backbone'),
+  _ = require('underscore');
+
+Backbone.sync = function(method, model, options){
+  var service = _.result(this, 'service'), args;
+
+  if(_.isString(service)) service = {name: service, args: []};
+
+  args = service.args || [];
+  if(!_.isArray(args)) args = [args];
+
+  args.push(function(err, data){
+    if(err) return options.error(err);
+    options.success(data);
+  });
+
+  srv[service.name].apply(srv, args);
+};
+
+var mixins = {
+  service: null,
+  iohandler: function(data){
+    if (!this.set(data)) return false;
+    this.trigger('sync', this, data, {});
+  },
+  subscribe: function(options){
+    _.defaults(options || (options = {}), {
+      uri: _.result(this, 'uri')
+    });
+
+    srv.io
+      .on(options.uri, this.iohandler.bind(this))
+      .emit(options.uri);
+    this.trigger('subscribed', this, srv.io, options);
+  },
+  unsunscribe: function(options){
+    _.defaults(options || (options = {}), {
+      uri: _.result(this, 'uri')
+    });
+
+    srv.io
+      .off(options.uri, this.iohandler.bind(this))
+      .emit(_.result(this, 'url') + '/unsubscribe');
+
+    this.trigger('unsubscribed', this, srv.io, options);
+  }
+};
+
+module.exports.Model = Backbone.Model.extend(mixins);
+module.exports.List = Backbone.Collection.extend(mixins);
