@@ -2,7 +2,8 @@
 
 var Backbone = require('backbone'),
   models = require('../models'),
-  debug = require('debug')('mg:scope:top');
+  debug = require('debug')('mg:scope:top'),
+  creek = require('../creek');
 
 module.exports = Backbone.View.extend({
   tpl: require('../templates/top.jade'),
@@ -13,6 +14,8 @@ module.exports = Backbone.View.extend({
     this.top = new models.Top()
       .on('sync', this.render, this)
       .on('error', this.render, this);
+
+    this.graphs = [];
   },
   activate: function(){
     this.top.fetch();
@@ -27,9 +30,18 @@ module.exports = Backbone.View.extend({
     var self = this,
       ctx = self.top.toJSON();
 
+    if(this.top.hasChanged('namespaces')){
+      this.graphs = this.top.get('namespaces').map(function(ns, i){
+        return creek('#creek-' + i, {});
+      });
+    }
+
     process.nextTick(function(){
       debug('writing template');
       self.$el.html(self.tpl(ctx));
+      self.graphs.map(function(graph){
+        graph.render();
+      });
     });
     return self;
   }

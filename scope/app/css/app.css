@@ -51,3 +51,48 @@
 .dl-horizontal dd {
   margin-left: 110px !important;
 }
+
+
+.creek {
+  font-family: 'PT Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+  color: #494747;
+}
+.creek-stage {}
+/**
+ * A line of data.
+ */
+.creek-line {
+  fill: none;
+  stroke: #000;
+  stroke-width: 2px;
+}
+/**
+ * The area under the line.
+ */
+.creek-area {
+  fill: red;
+  stroke-width: 0;
+}
+/**
+ * The tracking line.
+ */
+.creek path.domain {
+  fill: none;
+  stroke-width: 1px;
+  stroke: #CCC;
+}
+/**
+ * axis text.
+ */
+.creek text {
+  color: #CCC;
+  font-size: 10px;
+}
+.creek .x-axis line, .creek .y-axis line {
+  stroke: #CCC;
+  stroke-width: 1px;
+  shape-rendering: crispEdges;
+}
+.creek .y-axis {
+  opacity: .7;
+}
