@@ -30,9 +30,16 @@ module.exports = Backbone.View.extend({
     var self = this,
       ctx = self.top.toJSON();
 
+    window.graph = {};
     if(this.top.hasChanged('namespaces')){
       this.graphs = this.top.get('namespaces').map(function(ns, i){
-        return creek('#creek-' + i, {});
+        var item = creek('#creek-' + i, {});
+        Backbone.$('#creek-' + i).siblings('h3').on('click', function(){
+          var i = item.paused ? item.resume() : item.pause();
+          return false;
+        });
+        window.graph[ns] = item;
+        return item;
       });
     }
 
@@ -43,6 +50,7 @@ module.exports = Backbone.View.extend({
         graph.render();
       });
     });
+
     return self;
   }
 });

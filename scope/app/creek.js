@@ -3,60 +3,9 @@
 // Simple way to make a nice chart with a single metric being streamed into it.
 //
 // @todo: make this an actual duplex stream.
-//
-// To customize, have a look at the styles below.
-//
-// ```css
-// /**
-//  * data stream wrapper.
-//  */
-// .creek {
-//   font-family: 'PT Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
-//   color: #494747;
-// }
-// .creek-stage {}
-// /**
-//  * A line of data.
-//  */
-// .creek-line {
-//   fill: none;
-//   stroke: #000;
-//   stroke-width: 2px;
-// }
-// /**
-//  * The area under the line.
-//  */
-// .creek-area {
-//   fill: red;
-//   stroke-width: 0;
-// }
-// *
-//  * The tracking line.
-
-// .creek path.domain {
-//   fill: none;
-//   stroke-width: 1px;
-//   stroke: #CCC;
-// }
-// /**
-//  * axis text.
-//  */
-// .creek text {
-//   color: #CCC;
-//   font-size: 10px;
-// }
-// .creek .x-axis line, .creek .y-axis line {
-//   stroke: #CCC;
-//   stroke-width: 1px;
-//   shape-rendering: crispEdges;
-// }
-// .creek .y-axis {
-//   opacity: .7;
-// }
-//```
-var _ = require('underscore'),
+var _ = require('lodash'),
   d3 = require('d3'),
-  debug = require('debug')('mg:creek');
+  debug = require('debug')('creek');
 
 module.exports = function(selector, opts){
   opts = opts || {};
@@ -66,94 +15,118 @@ module.exports = function(selector, opts){
 
 function Creek(opts){
   _.extend(this, _.defaults({}, opts, {
-    n: 25,
-    duration: 500,
-    count: 0,
+    minutes: 2,
     data: [],
-    interpolation: 'step-after',
-    width: 320,
+    interpolation: 'cardinal',
+    width: window.innerWidth,
     height: 160,
-    selector: 'body'
+    selector: 'body',
+    line: true,
+    area: true,
+    history: []
   }));
 
-  var self = this;
+  this.scrollback = 60 * this.minutes;
+  this.duration = 1000 / this.minutes;
 
-  if(this.data.length === 0){
-    this.data = d3.range(this.n).map(function(){
-      return 0;
-    });
-  }
+  this.data = d3.range(this.scrollback).map(function(){
+    return 0;
+  });
 
   this.value = 0;
-
   this.clipId = 'clip-' + Math.random();
 }
 
 Creek.prototype.render = function(){
   this.selection = d3.select(document.querySelector(this.selector));
+  var self = this, series;
+  this.tickAt = -1;
 
-  this.svg = this.selection.append('p')
+  this.axisOffset = 0;
+
+  this.svg = this.selection
     .append('svg')
       .attr('class', 'creek')
-      .attr('height', this.height + 20)
+      .attr('height', this.height)
       .attr('width', this.width)
-    .append('g')
-      .attr('transform', 'translate(40,0)');
+    .append('g');
 
-  var self = this,
-    clip = this.svg
-    .append('g')
-      .attr('class', 'creek-stage')
-      .attr('clip-path', 'url(#' + this.clipId + ')');
+  this.stage = {
+    height: this.height - 18,
+    width: this.width - this.axisOffset
+  };
 
-  var now = new Date(Date.now() - this.duration);
+  this.now = new Date(Date.now() - this.duration);
   this.scales = {
     x: d3.time.scale()
-      .domain([now - (this.n - 2) * this.duration, now - this.duration])
-      .range([0, this.width]),
+      .domain([self.now - (this.scrollback - 2) * this.duration, this.now - this.duration])
+      .range([0, this.stage.width]),
     y: d3.scale.linear()
-    .range([this.height, 0])
+    .range([this.stage.height, 0])
     .domain([0, 0])
   };
 
   this.shapes = {
     line: d3.svg.line().interpolate(this.interpolation)
       .x(function(d, i){
-        return self.scales.x(now - (self.n - 1 - i) * self.duration);
+        return self.scales.x(self.now - (self.scrollback - 1 - i) * self.duration);
       })
+      .tension(0.5)
       .y(function(d, i){
         return self.scales.y(d);
       }),
     area: d3.svg.area().interpolate(this.interpolation)
       .x(function(d, i){
-        return self.scales.x(now - (self.n - 1 - i) * self.duration);
+        return self.scales.x(self.now - (self.scrollback - 1 - i) * self.duration);
       })
-      .y(function(d, i){
+      .y1(function(d, i){
         return self.scales.y(d);
       })
+      .y0(self.stage.height)
+      .tension(0.5)
   };
 
-  this.area = clip.append('path')
-    .data([this.data])
-    .attr('class', 'creek-area')
-    .attr('d', this.shapes.area);
-
-  this.path = clip.append('path')
-    .data([this.data])
-    .attr('class', 'creek-line')
-    .attr('d', this.shapes.line);
-
+  this.svg.append('defs').append('clipPath')
+      .attr('id', this.clipId)
+    .append('rect')
+      .attr('width', this.stage.width - 25)
+      .attr('height', this.stage.height);
 
   this.axes = {
     x: this.svg.append('g')
-      .attr('class', 'x-axis')
-      .attr('transform', 'translate(0,' + this.height + ')')
-      .call(this.scales.x.axis = d3.svg.axis().scale(this.scales.x).orient('bottom')),
+      .attr('class', 'x-axis axis')
+      .attr('transform', 'translate('+ -25 +',' + this.stage.height + ')')
+      .call(this.scales.x.axis = d3.svg.axis().scale(this.scales.x).orient('bottom'))
+      .call(this.scales.x.axis.ticks(4).tickSubdivide(0)),
     y: this.svg.append('g')
-    .attr('class', 'y-axis')
-    .attr('transform', 'translate(0,0)')
-    .call(this.scales.y.axis = d3.svg.axis().scale(this.scales.y).orient('left'))
+      .attr('class', 'y-axis axis')
+      .attr('transform', 'translate(' + (this.stage.width - 25) + ', 0)')
+      .call(this.scales.y.axis = d3.svg.axis().scale(this.scales.y).orient('right'))
+      .call(this.scales.y.axis.ticks(4).tickSubdivide(0).tickSize(-this.stage.width))
   };
+
+  series = this.svg
+    .append('g')
+      .attr('class', 'series')
+      .attr('clip-path', 'url(#' + this.clipId + ')');
+
+  if(this.line){
+    this.line = series.append('path')
+      .data([this.data])
+      .attr('class', 'line')
+      .attr('d', this.shapes.line);
+      this.tickAt++;
+  }
+
+  if(this.area){
+    this.area = series.append('path')
+      .data([this.data])
+      .attr('class', 'area')
+      .attr('d', this.shapes.area);
+    this.tickAt++;
+  }
+
+
   this.paused = false;
 
   this.tick();
@@ -176,48 +149,57 @@ Creek.prototype.inc = function(i){
   return this;
 };
 
-Creek.prototype.tick = function(){
-  var now = new Date(),
-    self = this;
-
-  // get new value from the queue
+Creek.prototype.consume = function(){
   this.data.push(this.value);
   this.value = 0;
+  this.history.push(this.data.shift());
+  return this;
+};
 
-  this.scales.x.domain([now - (this.n - 2) * this.duration, now - this.duration]);
-  this.scales.y.domain([0, d3.max(this.data)]);
+Creek.prototype.tick = function(){
+  if(this.paused === true) return this;
+  var max = d3.max(this.data);
+  // update current time for smoothness.
+  this.now = new Date();
+  this.consume();
 
-  // reset the shapes
-  this.svg.select('.creek-line')
-      .attr('d', this.shapes.line);
+  this.scales.x.domain([this.now - (this.scrollback - 2) * this.duration, this.now - this.duration]);
+  this.scales.y.domain([0, max]);
 
-  this.svg.select('.creek-area')
-    .attr('d', this.shapes.area);
+  if(this.line){
+    this.svg.select('.line')
+      .attr('d', this.shapes.line)
+      .attr('transform', null);
+  }
 
-  this.transition(now);
+  if(this.area){
+    this.svg.select('.area')
+      .attr('d', this.shapes.area)
+      .attr('transform', null);
+  }
 
-  this.data.shift();
+  this.transition();
 };
 
 Creek.prototype.transitionAxis = function(id){
   this.axes[id].transition()
     .duration(this.duration)
-    .ease('linear')
+    .ease(id === 'y' ? 'elastic-out-in' : 'linear')
     .call(this.scales[id].axis);
 };
 
-Creek.prototype.transition = function(now){
+Creek.prototype.transition = function(){
   var self = this;
 
   // Adjust axes and scaling for incoming value
   ['x', 'y'].map(this.transitionAxis.bind(this));
 
   // Move the whole world over to expose the next value
-  d3.selectAll(document.querySelectorAll(this.selector + ' .creek-stage path')).call(function(p){
+  d3.selectAll(document.querySelectorAll(this.selector + ' .series path')).call(function(p){
     p.transition()
       .duration(self.duration)
       .ease('linear')
-      .attr('transform', 'translate(' + self.scales.x(now - (self.n - 1) * self.duration) + ')')
-      .each('end', function(d, i){return (i === 0) ? null : self.tick();});
+      .attr('transform', 'translate(' + self.scales.x(self.now - (self.scrollback - 1) * self.duration) + ')')
+      .each('end', function(d, i){return (i === self.tickAt) ? self.tick() : null;});
   });
 };

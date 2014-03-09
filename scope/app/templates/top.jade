@@ -1,8 +1,7 @@
-h2 top
-
-.row
- - for ns, i in namespaces
-  .col-md-4(id='creek-#{i}')
+- for ns, i in namespaces
+  .row
+    .col-md-12.mms(id='creek-#{i}')
+      h4.graph-title(style="text-align: right; right: 40px;position:absolute;") #{ns}
 
 
 table.grid.table.table-condensed.table-hover

@@ -52,47 +52,97 @@
   margin-left: 110px !important;
 }
 
-
 .creek {
   font-family: 'PT Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
   color: #494747;
 }
-.creek-stage {}
-/**
- * A line of data.
- */
-.creek-line {
+
+.creek .line {
   fill: none;
   stroke: #000;
   stroke-width: 2px;
 }
-/**
- * The area under the line.
- */
-.creek-area {
-  fill: red;
-  stroke-width: 0;
+
+.creek .area {
+  fill: #000;
 }
-/**
- * The tracking line.
- */
+
 .creek path.domain {
   fill: none;
-  stroke-width: 1px;
-  stroke: #CCC;
+  stroke: none;
 }
-/**
- * axis text.
- */
+
 .creek text {
+  color: #000;
+  font-size: 10px;
+}
+
+.creek .axis {
+  fill: #000;
+}
+
+.creek .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.creek .tick line{
+  z-index: -1;
+  stroke: #CCC;
+  stroke-width: 1px;
+  stroke-dasharray: 1 1;
+  shape-rendering: crispEdges;
+}
+
+.soda-dark .creek {
+  font-family: 'PT Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+  color: #F8F8F2;
+  background: #242424;
+}
+
+.soda-dark .creek .line {
+  fill: none;
+  stroke: #F8F8F0;
+  stroke-width: 2px;
+}
+
+.soda-dark .creek .area {
+  fill: #403d3d;
+}
+.soda-dark .creek .axis {
+  fill: #F8F8F2;
+}
+.soda-dark .creek text {
+  color: #F8F8F2;
+  font-size: 10px;
+}
+
+.soda-dark .creek .tick line{
+  z-index: -1;
+  stroke: #F8F8F2;
+  stroke-width: 1px;
+  stroke-dasharray: 1 1;
+  opacity: 0.2;
+}
+
+.mms .creek {
+  font-family: 'PT Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+  color: #000;
+}
+
+.mms .creek .line {
+  fill: none;
+  stroke: #064800;
+  stroke-width: 2px;
+}
+
+.mms .creek .area {
+  fill: #6ba442;
+}
+
+.mms .creek text {
   color: #CCC;
   font-size: 10px;
 }
-.creek .x-axis line, .creek .y-axis line {
-  stroke: #CCC;
-  stroke-width: 1px;
-  shape-rendering: crispEdges;
-}
-.creek .y-axis {
-  opacity: .7;
-}
+
