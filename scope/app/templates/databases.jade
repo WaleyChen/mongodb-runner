@@ -4,11 +4,9 @@ include mixins/bytes
 .row
   .col-md-4
     .panel.panel-default
-      .panel-heading
-        h2 databases
+      .panel-heading databases
 
       ul.list-group.panel-body
        - for database_name in instance.database_names
         li.list-group-item
-          a(href='#dbs/#{database_name}')
-            h3.pull-left(style='margin: 0px;') #{database_name}
+          a(href='#dbs/#{database_name}') #{database_name}
