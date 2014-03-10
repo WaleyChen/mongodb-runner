@@ -1,0 +1,83 @@
+include mixins/bytes
+include mixins/cog
+
+.row
+  .panel.panel-default.col-md-8(style="padding-right: 0;")
+    .panel-heading
+      .collection-creek.mms
+    ul.list-group.panel-body.samples(style="padding: 0;")
+
+  .col-md-4
+    .panel.panel-default
+      .panel-heading
+        +cog('#database/#{collection.database}', ['rename'])
+        h1(style="margin: 0; padding: 0;") #{collection.name}
+        h3(style="margin: 0; padding: 0;")
+          a(href="#database/#{collection.database}") #{collection.database}
+
+      - stats = collection.stats;
+      - stats.object_size_average = (stats.object_size/stats.object_count);
+      - stats.index_size_per_object = (stats.index_size/stats.object_count);
+
+      ul.list-group.panel-body.well
+        li.list-group-item
+          span.badge #{collection.stats.index_count}
+          | Indexes
+
+        li.list-group-item
+          span.badge #{collection.stats.object_count}
+          | Documents
+
+      ul.list-group.panel-body.well
+        li.list-group-item
+          span.badge
+            +bytes(collection.stats.object_size)
+          | Size of Documents
+
+        li.list-group-item
+          span.badge
+            +bytes(stats.object_size_average)
+          | Average Document Size
+
+        li.list-group-item
+          span.badge
+            +bytes(collection.stats.index_size)
+          | Size of Indexes
+
+        li.list-group-item
+          span.badge
+            +bytes(stats.index_size_per_object)
+          | Size of Index Per Document
+
+      ul.list-group.panel-body.well
+        li.list-group-item
+          span.badge
+            +bytes(collection.stats.extent_last_size)
+          | Last Extent Size
+
+        li.list-group-item
+          span.badge #{collection.stats.extent_count}
+          | Extents
+
+        li.list-group-item
+          span.badge #{collection.stats.padding_factor}
+          | Padding Factor
+
+        li.list-group-item
+          a(href="http://mms.mongodb.com", target="_blank") View Historical Data
+
+    .panel.panel-default
+      .panel-heading
+        .pull-right
+            button.btn.btn-primary Create
+        h3 Indexes
+
+      ul.list-group.panel-body
+       - for index in collection.indexes
+        li.list-group-item
+          span.badge
+            +bytes(index.size)
+          | #{index.name}
+
+          code #{JSON.stringify(index.key)}
+

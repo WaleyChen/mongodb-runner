@@ -1,0 +1,23 @@
+include mixins/cog
+include mixins/bytes
+
+.row
+  .col-md-12 &nbsp;
+.row
+  .col-md-6.col-md-push-3
+    .panel.panel-default
+      .panel-heading
+        h3(style="margin: 0; padding: 0;") #{instance.host.hostname}
+        h1(style="margin: 0; padding: 0;") databases
+
+      ul.list-group.panel-body
+       - for database_name in instance.database_names
+        li.list-group-item
+          h4
+            a(href='#database/#{database_name}') #{database_name}
+      //- .panel-footer
+      //-   form.form-inline(role="form")
+      //-     .form-group
+      //-       label.sr-only(for="new-database-name") Name Your Database
+      //-       input.form-control.h3(id="new-database-name", placeholder="Name Your Database")
+      //-     button.btn.btn-primary(type="submit") Create

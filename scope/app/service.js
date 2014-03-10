@@ -137,7 +137,14 @@ Service.prototype.find = function(db, name, spec, fn){
 // @param {Function} fn `fn(err, data)`
 // @api public
 Service.prototype.collection = function(db, name, fn){
-  this.read('/' + name, function(err, data){
+  this.read('/' + db + '/' + name, function(err, data){
+    if(err) return fn(err);
+    fn(null, data);
+  });
+};
+
+Service.prototype.sample = function(db, name, fn){
+  this.read('/' + db + '/' + name + '/sample', function(err, data){
     if(err) return fn(err);
     fn(null, data);
   });

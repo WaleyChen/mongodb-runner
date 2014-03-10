@@ -4,7 +4,8 @@ html(lang='en')
     title mongoscope
     link(rel='stylesheet', href='index.css')
     link(rel='icon', href='img/favicon.ico', type='image/x-icon')
-  body.mmsBody
+  body.mmsBody.container-fluid
+
     #wrapper
       include includes/loading-indicator
       #page.default
@@ -22,7 +23,7 @@ html(lang='en')
           removed secondary bar/miniview used in MMS.
         ul.nav.navbar-nav.side-nav
 
-          - for section in [{name: 'info', icon: 'info-sign'}, {name: 'top', icon: 'barcode'}, {name: 'log', icon: 'align-justify'}, {name: 'dbs', 'icon': 'list-alt'}]
+          - for section in [{name: 'pulse', 'icon': 'list-alt'}, {name: 'top', icon: 'barcode'}, {name: 'log', icon: 'align-justify'}]
             li
               a.btn(href='##{section.name}', style='padding-left: 5px;border-radius: 0;')
                 span(class='glyphicon glyphicon-#{section.icon}', style='padding-right: 10px;')

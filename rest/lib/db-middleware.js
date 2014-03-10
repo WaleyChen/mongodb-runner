@@ -6,9 +6,11 @@ module.exports = function(app){
   return function(req, res, next){
     req.mongo = app.get('db');
 
-    req.mongo.find = function find(db, name, spec, fn){
+    req.mongo.find = function find(db, name, opts, fn){
       db.collection(name, function(err, coll){
-        coll.find({}, function(err, data){
+        if(err) return fn(err);
+
+        coll.find({}, [], opts || {}, function(err, data){
           if(err) return fn(err);
           data.toArray(function(err, data){
             fn(null, data);

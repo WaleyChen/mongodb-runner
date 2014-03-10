@@ -22,31 +22,13 @@ module.exports = Backbone.View.extend({
     var self = this;
     // @todo: Use webworker for log processing instead of animation frame?
     requestAnimationFrame(function(){
-      var ctx = {'lines': []},
-        lineTpl = require('../templates/log-line.jade'),
-        startTime = self.log.models[0].get('date');
-      debug(startTime);
+      var lineTpl = require('../templates/log-line.jade');
 
-      ctx.countByName = _.countBy(self.log.models, function(log){
-        return log.get('name');
-      });
-
-      var filterBtns = [];
-      for(var name in ctx.countByName){
-        filterBtns.push(new FilterButton({
-          model: new Backbone.Model({
-              name: name, count: ctx.countByName[name]})
-          }).render().el
-        );
-      }
-      debug('filter btns', filterBtns);
-      debug('count by name', ctx.numByName);
-
-      self.log.models.map(function(model, i){
-        ctx.lines.push(lineTpl(model.toJSON()));
-      });
-      self.$el.html(self.tpl(ctx));
-      $('.filter-bar .btn-group').append(filterBtns);
+      self.$el.html(self.tpl({
+        lines: self.log.models.map(function(model, i){
+          return lineTpl(model.toJSON());
+        })
+      }));
       return self;
     });
   }

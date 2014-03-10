@@ -117,10 +117,29 @@ module.exports.Collection = Model.extend({
     }
   },
   service: function(){
-    return {name: 'collection', args: [this.get('database')]};
+    return {name: 'collection', args: [this.get('database'), this.get('name')]};
   },
   uri: function(){
     return this.get('database') + '/' + this.get('name');
+  }
+});
+
+module.exports.Sample = List.extend({
+  model: Backbone.Model.extend({
+    defaults: {
+      _id: 1,
+      name: 'I could be any shape of document'
+    }
+  }),
+  initialize: function(opts){
+    this.database = opts.database;
+    this.name = opts.name;
+  },
+  service: function(){
+    return {name: 'sample', args: [this.database, this.name]};
+  },
+  uri: function(){
+    return this.database + '/' + this.name + '/sample';
   }
 });
 

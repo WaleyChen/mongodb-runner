@@ -4,6 +4,7 @@
 //
 // @todo: make this an actual duplex stream.
 var _ = require('lodash'),
+  $ = require('jquery'),
   d3 = require('d3'),
   debug = require('debug')('creek');
 
@@ -18,7 +19,7 @@ function Creek(opts){
     minutes: 2,
     data: [],
     interpolation: 'cardinal',
-    width: window.innerWidth,
+    width: 0,
     height: 160,
     selector: 'body',
     line: true,
@@ -29,7 +30,7 @@ function Creek(opts){
   this.scrollback = 60 * this.minutes;
   this.duration = 1000 / this.minutes;
 
-  this.data = d3.range(this.scrollback).map(function(){
+  this.data = this.data || d3.range(this.scrollback).map(function(){
     return 0;
   });
 
@@ -37,26 +38,52 @@ function Creek(opts){
   this.clipId = 'clip-' + Math.random();
 }
 
+Creek.prototype.layout = function(){
+  var newWidth = $(this.svg.node().parentElement).width(),
+    delta = this.width - newWidth;
+
+  this.width = newWidth;
+
+  this.stage = {
+    height: this.height - 18,
+    width: newWidth - this.axisOffset
+  };
+
+  if(delta === 0) return this;
+
+  this.scales.x.range([0, this.stage.width]);
+
+  this.svg.select(this.clipId + ' rect')
+    .attr('width', this.stage.width - this.axisOffset);
+
+  this.svg.select('.y-axis')
+    .attr('transform', 'translate(' + delta + ', 0)');
+
+  this.axes.y.call(this.scales.y.axis.ticks(4)
+    .tickSubdivide(0).tickSize(-this.stage.width));
+
+  return this;
+};
+
 Creek.prototype.render = function(){
   this.selection = d3.select(document.querySelector(this.selector));
   var self = this, series;
   this.tickAt = -1;
-
   this.axisOffset = 0;
+  this.now = new Date(Date.now() - this.duration);
 
   this.svg = this.selection
     .append('svg')
       .attr('class', 'creek')
       .attr('height', this.height)
-      .attr('width', this.width)
+      .attr('width', '100%')
     .append('g');
 
-  this.stage = {
-    height: this.height - 18,
-    width: this.width - this.axisOffset
-  };
+  // Manually set the first time and call layout, which keeps code in one spot.
+  this.width = $(this.svg.node().parentElement).width();
+  this.layout();
+  $(window).resize(_.debounce(this.layout.bind(this), 300));
 
-  this.now = new Date(Date.now() - this.duration);
   this.scales = {
     x: d3.time.scale()
       .domain([self.now - (this.scrollback - 2) * this.duration, this.now - this.duration])
