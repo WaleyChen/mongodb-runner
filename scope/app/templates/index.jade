@@ -9,10 +9,11 @@ html(lang='en')
     #wrapper
       include includes/loading-indicator
       #page.default
-        .navbar.navbar-inverse.navbar-fixed-top.mms-navbar(style='border-bottom: 2px solid #6ba442;')
+        .navbar.navbar-inverse.navbar-fixed-top.mms-navbar(style='border-bottom: 2px solid #6ba442;height: 50px;')
           .navbar-header
-            a.navbar-brand(style='text-indent: 0;color: white;font-weight: bold;')
-              | mongoscope
+            a.navbar-brand(style='text-indent: 0;color: white;font-weight: bold;padding: 0;margin: 0;width: 100%;')
+              img(src="img/scope-40.png", style='padding-left: 12px; padding-top: 2px;float: left;')
+              div(style="padding-top: 10px;float: left; margin-left: 5px;") mongoscope
 
           ul.nav.navbar-nav.navbar-right.secondary
             li
@@ -25,9 +26,9 @@ html(lang='en')
 
           - for section in [{name: 'pulse', 'icon': 'list-alt'}, {name: 'top', icon: 'barcode'}, {name: 'log', icon: 'align-justify'}]
             li
-              a.btn(href='##{section.name}', style='padding-left: 5px;border-radius: 0;')
-                span(class='glyphicon glyphicon-#{section.icon}', style='padding-right: 10px;')
-                span.text= section.name
+              a.btn(href='##{section.name}', style='border-radius: 0;')
+                span(class='glyphicon glyphicon-#{section.icon}', style='font-size: 24px;')
+                div.text(style="font-size: 12px;line-height: 14px;text-align: center;text-shadow: none;") #{section.name}
 
           //- li.nav-footer
           //-   button#featureRequestToggle.btn.btn-primary(data-toggle='modal' data-target='#feedbackModal')

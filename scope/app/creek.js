@@ -35,7 +35,6 @@ function Creek(opts){
   });
 
   this.value = 0;
-  this.clipId = 'clip-' + Math.random();
 }
 
 Creek.prototype.layout = function(){
@@ -66,6 +65,7 @@ Creek.prototype.layout = function(){
 };
 
 Creek.prototype.render = function(){
+  this.clipId = 'clip-' + Math.random();
   this.selection = d3.select(document.querySelector(this.selector));
   var self = this, series;
   this.tickAt = -1;

@@ -22,8 +22,10 @@ module.exports = Backbone.View.extend({
   activate: function(){
     this.top.fetch();
     this.top.subscribe();
+    console.warn('activate top');
   },
   deactivate: function(){
+    console.warn('deactivate top');
     this.top.unsubscribe();
     this.layout = true;
   },

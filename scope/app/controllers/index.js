@@ -21,6 +21,15 @@ function splint(){
   router._current = null;
   router._nameToHandler = {};
 
+  // Deactivate the previous controller
+  router.on('route', function(name, args){
+    console.log('need to deactivate?', name, args, router._current);
+    if(router._current){
+      router._current.deactivate();
+    }
+    router._current = router._nameToHandler[name];
+  });
+
   specs.map(function(spec){
     var route = spec.shift(),
       controller = spec.shift(),
@@ -43,14 +52,6 @@ function splint(){
       router.route('', 'index', handler);
       router._nameToHandler.index = controller;
     }
-  });
-
-  // Deactivate the previous controller
-  router.on('route', function(name, args){
-    if(router._current){
-      router._current.deactivate.apply(router._current, []);
-    }
-    router._current = router._nameToHandler[name];
   });
 
   Backbone.history.start();

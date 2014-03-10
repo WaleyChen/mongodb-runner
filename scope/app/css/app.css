@@ -155,3 +155,14 @@
 .panel-heading .pull-right{
   margin-top: 10px;
 }
+
+.nav > li > a {
+  color: #807f7f;
+}
+.nav > li > a:hover,
+.nav > li > a:focus {
+  color: #FFFFFF !important;
+  /*border-color: #064800 !important;*/
+  background: #6ba442 !important;
+
+}
