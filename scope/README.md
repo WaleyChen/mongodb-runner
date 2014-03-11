@@ -20,6 +20,11 @@ to dev or run your own mongoscope, just run
 
 more details are available in the [`gulpfile`](./blob/master/gulpfile.js)
 
+
+to embed scope in rest for distribution
+
+    npm run-script build
+
 ### test
 
     npm test
