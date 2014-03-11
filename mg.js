@@ -18,13 +18,6 @@ function mg(argv){
     delete argv[key];
   });
 
-  _.each(_.keys(options), function(name){
-    debug(name+ ' options:');
-    _.each(_.keys(options[name]), function(k){
-      debug('  - ' + k, options[name][k]);
-    });
-  });
-
   delete mg.settings.apps.mg;
 
   var apps;
@@ -36,11 +29,26 @@ function mg(argv){
     apps = mg.settings.apps;
   }
 
+  var fromEnv = {},
+    envMapping = {
+      'url': 'MG_URL',
+      'mongo': 'MG_MONGO',
+      'bin': 'MG_BIN',
+      'dbpath': 'MG_DBPATH'
+    };
+
+  Object.keys(envMapping).map(function(k){
+    fromEnv[k] = process.env[envMapping[k]];
+  });
+
   debug('starting apps', Object.keys(apps));
 
   Object.keys(apps).map(function(name){
     if(prev === null){
       debug('starting', name);
+      options[name].bin = fromEnv.bin || options[name].bin;
+      options[name].dbpath = fromEnv.dbpath || options[name].dbpath;
+
       prev = mg.settings.apps[name](options[name]).on('error', function(){
         debug('assuming ready somewhere else');
         prev.emit('ready', {});
@@ -50,6 +58,10 @@ function mg(argv){
       debug('waiting', name);
       prev.on('ready', function(){
         debug('starting', name);
+
+        options[name].mongo = fromEnv.mongo || options[name].mongo;
+        options[name].url = fromEnv.url || options[name].url;
+
         prev = mg.settings.apps[name](options[name]);
       });
     }
