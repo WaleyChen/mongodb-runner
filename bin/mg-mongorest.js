@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require('../')('mongorest');
+require('../')('../rest');
