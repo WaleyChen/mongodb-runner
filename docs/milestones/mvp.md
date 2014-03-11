@@ -59,7 +59,7 @@ _@note_ not prioritized at all or filtered by target personas
 - [ ] aggregation query builder
 - [ ] view results of system.profile
 - [ ] visualize authentication
-
+- [ ] basic shell to run queries
 
 ## Stretch
 

@@ -25,15 +25,7 @@ _Goal_ concrete things to point at on a screen and talk about
   - [x] inline css and js
   - [x] update C++ to always send back CORS headers and serve `bootloader.html`
     as the root for `http://localhost:28017`
-- [ ] move to LESS and chop up MMS styles instead of copying this monster around
-- [ ] wire in `bootstrap.js` plugins
-- [ ] token based auth?
-- [ ] reorganize repo now that we have rest/launcher stuff
-- [ ] update service.js for ui to account for new rest backend
-
-
-
-## Stretch
-
-- [ ] basic shell to run queries
-- [ ] top shows delta values only
+- [x] wire in `bootstrap.js` plugins
+- [x] reorganize repo now that we have rest/launcher stuff
+- [x] update service.js for ui to account for new rest backend
+- [x] top shows delta values only
