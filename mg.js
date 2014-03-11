@@ -1,5 +1,6 @@
 "use strict";
 var _ = require('underscore'),
+  child_process = require('child_process'),
   debug = require('debug')('mg');
 
 function mg(argv){
@@ -66,6 +67,10 @@ function mg(argv){
       });
     }
   });
+
+  if(apps.mongorest){
+    child_process.exec('open ' + options.mongorest.url);
+  }
 }
 
 mg.settings = {
