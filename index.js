@@ -2,7 +2,7 @@
 
 var apps = {
   mongod: require('mongodmon'),
-  mongorest: require('./rest')
+  mongorest: require('mongorest')
 };
 
 require('./mg').prepare(apps);

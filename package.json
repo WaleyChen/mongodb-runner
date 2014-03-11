@@ -9,7 +9,7 @@
     "underscore": "^1.6.0"
   },
   "scripts": {
-    "dist": "lone",
+    "dist": "DEBUG=* lone",
     "start": "DEBUG=mg:* ./bin/mg.js",
     "install": "./bin/install-children.sh"
   },
@@ -18,7 +18,15 @@
   },
   "lone": {
     "ignore": [
-      "scope/**", "bin/*.sh"
+      "scope/**",
+      "rest/**",
+      "bin/*.sh",
+      "**/mocha/**",
+      "**/flash-src/**",
+      "**/socket.io-client/components/**",
+      "**/node_modules/redis/**",
+      "**/test/**",
+      "**/example/**"
     ]
   },
   "bin": {
