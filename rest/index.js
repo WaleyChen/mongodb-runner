@@ -66,6 +66,7 @@ function middleware(){
   });
   app.use(require('./lib/db-middleware')(app));
   require('./lib/api')(app);
+  require('./lib/ui')(app);
 
   app.use(function(err, req, res, next){
     // handle http errors bubbled up from middlewares.

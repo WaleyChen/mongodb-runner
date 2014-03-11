@@ -21,7 +21,7 @@ module.exports = function(opts){
 var Settings = Backbone.Model.extend({
     defaults: {
       host: window.document.hostname,
-      port: 3000
+      port: 29017
     }
   }),
   Instance = Backbone.Model.extend({
