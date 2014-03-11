@@ -25,7 +25,7 @@ module.exports = function(name){
 
   var allowed = Object.keys(app.get('options'));
   Object.keys(argv).map(function(k){
-    if(allowed.indexOf(k) === -1){
+    if(allowed.indexOf(k) === -1 && k !== '_'){
       delete argv[k];
     }
   });

@@ -4,7 +4,8 @@ var _ = require('underscore'),
 
 function mg(argv){
   var options = {},
-    prev = null;
+    prev = null,
+    positional = argv._;
 
   _.each(_.keys(argv), function(key){
     var alias = mg.get(key);
@@ -26,9 +27,18 @@ function mg(argv){
 
   delete mg.settings.apps.mg;
 
-  debug('starting apps', Object.keys(mg.settings.apps));
+  var apps;
+  if(positional.length > 0 && mg.settings.apps[positional[0]]){
+    apps = {};
+    apps[positional[0]] = mg.settings.apps[positional[0]];
+  }
+  else {
+    apps = mg.settings.apps;
+  }
 
-  Object.keys(mg.settings.apps).map(function(name){
+  debug('starting apps', Object.keys(apps));
+
+  Object.keys(apps).map(function(name){
     if(prev === null){
       debug('starting', name);
       prev = mg.settings.apps[name](options[name]);
