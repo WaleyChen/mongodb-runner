@@ -3,10 +3,9 @@
 var express = require('express'),
   app = module.exports = express(),
   server = require('http').createServer(app),
-  nconf = require('nconf'),
   MongoClient = require('mongodb').MongoClient,
-  debug = require('debug')('mg:mongorest'),
-  _ = require('underscore'),
+  debug = require('debug')('mg:rest'),
+  _ = require('lodash'),
   urllib = require('url');
 
 app.set = function(setting, val){
@@ -31,7 +30,7 @@ app.set({
       desc: 'connection url for a mongo instance'
     },
     url: {
-      default: 'http://127.0.0.1:3000',
+      default: 'http://127.0.0.1:29017',
       desc: 'host:port for rest to listen on'
     }
   }
