@@ -16,6 +16,11 @@
   "devDependencies": {
     "lone": "imlucas/lone"
   },
+  "lone": {
+    "ignore": [
+      "scope/**", "bin/*.sh"
+    ]
+  },
   "bin": {
     "mg": "./bin/mg.js"
   }
