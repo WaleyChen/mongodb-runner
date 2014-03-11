@@ -41,7 +41,10 @@ function mg(argv){
   Object.keys(apps).map(function(name){
     if(prev === null){
       debug('starting', name);
-      prev = mg.settings.apps[name](options[name]);
+      prev = mg.settings.apps[name](options[name]).on('error', function(){
+        debug('assuming ready somewhere else');
+        prev.emit('ready', {});
+      });
     }
     else{
       debug('waiting', name);
