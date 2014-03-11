@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "start": "gulp dev",
+    "build": "gulp build",
     "test": "mocha",
     "deploy": "./bin/deploy.sh"
   },
