@@ -11,8 +11,7 @@
   "scripts": {
     "dist": "lone",
     "start": "DEBUG=mg:* ./bin/mg.js",
-    "test": "cd rest && npm test && cd ../; cd scope && npm test && cd ../;",
-    "install": "npm link rest/; npm link scope/;"
+    "install": "./bin/install-children.sh"
   },
   "devDependencies": {
     "lone": "imlucas/lone"
