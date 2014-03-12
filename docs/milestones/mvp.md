@@ -1,71 +1,142 @@
 # MVP [Milestone](../milestones.md)
 
-_Goal_ Something usable
+## 0.1.0
 
-## Punchlist
+> Mar 12th - Mar 26th
+> @imlucas on vacation 17th - 21st
+
+### Carry Over
+
+- [x] timing issues around controllers replacing content
+- [x] needs to be more obvious if your instance is empty
+
+### Punchlist
+
+- [ ] rest bails on a silly log regex failure `#bug`
+- [ ] refine index meta and stats, e.g. spec & size `#collection`
+- [ ] reconnect collection lock % from backend to chart data `#collection`
+- [ ] button to bring up data table instead of running automatically `#collection`
+- [ ] simple paging for data table `#collection`
+- [ ] small tighten up for log view reliability and usability `#log`
+- [ ] update instance info template to use new schemas `#info`
+
+## 0.2.0
+
+> Mar 26th - Apr 2nd
+
+### Punchlist
+
+> empty
+
+### Prioritize Me
+
+- [ ] top supports filtering keys by regex `#pulse`
+- [ ] graph of instance level lock `#pulse`
+- [ ] refine databases list `#pulse`
+- [ ] stream `currentOp` `#pulse`
+- [ ] ACL visualization "auth user view" (biggie.) `#auth` `#needsspec`
+- [ ] list users `#auth`
+- [ ] list roles `#auth`
+- [ ] view status `{ replSetGetStatus : 1 }` `#replica`
+- [ ] view oplog size and time range `rs.printReplicationInfo()` `#replica`
+- [ ] view members and replication lag `rs.printSlaveReplicationInfo()` `#replica`
+- [ ] authenticate via rest research `#auth`
+- [ ] backend pieces (eg middleware to enforce) `#auth`
+- [ ] front-end login forms `#auth`
+- [ ] pipeline builder UI `#aggregation` `#needsspec`
+- [ ] read only shell `#shell` `#needsspec`
+
+## Backlog
 
 _@note_ not prioritized at all or filtered by target personas
 
-- [ ] use `ping` command to show nice message if --rest not enabled
-- [ ] offline support: (AppCache? Modify sterno to use mozilla/localForage?)
-- [ ] instance actions
-  - [ ] setParameter
-  - [ ] getParameter
-  - [ ] logRotate
-  - [ ] getCmdLineOpts
-  - [ ] profiling settings
-  - [ ] toggle profiling
-- [ ] database actions
-  - [ ] create
-  - [ ] clone
-  - [ ] drop
-  - [ ] repair
-  - [ ] fsync
-- [ ] create collection
-- [ ] create ttl collection
-- [ ] create capped collection
-- [ ] collection actions from dropdown
-  - [ ] rename
-  - [ ] clone
-  - [ ] clone as capped
-  - [ ] remove
-  - [ ] drop indexes
-  - [ ] compact
-  - [ ] reIndex
-  - [ ] touch
-  - [ ] validate
-- [ ] create index
-- [ ] remove index
-[ ] [change index ttl](http://docs.mongodb.org/manual/reference/command/collMod/#index)
-- [ ] documents (simple data browser like dynamo has in the aws console)
-  - [ ] find
-  - [ ] insert
-  - [ ] remove
-  - [ ] update
-- [ ] view and edit instance level auth config
-- [ ] auth users
-  - [ ] list
-  - [ ] add
-  - [ ] remove
-  - [ ] change password
-  - [ ] add role
-  - [ ] remove role
-  - [ ] view a list of all databases a user has access to
-- [ ] auth roles
-  - [ ] list
-  - [ ] view
-  - [ ] add
-  - [ ] remove
-- [ ] aggregation query builder
-- [ ] view results of system.profile
-- [ ] visualize authentication
-- [ ] basic shell to run queries
+- [ ] images not showing up when running from the binary `#bug`
+- [ ] finalize bootloader and start deploying like whoa
+
+### read actions
+
+> things we can do
+
+#### instance
+
+- getParameter
+- getCmdLineOpts
+- view profiling config
+- view profiling data
+
+### write actions
+
+> things we'll need to wait on
+
+#### instance
+
+- setParameter
+- logRotate
+- enable/disable profiling
+- edit auth config
+
+#### database
+
+- create
+- clone
+- drop
+- repair
+- fsync
+
+#### collection
+
+- create
+- create ttl
+- create capped
+- rename
+- clone
+- clone as capped
+- remove
+- drop indexes
+- compact
+- reIndex
+- touch
+- validate
+- create index
+- remove index
+- [change index ttl](http://docs.mongodb.org/manual/reference/command/collMod/#index)
+- insert document
+- remove document
+- update document
+
+#### auth
+
+- create user
+- remove user
+- change user password
+- edit user role
+- create role
+- remove role
 
 ## Stretch
 
-- [ ] figure out relevant stats for sharding
-- [ ] view and edit sharding config
-- [ ] figure out relevant stats for replication
-- [ ] view and edit replication config
-- [ ] view and kill currently running operations
-- [ ] plan for tracking usage and analytics
+- sharding.
+
+
+## Taxonomy
+
+<dl>
+  <dt>collection</dt>
+  <dd>the collection entity page: `http://localhost:29017/#collection/test/rating`</dd>
+
+  <dt>pulse</dt>
+  <dd>Home page, dashboard, index: `http://localhost:29017/`</dd>
+
+  <dt>log</dt>
+  <dd>parsed version of getLog results: `http://localhost:29017/#log`</dd>
+
+  <dt>top metric</dt>
+  <dd>key returned from top: `total.count`, `test.rating.lock.count`, etc</dd>
+
+  <dt>data table</dt>
+  <dd>page through results of a find</dd>
+
+  <dt></dt>
+  <dd></dd>
+
+</dl>
