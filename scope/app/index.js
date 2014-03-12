@@ -7,4 +7,6 @@
 require('backbone').$ = require('jquery');
 require('debug').enable('*');
 
+require('./models')({host: '127.0.0.1'});
+
 module.exports = require('./controllers')({});
