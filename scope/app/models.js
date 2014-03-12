@@ -69,6 +69,15 @@ module.exports.Database = Model.extend({
   service: function(){
     return {name: 'database', args: this.get('name')};
   },
+  parse: function(data){
+    if(data.collection_names.length > 0){
+      var i = data.collection_names.indexOf('system.indexes');
+      if(i > -1 ){
+        data.collection_names.splice(i, 1);
+      }
+    }
+    return data;
+  },
   defaults: {
     name: 'mongomin',
     collection_names: ['fixture', 'system.indexes'],
@@ -127,8 +136,7 @@ module.exports.Collection = Model.extend({
 module.exports.Sample = List.extend({
   model: Backbone.Model.extend({
     defaults: {
-      _id: 1,
-      name: 'I could be any shape of document'
+      _id: 1
     }
   }),
   initialize: function(opts){

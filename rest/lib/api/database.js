@@ -25,7 +25,7 @@ var stats = module.exports.stats = function(req, res, next){
   debug('fetching stats');
   req.database.command({dbStats: 1}, {}, function(err, data){
     if(err) return next(err);
-    if(!data.extentFreeList) return next(errors.NotFound('unknown database ' + req.database.databaseName));
+
     req.database.stats = {
       object_count: data.objects,
       object_size: data.dataSize,
@@ -33,8 +33,6 @@ var stats = module.exports.stats = function(req, res, next){
       index_count: data.indexes,
       index_size: data.indexSize,
       extent_count: data.numExtents,
-      extent_freelist_count: data.extentFreeList.num,
-      extent_freelist_size: data.extentFreeList.totalSize,
       file_size: data.fileSize,
       ns_size: data.nsSizeMB * 1024 * 1024
     };
