@@ -33,7 +33,6 @@ module.exports = Backbone.View.extend({
       return rand() * 2;
     });
     creek('.collection-creek', {interpolation: 'step-after', data: data}).render();
-
   }
 });
 

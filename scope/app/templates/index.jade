@@ -14,30 +14,7 @@ html(lang='en')
             a.navbar-brand(style='text-indent: 0;color: white;font-weight: bold;padding: 0;margin: 0;width: 100%;')
               img(src="img/scope-40.png", style='padding-left: 12px; padding-top: 2px;float: left;')
               div(style="padding-top: 10px;float: left; margin-left: 5px;") mongoscope
-
-          ul.nav.navbar-nav.navbar-right.secondary
-            li
-              //- a.muted(href='/help') Help &amp; Support
-
-        //
-          Primary sidebar nav to hop to any section.  For simplicity,
-          removed secondary bar/miniview used in MMS.
-        ul.nav.navbar-nav.side-nav
-
-          - for section in [{name: 'pulse', 'icon': 'list-alt'}, {name: 'top', icon: 'barcode'}, {name: 'log', icon: 'align-justify'}]
-            li
-              a.btn(href='##{section.name}', style='border-radius: 0;')
-                span(class='glyphicon glyphicon-#{section.icon}', style='font-size: 24px;')
-                div.text(style="font-size: 12px;line-height: 14px;text-align: center;text-shadow: none;") #{section.name}
-
-          //- li.nav-footer
-          //-   button#featureRequestToggle.btn.btn-primary(data-toggle='modal' data-target='#feedbackModal')
-          //-     i.custom-icon
-          //-     br
-          //-     span.text feedback
-
-        // Container to show flash messages from app.
-        #uiMsgs.navbar-alert.alert.alert-warning.jshide
+        #sidebar
 
         // And finally the main view where the party actually happens.
         #pageWrapper
