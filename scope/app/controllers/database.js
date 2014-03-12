@@ -20,12 +20,10 @@ module.exports = Backbone.View.extend({
   },
   deactivate: function(){},
   render: function(){
-    var self = this;
-    requestAnimationFrame(function(){
-      self.$el.html(self.tpl({
-        'database': self.database.toJSON()
-      }));
-    });
+    this.$el.html(this.tpl({
+      'database': this.database.toJSON(),
+      'host': models.instance.toJSON().host
+    }));
   }
 });
 
