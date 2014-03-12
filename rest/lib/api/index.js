@@ -1,6 +1,7 @@
 "use strict";
 
 var mw = require('../db-middleware'),
+  diskspace = require('diskspace'),
   debug = require('debug')('mg:mongorest:api');
 
 module.exports = function(app){
@@ -45,8 +46,12 @@ var host = module.exports.host = function host(req, res, next){
       feature_always_full_sync: data.extra.alwaysFullSync,
       feature_nfs_async: data.extra.nfsAsync
     };
-
-    next();
+    diskspace.check('/', function(total, free, state){
+      req.mongo.host.disk_total = total;
+      req.mongo.host.disk_free = free;
+      req.mongo.host.disk_state = state;
+      next();
+    });
   });
 };
 
