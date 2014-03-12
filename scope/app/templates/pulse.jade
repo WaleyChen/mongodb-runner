@@ -10,15 +10,23 @@ include mixins/bytes
         .panel-body
           .well
             :markdown
-              #### Welcome to MongoDB!
+              #### Welcome to mongoscope!
 
               It appears you don't have any databases on this instance.
 
-              To get started, open a new terminal window and run:
+              To get started, open a new terminal window and copy and paste:
 
               ```
-              mongo --eval "db.getMongo().getDB('testing')"
+              mongo --eval \
+              "db.rating.save( \
+                {_id:'mongoscope', votes:[{you: 100}]})"
               ```
+
+          img.leafy(src="img/leafy-anim.gif", style="height: 70px; float: right;")
+          div(style="float: right; margin-top: 25px; text-align: right;")
+            | create a database to continue.
+            br
+            | the leaf has it under control while you do.
 
       else
         .panel-heading

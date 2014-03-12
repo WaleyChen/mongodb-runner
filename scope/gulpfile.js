@@ -3,7 +3,8 @@ var gulp = require('gulp'),
   browserify = require('gulp-browserify'),
   jade = require('gulp-jade'),
   concat = require('gulp-concat'),
-  manifest = require('gulp-sterno-manifest');
+  manifest = require('gulp-sterno-manifest'),
+  es = require('event-stream');
 
 // "form of: a webapp!"
 gulp.task('build', ['pages', 'assets', 'js', 'css', 'manifest', 'bootloader']);
@@ -16,6 +17,25 @@ gulp.task('ready', function(){
 });
 
 gulp.task('js', function(){
+  // function collect(glob, fn){
+  //   var paths = [];
+
+  //   gulp.src(glob)
+  //     .pipe(es.through(function(file){
+  //         paths.push();
+  //       }, function(){
+  //         this.emit('end');
+  //       }));
+  // }
+
+  // collect('./app/templates/*.jade', function(paths){
+  //   gulp.src('./app/index.js')
+  //     .pipe(browserify({
+  //       debug : false, transform: ['jadeify'], require: paths
+  //     }))
+  //     .pipe(gulp.dest('../rest/ui'));
+  // });
+
   gulp.src('./app/index.js')
     .pipe(browserify({debug : false, transform: ['jadeify']}))
     .pipe(gulp.dest('../rest/ui'));

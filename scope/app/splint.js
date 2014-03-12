@@ -103,6 +103,13 @@ module.exports.Controller = Backbone.View.extend({
     if(this.activated === false) return this;
 
     this.$el.html(this.tpl(this.ctx()));
+    this.trigger('rendered', this);
+    return this;
+  },
+  rerender: function(){
+    this.activated = true;
+    this.render();
+    this.activate = false;
     return this;
   }
 });
