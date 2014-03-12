@@ -1,13 +1,44 @@
+include mixins/bytes
+
+- stats = database.stats
+- stats.extent_used_size = stats.object_size + stats.index_size
+- stats.extent_free_size = stats.storage_size - stats.extent_used_size
+- stats.extent_size = stats.storage_size / stats.extent_count
+- host.disk_used = host.disk_total - host.disk_free
+
 .row
   .col-md-12 &nbsp;
 .row
-  .col-md-6.col-md-push-3
-    .panel.panel-default
-      .panel-heading
-        h2 #{database.name}
+  .panel.panel-default.col-md-6.col-md-push-3
+    .panel-heading
+      h2 #{database.name}
 
-      ul.list-group.panel-body
-       - for collection_name in database.collection_names
-        li.list-group-item
-          h4
-            a(href='#collection/#{database.name}/#{collection_name}') #{collection_name}
+    ul.list-group.panel-body
+     - for collection_name in database.collection_names
+      li.list-group-item
+        h4
+          a(href='#collection/#{database.name}/#{collection_name}') #{collection_name}
+.row
+  .panel.panel-default.col-md-6.col-md-push-3
+    .panel-heading
+    ul.list-group.panel-body
+      li.list-group-item document data
+        +bytes(stats.object_size)
+
+      li.list-group-item indexes pre-allocated
+        +bytes(stats.index_size)
+
+      li.list-group-item
+        +bytes(stats.extent_size-stats.extent_free_size)
+        | &nbsp;of&nbsp;
+        +bytes(stats.extent_size)
+        | &nbsp;filled in current extent
+      li.list-group-item disk used #{((stats.ns_size+stats.file_size)/host.disk_used*100).toFixed(2)}%
+
+.row
+  .panel.panel-default.col-md-6.col-md-push-3
+    .panel-heading
+    ul.list-group.panel-body
+      li #{stats.object_count} documents
+      li #{stats.index_count} indexes
+      li #{database.collection_names.length} collections
