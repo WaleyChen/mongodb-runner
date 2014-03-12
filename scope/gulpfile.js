@@ -9,10 +9,10 @@ var gulp = require('gulp'),
 gulp.task('build', ['pages', 'assets', 'js', 'css', 'manifest', 'bootloader']);
 
 // What we'll call from `npm start` to work on this project
-gulp.task('dev', ['mongod', 'build', 'serve', 'watch', 'ready']);
+gulp.task('dev', ['build', 'serve', 'watch', 'ready']);
 
 gulp.task('ready', function(){
-    gutil.log('mongoscope ready to use!', 'http://mongoscope.dev/');
+    gutil.log('mongoscope ready to use!', 'http://localhost:3000/');
 });
 
 gulp.task('js', function(){
@@ -44,17 +44,8 @@ gulp.task('pages', function(){
 gulp.task('serve', function(){
   var port = 3000;
   require('http').createServer(
-    require('ecstatic')({ root: __dirname + '/build' })
+    require('ecstatic')({ root: __dirname + '/../rest/ui' })
   ).listen(port);
-});
-
-// First up mongod built from the mongoscope branch.
-gulp.task('mongod', function(){
-  var mongod = process.env.MONGOD || '/srv/mongo/bin/mongod',
-    dbpath = process.env.DBPATH || '/srv/mongo/data/',
-    cmd = mongod + ' --dbpath ' + dbpath + ' --rest';
-
-  require('child_process').exec(cmd);
 });
 
 // App within the app that takes care of bootstrapping from a single HTML file.
