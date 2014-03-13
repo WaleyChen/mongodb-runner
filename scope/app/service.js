@@ -179,11 +179,13 @@ var mixins = {
     _.defaults(options || (options = {}), {
       uri: _.result(this, 'uri')
     });
+    var self = this;
 
     debug('$sub  ' + options.uri);
-    srv.io
-      .on(options.uri, this.iohandler.bind(this))
-      .emit(options.uri);
+    srv.io.on('connect', function(){
+      srv.io.on(options.uri, self.iohandler.bind(self))
+        .emit(options.uri);
+    });
     this.trigger('subscribed', this, srv.io, options);
     return this;
   },

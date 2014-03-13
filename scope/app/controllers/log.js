@@ -15,11 +15,11 @@ module.exports = Backbone.View.extend({
       .on('error', this.render, this);
   },
   activate: function(){
+    var self = this;
     this.log.fetch();
-    this.log.subscribe();
   },
   deactivate: function(){
-    this.log.unsubscribe();
+
   },
   render: function(){
     var lineTpl = require('../templates/log-line.jade');
