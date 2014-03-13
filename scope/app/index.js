@@ -4,7 +4,11 @@
 
 // By default we'll use jquery to drive the DOM from backbone,
 // but we could easily switch to zepto instead.
-require('backbone').$ = require('jquery');
+window.jQuery = require('backbone').$ = require('jquery');
+
+require('bootstrap/js/tooltip.js');
+require('bootstrap/js/popover.js');
+
 require('debug').enable('*');
 
 require('./models')({host: '127.0.0.1'});

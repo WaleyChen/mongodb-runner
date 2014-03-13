@@ -21,7 +21,8 @@
     "socket.io-client": "^0.9.16",
     "d3": "^3.4.3",
     "lodash": "^2.4.1",
-    "numeral": "^1.5.3"
+    "numeral": "^1.5.3",
+    "bootstrap": "git://github.com/twbs/bootstrap"
   },
   "devDependencies": {
     "jadeify": "~2.1.1",

@@ -194,13 +194,15 @@ Creek.prototype.tick = function(){
   this.scales.y.domain([0, max]);
 
   if(this.line){
-    this.svg.select('.line')
+    this.line
       .attr('d', this.shapes.line)
-      .attr('transform', null);
+      .attr('transform', null)
+      // .on('mouseover', function(d){ alert('hi');})
+      // .on('mouseout', function(d){});
   }
 
   if(this.area){
-    this.svg.select('.area')
+    this.area
       .attr('d', this.shapes.area)
       .attr('transform', null);
   }
