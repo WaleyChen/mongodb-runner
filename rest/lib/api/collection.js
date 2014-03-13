@@ -6,8 +6,8 @@ var mw = require('../db-middleware'),
 module.exports = function(app){
   app.get('/api/v1/:database_name/:collection_name', mw.database(),
     mw.collection(), stats, indexes, get);
-  app.get('/api/v1/:database_name/:collection_name/sample', mw.database(),
-    mw.collection(), sample);
+  app.get('/api/v1/:database_name/:collection_name/find', mw.database(),
+    mw.collection(), find);
 
   app.post('/api/v1/:database_name/:collection_name/rename', rename);
   app.post('/api/v1/:database_name/:collection_name/clone', clone);
@@ -65,8 +65,11 @@ var indexes = module.exports.indexes = function(req, res, next){
   });
 };
 
-var sample = function(req, res, next){
-  req.mongo.find(req.database, req.collection.collectionName, {limit: 10}, function(err, docs){
+var find = function(req, res, next){
+  var limit = Math.min(10, req.param('limit', 10)),
+    skip = Math.max(0, req.param('skip', 0));
+
+  req.mongo.find(req.database, req.collection.collectionName, {limit: limit, skip: skip}, function(err, docs){
     if(err) return next(err);
     res.send(docs);
   });
