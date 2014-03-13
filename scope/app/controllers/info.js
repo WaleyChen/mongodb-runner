@@ -25,14 +25,12 @@ module.exports = Backbone.View.extend({
   },
   deactivate: function(){},
   render: function(){
-    var self = this;
-    requestAnimationFrame(function(){
-      var ctx = {
-        'build': self.build.toJSON(),
-        'host': self.host.toJSON()
-      };
-      ctx.host.system_time = moment(ctx.host.system_time).format('MMM Do YYYY, h:mm:ss a');
-      self.$el.html(self.tpl(ctx));
-    });
+    var ctx = {
+      'build': this.build.toJSON(),
+      'host': this.host.toJSON()
+    };
+    ctx.host.system_time = moment(ctx.host.system_time).format('MMM Do YYYY, h:mm:ss a');
+    this.$el.html(this.tpl(ctx));
+    return this;
   }
 });

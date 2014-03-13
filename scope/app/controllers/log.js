@@ -22,30 +22,13 @@ module.exports = Backbone.View.extend({
     this.log.unsubscribe();
   },
   render: function(){
-    var self = this;
-    // @todo: Use webworker for log processing instead of animation frame?
-    requestAnimationFrame(function(){
-      var lineTpl = require('../templates/log-line.jade');
+    var lineTpl = require('../templates/log-line.jade');
 
-      self.$el.html(self.tpl({
-        lines: self.log.models.map(function(model, i){
-          return lineTpl(model.toJSON());
-        })
-      }));
-      return self;
-    });
-  }
-});
-
-var FilterButton = Backbone.View.extend({
-  className: 'btn btn-default',
-  tagName: 'a',
-  initialize: function(opts){
-    this.model = opts.model;
-    this.model.on('change', this.render, this);
-  },
-  render: function(){
-    this.$el.text(this.model.get('name') + ' ('+this.model.get('count') +')');
+    this.$el.html(this.tpl({
+      lines: this.log.models.map(function(model, i){
+        return lineTpl(model.toJSON());
+      })
+    }));
     return this;
   }
 });

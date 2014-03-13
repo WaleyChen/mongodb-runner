@@ -51,12 +51,8 @@ var SampleView = Backbone.View.extend({
   render: function(){
     this.$el = $('.samples');
     this.el = this.$el.get(0);
-
-    var self = this;
-    requestAnimationFrame(function(){
-      self.$el.html(self.tpl({
-        'samples': self.model.toJSON()
-      }));
-    });
+    this.$el.html(this.tpl({
+      'samples': this.model.toJSON()
+    }));
   }
 });

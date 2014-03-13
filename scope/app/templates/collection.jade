@@ -5,12 +5,13 @@ include mixins/cog
   .panel.panel-default.col-md-8(style="padding-right: 0;")
     .panel-heading
       a.btn.btn-primary Browse Data
+    .panel-body
+      .collection-creek.mms
 
 
   .col-md-4
     .panel.panel-default
       .panel-heading
-        +cog('#database/#{collection.database}', ['rename'])
         h1(style="margin: 0; padding: 0;") #{collection.name}
         h3(style="margin: 0; padding: 0;")
           a(href="#database/#{collection.database}") #{collection.database}
