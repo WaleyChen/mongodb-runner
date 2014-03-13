@@ -22,6 +22,7 @@ module.exports = function(app){
 var get = module.exports.get = function(req, res, next){
   req.mongo.admin().command({getLog: req.param('name', 'global')}, function(err, data){
     if(err) return next(err);
+
     res.send(mongolog.parse(data.documents[0].log));
   });
 };
