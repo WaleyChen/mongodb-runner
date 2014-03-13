@@ -14,8 +14,8 @@
 
 - [x] rest bails on a silly log regex failure `#bug`
 - [x] refine index meta and stats, e.g. spec & size `#collection`
-- [ ] reconnect collection lock % from backend to chart data `#collection`
-- [ ] button to bring up data table instead of running automatically `#collection`
+- [x] reconnect collection lock % from backend to chart data `#collection`
+- [x] button to bring up data table instead of running automatically `#collection`
 - [ ] simple paging for data table `#collection`
 - [ ] small tighten up for log view reliability and usability `#log`
 - [ ] update instance info template to use new schemas `#info`

@@ -12,27 +12,39 @@ module.exports = Backbone.View.extend({
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);
 
+    this.metric = 'lock.count';
+
     this.collection = new models.Collection()
-      .on('sync', this.render, this)
-      .on('error', this.render, this);
+      .on('sync', this.render, this);
+
+    this.top = new models.Top()
+      .on('sync', this.onTopData, this);
+
+    this.graph = creek('.collection-creek', {
+      interpolation: 'step-after'
+    });
   },
   activate: function(database, name){
-    var opts = {database: database, name: name};
-    this.collection.set(opts, {silent: true});
+    this.collection.set({database: database, name: name}, {silent: true});
     this.collection.fetch();
-    this.sample = this.sample || new SampleView(opts);
+
+    this.top.fetch();
+    this.top.subscribe();
   },
-  deactivate: function(){},
+  onTopData: function(){
+    var key =  [
+        this.collection.get('database'),
+        this.collection.get('name'), this.metric].join('.'),
+      locks = this.top.get('deltas')[key];
+
+    this.graph.inc(locks);
+  },
+  deactivate: function(){
+    this.top.unsubscribe();
+  },
   render: function(){
-    var self = this;
-    self.$el.html(self.tpl({
-      'collection': self.collection.toJSON()
-    }));
-    var rand = d3.random.logNormal(2, 0.5);
-    var data = d3.range(400).map(function(){
-      return rand() * 2;
-    });
-    creek('.collection-creek', {interpolation: 'step-after', data: data}).render();
+    this.$el.html(this.tpl({'collection': this.collection.toJSON()}));
+    this.graph.render();
   }
 });
 

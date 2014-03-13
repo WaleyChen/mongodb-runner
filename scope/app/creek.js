@@ -28,9 +28,11 @@ function Creek(opts){
   }));
 
   this.scrollback = 60 * this.minutes;
-  this.duration = 1000 / this.minutes;
+  this.duration = 1000;
 
-  this.data = this.data || d3.range(this.scrollback).map(function(){
+  // Back fill so if we get an `inc` relatively quickly, we'll
+  // be right on the nose instead of a few seconds behind.
+  this.data = d3.range(this.scrollback - 2).map(function(){
     return 0;
   });
 

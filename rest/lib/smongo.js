@@ -20,7 +20,7 @@ function CommandStream(db, cmd, opts){
   this.debug = require('debug')('mg:smongo:command');
 
   // How often to sample mongod
-  this.interval = opts.interval || 500;
+  this.interval = opts.interval || 1000;
   this.intervalId = null;
   this.readable = false;
   this.writable = false;
