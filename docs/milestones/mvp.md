@@ -13,7 +13,7 @@
 ### Punchlist
 
 - [x] rest bails on a silly log regex failure `#bug`
-- [ ] refine index meta and stats, e.g. spec & size `#collection`
+- [x] refine index meta and stats, e.g. spec & size `#collection`
 - [ ] reconnect collection lock % from backend to chart data `#collection`
 - [ ] button to bring up data table instead of running automatically `#collection`
 - [ ] simple paging for data table `#collection`
