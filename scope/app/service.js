@@ -127,7 +127,10 @@ Service.prototype.database = function(name, fn){
 // @param {Function} fn `(err, docs)`
 // @api private
 Service.prototype.find = function(db, name, spec, fn){
-  return fn(new Error('deprecated'));
+  this.read('/' + db + '/' + name + '/find', spec, function(err, data){
+    if(err) return fn(err);
+    fn(null, data);
+  });
 };
 
 // Get all collection metadata.
@@ -141,22 +144,6 @@ Service.prototype.collection = function(db, name, fn){
     if(err) return fn(err);
     fn(null, data);
   });
-};
-
-Service.prototype.sample = function(db, name, fn){
-  this.read('/' + db + '/' + name + '/sample', function(err, data){
-    if(err) return fn(err);
-    fn(null, data);
-  });
-};
-
-// Get indexes in `db` and call `fn(err, indexes)` when complete.
-//
-// @param {String} db A database name
-// @param {Function} fn `fn(err, indexes)`
-// @api public
-Service.prototype.indexes = function(db, fn){
-  return fn(new Error('deprecated.  indexes returned via this.collection.'));
 };
 
 var Backbone = require('backbone'),

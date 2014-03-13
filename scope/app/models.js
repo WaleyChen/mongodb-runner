@@ -142,9 +142,12 @@ module.exports.Sample = List.extend({
   initialize: function(opts){
     this.database = opts.database;
     this.name = opts.name;
+    this.skip = 0;
+    this.limit = 10;
   },
   service: function(){
-    return {name: 'sample', args: [this.database, this.name]};
+    return {name: 'find', args: [this.database, this.name,
+      {skip: this.skip, limit: this.limit}]};
   },
   uri: function(){
     return this.database + '/' + this.name + '/sample';
