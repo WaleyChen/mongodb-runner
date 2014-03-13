@@ -9,30 +9,42 @@
 /**
  * Log
  */
+.log-container {
+  font-family: monaco;
+  font-size: 14px;
+  line-height: 24px;
+  background: #403d3d;
+  color: #F8F8F2;
+}
 .log > span {
   display: block;
   max-height: 18px;
   overflow: hidden;
 }
 
+/**
+magenta: FF80F4
+yellow: FFEE99
+pink: #F92672
+cyan: #66D9EF
+green: #A6E22E
+orange: #FD971F
+gray: #8C8C8C
+*/
+
 .log .name {
-  font-size: 80%;
-  width: 80px;
+  width: 140px;
   display: block;
   float: left;
   text-align: right;
-  margin-right: 10px;
+  margin-right: 20px;
 }
 
-.log .initandlisten > .name{
+.log .initandlisten .name, .log .name{
   color: #868686;
 }
 
-.log .websvr > .name {
-  color: #2F9C33;
-}
-
-.log .clientcursormon > .name {
+.log .clientcursormon .name {
   color: #812A92;
 }
 
