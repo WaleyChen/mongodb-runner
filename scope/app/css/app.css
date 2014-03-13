@@ -25,6 +25,7 @@ kbd {
   line-height: 24px;
   background: #403d3d;
   color: #F8F8F2;
+  overflow: hidden;
 }
 .log > span {
   display: block;
@@ -57,6 +58,11 @@ peach: #DF826B
 
 .log .clientcursormon .name {
   color: #FF80F4;
+}
+
+.log div {
+  white-space: nowrap;
+  clear: both;
 }
 
 .filter-bar {
