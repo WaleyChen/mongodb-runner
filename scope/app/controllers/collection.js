@@ -23,9 +23,11 @@ module.exports = Backbone.View.extend({
     this.graph = creek('.collection-creek', {
       interpolation: 'step-after'
     });
+
+    this.explorer = new ExplorerView({collection: this.collection});
   },
   activate: function(database, name){
-    this.collection.set({database: database, name: name}, {silent: true});
+    this.collection.set({database: database, name: name});
     this.collection.fetch();
 
     this.top.fetch();
@@ -49,22 +51,34 @@ module.exports = Backbone.View.extend({
 });
 
 
-var SampleView = Backbone.View.extend({
+var ExplorerView = Backbone.View.extend({
   tpl: require('../templates/collection-sample.jade'),
+  events: {
+    'click .next': 'next',
+    'click .prev': 'prev'
+  },
   initialize: function(opts){
-    this.$el = $('.samples');
+    this.$el = $('.explorer');
     this.el = this.$el.get(0);
 
-    this.model = new models.Sample(opts)
-      .on('sync', this.render, this)
-      .on('error', this.render, this);
-    this.model.fetch();
+    this.samples = new models.Sample({
+      limit: this.limit,
+      skip: this.skip,
+      collection: this.opts.collection
+    }).on('sync', this.render, this);
+  },
+  prev: function(){
+    this.samples.prev();
+  },
+  next: function(){
+    this.samples.next();
   },
   render: function(){
-    this.$el = $('.samples');
-    this.el = this.$el.get(0);
     this.$el.html(this.tpl({
-      'samples': this.model.toJSON()
+      limit: this.samples.limit,
+      skip: this.samples.skip,
+      schema: this.samples.schema,
+      samples: this.samples.toJSON()
     }));
   }
 });

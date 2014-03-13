@@ -140,10 +140,27 @@ module.exports.Sample = List.extend({
     }
   }),
   initialize: function(opts){
-    this.database = opts.database;
-    this.name = opts.name;
+    this.database = null;
+    this.name = null;
     this.skip = 0;
     this.limit = 10;
+    this.schema = {};
+    this.collection = opts.collection.on('change', this.collectionChange, this);
+  },
+  next: function(){
+    this.skip += this.limit;
+    this.fetch({reset: true});
+  },
+  prev: function(){
+    this.skip -= this.limit;
+    this.fetch({reset: true});
+  },
+  collectionChange: function(){
+    var isFirst = this.database === null;
+
+    this.database = this.collection.get('database');
+    this.name = this.collection.get('name');
+    this.fetch({reset: true});
   },
   service: function(){
     return {name: 'find', args: [this.database, this.name,
@@ -151,6 +168,9 @@ module.exports.Sample = List.extend({
   },
   uri: function(){
     return this.database + '/' + this.name + '/sample';
+  },
+  parse: function(res){
+    // @todo: fastest way to sample out the schema?
   }
 });
 
