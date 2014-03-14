@@ -17,7 +17,7 @@
 - [x] reconnect collection lock % from backend to chart data `#collection`
 - [x] button to bring up data table instead of running automatically `#collection`
 - [x] simple paging for data table `#collection`
-- [ ] small tighten up for log view reliability and usability `#log`
+- [x] small tighten up for log view reliability and usability `#log`
 - [x] update instance info template to use new schemas `#info`
 
 ## 0.2.0

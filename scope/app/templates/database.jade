@@ -7,38 +7,34 @@ include mixins/bytes
 - host.disk_used = host.disk_total - host.disk_free
 
 .row
-  .col-md-12 &nbsp;
-.row
-  .panel.panel-default.col-md-6.col-md-push-3
+  .col-md-9(style="padding-right: 0;padding-top: 20px;")
+    h5(style="position:absolute;position: absolute;right: 40px;opacity: .7;") #{metric}
+    .collection-creek.mms
+
+    .col-md-4.panel.panel-default(style="margin-right: 10px;")
+      .panel-heading
+        h4 Collections
+
+      ul.list-group.panel-body
+       - for collection_name in database.collection_names
+        li.list-group-item
+          h4
+            a(href='#collection/#{database.name}/#{collection_name}') #{collection_name}
+
+    .col-md-6.panel.panel-default.col-md-push-1
+      .panel-heading
+        h4 Storage: #{((stats.ns_size+stats.file_size)/host.disk_used*100).toFixed(2)}%
+      .panel-body.donut
+
+  .panel.panel-default.col-md-3
     .panel-heading
       h2 #{database.name}
 
     ul.list-group.panel-body
-     - for collection_name in database.collection_names
       li.list-group-item
-        h4
-          a(href='#collection/#{database.name}/#{collection_name}') #{collection_name}
-.row
-  .panel.panel-default.col-md-6.col-md-push-3
-    .panel-heading
-    ul.list-group.panel-body
-      li.list-group-item document data
-        +bytes(stats.object_size)
-
-      li.list-group-item indexes pre-allocated
-        +bytes(stats.index_size)
-
+        span.badge #{stats.object_count}
+        strong Documents
       li.list-group-item
-        +bytes(stats.extent_size-stats.extent_free_size)
-        | &nbsp;of&nbsp;
-        +bytes(stats.extent_size)
-        | &nbsp;filled in current extent
-      li.list-group-item disk used #{((stats.ns_size+stats.file_size)/host.disk_used*100).toFixed(2)}%
+        span.badge #{stats.index_count}
+        strong Indexes
 
-.row
-  .panel.panel-default.col-md-6.col-md-push-3
-    .panel-heading
-    ul.list-group.panel-body
-      li #{stats.object_count} documents
-      li #{stats.index_count} indexes
-      li #{database.collection_names.length} collections

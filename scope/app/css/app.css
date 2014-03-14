@@ -185,6 +185,14 @@ peach: #DF826B
   stroke-width: 2px;
 }
 
+.donut .documents {
+  stroke: #064800;
+}
+
+.donut .indexes {
+  stroke: #6f6763;
+}
+
 .mms .creek .area {
   fill: #6ba442;
 }

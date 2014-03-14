@@ -11,7 +11,8 @@ module.exports = Backbone.View.extend({
     this.$el = Backbone.$('#mongoscope');
     this.el = this.$el.get(0);
 
-    this.layout = true;
+    this.activated = false;
+    this.metric = 'lock.count';
 
     this.top = new models.Top()
       .on('sync', this.render, this)
@@ -22,37 +23,34 @@ module.exports = Backbone.View.extend({
   activate: function(){
     this.top.fetch();
     this.top.subscribe();
-    console.warn('activate top');
+    this.activated = true;
   },
   deactivate: function(){
-    console.warn('deactivate top');
-    this.top.unsubscribe();
-    this.layout = true;
+    this.activated = false;
   },
   render: function(){
-    if(!this.top.hasChanged('deltas')) return;
-
+    if(!this.activated) return this;
     var self = this,
       ctx = self.top.toJSON();
+    ctx.metric = this.metric;
 
-    if(this.layout === true){
-      this.layout = false;
-
-      this.top.get('namespaces').map(function(ns, i){
-        var item = creek('#creek-' + i, {interpolation: 'step-after'});
-        self.graphs[ns] = item;
-        return item;
-      });
-
-      self.$el.html(self.tpl(ctx));
-      this.top.get('namespaces').map(function(ns){
-        self.graphs[ns].render();
-      });
-    }
+    this.top.get('namespaces').map(function(ns, i){
+      var item = creek('#creek-' + i, {interpolation: 'step-after'});
+      self.graphs[ns] = item;
+      return item;
+    });
 
     this.top.get('namespaces').map(function(ns){
       self.graphs[ns].inc(self.top.get('deltas')[ns + '.total.count']);
     });
-    return self;
+
+    if(this.$el.find('.graph-title').length === 0){
+      self.$el.html(self.tpl(ctx));
+
+      this.top.get('namespaces').map(function(ns){
+        self.graphs[ns].render();
+      });
+    }
+    return this;
   }
 });

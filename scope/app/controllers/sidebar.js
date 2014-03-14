@@ -15,7 +15,14 @@ module.exports = Backbone.View.extend({
   },
   render: function(){
     var self = this;
-    self.$el.html(self.tpl({}));
+    self.$el.html(self.tpl({
+      sections: [
+        {name: 'pulse', 'icon': 'flash'},
+        {name: 'top', icon: 'magnet'},
+        {name: 'log', icon: 'align-justify'},
+        {name: 'info', icon: 'info-sign'}
+      ]
+    }));
     if(self.instance.get('database_names').length === 0){
       self.$el.find('.log').hide();
       self.$el.find('.top').hide();

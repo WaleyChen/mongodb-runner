@@ -30,7 +30,7 @@ module.exports = function splint(){
   router.on('route', function(name, args){
     if(router._current){
       debug('deactivating', router._current.name);
-      router._current.deactivate();
+      router._current.deactivate.call(router._current);
     }
     router._current = router._nameToHandler[name];
     router._current.name = name;

@@ -92,7 +92,7 @@ Creek.prototype.render = function(){
       .range([0, this.stage.width]),
     y: d3.scale.linear()
     .range([this.stage.height, 0])
-    .domain([0, 0])
+    .domain([0, 1])
   };
 
   this.shapes = {
@@ -193,7 +193,7 @@ Creek.prototype.tick = function(){
   this.consume();
 
   this.scales.x.domain([this.now - (this.scrollback - 2) * this.duration, this.now - this.duration]);
-  this.scales.y.domain([0, max]);
+  this.scales.y.domain([0, Math.max(1, max)]);
 
   if(this.line){
     this.line

@@ -1,40 +1,75 @@
 include mixins/cog
 include mixins/bytes
 
-.row
-  .col-md-12 &nbsp;
+mixin health_bar(build)
+  ul.list-inline
+    li(class="label #{instance.host.cpu_bits === 64 ? 'label-success' : 'label-warning'}") #{instance.host.cpu_bits}bit
+    li(class="label #{build.debug === false ? 'label-success' : 'label-warning'}")
+      | debug #{build.debug ? 'on' : 'off'}
+    li(class="label #{build.javascript_engine === 'V8' ? 'label-success' : 'label-warning'}")
+      | #{build.javascript_engine}
+    li(class="label #{build.allocator === 'tcmalloc' ? 'label-success' : 'label-warning'}")
+      | #{build.allocator}
+    li.label.label-success boost #{build.boost_version}
+
+    li(class="label #{build.openssl_version ? 'label-success' : 'label-warning'}")
+      | openssl #{build.openssl_version || 'N/A'}
+if instance.database_names.length === 0
 .row
   .col-md-6.col-md-push-3
     .panel.panel-default
-      if instance.database_names.length === 0
-        .panel-body
-          .well
-            :markdown
-              #### Welcome to mongoscope!
+      .panel-body.well
+        :markdown
+          #### Welcome to mongoscope!
 
-              It appears you don't have any databases on this instance.
+          It appears you don't have any databases on this instance.
 
-              To get started, open a new terminal window and copy and paste:
+          To get started, open a new terminal window and copy and paste:
 
-              ```
-              mongo --eval \
-              "db.rating.save( \
-                {_id:'mongoscope', votes:[{you: 100}]})"
-              ```
+          ```
+          mongo --eval \
+          "db.rating.save( \
+            {_id:'mongoscope', votes:[{you: 100}]})"
+          ```
 
-          img.leafy(src="img/leafy-anim.gif", style="height: 70px; float: right;")
-          div(style="float: right; margin-top: 25px; text-align: right;")
-            | create a database to continue.
-            br
-            | the leaf has it under control while you do.
+      img.leafy(src="img/leafy-anim.gif", style="height: 70px; float: right;")
+      div(style="float: right; margin-top: 25px; text-align: right;")
+        | create a database to continue.
+        br
+        | the leaf has it under control while you do.
 
-      else
-        .panel-heading
-          h3(style="margin: 0; padding: 0;") #{instance.host.hostname}
-          h1(style="margin: 0; padding: 0;") databases
+else
+.row(style="margin-top: 20px;")
+  .col-md-8
 
-        ul.list-group.panel-body
-         - for database_name in instance.database_names
-          li.list-group-item
-            h4
-              a(href='#database/#{database_name}') #{database_name}
+  .col-md-4
+    .panel.panel-default
+      //- .panel-heading
+      //-   h1(style="margin: 0; padding: 0;") #{instance.host.hostname}
+      .panel-heading
+        h3(style="margin: 0; padding: 0;") databases
+
+      ul.list-group.panel-body
+       - for database_name in instance.database_names
+        li.list-group-item
+          h4
+            a(href='#database/#{database_name}') #{database_name}
+
+    .panel.panel-default
+      .panel-heading
+        h3 MongoDB&nbsp;
+          a(href=instance.build.commit_url, title="View commit #{instance.build.commit.substr(0, 8)} on github") #{instance.build.version}
+        +health_bar(instance.build)
+
+      dl.dl-horizontal.panel-body
+        dt Software
+        dd #{instance.host.os}
+        dt Cores
+        dd #{instance.host.cpu_cores_physical}
+        dt Memory
+        dd
+          +bytes(instance.host.memory_bits)
+        dt System Time
+        dd #{instance.host.system_time}
+        dt Processor
+        dd #{instance.host.cpu_string}
