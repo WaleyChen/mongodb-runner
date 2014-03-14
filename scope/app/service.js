@@ -29,7 +29,7 @@ Service.prototype.connect = function(){
 
   this.io = socketio.connect(this.origin)
     .on('connect', function(){
-      debug('socketio connected');
+      // debug('socketio connected');
     }).on('connect_error', function(err){
       debug('socketio connection error :(', err);
     });
@@ -50,14 +50,14 @@ Service.prototype.read = function(pathname, params, fn){
     params = {};
   }
 
-  debug('$get  ' + pathname, params);
+  // debug('$get  ' + pathname, params);
 
   $.get(this.origin + '/api/v1' + pathname, params, function(data){
     if(typeof data === 'string'){
       data = JSON.parse(data);
     }
 
-    debug('$res  ' + pathname, data);
+    // debug('$res  ' + pathname, data);
     fn(null, data);
   });
 };
@@ -181,7 +181,7 @@ var mixins = {
     });
     var self = this;
 
-    debug('$sub  ' + options.uri);
+    // debug('$sub  ' + options.uri);
     srv.io.on('connect', function(){
       srv.io.on(options.uri, self.iohandler.bind(self))
         .emit(options.uri);

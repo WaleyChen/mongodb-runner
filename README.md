@@ -27,11 +27,11 @@ Temporary environment variables and defaults
 Recommended
 
 ```
-DEBUG=* MG_DBPATH=~/.mongodb/data ./bin/mg/js
+DEBUG=* MG_DBPATH=~/.mongodb/data ./bin/mg.js
 ```
 
 ```
-DEBUG=* MG_BIN=/srv/mongo/bin/mongod MG_DBPATH=~/.mongodb/data ./bin/mg/js
+DEBUG=* MG_BIN=/srv/mongo/bin/mongod MG_DBPATH=~/.mongodb/data ./bin/mg.js
 ```
 
 ## dev

@@ -145,6 +145,10 @@ module.exports.Sample = List.extend({
     this.skip = 0;
     this.limit = 10;
     this.schema = {};
+
+    this.hasMore = false;
+    this.hasPrev = false;
+
     this.collection = opts.collection.on('change', this.collectionChange, this);
   },
   next: function(){
@@ -170,7 +174,17 @@ module.exports.Sample = List.extend({
     return this.database + '/' + this.name + '/sample';
   },
   parse: function(res){
-    // @todo: fastest way to sample out the schema?
+    // @todo: just temporary
+    this.schema = {
+      keys: []
+    };
+    for(var k in res[0]){
+      this.schema.keys.push(k);
+    }
+    debug('guess schema', this.schema);
+    this.hasMore = (res.length >= this.limit);
+    this.hasPrev = (this.skip > 0);
+    return res;
   }
 });
 
