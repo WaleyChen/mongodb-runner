@@ -25,32 +25,32 @@ app.set = function(setting, val){
 app.set({
   server: server,
   options: {
-    mongo: {
+    connect: {
       default: 'mongodb://localhost',
-      desc: 'connection url for a mongo instance'
+      desc: 'connection uri for a mongo instance'
     },
-    url: {
+    listen: {
       default: 'http://127.0.0.1:29017',
-      desc: 'host:port for rest to listen on'
+      desc: 'uri for rest server to listen on'
     }
   }
 });
 
 // Validate, correct and set any
 function validate(){
-  var url = app.get('url');
-  if(!/^https?:\/\//.test(url)) url = 'http://' + url;
-  var parsed = urllib.parse(url);
+  var listen = app.get('listen');
+  if(!/^https?:\/\//.test(listen)) listen = 'http://' + url;
+  var parsed = urllib.parse(listen);
   ['href', 'port', 'hostname', 'protocol'].map(function(k){
     app.set(k, parsed[k]);
   });
-  app.set('url', url);
+  app.set('listen', listen);
 }
 
 function connect(){
   app.set('io', require('socket.io').listen(server));
   debug('connecting to mongod', app.get('mongo'));
-  MongoClient.connect(app.get('mongo'), function(err, db){
+  MongoClient.connect(app.get('connect'), function(err, db){
     if(err) return console.log(err);
     app.set('db', db);
     middleware();
@@ -69,6 +69,7 @@ function middleware(){
   require('./lib/ui')(app);
 
   app.use(function(err, req, res, next){
+
     // handle http errors bubbled up from middlewares.
     if(!err.http) return next(err);
     res.send(err.code, err.message);
@@ -91,4 +92,3 @@ module.exports = function(config){
 
 module.exports.get = app.get;
 module.exports.set = app.set;
-

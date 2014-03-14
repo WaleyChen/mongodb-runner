@@ -32,8 +32,8 @@ function mg(argv){
 
   var fromEnv = {},
     envMapping = {
-      'url': 'MG_URL',
-      'mongo': 'MG_MONGO',
+      'listen': 'MG_LISTEN',
+      'connect': 'MG_CONNECT',
       'bin': 'MG_BIN',
       'dbpath': 'MG_DBPATH'
     };
@@ -60,8 +60,8 @@ function mg(argv){
       prev.on('ready', function(){
         debug('starting', name);
 
-        options[name].mongo = fromEnv.mongo || options[name].mongo;
-        options[name].url = fromEnv.url || options[name].url;
+        options[name].connect = fromEnv.connect || options[name].connect;
+        options[name].listen = fromEnv.listen || options[name].listen;
 
         prev = mg.settings.apps[name](options[name]);
       });
@@ -83,6 +83,17 @@ mg.settings = {
   aliases: {},
   apps: []
 };
+
+// @todo: simplify all of this config madness by just using mongo's config.yml.
+function getConfig(fn){
+  var data = {},
+    searchPaths = [process.cwd() + '/config.yml'];
+
+  if(process.env.MONGOPATH){
+    searchPaths.push(process.env.MONGOPATH.replace('~',
+      process.env.HOME) + '/config.yml');
+  }
+}
 
 mg.prepare = function(apps){
   mg.settings.apps = apps;
