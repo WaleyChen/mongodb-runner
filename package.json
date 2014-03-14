@@ -31,5 +31,17 @@
   },
   "bin": {
     "mg": "./bin/mg.js"
+  },
+  "jshintConfig": {
+    "eqeqeq": true,
+    "node": true,
+    "indent": 2,
+    "newcap": true,
+    "predef": [ "describe", "it", "before", "beforeEach", "after", "afterEach"],
+    "quotmark": "single",
+    "unused": true,
+    "trailing": true,
+    "boss": true,
+    "loopfunc": true
   }
 }
