@@ -10,7 +10,7 @@
   },
   "scripts": {
     "dist": "DEBUG=* lone",
-    "start": "DEBUG=mg:* ./bin/mg.js",
+    "start": "DEBUG=* MG_BIN=/srv/mongo/bin/mongod MG_DBPATH=~/.mongodb/data ./bin/mg.js",
     "install": "./bin/install-children.sh"
   },
   "devDependencies": {
