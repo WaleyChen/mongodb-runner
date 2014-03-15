@@ -10,7 +10,6 @@ module.exports = function(opts){
     ['pulse', 'pulse', new (require('./pulse'))(), {index: true}],
     ['log', 'log', new (require('./log'))()],
     ['top', 'top', new (require('./top'))()],
-    ['info', 'info', new (require('./info'))()],
     ['collection/:database_name/:collection_name',  'collection', new (require('./collection'))()],
     ['database/:database_name',  'database', new (require('./database'))()]
   );
