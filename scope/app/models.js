@@ -60,7 +60,8 @@ var Settings = Backbone.Model.extend({
         debug: false,
         for_bits: 64,
         max_bson_object_size: 16777216
-      }
+      },
+      replicaset: null
     },
     service: 'instance'
   });

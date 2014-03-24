@@ -19,7 +19,8 @@ module.exports = Backbone.View.extend({
       sections: [
         {name: 'pulse', 'icon': 'flash'},
         {name: 'top', icon: 'magnet'},
-        {name: 'log', icon: 'align-justify'}
+        {name: 'log', icon: 'align-justify'},
+        {name: 'replication', icon: 'send'}
       ]
     }));
     if(self.instance.get('database_names').length === 0){
