@@ -95,6 +95,18 @@ Service.prototype.security = function(fn){
   });
 };
 
+Service.prototype.securityUsers = function(username, fn){
+  if(typeof username === 'function'){
+    fn = username;
+    username = null;
+  }
+
+  this.read('/security/users' + (username ? '/' + username : ''), function(err, data){
+    if(err) return fn(err);
+    fn(null, data);
+  });
+};
+
 // Get a list of log `line` objects.
 //
 // @param {String, default:global} optional log name to restrict to (default: global).

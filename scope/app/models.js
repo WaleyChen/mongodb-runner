@@ -216,12 +216,18 @@ var User = Backbone.Model.extend({
       {role: "clusterMonitor", db: "admin"},
       {role: "userAdminAnyDatabase", db: "admin"}
     ]
+  },
+  service: function(){
+    return {name: 'securityUsers', args: [this.get('_id').replace('admin.', '')]};
   }
 });
 
 module.exports.Security = Backbone.Model.extend({
   defaults: {
-    users: List.extend({model: User, service: 'users'})
+    users: List.extend({model: User, service: 'users'}),
+    service: 'securityUsers'
   },
   service: 'security'
 });
+
+module.exports.Security.User = User;
