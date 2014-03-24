@@ -7,12 +7,6 @@
 ### Punchlist
 
 - [x] images not showing up when running from the binary `#bug` `2h`
-
-### Prioritize Me
-
-- [ ] bind donut on database view to real data `#database` `1h`
-- [ ] graph of instance level lock `#pulse` `1h`
-- [ ] databases list has quick stats `#pulse` `2h`
 - replica sets
   - [x] replication page `#replica` `1h`
   - [ ] get mock data
@@ -28,10 +22,9 @@
   - [ ] table view of [`system.users`][system.users]  `#auth` `2h`
   - [ ] table view of [`system.roles`][system.roles] `#auth` `2h`
   - [ ] view the [action matrix][user-actions] for a user or role `#auth` `4h`
-- needsspec
-  - [ ] authenticate via rest research `#auth`
-  - [ ] pipeline builder UI `#aggregation`
-  - [ ] read only shell `#shell`
+- [ ] bind donut on database view to real data `#database` `1h`
+- [ ] graph of instance level lock `#pulse` `1h`
+- [ ] databases list has quick stats `#pulse` `2h`
 
 [create-admin]: http://docs.mongodb.org/manual/tutorial/add-user-administrator/
 [user-actions]: http://docs.mongodb.org/master/reference/privilege-actions/#security-user-actions
@@ -39,6 +32,12 @@
 [system.users]: http://docs.mongodb.org/master/reference/system-users-collection/
 
 ## Backlog
+
+
+### needsspec
+  - [ ] authenticate via rest research `#auth`
+  - [ ] pipeline builder UI `#aggregation`
+  - [ ] read only shell `#shell`
 
 _@note_ not prioritized at all or filtered by target personas
 
