@@ -9,10 +9,10 @@
 - [x] images not showing up when running from the binary `#bug` `2h`
 - replica sets
   - [x] replication page `#replica` `1h`
-  - [ ] get mock data
-  - [ ] view status `{ replSetGetStatus : 1 }` `#replica`  `2h`
-  - [ ] view oplog size and time range `rs.printReplicationInfo()` `#replica`  `1h`
-  - [ ] view members and replication lag `rs.printSlaveReplicationInfo()` `#replica`  `1h`
+  - [x] get mock data
+  - [x] view status `{ replSetGetStatus : 1 }` `#replica`  `2h`
+  - [x] view oplog size and time range `rs.printReplicationInfo()` `#replica`  `1h`
+  - [x] view members and replication lag `rs.printSlaveReplicationInfo()` `#replica`  `1h`
 - [ ] stream `currentOp` `#pulse` `2h`
 - [ ] finish bootloader wiring to enable auto ui updating `2h`
 - auth
@@ -22,7 +22,7 @@
   - [ ] table view of [`system.users`][system.users]  `#auth` `2h`
   - [ ] table view of [`system.roles`][system.roles] `#auth` `2h`
   - [ ] view the [action matrix][user-actions] for a user or role `#auth` `4h`
-- [ ] bind donut on database view to real data `#database` `1h`
+- [x] bind donut on database view to real data `#database` `1h`
 - [ ] graph of instance level lock `#pulse` `1h`
 - [ ] databases list has quick stats `#pulse` `2h`
 

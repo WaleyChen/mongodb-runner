@@ -43,7 +43,23 @@ module.exports = Backbone.View.extend({
       'metric': this.metric
     }));
     this.graph.render();
-    donut('.donut');
+
+    donut('.donut', [
+      {
+        name: 'Documents',
+        size: this.database.get('stats').document_size,
+        count: this.database.get('stats').document_count,
+        color: '#6ba442',
+        className: 'documents'
+      },
+      {
+        name: 'Indexes',
+        size: this.database.get('stats').index_size,
+        count: this.database.get('stats').index_count,
+        color: '#d9d6d4',
+        className: 'indexes'
+      }
+    ]);
   }
 });
 

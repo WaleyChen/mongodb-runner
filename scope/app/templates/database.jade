@@ -1,7 +1,7 @@
 include mixins/bytes
 
 - stats = database.stats
-- stats.extent_used_size = stats.object_size + stats.index_size
+- stats.extent_used_size = stats.document_size + stats.index_size
 - stats.extent_free_size = stats.storage_size - stats.extent_used_size
 - stats.extent_size = stats.storage_size / stats.extent_count
 - host.disk_used = host.disk_total - host.disk_free
@@ -32,7 +32,7 @@ include mixins/bytes
 
     ul.list-group.panel-body
       li.list-group-item
-        span.badge #{stats.object_count}
+        span.badge #{stats.document_count}
         strong Documents
       li.list-group-item
         span.badge #{stats.index_count}

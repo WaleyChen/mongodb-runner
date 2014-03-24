@@ -41,8 +41,8 @@ var stats = module.exports.stats = function(req, res, next){
 
     req.collection.stats = {
       index_sizes: data.indexSizes,
-      object_count: data.count,
-      object_size: data.size,
+      document_count: data.count,
+      document_size: data.size,
       storage_size: data.storageSize,
       index_count: data.nindexes,
       index_size: data.totalIndexSize,

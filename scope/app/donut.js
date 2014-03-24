@@ -8,7 +8,7 @@ function bytes(num){
   return (num < 0 ? '-' : '') + inUnits + ' ' + unit;
 }
 
-module.exports = function(el){
+module.exports = function(el, data){
   var width = 350,
     height = 200,
     radius = Math.min(width, height) / 2;
@@ -29,23 +29,6 @@ module.exports = function(el){
       .attr("height", height)
     .append("g")
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-  var data = [
-    {
-      name: 'Documents',
-      size: 813056,
-      count: 1380,
-      color: '#6ba442',
-      className: 'documents'
-    },
-    {
-      name: 'Indexes',
-      size: 56000,
-      count: 1,
-      color: '#d9d6d4',
-      className: 'indexes'
-    }
-  ];
 
   var g = svg.selectAll(".arc")
       .data(pie(data))

@@ -27,8 +27,8 @@ var stats = module.exports.stats = function(req, res, next){
     if(err) return next(err);
 
     req.database.stats = {
-      object_count: data.objects,
-      object_size: data.dataSize,
+      document_count: data.objects,
+      document_size: data.dataSize,
       storage_size: data.storageSize,
       index_count: data.indexes,
       index_size: data.indexSize,

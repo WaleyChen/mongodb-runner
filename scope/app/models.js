@@ -114,8 +114,8 @@ module.exports.Collection = Model.extend({
       }
     ],
     stats: {
-      object_count: 1,
-      object_size: 48,
+      document_count: 1,
+      document_size: 48,
       storage_size: 8192,
       index_count: 1,
       index_size: 8176,
