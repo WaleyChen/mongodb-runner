@@ -26,7 +26,7 @@
 
 ### Punchlist
 
-> empty
+- [x] images not showing up when running from the binary `#bug`
 
 ### Prioritize Me
 
@@ -50,7 +50,6 @@
 
 _@note_ not prioritized at all or filtered by target personas
 
-- [ ] images not showing up when running from the binary `#bug`
 - [ ] finalize bootloader and start deploying like whoa
 
 ### read actions

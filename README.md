@@ -53,8 +53,3 @@ npm test
 ```
 npm dist
 ```
-
-
-## todo
-
-- [ ] move mongod wrappers from rest up to this level
