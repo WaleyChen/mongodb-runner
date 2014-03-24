@@ -205,3 +205,23 @@ module.exports.Log = List.extend({
   service: 'log',
   uri: '/log'
 });
+
+var User = Backbone.Model.extend({
+  defaults: {
+    _id: "admin.scopey",
+    user: "scopey",
+    db: "admin",
+    roles: [
+      {role: "hostManager", db: "admin"},
+      {role: "clusterMonitor", db: "admin"},
+      {role: "userAdminAnyDatabase", db: "admin"}
+    ]
+  }
+});
+
+module.exports.Security = Backbone.Model.extend({
+  defaults: {
+    users: List.extend({model: User, service: 'users'})
+  },
+  service: 'security'
+});

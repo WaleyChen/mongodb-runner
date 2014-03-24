@@ -11,6 +11,7 @@ module.exports = function(opts){
     ['log', 'log', new (require('./log'))()],
     ['top', 'top', new (require('./top'))()],
     ['replication', 'replication', new (require('./replication'))()],
+    ['security', 'security', new (require('./security'))()],
     ['collection/:database_name/:collection_name',  'collection', new (require('./collection'))()],
     ['database/:database_name',  'database', new (require('./database'))()]
   );

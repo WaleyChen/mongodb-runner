@@ -88,6 +88,13 @@ Service.prototype.instance = function(fn){
   });
 };
 
+Service.prototype.security = function(fn){
+  this.read('/security', function(err, data){
+    if(err) return fn(err);
+    fn(null, data);
+  });
+};
+
 // Get a list of log `line` objects.
 //
 // @param {String, default:global} optional log name to restrict to (default: global).

@@ -1,0 +1,19 @@
+if users.length === 0
+
+:markdown
+  ```
+  use admin;
+  db.addUser( { user: 'scopey',
+    pwd: 'scoperson',
+    roles: ['userAdminAnyDatabase', 'clusterMonitor', 'hostManager']});
+  ```
+else
+h1 security
+
+h2 users
+
+ul
+ - for user in users
+  li
+    a(href="#security/users/#{user._id}") #{user._id}
+    | (#{user.roles.length} roles)

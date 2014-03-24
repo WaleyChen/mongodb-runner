@@ -2,8 +2,8 @@ include mixins/bytes
 include mixins/cog
 
 - stats = collection.stats;
-- stats.object_size_average = (stats.object_size/stats.object_count);
-- stats.index_size_per_object = (stats.index_size/stats.object_count);
+- stats.document_size_average = (stats.document_size/stats.document_count);
+- stats.index_size_per_document = (stats.index_size/stats.document_count);
 
 .row
   .col-md-10(style="padding-right: 0;padding-top: 20px;")
@@ -19,22 +19,22 @@ include mixins/cog
           a(href="#database/#{collection.database}") #{collection.database}
 
       .panel-heading
-        h5 Documents #{collection.stats.object_count}
+        h5 Documents #{collection.stats.document_count}
       ul.list-group.panel-body
         li.list-group-item
           span.badge
-            +bytes(collection.stats.object_size)
+            +bytes(collection.stats.document_size)
           strong Total
         li.list-group-item
           span.badge
-            +bytes(stats.object_size_average)
+            +bytes(stats.document_size_average)
           strong Average
       .panel-heading
         h5 Indexes #{collection.indexes.length}
         //- h4
         //-   +bytes(collection.stats.index_size)
         //- h4
-        //-   +bytes(stats.index_size_per_object)
+        //-   +bytes(stats.index_size_per_document)
         //-   | per
 
       ul.list-group.panel-body

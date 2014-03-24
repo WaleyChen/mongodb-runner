@@ -21,6 +21,7 @@ module.exports = function(app){
 
   require('./log')(app);
   require('./top')(app);
+  require('./security')(app);
   require('./database')(app);
   require('./collection')(app);
 };

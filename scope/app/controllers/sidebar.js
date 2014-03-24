@@ -20,6 +20,7 @@ module.exports = Backbone.View.extend({
         {name: 'pulse', 'icon': 'flash'},
         {name: 'top', icon: 'magnet'},
         {name: 'log', icon: 'align-justify'},
+        {name: 'security', icon: 'record'},
         {name: 'replication', icon: 'send'}
       ]
     }));
