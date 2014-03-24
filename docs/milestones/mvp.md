@@ -14,7 +14,8 @@
 - [ ] graph of instance level lock `#pulse` `1h`
 - [ ] databases list has quick stats `#pulse` `2h`
 - replica sets
-  - [ ] if instance is a member of a replica set, enable menu item `#replica` `1h`
+  - [x] replication page `#replica` `1h`
+  - [ ] get mock data
   - [ ] view status `{ replSetGetStatus : 1 }` `#replica`  `2h`
   - [ ] view oplog size and time range `rs.printReplicationInfo()` `#replica`  `1h`
   - [ ] view members and replication lag `rs.printSlaveReplicationInfo()` `#replica`  `1h`
