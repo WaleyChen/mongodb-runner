@@ -1,6 +1,6 @@
 "use strict";
 
-"use strict";
+var errors = require('./api/errors');
 
 module.exports = function(app){
   return function(req, res, next){
@@ -27,6 +27,10 @@ module.exports.admin = function(){
     req.database = req.mongo.admin();
     next();
   };
+};
+
+module.exports.notImplemented = function(req, res, next){
+  next(new errors.NotImplemented());
 };
 
 module.exports.database = function(){

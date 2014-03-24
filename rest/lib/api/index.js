@@ -2,16 +2,22 @@
 
 var mw = require('../db-middleware'),
   diskspace = require('diskspace'),
+  replicaset = require('./replicaset'),
   debug = require('debug')('mg:mongorest:api');
 
 module.exports = function(app){
-  app.get('/api/v1', host, database_names, build, function(req, res, next){
+  app.get('/api/v1', host, database_names, build, replicaset.get, function(req, res, next){
     res.send({
       database_names: req.mongo.database_names,
+      replicaset: req.mongo.replicaset,
+      // @todo: host and build are relatively static so should they
+      // be moved to a different handler?
       host: req.mongo.host,
       build: req.mongo.build
     });
   });
+
+  replicaset(app);
 
   require('./log')(app);
   require('./top')(app);
