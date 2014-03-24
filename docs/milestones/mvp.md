@@ -7,26 +7,35 @@
 ### Punchlist
 
 - [x] images not showing up when running from the binary `#bug` `2h`
-- [ ] bind donut on database view to real data `#database` `1h`
-- [ ] graph of instance level lock `#pulse` `1h`
-- [ ] databases list has quick stats `#pulse` `2h`
-- [ ] if instance is a member of a replica set, enable menu item `#replica` `1h`
-- [ ] view status `{ replSetGetStatus : 1 }` `#replica`  `2h`
-- [ ] view oplog size and time range `rs.printReplicationInfo()` `#replica`  `1h`
-- [ ] view members and replication lag `rs.printSlaveReplicationInfo()` `#replica`  `1h`
-- [ ] stream `currentOp` `#pulse` `2h`
-- [ ] finish bootloader wiring to enable auto ui updating `2h`
 
 ### Prioritize Me
 
-- [ ] ACL visualization "auth user view" (biggie.) `#auth` `#needsspec`
-- [ ] list users `#auth`
-- [ ] list roles `#auth`
-- [ ] authenticate via rest research `#auth`
-- [ ] backend pieces (eg middleware to enforce) `#auth`
-- [ ] front-end login forms `#auth`
-- [ ] pipeline builder UI `#aggregation` `#needsspec`
-- [ ] read only shell `#shell` `#needsspec`
+- [ ] bind donut on database view to real data `#database` `1h`
+- [ ] graph of instance level lock `#pulse` `1h`
+- [ ] databases list has quick stats `#pulse` `2h`
+- replica sets
+  - [ ] if instance is a member of a replica set, enable menu item `#replica` `1h`
+  - [ ] view status `{ replSetGetStatus : 1 }` `#replica`  `2h`
+  - [ ] view oplog size and time range `rs.printReplicationInfo()` `#replica`  `1h`
+  - [ ] view members and replication lag `rs.printSlaveReplicationInfo()` `#replica`  `1h`
+- [ ] stream `currentOp` `#pulse` `2h`
+- [ ] finish bootloader wiring to enable auto ui updating `2h`
+- auth
+  - [ ] shell prompt to [create admin user][create-admin] `2h`
+  - [ ] `mg` starts mongod with `--auth` `#auth` `1h`
+  - [ ] security tab `#auth` `4hr`
+  - [ ] table view of [`system.users`][system.users]  `#auth` `2h`
+  - [ ] table view of [`system.roles`][system.roles] `#auth` `2h`
+  - [ ] view the [action matrix][user-actions] for a user or role `#auth` `4h`
+- needsspec
+  - [ ] authenticate via rest research `#auth`
+  - [ ] pipeline builder UI `#aggregation`
+  - [ ] read only shell `#shell`
+
+[create-admin]: http://docs.mongodb.org/manual/tutorial/add-user-administrator/
+[user-actions]: http://docs.mongodb.org/master/reference/privilege-actions/#security-user-actions
+[system.roles]: http://docs.mongodb.org/master/reference/system-roles-collection/
+[system.users]: http://docs.mongodb.org/master/reference/system-users-collection/
 
 ## Backlog
 
