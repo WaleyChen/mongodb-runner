@@ -10,10 +10,17 @@ if users.length === 0
 else
 h1 security
 
-h2 users
+.row
+  .col-md-4
+    ul.list-group
+     - for user in users
+      li.list-group-item
+        h4
+          a(href="#security/users/#{user._id}") #{user._id}
+        ul.list-inline
+         - for role in user.roles
+          li
+            span.label.label-default #{role.role}
 
-ul
- - for user in users
-  li
-    a(href="#security/users/#{user._id}") #{user._id}
-    | (#{user.roles.length} roles)
+  .col-md-8
+    p details
