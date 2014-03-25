@@ -1,0 +1,183 @@
+# # Security
+# An attempt to reason about how mongod role based auth works by
+# trying to model the system in YAML which will hopefully make the
+# UI implementation more well informed.
+#
+# ## Actions
+# All commands (actions) logically grouped.
+
+actions:
+  # ### Primitives
+  read: &READ
+    ? collStats
+    ? dbHash
+    ? dbStats
+    ? find
+    ? killCursors
+    ? planCacheRead
+  advanced read: &READ_ADVANCED
+    ? connPoolStats
+    ? getCmdLineOpts
+    ? getLog
+    ? getParameter
+    ? getShardMap
+    ? hostInfo
+    ? listDatabases
+    ? listShards
+    ? netstat
+    ? replSetGetStatus
+    ? serverStatus
+    ? top
+    ? cursorInfo
+    ? inprog
+    ? shardingState
+    ? collStats
+    ? dbStats
+    ? getShardVersion
+
+  basic write: &WRITE_BASIC
+    ? insert
+    ? remove
+    ? update
+
+  write: &WRITE
+    << : *WRITE_BASIC
+    << : {
+      convertToCapped,
+      createCollection,
+      dropCollection,
+      dropIndex,
+      emptycapped,
+      createIndex,
+      renameCollectionSameDB
+      }
+
+  advanced write: &WRITE_ADVANCED
+    ? appendOplogNote
+    ? applicationMessage
+    ? replSetConfigure
+    ? replSetStateChange
+    ? resync
+    ? addShard
+    ? removeShard
+    ? flushRouterConfig
+    ? cleanupOrphaned
+    ? splitChunk
+    ? moveChunk
+    ? enableSharding
+    ? splitVector
+
+  host administration: &WRITE_HOST
+    ? applicationMessage
+    ? connPoolSync
+    ? closeAllDatabases
+    ? cpuProfiler
+    ? logRotate
+    ? setParameter
+    ? shutdown
+    ? touch
+    ? unlock
+    ? diagLogging
+    ? flushRouterConfig
+    ? fsync
+    ? invalidateUserCache
+    ? killop
+    ? resync
+    ? killCursors
+    ? repairDatabase
+
+  administration: &ADMIN
+    ? collMod
+    ? collStats
+    ? compact
+    ? convertToCapped
+    ? createCollection
+    ? dbStats
+    ? dropCollection
+    ? dropDatabase
+    ? dropIndex
+    ? createIndex
+    ? indexStats
+    ? enableProfiler
+    ? planCacheIndexFilter
+    ? planCacheRead
+    ? planCacheWrite
+    ? reIndex
+    ? renameCollectionSameDB
+    ? repairDatabase
+    ? storageDetails
+    ? validate
+
+  authentication administration: &AUTH
+    ? changeCustomData
+    ? changePassword
+    ? createUser
+    ? createRole
+    ? dropUser
+    ? dropRole
+    ? grantRole
+    ? revokeRole
+    ? viewUser
+    ? viewRole
+
+  # ### Composites
+  operator: &ADVANCED
+    << : *READ
+    << : *WRITE
+
+  read & write: &READWRITE
+    << : *READ
+    << : *WRITE
+
+  basic read & write: &READWRITE_BASIC
+    << : *READ
+    << : *WRITE_BASIC
+
+  view profiling: &PROFILING
+    << : *READ
+    << : {dropCollection}
+
+  root: &ROOT
+    << : *READ
+    << : *WRITE
+    << : *AUTH
+    << : *ADMIN
+    << : *WRITE_HOST
+    << : *WRITE_ADVANCED
+    << : *READ_ADVANCED
+
+roles:
+  # ## Built-in roles
+  read:
+    - system.indexes: *READ
+    - system.namespaces: *READ
+    - system.js: *READ
+    - $db: *READ
+  readWrite:
+    - system.indexes: *READWRITE_BASIC
+    - system.namespaces: *READWRITE_BASIC
+    - system.js: *READWRITE_BASIC
+    - $db: *READWRITE
+  userAdmin:
+    - $db: *AUTH
+  dbAdmin:
+    - system.indexes: *READ
+    - system.namespaces: *READ
+    - system.profile: *PROFILING
+    - $db: *ADMIN
+
+  clusterMonitor:
+    - '*': *READ_ADVANCED
+
+  clusterManager:
+    - '*': *ADVANCED
+    - config: *READ
+    - config.settings: *WRITE_BASIC
+    - local.system.replset: *READ
+  hostManager:
+    - '*': *WRITE_HOST
+
+  readAnyDatabase:
+    - '*': *READ
+  readwriteAnyDatabase:
+    - '*': *READWRITE
