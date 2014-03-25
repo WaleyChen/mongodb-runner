@@ -1,0 +1,874 @@
+{
+  "roles": [
+    {
+      "name": "read",
+      "description": null,
+      "statements": [
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "collStats"
+        },
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "dbHash"
+        },
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "dbStats"
+        },
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "find"
+        },
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "killCursors"
+        },
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "planCacheRead"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "collStats"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "dbHash"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "dbStats"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "find"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "killCursors"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "planCacheRead"
+        },
+        {
+          "resource": "#{database}.system.js",
+          "action": "collStats"
+        },
+        {
+          "resource": "#{database}.system.js",
+          "action": "dbHash"
+        },
+        {
+          "resource": "#{database}.system.js",
+          "action": "dbStats"
+        },
+        {
+          "resource": "#{database}.system.js",
+          "action": "find"
+        },
+        {
+          "resource": "#{database}.system.js",
+          "action": "killCursors"
+        },
+        {
+          "resource": "#{database}.system.js",
+          "action": "planCacheRead"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "collStats"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "dbHash"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "dbStats"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "find"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "killCursors"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "planCacheRead"
+        }
+      ]
+    },
+    {
+      "name": "readWrite",
+      "description": null,
+      "statements": [
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "collStats"
+        },
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "dbHash"
+        },
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "dbStats"
+        },
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "find"
+        },
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "killCursors"
+        },
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "planCacheRead"
+        },
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "insert"
+        },
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "remove"
+        },
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "update"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "collStats"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "dbHash"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "dbStats"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "find"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "killCursors"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "planCacheRead"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "insert"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "remove"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "update"
+        },
+        {
+          "resource": "#{database}.system.js",
+          "action": "collStats"
+        },
+        {
+          "resource": "#{database}.system.js",
+          "action": "dbHash"
+        },
+        {
+          "resource": "#{database}.system.js",
+          "action": "dbStats"
+        },
+        {
+          "resource": "#{database}.system.js",
+          "action": "find"
+        },
+        {
+          "resource": "#{database}.system.js",
+          "action": "killCursors"
+        },
+        {
+          "resource": "#{database}.system.js",
+          "action": "planCacheRead"
+        },
+        {
+          "resource": "#{database}.system.js",
+          "action": "insert"
+        },
+        {
+          "resource": "#{database}.system.js",
+          "action": "remove"
+        },
+        {
+          "resource": "#{database}.system.js",
+          "action": "update"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "collStats"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "dbHash"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "dbStats"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "find"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "killCursors"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "planCacheRead"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "insert"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "remove"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "update"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "convertToCapped"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "createCollection"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "dropCollection"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "dropIndex"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "emptycapped"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "createIndex"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "renameCollectionSameDB"
+        }
+      ]
+    },
+    {
+      "name": "userAdmin",
+      "description": null,
+      "statements": [
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "changeCustomData"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "changePassword"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "createUser"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "createRole"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "dropUser"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "dropRole"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "grantRole"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "revokeRole"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "viewUser"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "viewRole"
+        }
+      ]
+    },
+    {
+      "name": "dbAdmin",
+      "description": null,
+      "statements": [
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "collStats"
+        },
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "dbHash"
+        },
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "dbStats"
+        },
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "find"
+        },
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "killCursors"
+        },
+        {
+          "resource": "#{database}.system.indexes",
+          "action": "planCacheRead"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "collStats"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "dbHash"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "dbStats"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "find"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "killCursors"
+        },
+        {
+          "resource": "#{database}.system.namespaces",
+          "action": "planCacheRead"
+        },
+        {
+          "resource": "#{database}.system.profile",
+          "action": "collStats"
+        },
+        {
+          "resource": "#{database}.system.profile",
+          "action": "dbHash"
+        },
+        {
+          "resource": "#{database}.system.profile",
+          "action": "dbStats"
+        },
+        {
+          "resource": "#{database}.system.profile",
+          "action": "find"
+        },
+        {
+          "resource": "#{database}.system.profile",
+          "action": "killCursors"
+        },
+        {
+          "resource": "#{database}.system.profile",
+          "action": "planCacheRead"
+        },
+        {
+          "resource": "#{database}.system.profile",
+          "action": "dropCollection"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "collMod"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "collStats"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "compact"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "convertToCapped"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "createCollection"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "dbStats"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "dropCollection"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "dropDatabase"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "dropIndex"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "createIndex"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "indexStats"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "enableProfiler"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "planCacheIndexFilter"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "planCacheRead"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "planCacheWrite"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "reIndex"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "renameCollectionSameDB"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "repairDatabase"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "storageDetails"
+        },
+        {
+          "resource": "#{database}.#{collection}",
+          "action": "validate"
+        }
+      ]
+    },
+    {
+      "name": "clusterMonitor",
+      "description": null,
+      "statements": [
+        {
+          "resource": "*",
+          "action": "connPoolStats"
+        },
+        {
+          "resource": "*",
+          "action": "getCmdLineOpts"
+        },
+        {
+          "resource": "*",
+          "action": "getLog"
+        },
+        {
+          "resource": "*",
+          "action": "getParameter"
+        },
+        {
+          "resource": "*",
+          "action": "getShardMap"
+        },
+        {
+          "resource": "*",
+          "action": "hostInfo"
+        },
+        {
+          "resource": "*",
+          "action": "listDatabases"
+        },
+        {
+          "resource": "*",
+          "action": "listShards"
+        },
+        {
+          "resource": "*",
+          "action": "netstat"
+        },
+        {
+          "resource": "*",
+          "action": "replSetGetStatus"
+        },
+        {
+          "resource": "*",
+          "action": "serverStatus"
+        },
+        {
+          "resource": "*",
+          "action": "top"
+        },
+        {
+          "resource": "*",
+          "action": "cursorInfo"
+        },
+        {
+          "resource": "*",
+          "action": "inprog"
+        },
+        {
+          "resource": "*",
+          "action": "shardingState"
+        },
+        {
+          "resource": "*",
+          "action": "collStats"
+        },
+        {
+          "resource": "*",
+          "action": "dbStats"
+        },
+        {
+          "resource": "*",
+          "action": "getShardVersion"
+        }
+      ]
+    },
+    {
+      "name": "clusterManager",
+      "description": null,
+      "statements": [
+        {
+          "resource": "*",
+          "action": "collStats"
+        },
+        {
+          "resource": "*",
+          "action": "dbHash"
+        },
+        {
+          "resource": "*",
+          "action": "dbStats"
+        },
+        {
+          "resource": "*",
+          "action": "find"
+        },
+        {
+          "resource": "*",
+          "action": "killCursors"
+        },
+        {
+          "resource": "*",
+          "action": "planCacheRead"
+        },
+        {
+          "resource": "*",
+          "action": "insert"
+        },
+        {
+          "resource": "*",
+          "action": "remove"
+        },
+        {
+          "resource": "*",
+          "action": "update"
+        },
+        {
+          "resource": "*",
+          "action": "convertToCapped"
+        },
+        {
+          "resource": "*",
+          "action": "createCollection"
+        },
+        {
+          "resource": "*",
+          "action": "dropCollection"
+        },
+        {
+          "resource": "*",
+          "action": "dropIndex"
+        },
+        {
+          "resource": "*",
+          "action": "emptycapped"
+        },
+        {
+          "resource": "*",
+          "action": "createIndex"
+        },
+        {
+          "resource": "*",
+          "action": "renameCollectionSameDB"
+        },
+        {
+          "resource": "#{database}.config",
+          "action": "collStats"
+        },
+        {
+          "resource": "#{database}.config",
+          "action": "dbHash"
+        },
+        {
+          "resource": "#{database}.config",
+          "action": "dbStats"
+        },
+        {
+          "resource": "#{database}.config",
+          "action": "find"
+        },
+        {
+          "resource": "#{database}.config",
+          "action": "killCursors"
+        },
+        {
+          "resource": "#{database}.config",
+          "action": "planCacheRead"
+        },
+        {
+          "resource": "#{database}.config.settings",
+          "action": "insert"
+        },
+        {
+          "resource": "#{database}.config.settings",
+          "action": "remove"
+        },
+        {
+          "resource": "#{database}.config.settings",
+          "action": "update"
+        },
+        {
+          "resource": "#{database}.local.system.replset",
+          "action": "collStats"
+        },
+        {
+          "resource": "#{database}.local.system.replset",
+          "action": "dbHash"
+        },
+        {
+          "resource": "#{database}.local.system.replset",
+          "action": "dbStats"
+        },
+        {
+          "resource": "#{database}.local.system.replset",
+          "action": "find"
+        },
+        {
+          "resource": "#{database}.local.system.replset",
+          "action": "killCursors"
+        },
+        {
+          "resource": "#{database}.local.system.replset",
+          "action": "planCacheRead"
+        }
+      ]
+    },
+    {
+      "name": "hostManager",
+      "description": null,
+      "statements": [
+        {
+          "resource": "*",
+          "action": "applicationMessage"
+        },
+        {
+          "resource": "*",
+          "action": "connPoolSync"
+        },
+        {
+          "resource": "*",
+          "action": "closeAllDatabases"
+        },
+        {
+          "resource": "*",
+          "action": "cpuProfiler"
+        },
+        {
+          "resource": "*",
+          "action": "logRotate"
+        },
+        {
+          "resource": "*",
+          "action": "setParameter"
+        },
+        {
+          "resource": "*",
+          "action": "shutdown"
+        },
+        {
+          "resource": "*",
+          "action": "touch"
+        },
+        {
+          "resource": "*",
+          "action": "unlock"
+        },
+        {
+          "resource": "*",
+          "action": "diagLogging"
+        },
+        {
+          "resource": "*",
+          "action": "flushRouterConfig"
+        },
+        {
+          "resource": "*",
+          "action": "fsync"
+        },
+        {
+          "resource": "*",
+          "action": "invalidateUserCache"
+        },
+        {
+          "resource": "*",
+          "action": "killop"
+        },
+        {
+          "resource": "*",
+          "action": "resync"
+        },
+        {
+          "resource": "*",
+          "action": "killCursors"
+        },
+        {
+          "resource": "*",
+          "action": "repairDatabase"
+        }
+      ]
+    },
+    {
+      "name": "readAnyDatabase",
+      "description": null,
+      "statements": [
+        {
+          "resource": "*",
+          "action": "collStats"
+        },
+        {
+          "resource": "*",
+          "action": "dbHash"
+        },
+        {
+          "resource": "*",
+          "action": "dbStats"
+        },
+        {
+          "resource": "*",
+          "action": "find"
+        },
+        {
+          "resource": "*",
+          "action": "killCursors"
+        },
+        {
+          "resource": "*",
+          "action": "planCacheRead"
+        }
+      ]
+    },
+    {
+      "name": "readwriteAnyDatabase",
+      "description": null,
+      "statements": [
+        {
+          "resource": "*",
+          "action": "collStats"
+        },
+        {
+          "resource": "*",
+          "action": "dbHash"
+        },
+        {
+          "resource": "*",
+          "action": "dbStats"
+        },
+        {
+          "resource": "*",
+          "action": "find"
+        },
+        {
+          "resource": "*",
+          "action": "killCursors"
+        },
+        {
+          "resource": "*",
+          "action": "planCacheRead"
+        },
+        {
+          "resource": "*",
+          "action": "insert"
+        },
+        {
+          "resource": "*",
+          "action": "remove"
+        },
+        {
+          "resource": "*",
+          "action": "update"
+        },
+        {
+          "resource": "*",
+          "action": "convertToCapped"
+        },
+        {
+          "resource": "*",
+          "action": "createCollection"
+        },
+        {
+          "resource": "*",
+          "action": "dropCollection"
+        },
+        {
+          "resource": "*",
+          "action": "dropIndex"
+        },
+        {
+          "resource": "*",
+          "action": "emptycapped"
+        },
+        {
+          "resource": "*",
+          "action": "createIndex"
+        },
+        {
+          "resource": "*",
+          "action": "renameCollectionSameDB"
+        }
+      ]
+    }
+  ]
+}
