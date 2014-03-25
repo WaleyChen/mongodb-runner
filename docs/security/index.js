@@ -16,7 +16,7 @@ Object.keys(doc.roles).map(function(name){
   data.push.apply(data, doc.roles[name].map(function(rules){
     var collection = Object.keys(rules)[0],
       actions = Object.keys(rules[collection]);
-    return '#### scope: `' + collection + '`\n  - ' + actions.join('\n  - ') + '\n';
+    return '#### '+name+': `' + collection + '`\n  - ' + actions.join('\n  - ') + '\n';
   }));
   data.push('');
 });
