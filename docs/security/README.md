@@ -6,38 +6,42 @@ An experiment in modelling and generating mongod's security system.
 
 ### read
 
-- `system.indexes`:
+#### scope: `system.indexes`
   - collStats
   - dbHash
   - dbStats
   - find
   - killCursors
   - planCacheRead
-- `system.namespaces`:
+
+#### scope: `system.namespaces`
   - collStats
   - dbHash
   - dbStats
   - find
   - killCursors
   - planCacheRead
-- `system.js`:
+
+#### scope: `system.js`
   - collStats
   - dbHash
   - dbStats
   - find
   - killCursors
   - planCacheRead
-- `$db`:
+
+#### scope: `$db`
   - collStats
   - dbHash
   - dbStats
   - find
   - killCursors
   - planCacheRead
+
 
 ### readWrite
 
-- `system.indexes`:
+#### scope: `system.indexes`
   - collStats
   - dbHash
   - dbStats
@@ -47,7 +51,8 @@ An experiment in modelling and generating mongod's security system.
   - insert
   - remove
   - update
-- `system.namespaces`:
+
+#### scope: `system.namespaces`
   - collStats
   - dbHash
   - dbStats
@@ -57,7 +62,8 @@ An experiment in modelling and generating mongod's security system.
   - insert
   - remove
   - update
-- `system.js`:
+
+#### scope: `system.js`
   - collStats
   - dbHash
   - dbStats
@@ -67,7 +73,8 @@ An experiment in modelling and generating mongod's security system.
   - insert
   - remove
   - update
-- `$db`:
+
+#### scope: `$db`
   - collStats
   - dbHash
   - dbStats
@@ -85,9 +92,10 @@ An experiment in modelling and generating mongod's security system.
   - createIndex
   - renameCollectionSameDB
 
+
 ### userAdmin
 
-- `$db`:
+#### scope: `$db`
   - changeCustomData
   - changePassword
   - createUser
@@ -99,23 +107,26 @@ An experiment in modelling and generating mongod's security system.
   - viewUser
   - viewRole
 
+
 ### dbAdmin
 
-- `system.indexes`:
+#### scope: `system.indexes`
   - collStats
   - dbHash
   - dbStats
   - find
   - killCursors
   - planCacheRead
-- `system.namespaces`:
+
+#### scope: `system.namespaces`
   - collStats
   - dbHash
   - dbStats
   - find
   - killCursors
   - planCacheRead
-- `system.profile`:
+
+#### scope: `system.profile`
   - collStats
   - dbHash
   - dbStats
@@ -123,7 +134,8 @@ An experiment in modelling and generating mongod's security system.
   - killCursors
   - planCacheRead
   - dropCollection
-- `$db`:
+
+#### scope: `$db`
   - collMod
   - collStats
   - compact
@@ -145,9 +157,10 @@ An experiment in modelling and generating mongod's security system.
   - storageDetails
   - validate
 
+
 ### clusterMonitor
 
-- `*`:
+#### scope: `*`
   - connPoolStats
   - getCmdLineOpts
   - getLog
@@ -167,9 +180,10 @@ An experiment in modelling and generating mongod's security system.
   - dbStats
   - getShardVersion
 
+
 ### clusterManager
 
-- `*`:
+#### scope: `*`
   - collStats
   - dbHash
   - dbStats
@@ -186,18 +200,21 @@ An experiment in modelling and generating mongod's security system.
   - emptycapped
   - createIndex
   - renameCollectionSameDB
-- `config`:
+
+#### scope: `config`
   - collStats
   - dbHash
   - dbStats
   - find
   - killCursors
   - planCacheRead
-- `config.settings`:
+
+#### scope: `config.settings`
   - insert
   - remove
   - update
-- `local.system.replset`:
+
+#### scope: `local.system.replset`
   - collStats
   - dbHash
   - dbStats
@@ -205,9 +222,10 @@ An experiment in modelling and generating mongod's security system.
   - killCursors
   - planCacheRead
 
+
 ### hostManager
 
-- `*`:
+#### scope: `*`
   - applicationMessage
   - connPoolSync
   - closeAllDatabases
@@ -226,9 +244,10 @@ An experiment in modelling and generating mongod's security system.
   - killCursors
   - repairDatabase
 
+
 ### readAnyDatabase
 
-- `*`:
+#### scope: `*`
   - collStats
   - dbHash
   - dbStats
@@ -236,9 +255,10 @@ An experiment in modelling and generating mongod's security system.
   - killCursors
   - planCacheRead
 
+
 ### readwriteAnyDatabase
 
-- `*`:
+#### scope: `*`
   - collStats
   - dbHash
   - dbStats
@@ -256,9 +276,12 @@ An experiment in modelling and generating mongod's security system.
   - createIndex
   - renameCollectionSameDB
 
-## Actions
+
+## Action Sets
 
 ### read
+
+#### commands:
 
 - collStats
 - dbHash
@@ -268,6 +291,8 @@ An experiment in modelling and generating mongod's security system.
 - planCacheRead
 
 ### advanced read
+
+#### commands:
 
 - connPoolStats
 - getCmdLineOpts
@@ -290,11 +315,15 @@ An experiment in modelling and generating mongod's security system.
 
 ### basic write
 
+#### commands:
+
 - insert
 - remove
 - update
 
 ### write
+
+#### commands:
 
 - insert
 - remove
@@ -308,6 +337,8 @@ An experiment in modelling and generating mongod's security system.
 - renameCollectionSameDB
 
 ### advanced write
+
+#### commands:
 
 - appendOplogNote
 - applicationMessage
@@ -324,6 +355,8 @@ An experiment in modelling and generating mongod's security system.
 - splitVector
 
 ### host administration
+
+#### commands:
 
 - applicationMessage
 - connPoolSync
@@ -344,6 +377,8 @@ An experiment in modelling and generating mongod's security system.
 - repairDatabase
 
 ### administration
+
+#### commands:
 
 - collMod
 - collStats
@@ -368,6 +403,8 @@ An experiment in modelling and generating mongod's security system.
 
 ### authentication administration
 
+#### commands:
+
 - changeCustomData
 - changePassword
 - createUser
@@ -380,6 +417,8 @@ An experiment in modelling and generating mongod's security system.
 - viewRole
 
 ### operator
+
+#### commands:
 
 - collStats
 - dbHash
@@ -400,6 +439,8 @@ An experiment in modelling and generating mongod's security system.
 
 ### read & write
 
+#### commands:
+
 - collStats
 - dbHash
 - dbStats
@@ -419,6 +460,8 @@ An experiment in modelling and generating mongod's security system.
 
 ### basic read & write
 
+#### commands:
+
 - collStats
 - dbHash
 - dbStats
@@ -431,6 +474,8 @@ An experiment in modelling and generating mongod's security system.
 
 ### view profiling
 
+#### commands:
+
 - collStats
 - dbHash
 - dbStats
@@ -440,6 +485,8 @@ An experiment in modelling and generating mongod's security system.
 - dropCollection
 
 ### root
+
+#### commands:
 
 - collStats
 - dbHash

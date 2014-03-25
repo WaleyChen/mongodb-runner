@@ -16,19 +16,18 @@ Object.keys(doc.roles).map(function(name){
   data.push.apply(data, doc.roles[name].map(function(rules){
     var collection = Object.keys(rules)[0],
       actions = Object.keys(rules[collection]);
-    return '- `' + collection + '`:\n  - ' + actions.join('\n  - ');
-    // + '`: ' + Object.keys(doc.roles[name][collection]).join(',');
+    return '#### scope: `' + collection + '`\n  - ' + actions.join('\n  - ') + '\n';
   }));
   data.push('');
 });
 
 data.push.apply(data, [
-  '## Actions', ''
+  '## Action Sets', ''
 ]);
 
 Object.keys(doc.actions).map(function(name){
   data.push.apply(data, [
-    '### ' + name, ''
+    '### ' + name, '', '#### commands:', ''
   ]);
   data.push.apply(data, Object.keys(doc.actions[name]).map(function(a){
     return '- ' + a;
