@@ -1,0 +1,169 @@
+# # Security
+# An attempt to reason about how mongod role based auth works by
+# trying to model the system in YAML which will hopefully make the
+# UI implementation more well informed.
+#
+# ## Actions
+# All commands (actions) logically grouped.
+_READ: &READ
+  ? collStats
+  ? dbHash
+  ? dbStats
+  ? find
+  ? killCursors
+  ? planCacheRead
+
+_READ_ADVANCED: &READ_ADVANCED
+  ? connPoolStats
+  ? getCmdLineOpts
+  ? getLog
+  ? getParameter
+  ? getShardMap
+  ? hostInfo
+  ? listDatabases
+  ? listShards
+  ? netstat
+  ? replSetGetStatus
+  ? serverStatus
+  ? top
+  ? cursorInfo
+  ? inprog
+  ? shardingState
+  ? collStats
+  ? dbStats
+  ? getShardVersion
+
+_WRITE_BASIC: &WRITE_BASIC
+  ? insert
+  ? remove
+  ? update
+
+_WRITE: &WRITE
+  << : *WRITE_BASIC
+  << : {
+    convertToCapped,
+    createCollection,
+    dropCollection,
+    dropIndex,
+    emptycapped,
+    createIndex,
+    renameCollectionSameDB
+  }
+
+_READ_AUTH: &READ_AUTH
+  ? viewUser
+  ? viewRole
+
+_WRITE_AUTH: &WRITE_AUTH
+  ? changeCustomData
+  ? changePassword
+  ? createUser
+  ? createRole
+  ? dropUser
+  ? dropRole
+  ? grantRole
+  ? revokeRole
+
+_WRITE_ADVANCED: &WRITE_ADVANCED
+  ? appendOplogNote
+  ? applicationMessage
+  ? replSetConfigure
+  ? replSetStateChange
+  ? resync
+  ? addShard
+  ? removeShard
+  ? flushRouterConfig
+  ? cleanupOrphaned
+  ? splitChunk
+  ? moveChunk
+  ? enableSharding
+  ? splitVector
+
+_WRITE_HOST: &WRITE_HOST
+  ? applicationMessage
+  ? connPoolSync
+  ? closeAllDatabases
+  ? cpuProfiler
+  ? logRotate
+  ? setParameter
+  ? shutdown
+  ? touch
+  ? unlock
+  ? diagLogging
+  ? flushRouterConfig
+  ? fsync
+  ? invalidateUserCache
+  ? killop
+  ? resync
+  ? killCursors
+  ? repairDatabase
+
+_ADMIN: &ADMIN
+  ? collMod
+  ? collStats
+  ? compact
+  ? convertToCapped
+  ? createCollection
+  ? dbStats
+  ? dropCollection
+  ? dropDatabase
+  ? dropIndex
+  ? createIndex
+  ? indexStats
+  ? enableProfiler
+  ? planCacheIndexFilter
+  ? planCacheRead
+  ? planCacheWrite
+  ? reIndex
+  ? renameCollectionSameDB
+  ? repairDatabase
+  ? storageDetails
+  ? validate
+
+read:
+  - system.indexes: *READ
+  - system.namespaces: *READ
+  - system.js: *READ
+  - $db: *READ
+readAnyDatabase:
+  - '*': *READ
+readWrite:
+  - system.indexes:
+    << : *READ
+    << : *WRITE_BASIC
+  - system.namespaces:
+    << : *READ
+    << : *WRITE_BASIC
+  - system.js:
+    << : *READ
+    << : *WRITE_BASIC
+  - $db:
+    << : *READ
+    << : *WRITE
+readwriteAnyDatabase:
+  - '*':
+    << : *READ
+    << : *WRITE
+userAdmin:
+  - $db:
+    << : *WRITE_AUTH
+    << : *READ_AUTH
+dbAdmin:
+  - system.indexes: *READ
+  - system.namespaces: *READ
+  - system.profile:
+    << : *READ
+    << : {dropCollection}
+  - $db: *ADMIN
+clusterMonitor:
+  - '*': *READ_ADVANCED
+clusterManager:
+  - '*':
+    << : *READ_ADVANCED
+    << : *WRITE_ADVANCED
+  - config: *READ
+  - config.settings: *WRITE_BASIC
+  - local.system.replset: *READ
+hostManager:
+  - '*': *WRITE_HOST
+
