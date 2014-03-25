@@ -6,7 +6,7 @@ An experiment in modelling and generating mongod's security system.
 
 ### read
 
-#### scope: `system.indexes`
+#### read: `system.indexes`
   - collStats
   - dbHash
   - dbStats
@@ -14,7 +14,7 @@ An experiment in modelling and generating mongod's security system.
   - killCursors
   - planCacheRead
 
-#### scope: `system.namespaces`
+#### read: `system.namespaces`
   - collStats
   - dbHash
   - dbStats
@@ -22,7 +22,7 @@ An experiment in modelling and generating mongod's security system.
   - killCursors
   - planCacheRead
 
-#### scope: `system.js`
+#### read: `system.js`
   - collStats
   - dbHash
   - dbStats
@@ -30,7 +30,7 @@ An experiment in modelling and generating mongod's security system.
   - killCursors
   - planCacheRead
 
-#### scope: `$db`
+#### read: `$db`
   - collStats
   - dbHash
   - dbStats
@@ -41,7 +41,7 @@ An experiment in modelling and generating mongod's security system.
 
 ### readWrite
 
-#### scope: `system.indexes`
+#### readWrite: `system.indexes`
   - collStats
   - dbHash
   - dbStats
@@ -52,7 +52,7 @@ An experiment in modelling and generating mongod's security system.
   - remove
   - update
 
-#### scope: `system.namespaces`
+#### readWrite: `system.namespaces`
   - collStats
   - dbHash
   - dbStats
@@ -63,7 +63,7 @@ An experiment in modelling and generating mongod's security system.
   - remove
   - update
 
-#### scope: `system.js`
+#### readWrite: `system.js`
   - collStats
   - dbHash
   - dbStats
@@ -74,7 +74,7 @@ An experiment in modelling and generating mongod's security system.
   - remove
   - update
 
-#### scope: `$db`
+#### readWrite: `$db`
   - collStats
   - dbHash
   - dbStats
@@ -95,7 +95,7 @@ An experiment in modelling and generating mongod's security system.
 
 ### userAdmin
 
-#### scope: `$db`
+#### userAdmin: `$db`
   - changeCustomData
   - changePassword
   - createUser
@@ -110,7 +110,7 @@ An experiment in modelling and generating mongod's security system.
 
 ### dbAdmin
 
-#### scope: `system.indexes`
+#### dbAdmin: `system.indexes`
   - collStats
   - dbHash
   - dbStats
@@ -118,7 +118,7 @@ An experiment in modelling and generating mongod's security system.
   - killCursors
   - planCacheRead
 
-#### scope: `system.namespaces`
+#### dbAdmin: `system.namespaces`
   - collStats
   - dbHash
   - dbStats
@@ -126,7 +126,7 @@ An experiment in modelling and generating mongod's security system.
   - killCursors
   - planCacheRead
 
-#### scope: `system.profile`
+#### dbAdmin: `system.profile`
   - collStats
   - dbHash
   - dbStats
@@ -135,7 +135,7 @@ An experiment in modelling and generating mongod's security system.
   - planCacheRead
   - dropCollection
 
-#### scope: `$db`
+#### dbAdmin: `$db`
   - collMod
   - collStats
   - compact
@@ -160,7 +160,7 @@ An experiment in modelling and generating mongod's security system.
 
 ### clusterMonitor
 
-#### scope: `*`
+#### clusterMonitor: `*`
   - connPoolStats
   - getCmdLineOpts
   - getLog
@@ -183,7 +183,7 @@ An experiment in modelling and generating mongod's security system.
 
 ### clusterManager
 
-#### scope: `*`
+#### clusterManager: `*`
   - collStats
   - dbHash
   - dbStats
@@ -201,7 +201,7 @@ An experiment in modelling and generating mongod's security system.
   - createIndex
   - renameCollectionSameDB
 
-#### scope: `config`
+#### clusterManager: `config`
   - collStats
   - dbHash
   - dbStats
@@ -209,12 +209,12 @@ An experiment in modelling and generating mongod's security system.
   - killCursors
   - planCacheRead
 
-#### scope: `config.settings`
+#### clusterManager: `config.settings`
   - insert
   - remove
   - update
 
-#### scope: `local.system.replset`
+#### clusterManager: `local.system.replset`
   - collStats
   - dbHash
   - dbStats
@@ -225,7 +225,7 @@ An experiment in modelling and generating mongod's security system.
 
 ### hostManager
 
-#### scope: `*`
+#### hostManager: `*`
   - applicationMessage
   - connPoolSync
   - closeAllDatabases
@@ -247,7 +247,7 @@ An experiment in modelling and generating mongod's security system.
 
 ### readAnyDatabase
 
-#### scope: `*`
+#### readAnyDatabase: `*`
   - collStats
   - dbHash
   - dbStats
@@ -258,7 +258,7 @@ An experiment in modelling and generating mongod's security system.
 
 ### readwriteAnyDatabase
 
-#### scope: `*`
+#### readwriteAnyDatabase: `*`
   - collStats
   - dbHash
   - dbStats
