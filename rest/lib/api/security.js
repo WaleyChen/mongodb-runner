@@ -13,7 +13,7 @@ module.exports = function(app){
     res.send(req.mongo.users);
   });
   app.get('/api/v1/security/users/:username',  function(req, res, next){
-    req.mongo.admin().command({usersInfo: req.param('username')}, {}, function(err, data){
+    req.mongo.admin().command({usersInfo: req.param('username'), showPrivileges: true}, {}, function(err, data){
       if(err) return next(err);
 
       res.send(data.documents[0].users);

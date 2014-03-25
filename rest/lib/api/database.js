@@ -45,6 +45,8 @@ var collection_names = module.exports.collection_names = function(req, res, next
   req.mongo.find(req.database, 'system.namespaces', {}, function(err, data){
     if(err) return next(err);
 
+    debug('collection data', err, data, req.database.name);
+
     req.database.collection_names = data.filter(function(col){
       return !(col.name.indexOf('$') >= 0 && col.name.indexOf('.oplog.$') < 0);
     }).map(function(col){

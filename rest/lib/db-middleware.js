@@ -1,6 +1,7 @@
 "use strict";
 
-var errors = require('./api/errors');
+var errors = require('./api/errors'),
+  debug = require('debug')('mg:scope:db-middleware');
 
 module.exports = function(app){
   return function(req, res, next){
@@ -13,6 +14,7 @@ module.exports = function(app){
         coll.find({}, [], opts || {}, function(err, data){
           if(err) return fn(err);
           data.toArray(function(err, data){
+            if(data === null) return fn(new Error('Not authoirzed to run this query? ' + db.databaseName + '.' + name + '.find()'));
             fn(null, data);
           });
         });
@@ -37,6 +39,7 @@ module.exports.database = function(){
   return function(req, res, next){
     var name = req.param('database_name');
     req.database = req.mongo.db(name);
+    req.database.name = name;
     next();
   };
 };

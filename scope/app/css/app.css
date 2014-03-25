@@ -227,3 +227,7 @@ peach: #DF826B
   color: #a94442;
   background-color: #f2dede !important;
 }
+
+.nav-pills > li > a {
+  border-radius: 2px !important;
+}

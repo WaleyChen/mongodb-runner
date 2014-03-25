@@ -1,6 +1,16 @@
-h1 #{user.user}
-h2 roles
-
-ul
-for role in user.roles
-  li #{role.role}
+.panel.panel-default
+  .panel-heading
+    select.pull-right
+      option All
+      for role in user.roles
+        option #{role.role}
+    h2 #{Object.keys(matrix).length} privileges
+  .panel-body
+    .table-responsive
+      table.table.table-striped
+        tbody
+         for statement, _id in matrix
+          tr
+            td #{statement.resource}
+            td
+              abbr(title="Whats this?") #{statement.action}
