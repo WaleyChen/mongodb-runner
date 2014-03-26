@@ -1,16 +1,12 @@
 .panel.panel-default
   .panel-heading
-    select.pull-right
-      option All
-      for role in user.roles
-        option #{role.role}
-    h2 #{Object.keys(matrix).length} privileges
+
   .panel-body
-    .table-responsive
-      table.table.table-striped
+    .table-responsive(style="border:0;")
+      table.table(style="background: none;")
         tbody
          for statement, _id in matrix
           tr
             td #{statement.resource}
-            td
+            td(style="text-align: left;")
               abbr(title="Whats this?") #{statement.action}

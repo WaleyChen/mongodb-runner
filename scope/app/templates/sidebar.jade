@@ -1,10 +1,6 @@
-//
-  Primary sidebar nav to hop to any section.  For simplicity,
-  removed secondary bar/miniview used in MMS.
 ul.nav.navbar-nav.side-nav
-
   - for section in sections
     li(class="#{section.name}")
-      a.btn(href='##{section.name}', style='border-radius: 0;')
-        span(class='glyphicon glyphicon-#{section.icon}', style='font-size: 24px;')
-        div.text(style="font-size: 12px;line-height: 14px;text-align: center;text-shadow: none;") #{section.name}
+      a.btn(href='##{section.name}')
+        span(class='glyphicon glyphicon-#{section.icon}')
+        div.text #{section.name}

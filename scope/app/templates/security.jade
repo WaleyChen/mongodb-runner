@@ -10,30 +10,14 @@ if users.length === 0
 else
 
 .row
-  .col-md-12(style="margin-top: 20px; ")
-    ul.nav.nav-tabs
-      li.active
-        a(href="#security/users") users 2
-      li
-        a(href="#security/roles") roles 8
-.row
   .col-md-6(style="padding-right: 0px;")
+
+    // Big chosen dropdown to the left with all users and roles.
+    // select user or use autocomplete to open `.details` pane.
     ul.list-group
      - for user in users
-      li.list-group-item.well(style="border-right: 0px;")
+      li.list-group-item(style="border-right: 0px;")
         h4
           a(href="#security/users/#{user._id}") #{user._id}
-        ul.list-inline
-         - for role in user.roles
-          li
-            a.btn.btn-default.btn-sm(href="") #{role.role}
 
-      li.list-group-item(style="margin-right: 15px;")
-        h4
-          a(href="#security/users/#{user._id}") #{user._id}
-        ul.list-inline
-         - for role in user.roles
-          li
-            a.btn.btn-default.btn-sm(href="") #{role.role}
-
-  .col-md-6.details.list-group.list-group-item.well(style="border-left: 0px;")
+  .col-md-6.details.list-group.list-group-item(style="border-left: 0px;")
