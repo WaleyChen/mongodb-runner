@@ -3,7 +3,8 @@
 var Backbone = require('Backbone'),
   $ = Backbone.$,
   models = require('../models'),
-  creek = require('../creek');
+  creek = require('../creek'),
+  debug = require('debug')('mg:scope:pulse');
 
 module.exports = Backbone.View.extend({
   tpl: require('../templates/pulse.jade'),
@@ -20,12 +21,20 @@ module.exports = Backbone.View.extend({
     });
   },
   onTopData: function(){
+    if(!this.top.get('deltas')) return this;
     var locks = this.top.get('deltas')[this.metric];
+    debug('top: ' + this.metric, this.top.get('deltas'));
     this.graph.inc(locks);
   },
   activate: function(){
-    this.top.fetch();
+    this.$el = $('#mongoscope');
+    this.el = this.$el.get(0);
+
     this.top.subscribe();
+    this.instance.fetch();
+  },
+  deactivate: function(){
+    this.top.unsubscribe();
   },
   render: function(){
     var self = this;
