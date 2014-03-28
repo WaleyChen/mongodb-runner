@@ -181,10 +181,6 @@ TopStream.prototype.normalize = function(data){
       dest = 'total';
     }
 
-    // @todo: bit confusing right now, so just comment out to turn back on
-    if(dest === 'total'){
-      return;
-    }
     res.namespaces.push(dest);
 
     keys.map(function(k){
