@@ -26,8 +26,12 @@ module.exports = Backbone.View.extend({
   },
   render: function(){
     this.$el.html(this.tpl(this.security.toJSON()));
-    this.details.activate(this.security.get('users')[0]._id);
-    $('.chosen-select').chosen({width: '100%', no_results_text: 'No existing users or roles found matching'}).trigger('chosen:open');
+    if(this.security.get('users').length > 0){
+      this.details.activate(this.security.get('users')[0]._id);
+      $('.chosen-select').chosen({width: '100%',
+        no_results_text: 'No existing users or roles found matching'
+      }).trigger('chosen:open');
+    }
     return this;
   }
 });
