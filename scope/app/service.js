@@ -25,7 +25,7 @@ Service.prototype.connect = function(){
   if(this.connected) return this;
 
   this.origin = 'http://' + this.hostname + ':' + this.port;
-  // this.io = socketio.connect(this.origin);
+  this.io = socketio.connect(this.origin);
   this.connected = true;
   return this;
 };

@@ -182,19 +182,21 @@ Creek.prototype.resume = function(i){
 };
 
 Creek.prototype.inc = function(i){
-  this.value += i;
+  this.value += ~~i;
   return this;
 };
 
 Creek.prototype.tick = function(){
   if(this.paused === true) return this;
+
+  this.data.push(this.value);
+  this.value = 0;
+  this.data.shift();
+
   var max = d3.max(this.data);
 
   // update current time for smoothness.
   this.now = new Date();
-  this.data.push(this.value);
-  this.value = 0;
-  this.history.push(this.data.shift());
 
   this.scales.x.domain([this.now - (this.scrollback - 2) * this.duration,
     this.now - this.duration]);
