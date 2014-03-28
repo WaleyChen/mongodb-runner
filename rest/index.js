@@ -26,7 +26,7 @@ app.set({
   server: server,
   options: {
     connect: {
-      default: 'mongodb://scopey:scoperson@localhost',
+      default: 'mongodb://localhost',
       desc: 'connection uri for a mongo instance'
     },
     listen: {

@@ -1,12 +1,19 @@
-.panel.panel-default
-  .panel-heading
 
-  .panel-body
-    .table-responsive(style="border:0;")
-      table.table(style="background: none;")
-        tbody
-         for statement, _id in matrix
-          tr
-            td #{statement.resource}
-            td(style="text-align: left;")
-              abbr(title="Whats this?") #{statement.action}
+- l = null
+- byResource = {}
+
+for statement, _id in matrix
+  if l !== statement.resource
+    - byResource[statement.resource] = []
+    - l = statement.resource
+
+  - byResource[statement.resource].push(statement.action)
+
+for actions, resource in byResource
+    ul.weld-item.list-unstyled
+      li
+        blockquote for any database, #{user._id} can:
+      for action in actions
+        li(style="padding-left: 40px;margin-bottom: 5px; padding-bottom: 5px;padding-top: 10px; border-bottom: 1px solid rgba(128, 127, 127, 0.2);")
+          .h4  #{action}
+          p &nbsp;&nbsp;This is used to lorem ipsum all day

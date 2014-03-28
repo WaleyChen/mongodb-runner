@@ -7,34 +7,25 @@ include mixins/bytes
 - host.disk_used = host.disk_total - host.disk_free
 
 .row
-  .col-md-9(style="padding-right: 0;padding-top: 20px;")
-    h5(style="position:absolute;position: absolute;right: 40px;opacity: .7;") #{metric}
-    .collection-creek.mms
+  .databases.col-md-12
+    a
+      .collection-creek
+      .name #{database.name}
+      ul.stats
+        li #{stats.index_count} indexes
+        li #{stats.document_count} docs
 
-    .col-md-4.panel.panel-default(style="margin-right: 10px;")
-      .panel-heading
-        h4 Collections
-
-      ul.list-group.panel-body
+.row
+  .col-md-6.panel.panel-default
+    select.chosen-select(data-placeholder="collections #{database.collection_names.length}")
+      optgroup(label="collections")
+        option
        - for collection_name in database.collection_names
-        li.list-group-item
-          h4
-            a(href='#collection/#{database.name}/#{collection_name}') #{collection_name}
+        option(value="#{collection_name}")
+          | #{collection_name}
 
-    .col-md-6.panel.panel-default.col-md-push-1
-      .panel-heading
-        h4 Storage: #{((stats.ns_size+stats.file_size)/host.disk_used*100).toFixed(2)}%
-      .panel-body.donut
-
-  .panel.panel-default.col-md-3
+  .col-md-6.panel.panel-default
     .panel-heading
-      h2 #{database.name}
-
-    ul.list-group.panel-body
-      li.list-group-item
-        span.badge #{stats.document_count}
-        strong Documents
-      li.list-group-item
-        span.badge #{stats.index_count}
-        strong Indexes
+      h4 storage
+    .panel-body.donut
 

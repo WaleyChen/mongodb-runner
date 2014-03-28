@@ -20,7 +20,7 @@ function Creek(opts){
     data: [],
     interpolation: 'cardinal',
     width: 0,
-    height: 160,
+    height: 116,
     selector: 'body',
     line: true,
     area: true,
@@ -40,7 +40,7 @@ function Creek(opts){
 }
 
 Creek.prototype.layout = function(){
-  var newWidth = $(this.svg.node().parentElement).width(),
+  var newWidth = $(this.svg.node().parentElement).parent().parent().width(),
     delta = this.width - newWidth;
 
   this.width = newWidth;
@@ -67,10 +67,10 @@ Creek.prototype.layout = function(){
 };
 
 Creek.prototype.render = function(){
-  this.clipId = 'clip-' + Math.random();
+  this.clipId = ('clip-' + Math.random()).replace('.', '');
   this.selection = d3.select(document.querySelector(this.selector));
   var self = this, series;
-  this.tickAt = -1;
+
   this.axisOffset = 0;
   this.now = new Date(Date.now() - this.duration);
 
@@ -79,10 +79,19 @@ Creek.prototype.render = function(){
       .attr('class', 'creek')
       .attr('height', this.height)
       .attr('width', '100%')
-    .append('g');
+      .on('click', function(){
+        if(self.paused){
+          return self.resume();
+        }
+        return self.pause();
+      })
+      // .attr('transform', 'translateZ(0)')
+    .append('g')
+      .attr('transform', 'translate(0, 8)');
 
   // Manually set the first time and call layout, which keeps code in one spot.
-  this.width = $(this.svg.node().parentElement).width();
+  this.width = $(this.svg.node().parentElement).parent().parent().width();
+
   this.layout();
   $(window).resize(_.debounce(this.layout.bind(this), 300));
 
@@ -91,7 +100,7 @@ Creek.prototype.render = function(){
       .domain([self.now - (this.scrollback - 2) * this.duration, this.now - this.duration])
       .range([0, this.stage.width]),
     y: d3.scale.linear()
-    .range([this.stage.height, 0])
+    .range([this.stage.height-8, 0])
     .domain([0, 1])
   };
 
@@ -124,7 +133,7 @@ Creek.prototype.render = function(){
   this.axes = {
     x: this.svg.append('g')
       .attr('class', 'x-axis axis')
-      .attr('transform', 'translate('+ -25 +',' + this.stage.height + ')')
+      .attr('transform', 'translate('+ -25 +',' + (this.stage.height - 8) + ')')
       .call(this.scales.x.axis = d3.svg.axis().scale(this.scales.x).orient('bottom'))
       .call(this.scales.x.axis.ticks(4).tickSubdivide(0)),
     y: this.svg.append('g')
@@ -144,7 +153,6 @@ Creek.prototype.render = function(){
       .data([this.data])
       .attr('class', 'line')
       .attr('d', this.shapes.line);
-      this.tickAt++;
   }
 
   if(this.area){
@@ -152,11 +160,11 @@ Creek.prototype.render = function(){
       .data([this.data])
       .attr('class', 'area')
       .attr('d', this.shapes.area);
-    this.tickAt++;
   }
 
-
   this.paused = false;
+
+  $(this.svg.node().parentElement).parent().css({position: 'absolute'})
 
   this.tick();
   return this;
@@ -178,29 +186,25 @@ Creek.prototype.inc = function(i){
   return this;
 };
 
-Creek.prototype.consume = function(){
-  this.data.push(this.value);
-  this.value = 0;
-  this.history.push(this.data.shift());
-  return this;
-};
-
 Creek.prototype.tick = function(){
   if(this.paused === true) return this;
   var max = d3.max(this.data);
+
   // update current time for smoothness.
   this.now = new Date();
-  this.consume();
+  this.data.push(this.value);
+  this.value = 0;
+  this.history.push(this.data.shift());
 
-  this.scales.x.domain([this.now - (this.scrollback - 2) * this.duration, this.now - this.duration]);
+  this.scales.x.domain([this.now - (this.scrollback - 2) * this.duration,
+    this.now - this.duration]);
+
   this.scales.y.domain([0, Math.max(1, max)]);
 
   if(this.line){
     this.line
       .attr('d', this.shapes.line)
-      .attr('transform', null)
-      // .on('mouseover', function(d){ alert('hi');})
-      // .on('mouseout', function(d){});
+      .attr('transform', null);
   }
 
   if(this.area){
@@ -209,28 +213,28 @@ Creek.prototype.tick = function(){
       .attr('transform', null);
   }
 
-  this.transition();
-};
-
-Creek.prototype.transitionAxis = function(id){
-  this.axes[id].transition()
-    .duration(this.duration)
-    .ease(id === 'y' ? 'elastic-out-in' : 'linear')
-    .call(this.scales[id].axis);
-};
-
-Creek.prototype.transition = function(){
-  var self = this;
-
   // Adjust axes and scaling for incoming value
-  ['x', 'y'].map(this.transitionAxis.bind(this));
+  this.axes.x.transition()
+    .duration(this.duration)
+    .ease('linear')
+    .call(this.scales.x.axis);
+
+  this.axes.y.transition()
+    .duration(this.duration)
+    .ease('linear')
+    .call(this.scales.y.axis);
 
   // Move the whole world over to expose the next value
-  d3.selectAll(document.querySelectorAll(this.selector + ' .series path')).call(function(p){
-    p.transition()
-      .duration(self.duration)
-      .ease('linear')
-      .attr('transform', 'translate(' + self.scales.x(self.now - (self.scrollback - 1) * self.duration) + ')')
-      .each('end', function(d, i){return (i === self.tickAt) ? self.tick() : null;});
-  });
+  this.area.transition()
+    .duration(this.duration)
+    .ease('linear');
+
+  this.line.transition()
+    .duration(this.duration)
+    .ease('linear')
+    // .attr('transform', 'translate(' + self.scales.x(self.now - (self.scrollback - 1) * self.duration) + ')')
+
+  this.svg.transition()
+    .duration(this.duration)
+    .each('end', this.tick.bind(this));
 };

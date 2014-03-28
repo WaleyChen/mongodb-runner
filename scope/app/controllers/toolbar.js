@@ -1,12 +1,12 @@
 var Backbone = require('Backbone'),
   $ = Backbone.$,
   models = require('../models'),
-  debug = require('debug')('mg:scope:pulse');
+  debug = require('debug')('mg:scope:toolbar');
 
 module.exports = Backbone.View.extend({
-  tpl: require('../templates/sidebar.jade'),
+  tpl: require('../templates/toolbar.jade'),
   initialize: function(){
-    this.$el = $('#sidebar');
+    this.$el = $('#toolbar');
     this.el = this.$el.get(0);
 
     this.instance = models.instance

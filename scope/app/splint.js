@@ -21,7 +21,8 @@ var Backbone = require('backbone'),
 // @api public
 module.exports = function splint(){
   var specs = Array.prototype.slice.call(arguments, 0),
-    router = new Backbone.Router();
+    router = new Backbone.Router(),
+    body = Backbone.$('body');
 
   router._current = null;
   router._nameToHandler = {};
@@ -31,9 +32,11 @@ module.exports = function splint(){
     if(router._current){
       debug('deactivating', router._current.name);
       router._current.deactivate.call(router._current);
+      body.removeClass(router._current.name);
     }
     router._current = router._nameToHandler[name];
     router._current.name = name;
+    body.addClass(name);
   });
 
   specs.map(function(spec){

@@ -3,21 +3,27 @@ if users.length === 0
 :markdown
   ```
   use admin;
-  db.addUser( { user: 'scopey',
+  db.addUser({
+    user: 'scopey',
     pwd: 'scoperson',
-    roles: ['userAdminAnyDatabase', 'clusterMonitor', 'hostManager']});
+    roles: ['clusterMonitor', 'readAnyDatabase']
+  });
   ```
 else
 
 .row
   .col-md-6(style="padding-right: 0px;")
+    select.chosen-select(data-placeholder="security")
+      option
+      optgroup(label="users")
+       - for user in users
+        option #{user._id}
+        option #{user._id}
+        option #{user._id}
 
-    // Big chosen dropdown to the left with all users and roles.
-    // select user or use autocomplete to open `.details` pane.
-    ul.list-group
-     - for user in users
-      li.list-group-item(style="border-right: 0px;")
-        h4
-          a(href="#security/users/#{user._id}") #{user._id}
+      optgroup(label="roles")
+        option readAnyDatabase
+        option read
+        option readWrite
 
   .col-md-6.details.list-group.list-group-item(style="border-left: 0px;")

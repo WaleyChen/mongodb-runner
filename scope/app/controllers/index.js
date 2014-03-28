@@ -3,7 +3,7 @@
 var splint = require('../splint'),
   debug = require('debug')('mg:scope:router');
 
-new (require('./sidebar'))();
+new (require('./toolbar'))();
 
 var security = new (require('./security'))();
 

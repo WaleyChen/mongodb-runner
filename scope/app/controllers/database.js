@@ -37,6 +37,8 @@ module.exports = Backbone.View.extend({
   },
   deactivate: function(){},
   render: function(){
+    var db = this.database.get('name');
+
     this.$el.html(this.tpl({
       'database': this.database.toJSON(),
       'host': models.instance.toJSON().host,
@@ -44,22 +46,28 @@ module.exports = Backbone.View.extend({
     }));
     this.graph.render();
 
+    $('.chosen-select').chosen({width: '100%',
+      no_results_text: 'No existing users or roles found matching'
+    }).trigger('chosen:open').on('change', function(e, data) {
+      Backbone.history.navigate('collection/' + db + '/' + data.selected);
+    });
+
     donut('.donut', [
       {
         name: 'Documents',
         size: this.database.get('stats').document_size,
         count: this.database.get('stats').document_count,
-        color: '#6ba442',
         className: 'documents'
       },
       {
         name: 'Indexes',
         size: this.database.get('stats').index_size,
         count: this.database.get('stats').index_count,
-        color: '#d9d6d4',
         className: 'indexes'
       }
-    ]);
+    ], {
+      title: '0.17%'
+    });
   }
 });
 

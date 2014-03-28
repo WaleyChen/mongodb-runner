@@ -3,14 +3,16 @@ if instance.replicaset
     .col-md-9
       - self = instance.replicaset.instance
       h1 #{instance.replicaset._id}
-      .well
-        h2 #{self.name}
-        if self.isPrimary
-          span.label.label-success Primary
-        else if self.isSecondary
-          span.label.label-default Secondary
-        else if self.isArbiter
-          span.label.label-default Arbiter
+      .weld-item
+        .name(style="padding: 10px;")
+          span.h2 #{self.name}
+          if self.isPrimary
+            span.label.label-success Primary
+          else if self.isSecondary
+            span.label.label-default Secondary
+          else if self.isArbiter
+            span.label.label-default Arbiter
+
 
       ul.list-group
        - for member in instance.replicaset.secondaries

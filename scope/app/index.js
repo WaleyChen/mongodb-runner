@@ -9,6 +9,8 @@ window.jQuery = require('backbone').$ = require('jquery');
 require('bootstrap/js/tooltip.js');
 require('bootstrap/js/popover.js');
 
+require('./chosen.js');
+
 require('debug').enable('*');
 
 require('./models')({host: '127.0.0.1'});

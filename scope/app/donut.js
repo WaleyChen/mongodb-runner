@@ -8,10 +8,11 @@ function bytes(num){
   return (num < 0 ? '-' : '') + inUnits + ' ' + unit;
 }
 
-module.exports = function(el, data){
+module.exports = function(el, data, opts){
   var width = 350,
     height = 200,
     radius = Math.min(width, height) / 2;
+  opts = opts || {};
 
   var arc = d3.svg.arc()
     .outerRadius(radius - 10)
@@ -30,20 +31,27 @@ module.exports = function(el, data){
     .append("g")
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
+  svg.append('g')
+    .attr('class', 'title')
+    .append('text')
+      .attr("dy", ".25em")
+      .style("text-anchor", "middle")
+      .text(opts.title);
+
   var g = svg.selectAll(".arc")
       .data(pie(data))
     .enter().append("g")
       .attr('class', function(d){
-        return 'arc ' + d.data.className;
+        return d.data.className;
       });
 
   g.append("path")
-    .attr("d", arc)
-    .style("fill", function(d){
-      return d.data.color;
-    });
+    .attr('class', 'arc')
+    .attr("d", arc);
+
 
   g.append("text")
+    .attr('class', 'label')
     .attr("transform", function(d) {
       var calc = arc.centroid(d),
         x = calc[0],

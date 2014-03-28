@@ -1,10 +1,9 @@
 "use strict";
 
-var $ = require('jquery'),
-  debug = require('debug')('mg:scope:service'),
-  socketio = require('socket.io-client');
-
-var srv;
+var $ = require('jquery')
+  , debug = require('debug')('mg:scope:service')
+  , socketio = require('socket.io-client')
+  , srv;
 
 module.exports = function(hostname, port){
   if(!srv) srv = new Service(hostname, port).connect();
@@ -26,14 +25,7 @@ Service.prototype.connect = function(){
   if(this.connected) return this;
 
   this.origin = 'http://' + this.hostname + ':' + this.port;
-
-  this.io = socketio.connect(this.origin)
-    .on('connect', function(){
-      // debug('socketio connected');
-    }).on('connect_error', function(err){
-      debug('socketio connection error :(', err);
-    });
-
+  // this.io = socketio.connect(this.origin);
   this.connected = true;
   return this;
 };
@@ -195,20 +187,23 @@ var mixins = {
     this.trigger('sync', this, data, {});
   },
   subscribe: function(options){
+    if(!srv.io) return this;
+
     _.defaults(options || (options = {}), {
       uri: _.result(this, 'uri')
     });
-    var self = this;
 
-    // debug('$sub  ' + options.uri);
     srv.io.on('connect', function(){
-      srv.io.on(options.uri, self.iohandler.bind(self))
+      srv.io.on(options.uri, this.iohandler.bind(this))
         .emit(options.uri);
-    });
+    }.bind(this));
+
     this.trigger('subscribed', this, srv.io, options);
     return this;
   },
   unsunscribe: function(options){
+    if(!srv.io) return this;
+
     _.defaults(options || (options = {}), {
       uri: _.result(this, 'uri')
     });

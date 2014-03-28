@@ -1,0 +1,362 @@
+@import "./less/variables.less";
+@import "./less/bootstrap/mixins.less";
+
+// bootstrap core
+@import "./less/bootstrap/scaffolding.less";
+@import "./less/bootstrap/type.less";
+@import "./less/bootstrap/grid.less";
+@import "./less/bootstrap/tables.less";
+@import "./less/bootstrap/forms.less";
+@import "./less/bootstrap/buttons.less";
+
+// bootstrap components
+@import "./less/bootstrap/dropdowns.less";
+@import "./less/bootstrap/glyphicons.less";
+@import "./less/bootstrap/navs.less";
+@import "./less/bootstrap/navbar.less";
+@import "./less/bootstrap/pagination.less";
+@import "./less/bootstrap/pager.less";
+@import "./less/bootstrap/labels.less";
+@import "./less/bootstrap/badges.less";
+@import "./less/bootstrap/list-group.less";
+@import "./less/bootstrap/panels.less";
+
+@import "./less/bootstrap/utilities.less";
+@import "./less/bootstrap/responsive-utilities.less";
+
+@import "./less/chosen.less";
+
+.yo-transition(...) {
+  -webkit-transition: @arguments;
+  -moz-transition: @arguments;
+  -o-transition: @arguments;
+  transition: @arguments;
+}
+
+* {
+  -webkit-font-smoothing: auto;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+// .btn {
+//   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+//   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) ;
+// }
+
+// ## app states
+//
+// ### Exploring
+//
+// The user is actively browsing the contents of a collection.
+.exploring #mongoscope {
+  .stats {
+    h3 {
+      margin-top: 0;
+    }
+    h5 {
+      padding-top: 0;
+      padding-bottom: 0;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    // Hide detailled stats
+    .list-group {
+      display: none;
+    }
+  }
+}
+
+.log #mongoscope {
+  font-family: @font-family-monospace;
+}
+
+// ## components
+//
+// ### log
+.log {
+  // A line
+  div {
+    white-space: nowrap;
+    clear: both;
+  }
+  // The message
+  span {
+    display: block;
+    max-height: 18px;
+    overflow: hidden;
+  }
+  .name {
+    width: 140px;
+    display: block;
+    float: left;
+    text-align: right;
+    margin-right: 20px;
+    color: #868686;
+  }
+}
+
+// ### creek
+//
+// a d3 streaming time-series chart.
+.creek {
+  fill: transparent;
+  border-radius: 2px;
+  .line {
+    stroke: @text-color;
+    stroke-width: 2px;
+  }
+  .area {}
+  .tick {
+    stroke: fadeout(@text-color, 80%);
+    font-size: 10px;
+
+    line {
+      z-index: -1;
+      stroke-width: 1px;
+      stroke-dasharray: 1 1;
+      stroke: fadeout(@text-color, 90%);
+    }
+  }
+}
+
+.weld {
+  .list-group();
+  a, &-item {
+    .list-group-item();
+    margin: 0;
+    padding: 0;
+    box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, 0.05);
+    color: #807f7f;
+    background: rgba(10, 10, 10, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.5);
+
+    .yo-transition(all 250ms ease);
+  }
+  a:hover, &-item:hover {
+    box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, 0.3);
+    color: #D0D0D0;
+    background: rgba(10, 10, 10, 0.3);
+    text-decoration: none;
+  }
+}
+
+.databases {
+  .list-group();
+  a {
+    .list-group-item();
+    margin: 0;
+    padding: 0;
+    box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, 0.05);
+    color: #807f7f;
+    background: rgba(10, 10, 10, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.5);
+
+    .yo-transition(all 250ms ease);
+
+    .name {
+      .h2();
+      .list-group-item-heading();
+      color: @text-color;
+      margin-bottom: 95px;
+      display: block;
+      padding-left: 20px;
+      text-shadow: 0px 0px 10px #000;
+    }
+
+    .graph {
+      top: 10px;
+      // position: absolute;
+    }
+
+    .stats {
+      border-top: 1px solid rgba(128, 127, 127, 0.2);
+      font-variant: small-caps;
+      margin: 0;
+      .list-inline();
+      padding-left: 20px;
+
+      li {
+        color: rgba(128, 127, 127, 1.0);
+        border-right:  1px solid rgba(128, 127, 127, 0.2);
+      }
+    }
+  }
+  a:hover {
+    box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, 0.3);
+    color: #D0D0D0;
+    background: rgba(10, 10, 10, 0.3);
+    text-decoration: none;
+  }
+}
+
+// @text-color: #aaa;
+@text-color-subtle: #555;
+@text-color-highlight: #fff;
+
+@gray: @text-color-subtle;
+@white: @text-color;
+@green: @brand-primary;
+
+// ### donut
+//
+// a d3 annulus chart.
+.donut {
+  .title {
+    fill: @text-color-subtle;
+    font-size: 120%;
+  }
+  .documents {
+    .arc {
+      stroke: fadein(@brand-primary, %10);
+      fill: @brand-primary;
+    }
+    .label {
+      fill: @brand-primary;
+    }
+  }
+  .indexes {
+    .arc {
+      stroke: @white;
+      fill: fadeout(@white, 10%);
+    }
+    .label {
+      fill: @white;
+    }
+  }
+}
+
+#logo {
+  height: 28px;
+  width: 26px;
+  margin-top: 8px;
+  margin-left: 2px;
+  margin-right: 40px;
+
+  path {
+    stroke-width: 1;
+    stroke: @gray-light;
+    fill: @gray-light;
+  }
+}
+
+
+.label {
+  &-default {
+    background: none;
+  }
+  &-success {
+    background: none;
+    color: #A6E22E;
+  }
+  &-warning {
+    background: none;
+    color: #FD971F;
+  }
+}
+
+// ## app container
+#mongoscope {
+  .container-fluid();
+  padding-top: 10px + 40px;
+  box-shadow: 0px -1px 1px rgba(0, 0, 0, 0.1);
+}
+
+#toolbar {
+  position: fixed;
+  margin: 0;
+  width: 100%;
+  height: 41px;
+  background: #403d3d;
+  box-shadow: 0 -1px 10px 1px rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  z-index: 1100;
+  ul {
+    .nav();
+    .navbar-nav();
+
+    li {
+      box-shadow: 0 0 1px rgba(0, 0, 0, 0.3);
+      a {
+        .btn();
+        .yo-transition(all 250ms ease);
+        border-radius: 0;
+        height: 39px;
+        .icon {
+          .glyphicon();
+          font-size: 18px;
+        }
+        .label {
+          display: none;
+        }
+      }
+      a:hover {
+        text-decoration: none;
+        color: @text-color;
+        background: @brand-primary;
+      }
+    }
+  }
+}
+
+@table-border-color: 1px solid rgba(255, 255, 255, 0.1);
+.table {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  thead {
+    tr {
+      th {
+        border: 0;
+        font-weight: normal;
+        opacity: 0.5;
+      }
+    }
+  }
+  tbody {
+    td {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-weight: 600;
+    }
+  }
+}
+
+.panel {
+  margin-bottom: 20px;
+  background: none;
+  box-shadow: none;
+  border: 0;
+
+  &-heading {
+    background: none;
+    border: 0;
+  }
+}
+
+.list-group {
+  &-item {
+    background: none;
+    border: 0;
+
+    &-heading {
+      padding-bottom: 60px;
+      font-weight: normal;
+      padding-left: 20px;
+      padding-top: 5px;
+      color: #F8F8F2;
+    }
+  }
+}
+
+.list-group-item-heading {
+    color: #F8F8F2;
+}
+
+a.list-group-item:hover {
+  box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, 0.3);
+  color: #D0D0D0;
+  background: rgba(10, 10, 10, 0.3);
+}
+
+@import "./less/themes/soda-dark.less";

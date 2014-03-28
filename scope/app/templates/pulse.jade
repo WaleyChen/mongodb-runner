@@ -41,27 +41,15 @@ if instance.database_names.length === 0
 
 else
 .row
-  .col-md-8
-    .list-group
-     - for database_name in instance.database_names
-      a.list-group-item(href='#database/#{database_name}', style="margin: 0; padding: 0;")
-        h2.list-group-item-heading #{database_name}
-        ul.list-inline(style="border-top: 1px solid rgba(128, 127, 127, 0.2); font-variant: small-caps;margin: 0;")
-          li(style="color: rgba(128, 127, 127, 1.0);border-right:  1px solid rgba(128, 127, 127, 0.2);") 8 colls
-          li(style="color: rgba(128, 127, 127, 1.0);border-right:  1px solid rgba(128, 127, 127, 0.2);") 27 index
-          li(style="color: rgba(128, 127, 127, 1.0);border-right:  1px solid rgba(128, 127, 127, 0.2);") 120 gigab
-      a.list-group-item(href='#database/#{database_name}', style="margin: 0; padding: 0;")
-        h2.list-group-item-heading #{database_name}2
-        ul.list-inline(style="border-top: 1px solid rgba(128, 127, 127, 0.2); font-variant: small-caps;margin: 0;")
-          li(style="color: rgba(128, 127, 127, 1.0);border-right:  1px solid rgba(128, 127, 127, 0.2);") 8 colls
-          li(style="color: rgba(128, 127, 127, 1.0);border-right:  1px solid rgba(128, 127, 127, 0.2);") 2 index
-          li(style="color: rgba(128, 127, 127, 1.0);border-right:  1px solid rgba(128, 127, 127, 0.2);") 1 gigab
-      a.list-group-item(href='#database/#{database_name}', style="margin: 0; padding: 0;")
-        h2.list-group-item-heading #{database_name}3
-        ul.list-inline(style="border-top: 1px solid rgba(128, 127, 127, 0.2); font-variant: small-caps;margin: 0;")
-          li(style="color: rgba(128, 127, 127, 1.0);border-right:  1px solid rgba(128, 127, 127, 0.2);") 8 colls
-          li(style="color: rgba(128, 127, 127, 1.0);border-right:  1px solid rgba(128, 127, 127, 0.2);") 2 index
-          li(style="color: rgba(128, 127, 127, 1.0);border-right:  1px solid rgba(128, 127, 127, 0.2);") 1 gigab
+  .databases.col-md-8
+   - for database_name in instance.database_names
+    a(href='#database/#{database_name}')
+      .graph
+      span.name #{database_name}
+      ul.stats
+        li 8 colls
+        li 27 indexes
+        li 120 gb
 
   .col-md-4
     h3(style="font-size: 12px; font-weight: normal; color: lightgray;font-variant: small-caps;")
