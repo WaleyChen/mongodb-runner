@@ -25,7 +25,9 @@ Service.prototype.connect = function(){
   if(this.connected) return this;
 
   this.origin = 'http://' + this.hostname + ':' + this.port;
-  this.io = socketio.connect(this.origin);
+  this.io = socketio.connect(this.origin).on('connected', function(){
+    debug('socketio connected');
+  });
   this.connected = true;
   return this;
 };
@@ -189,29 +191,31 @@ var mixins = {
   subscribe: function(options){
     if(!srv.io) return this;
 
+    srv.connect();
+
     _.defaults(options || (options = {}), {
       uri: _.result(this, 'uri')
     });
 
-    srv.io.on('connect', function(){
-      srv.io.on(options.uri, this.iohandler.bind(this))
-        .emit(options.uri);
-    }.bind(this));
+    srv.io
+      .on(options.uri, this.iohandler.bind(this))
+      .emit(options.uri);
 
     this.trigger('subscribed', this, srv.io, options);
     return this;
   },
-  unsunscribe: function(options){
+  unsubscribe: function(options){
     if(!srv.io) return this;
+
+    srv.connect();
 
     _.defaults(options || (options = {}), {
       uri: _.result(this, 'uri')
     });
 
     debug('$unsub ' + options.uri);
-    srv.io
-      .off(options.uri, this.iohandler.bind(this))
-      .emit(_.result(this, 'url') + '/unsubscribe');
+
+    srv.io.emit(_.result(this, 'url') + '/unsubscribe');
 
     this.trigger('unsubscribed', this, srv.io, options);
     return this;
