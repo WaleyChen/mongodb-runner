@@ -5,6 +5,9 @@
 // when it comes to replicasets.  it needs to be incorporated into the
 // actual rest api.
 //
+// @todo: include more from serverStatus:
+// http://docs.mongodb.org/master/reference/command/serverStatus/#serverStatus.metrics.repl
+//
 // @todo: from mongo `shell/utils.js`
 //
 // rs.debug.nullLastOpWritten = function(primary, secondary) {

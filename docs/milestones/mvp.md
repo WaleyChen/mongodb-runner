@@ -38,6 +38,10 @@
   - [ ] authenticate via rest research `#auth`
   - [ ] pipeline builder UI `#aggregation`
   - [ ] read only shell `#shell`
+  - [ ] [working set](http://docs.mongodb.org/master/reference/command/serverStatus/#workingset)
+  - [ ] [index counters](http://docs.mongodb.org/master/reference/command/serverStatus/#indexcounters)
+  - [ ] [memory usage](http://docs.mongodb.org/master/reference/command/serverStatus/#mem)
+  - [ ] [more metrics](http://docs.mongodb.org/master/reference/command/serverStatus/#metrics) for pulse
 
 _@note_ not prioritized at all or filtered by target personas
 
