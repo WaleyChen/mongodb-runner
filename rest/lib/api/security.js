@@ -3,6 +3,13 @@
 var mw = require('../db-middleware'),
   debug = require('debug')('mg:mongorest:security');
 
+// @note: Currently maintaining the full matrix as a google spreadsheet:
+// https://docs.google.com/a/10gen.com/spreadsheet/ccc?key=0AiffIeCadTOydHhOcVo0RC11enVIUnN0MUp5MUZZNUE#gid=0
+//
+// QA Test Code worth mining more to find environmental behaviors:
+// - https://github.com/10gen/QA/tree/master/QA-341
+// - https://github.com/10gen/QA/tree/master/QA-338
+
 module.exports = function(app){
   app.get('/api/v1/security', users, function(req, res, next){
     res.send({
