@@ -7,6 +7,7 @@
 ### Punchlist
 
 - [x] images not showing up when running from the binary `#bug` `2h`
+- [x] bind donut on database view to real data `#database` `1h`
 - replica sets
   - [x] replication page `#replica` `1h`
   - [x] get mock data
@@ -20,11 +21,9 @@
   - [ ] table view of [`system.users`][system.users]  `#auth` `2h`
   - [ ] table view of [`system.roles`][system.roles] `#auth` `2h`
   - [ ] view the [action matrix][user-actions] for a user or role `#auth` `4h`
+- [ ] databases list has quick stats `#pulse` `2h`
 - [ ] stream `currentOp` `#pulse` `2h`
 - [ ] finish bootloader wiring to enable auto ui updating `2h`
-- [x] bind donut on database view to real data `#database` `1h`
-- [x] graph of instance level lock `#pulse` `1h`
-- [ ] databases list has quick stats `#pulse` `2h`
 
 [create-admin]: http://docs.mongodb.org/manual/tutorial/add-user-administrator/
 [user-actions]: http://docs.mongodb.org/master/reference/privilege-actions/#security-user-actions
@@ -34,7 +33,8 @@
 ## Backlog
 
 
-### needsspec
+## Icebox
+
   - [ ] authenticate via rest research `#auth`
   - [ ] pipeline builder UI `#aggregation`
   - [ ] read only shell `#shell`
@@ -42,8 +42,27 @@
   - [ ] [index counters](http://docs.mongodb.org/master/reference/command/serverStatus/#indexcounters)
   - [ ] [memory usage](http://docs.mongodb.org/master/reference/command/serverStatus/#mem)
   - [ ] [more metrics](http://docs.mongodb.org/master/reference/command/serverStatus/#metrics) for pulse
+  - [ ] excel drag and drop: Want to take a CSV file, drop it in on
+    mongoscope and start manipulating it with mongo.  shouldn’t have to
+    know how to program to use mongo
+  - [ ] data density info
+  - [ ] tabbed shells
+  - [ ] sublime text / atom integrations
+  - [ ] connect to instance with ssh + reverse tunnel (eg on my laptop,
+    use my ec2 pem to work against my dev server in the clouds)
+  - [ ] set up local shard/repl set/etc for testing like
+    [mlaunch](https://github.com/rueckstiess/mtools/wiki/mlaunch)
+  - [ ] extract from [mplotqueries](https://github.com/rueckstiess/mtools/wiki/mplotqueries)
+    - more like an expansion on top rather than reading from log files
+    - [replica set state](https://github.com/rueckstiess/mtools/wiki/mplotqueries#replica-set-state-plot)
+    - [connection churn](https://github.com/rueckstiess/mtools/wiki/mplotqueries#connection-churn-plot)
+  - [ ] visualize query plan as a flame graph like stackvis http://us-east.manta.joyent.com/dap/public/stackvis/example.htm
+  - [ ] shell recommends indexes like [dex](http://blog.mongolab.com/2012/06/introducing-dex-the-index-bot/)
+  - [ ] schema analysis like [variety](https://github.com/variety/variety)
+  - [ ] slow query finder like https://github.com/idealo/mongodb-slow-operations-profiler
+  - [ ] might be something here or someone to lend an extra hand? https://github.com/Zarkantho/mongoui
 
-_@note_ not prioritized at all or filtered by target personas
+
 
 ### read actions
 
@@ -121,6 +140,8 @@ _@note_ not prioritized at all or filtered by target personas
   - `removeShardTag(shard,tag` - removes the tag from the shard"
   - `addTagRange(fullName,min,max,tag` - tags the specified range of the given collection"
   - `status()` - prints a general overview of the cluster
+  - visualization http://blog.mongodb.org/post/31518267651/mongodb-sharding-visualizer
+  - visualize migration https://github.com/reversefold/tourist
 
 ## Taxonomy
 
