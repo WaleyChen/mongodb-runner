@@ -25,7 +25,75 @@ module.exports = function(app){
   require('./database')(app);
   require('./collection')(app);
 };
+// @todo: Extra host info pro services uses:
+// #!/bin/bash
+// #
+// # Linux system data collector.
 
+// # Execute on MongoDB server:
+// #
+// #   getLinuxSystemData.sh > getLinuxSystemData.log
+// #
+// # Author: james.tan@mongodb.com
+
+// function ensure_linux() {
+//   if ! [ `uname` = 'Linux' ]; then
+//     echo "Sorry, this script only runs on Linux"
+//     exit 2
+//   fi
+// }
+
+// function get_ulimits() {
+//   echo "** system ulimits:"
+//   ulimit -a
+//   echo "** ulimits for any running mongod and mongos processes:"
+//   for process in mongod mongos; do
+//     for pid in `pgrep $process`; do
+//       ps -fp $pid
+//       cat /proc/$pid/limits
+//       echo
+//     done
+//   done
+// }
+// ensure_linux
+
+// echo "** Date: `date`"
+// echo "** uname: `uname -a`"
+// echo "** lsb_release:"
+// lsb_release -a
+
+// echo "** cpuinfo:"
+// cat /proc/cpuinfo
+// echo "** meminfo:"
+// cat /proc/meminfo
+
+// echo "** dmesg:"
+// dmesg
+
+// echo "** mount:"
+// mount
+// echo "** df -Th:"
+// df -Th
+// echo "** blockdev --report:"
+// /sbin/blockdev --report
+// echo "** smart output:"
+// /usr/sbin/smartctl --scan | sed -e 's/#.*$//' | while read i; do /usr/sbin/smartctl --all $i; done
+// echo "** fdisk:"
+// fdisk -l
+// echo "** pvdisplay:"
+// pvdisplay
+// echo "** lvdisplay:"
+// lvdisplay
+
+// get_ulimits
+
+// echo "** ps:"
+// ps aux
+
+// echo "** lspci:"
+// lspci -vvv
+// echo "** sysctl:"
+// /sbin/sysctl -a
 var host = module.exports.host = function host(req, res, next){
   req.mongo.admin().command({hostInfo: 1}, {}, function(err, data){
     if(err) return next(err);
