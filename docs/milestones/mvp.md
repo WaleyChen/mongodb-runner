@@ -14,16 +14,16 @@
   - [x] view oplog size and time range `rs.printReplicationInfo()` `#replica`  `1h`
   - [x] view members and replication lag `rs.printSlaveReplicationInfo()` `#replica`  `1h`
 - auth
-  - [ ] shell prompt to [create admin user][create-admin] `2h`
+  - [x] shell prompt to [create admin user][create-admin] `2h`
   - [x] `mg` starts mongod with `--auth` `#auth` `1h`
-  - [ ] security tab `#auth` `4hr`
+  - [x] security tab `#auth` `4hr`
   - [ ] table view of [`system.users`][system.users]  `#auth` `2h`
   - [ ] table view of [`system.roles`][system.roles] `#auth` `2h`
   - [ ] view the [action matrix][user-actions] for a user or role `#auth` `4h`
 - [ ] stream `currentOp` `#pulse` `2h`
 - [ ] finish bootloader wiring to enable auto ui updating `2h`
 - [x] bind donut on database view to real data `#database` `1h`
-- [ ] graph of instance level lock `#pulse` `1h`
+- [x] graph of instance level lock `#pulse` `1h`
 - [ ] databases list has quick stats `#pulse` `2h`
 
 [create-admin]: http://docs.mongodb.org/manual/tutorial/add-user-administrator/
@@ -103,8 +103,20 @@ _@note_ not prioritized at all or filtered by target personas
 
 ## Stretch
 
-- sharding.
-
+- sharding: see `shell/utils_sh.js` in server
+  - `addShard( host )` - server:port OR setname/server:port
+  - `enableSharding(dbname` - enables sharding on the database dbname
+  - `shardCollection(fullName,key,unique` - shards the collection"
+  - `splitFind(fullName,find` - splits the chunk that find is in at the median"
+  - `splitAt(fullName,middle` - splits the chunk that middle is in at middle"
+  - `moveChunk(fullName,find,to` - move the chunk where 'find' is to 'to' (name of shard)
+  - `setBalancerState( <bool on or not> )` - turns the balancer on or off true=on, false=off"
+  - `getBalancerState()` - return true if enabled"
+  - `isBalancerRunning()` - return true if the balancer has work in progress on any mongos"
+  - `addShardTag(shard,tag` - adds the tag to the shard"
+  - `removeShardTag(shard,tag` - removes the tag from the shard"
+  - `addTagRange(fullName,min,max,tag` - tags the specified range of the given collection"
+  - `status()` - prints a general overview of the cluster
 
 ## Taxonomy
 
