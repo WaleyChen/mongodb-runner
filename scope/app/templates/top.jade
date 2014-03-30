@@ -1,24 +1,38 @@
-- for ns, i in namespaces
+mixin cells(namespaces)
+  each ns in namespaces
+    .top-matrix-body-row-column #{deltas[ns + '.total.count']}
+    .top-matrix-body-row-column #{deltas[ns + '.read.count'] || '-'}
+    .top-matrix-body-row-column #{deltas[ns + '.insert.count']}
+    .top-matrix-body-row-column #{deltas[ns + '.lock.time']}µs
+
+mixin row(namespaces)
+  .top-matrix-body-row
+    +cells(namespaces)
+    - d = new Date()
+    .top-matrix-body-row-date #{d.getHours()}:#{d.getMinutes()}:#{d.getSeconds()}
+
+if update === true
+  +row(namespaces)
+else
   .row
-    .col-md-12.mms(id='creek-#{i}')
-      h4.graph-title #{metric}
-
-
-table.grid.table.table-condensed(style="margin-top: 20px;")
-  thead
-    tr
-      th &nbsp;
-      th #total/#lock
-      th lock time
-      th #readlock/#writelock
-      th #read/#write
-      th #insert/#update
-  tbody
-   - for ns in namespaces
-    tr
-      td #{ns}
-      td #{deltas[ns + '.total.count']}/#{deltas[ns + '.lock.count']}
-      td #{deltas[ns + '.lock.time']}µs
-      td #{deltas[ns + '.readlock.count']}/#{deltas[ns + '.writelock.count']}
-      td #{deltas[ns + '.read.count']}/#{deltas[ns + '.write.count']}
-      td #{deltas[ns + '.insert.count']}/#{deltas[ns + '.update.count']}
+    .col-md-8
+      .top-matrix
+        .top-matrix-header
+          .top-matrix-header-column
+            div
+              span &nbsp;
+         - for ns in namespaces
+          .top-matrix-header-column
+            div
+              span #{ns} ops
+          .top-matrix-header-column
+            div
+              span #{ns} reads
+          .top-matrix-header-column
+            div
+              span #{ns} inserts
+          .top-matrix-header-column
+            div
+              span #{ns} µs lock
+        .top-matrix-body
+          +row(namespaces)
