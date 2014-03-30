@@ -3,7 +3,8 @@
 var Backbone = require('backbone'),
   models = require('../models'),
   debug = require('debug')('mg:scope:top'),
-  creek = require('../creek');
+  creek = require('../creek'),
+  moment = require('moment');
 
 module.exports = Backbone.View.extend({
   tpl: require('../templates/top.jade'),
@@ -30,6 +31,8 @@ module.exports = Backbone.View.extend({
   onTopData: function(){
     var ctx = this.top.toJSON(), html;
     ctx.update = true;
+    ctx.moment = moment;
+
     html = this.tpl(ctx);
 
 
@@ -45,6 +48,8 @@ module.exports = Backbone.View.extend({
 
     var ctx = this.top.toJSON(), html;
     ctx.update = false;
+    ctx.moment = moment;
+
     html = this.tpl(this.top.toJSON());
 
     this.$el.html(html);

@@ -34,7 +34,7 @@ module.exports = Backbone.View.extend({
     this.instance.fetch();
   },
   deactivate: function(){
-    this.top.unsubscribe();
+    // this.top.unsubscribe();
   },
   render: function(){
     var self = this;
