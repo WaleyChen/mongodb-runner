@@ -78,24 +78,61 @@ body {
 //
 // ### log
 .log {
-  // A line
-  div {
+  .line {
+    .clearfix();
     white-space: nowrap;
-    clear: both;
+    border-right: 4px solid #868686;
+
+    .message {
+      display: block;
+      max-height: 18px;
+      overflow: hidden;
+      padding-right: 10px;
+      text-overflow: ellipsis;
+    }
+
+    .name, .second, .ms{
+      float: left;
+      color: #868686;
+      visibility: hidden;
+    }
+
+    .name {
+      width: 140px;
+      margin-right: 10px;
+      text-align: right;
+    }
+
+    .ms {
+      width: 40px;
+      margin-right: 30px;
+    }
+
+    .second {
+      width: 80px;
+      margin-right: 5px;
+    }
   }
-  // The message
-  span {
-    display: block;
-    max-height: 18px;
-    overflow: hidden;
+  .line.group-by-name {
+    border-top: 1px solid rgba(128, 127, 127, 0.2);
+    margin-top: 20px;
+    padding-top: 10px;
+    .name {
+      visibility: visible;
+    }
   }
-  .name {
-    width: 140px;
-    display: block;
-    float: left;
-    text-align: right;
-    margin-right: 20px;
-    color: #868686;
+  .line.group-by-second {
+    border-right: 4px solid rgba(128, 127, 127, 0.2);
+    margin-top: 20px;
+    .second {
+      visibility: visible;
+    }
+  }
+  .line.group-by-ms {
+    border-right: 4px solid rgba(128, 127, 127, 0.2);
+    .ms {
+      visibility: visible;
+    }
   }
 }
 
@@ -120,27 +157,6 @@ body {
       stroke-dasharray: 1 1;
       stroke: fadeout(@text-color, 90%);
     }
-  }
-}
-
-.weld {
-  .list-group();
-  a, &-item {
-    .list-group-item();
-    margin: 0;
-    padding: 0;
-    box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, 0.05);
-    color: #807f7f;
-    background: rgba(10, 10, 10, 0.05);
-    border: 1px solid rgba(0, 0, 0, 0.5);
-
-    .yo-transition(all 250ms ease);
-  }
-  a:hover, &-item:hover {
-    box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, 0.3);
-    color: #D0D0D0;
-    background: rgba(10, 10, 10, 0.3);
-    text-decoration: none;
   }
 }
 

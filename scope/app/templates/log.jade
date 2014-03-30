@@ -1,4 +1,30 @@
-.log.log-container
-  - for line in lines
-   | !{line}
+.log
+ - prevS = ''
+ - prevM = ''
+ - prevN = ''
 
+ - for line in lines
+  - classes = ['line', line.name]
+  - d = new Date(line.date)
+  - currS = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds()
+  - currM = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + '.' + d.getMilliseconds()
+  - currN = line.name
+
+  - if(currN != prevN){
+  -   prevN = currN;
+  -   classes.push('group-by-name');
+  - }
+  - else if(currS != prevS){
+  -   prevS = currS;
+  -   classes.push('group-by-second');
+  - }
+  - else if(currM != prevM){
+  -   prevM = currM;
+  -   classes.push('group-by-ms');
+  - }
+
+  div(class=classes.join(' '))
+    .name #{line.name}
+    .second #{moment(d).format('h:mm:ss')}
+    .ms #{d.getMilliseconds()}ms
+    .message #{line.message}

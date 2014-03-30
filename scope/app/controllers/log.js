@@ -2,6 +2,7 @@ var Backbone = require('backbone'),
   $ = Backbone.$,
   _ = require('underscore'),
   models = require('../models'),
+  moment = require('moment'),
   debug = require('debug')('mongoscope:log');
 
 module.exports = Backbone.View.extend({
@@ -10,25 +11,15 @@ module.exports = Backbone.View.extend({
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);
 
-    this.log = new models.Log()
-      .on('sync', this.render, this)
-      .on('error', this.render, this);
+    this.log = new models.Log().on('sync', this.render, this);
   },
   activate: function(){
-    var self = this;
     this.log.fetch();
   },
-  deactivate: function(){
-
-  },
+  deactivate: function(){},
   render: function(){
-    var lineTpl = require('../templates/log-line.jade');
-
-    this.$el.html(this.tpl({
-      lines: this.log.models.map(function(model, i){
-        return lineTpl(model.toJSON());
-      })
-    }));
-    return this;
+    debug('now', moment().format('h:mm:ss'))
+    this.$el.html(this.tpl({moment: moment,
+      lines: this.log.toJSON()}));
   }
 });

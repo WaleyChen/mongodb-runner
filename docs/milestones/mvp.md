@@ -18,17 +18,16 @@
   - [x] shell prompt to [create admin user][create-admin] `2h`
   - [x] `mg` starts mongod with `--auth` `#auth` `1h`
   - [x] security tab `#auth` `4hr`
-  - [ ] table view of [`system.users`][system.users]  `#auth` `2h`
-  - [ ] table view of [`system.roles`][system.roles] `#auth` `2h`
+  - [ ] view a list of users `#auth` `2h`
+  - [ ] view roles `#auth` `2h`
   - [ ] view the [action matrix][user-actions] for a user or role `#auth` `4h`
+  - [ ] user actions contain friendly descriptions extracted from @mongodb/docs
 - [ ] databases list has quick stats `#pulse` `2h`
 - [ ] stream `currentOp` `#pulse` `2h`
 - [ ] finish bootloader wiring to enable auto ui updating `2h`
 
 [create-admin]: http://docs.mongodb.org/manual/tutorial/add-user-administrator/
 [user-actions]: http://docs.mongodb.org/master/reference/privilege-actions/#security-user-actions
-[system.roles]: http://docs.mongodb.org/master/reference/system-roles-collection/
-[system.users]: http://docs.mongodb.org/master/reference/system-users-collection/
 
 ## Backlog
 
@@ -51,7 +50,9 @@
   - [ ] connect to instance with ssh + reverse tunnel (eg on my laptop,
     use my ec2 pem to work against my dev server in the clouds)
   - [ ] set up local shard/repl set/etc for testing like
-    [mlaunch](https://github.com/rueckstiess/mtools/wiki/mlaunch)
+    [mlaunch](https://github.com/rueckstiess/mtools/wiki/mlaunch).
+    extract from `shell/servers.js`, `shell/replsettest.js`, and
+    `shell/shardingtest.js`
   - [ ] extract from [mplotqueries](https://github.com/rueckstiess/mtools/wiki/mplotqueries)
     - more like an expansion on top rather than reading from log files
     - [replica set state](https://github.com/rueckstiess/mtools/wiki/mplotqueries#replica-set-state-plot)
