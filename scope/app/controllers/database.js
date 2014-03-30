@@ -32,7 +32,6 @@ module.exports = Backbone.View.extend({
     this.database.set({name: name}, {silent: true});
     this.database.fetch();
 
-    this.top.fetch();
     this.top.subscribe();
   },
   deactivate: function(){},
@@ -44,13 +43,17 @@ module.exports = Backbone.View.extend({
       'host': models.instance.toJSON().host,
       'metric': this.metric
     }));
+
     this.graph.render();
 
     $('.chosen-select').chosen({width: '100%',
       no_results_text: 'No existing users or roles found matching'
     }).trigger('chosen:open').on('change', function(e, data) {
-      Backbone.history.navigate('collection/' + db + '/' + data.selected);
-    });
+      var uri = 'collection/' + db + '/' + data.selected;
+
+      debug('go to', uri);
+      this.router.navigate(uri, {trigger: true});
+    }.bind(this));
 
     donut('.donut', [
       {

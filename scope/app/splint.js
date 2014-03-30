@@ -46,6 +46,8 @@ module.exports = function splint(){
       opts = spec[3] || {},
       handler = controller.activate.bind(controller);
 
+    controller.router = router;
+
     router._nameToHandler[name] = controller;
     router.route(route, name, handler);
 

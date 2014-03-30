@@ -30,7 +30,7 @@ module.exports = Backbone.View.extend({
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);
 
-    this.top.subscribe();
+    // this.top.subscribe();
     this.instance.fetch();
   },
   deactivate: function(){

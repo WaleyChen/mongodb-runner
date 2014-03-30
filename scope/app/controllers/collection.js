@@ -42,25 +42,28 @@ module.exports = Backbone.View.extend({
     // Backbone.history.navigate(uri);
   },
   activate: function(database, name){
+    debug('activate', database, name);
     this.collection.set({database: database, name: name});
     this.collection.fetch();
 
-    this.top.fetch();
-    this.top.subscribe();
+    // this.top.fetch();
+    // this.top.subscribe();
   },
   onTopData: function(){
     var key =  [
         this.collection.get('database'),
         this.collection.get('name'), this.metric].join('.'),
-      locks = this.top.get('deltas')[key];
-
-    this.graph.inc(locks);
+      val = this.top.get('deltas')[key];
+    debug(this.metric, val);
+    this.graph.inc(val);
   },
   deactivate: function(){
-    this.top.unsubscribe();
     this.$el.removeClass('exploring');
+    this.top.unsubscribe();
   },
   render: function(){
+    debug('collection render');
+
     this.$el.html(this.tpl({
       'metric': this.metric,
       'collection': this.collection.toJSON()
