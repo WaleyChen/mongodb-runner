@@ -29,6 +29,7 @@ module.exports = function splint(){
 
   // Deactivate the previous controller
   router.on('route', function(name, args){
+
     if(router._current){
       debug('deactivating', router._current.name);
       router._current.deactivate.call(router._current);

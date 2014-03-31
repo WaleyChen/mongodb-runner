@@ -15,17 +15,19 @@ include mixins/bytes
         li #{stats.index_count} indexes
         li #{stats.document_count} docs
 
-.row
-  .col-md-6.panel.panel-default
-    select.chosen-select(data-placeholder="collections #{database.collection_names.length}")
-      optgroup(label="collections")
-        option
-       - for collection_name in database.collection_names
-        option(value="#{collection_name}")
-          | #{collection_name}
+.row(style="margin-top: 40px;")
+  .col-md-6
+    .inset-panel
+      .panel-heading collections
+      .panel-bottom.padded
+        ul.list-group
+          for collection_name in database.collection_names
+            a.list-group-item(href='collection/#{database.name}/#{collection_name}') #{collection_name}
 
-  .col-md-6.panel.panel-default
-    .panel-heading
-      h4 storage
-    .panel-body.donut
+
+  .col-md-6
+    .inset-panel
+      .panel-heading storage
+      .panel-bottom.padded
+        .panel-body.donut
 

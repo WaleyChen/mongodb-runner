@@ -3,31 +3,30 @@ if instance.replicaset
     .col-md-9
       - self = instance.replicaset.instance
       h1 #{instance.replicaset._id}
-      .weld-item
-        .name(style="padding: 10px;")
-          span.h2 #{self.name}
-          if self.isPrimary
-            span.label.label-success Primary
-          else if self.isSecondary
-            span.label.label-default Secondary
-          else if self.isArbiter
-            span.label.label-default Arbiter
 
+      ol.list-group
+        li.two-lines
+          //- if self.isPrimary
+          //-   .status P
+          //- else if self.isSecondary
+          //-   .status S
+          //- else if self.isArbiter
+          //-   .status A
+          .primary-line #{self.name}
 
-      ul.list-group
-       - for member in instance.replicaset.secondaries
-        li.list-group-item
-          h4 #{member.name}
-          span.label.label-default Secondary
-          p #{member.state}
-          p Replication Lag #{member.lag_replication}ms
+        for member in instance.replicaset.secondaries
+          li.list-item
+            //- .status S
+            .primary-line #{member.name}
+            .secondary-line #{member.state}
+            .secondary-line Replication Lag #{member.lag_replication}ms
 
     .col-md-3
       ul.list-group
        - for member in instance.replicaset.arbiters
-        li.list-group-item
-          h4 #{member.name}
-          span.label.label-default Arbiter
+        li.list-item
+          span.inline-block-tight #{member.name}
+          span.inline-block-tight.text-subtle A
           p Operational Lag #{member.lag_operational}ms
 
 else
