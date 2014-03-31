@@ -1,10 +1,20 @@
 @import "./index";
-@import "./less/themes/soda-dark";
+
+body {
+  overflow: auto !important;
+  background-color: #fff;
+}
 
 .styleguide {
-  .container-fluid();
-  background: @app-background-color;
+  overflow: auto;
+  // .container-fluid();
+  // background: @app-background-color;
   padding: 20px;
+  background: @base-background-color;
+
+  h3 {
+    display: none;
+  }
 
   section.bordered {
     border-top: 1px solid @background-color-highlight;

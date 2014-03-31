@@ -4,515 +4,534 @@ html(lang='en')
     title styleguide
     link(rel='stylesheet', href='styleguide.css')
     link(rel='icon', href='img/favicon.ico', type='image/x-icon')
-  body
+  body.workspace.panes.pane.item-views.active
+    .styleguide.padded.pane-item
+      section.bordered(data-name='styleguide')
+        h1 Styleguide
 
-  .styleguide
-    section.bordered(data-name='styleguide')
-      h1 Styleguide
-      p This exercises all UI components and acts as a styleguide.
+      section.bordered(data-name='text')
+        h2 Text
 
-    section.bordered(data-name='text')
-      h2 Text classes
+        .block
+          span.inline-block-tight normal
+          span.inline-block-tight.text-smaller .text-smaller
+          span.inline-block-tight.text-subtle .text-subtle
+          span.inline-block-tight.text-highlight .text-highlight
+          span.inline-block-tight.text-info .text-info
+          span.inline-block-tight.text-success .text-success
+          span.inline-block-tight.text-warning .text-warning
+          span.inline-block-tight.text-error .text-error
 
-      h3 text-* classes
+        .block
+          span.inline-block-tight normal
+          span.inline-block-tight.highlight .highlight
+          span.inline-block-tight.highlight-info .highlight-info
+          span.inline-block-tight.highlight-success .highlight-success
+          span.inline-block-tight.highlight-warning .highlight-warning
+          span.inline-block-tight.highlight-error .highlight-error
 
-      div Normal text
-      p.text-smaller Smaller text
-      .text-subtle Subtle text
-      .text-highlight Highlighted text
-      .text-info Info text
-      .text-success Success text
-      .text-warning Warning text
-      .text-error Error text
+      section.bordered(data-name='buttons')
+        h2 Buttons
+        .block
+          button.btn.btn-default .btn-default
+          button.btn.btn-xs .btn-xs
+          button.btn.btn-sm .btn-sm
+          button.btn.btn-lg .btn-lg
 
+        .block
+          button.btn.btn-primary.inline-block-tight .btn-primary
+          button.btn.btn-info.inline-block-tight .btn-info
+          button.btn.btn-success.inline-block-tight .btn-success
+          button.btn.btn-warning.inline-block-tight .btn-warning
+          button.btn.btn-error.inline-block-tight .btn-error
 
-      h3 highlight-* classes
+        .block
+          button.btn.btn-primary.selected.inline-block-tight .btn-primary
+          button.btn.btn-info.selected.inline-block-tight .btn-info
+          button.btn.btn-success.selected.inline-block-tight .btn-success
+          button.btn.btn-warning.selected.inline-block-tight .btn-warning
+          button.btn.btn-error.selected.inline-block-tight .btn-error
 
-      span Normal text
-      span.highlight Highlighted
-      span.highlight-info Info
-      span.highlight-success Success
-      span.highlight-warning Warning
-      span.highlight-error Error
-
-    section.bordered(data-name='buttons')
-      h2 Buttons
-      h3 Standalone buttons
-      .block
-        button.btn.btn-default Button
-      .block
-        button.btn.btn-xs Extra Small Button
-      .block
-        button.btn.btn-sm Small Button
-      .block
-        button.btn.btn-lg Large Button
-
-
-      h3 Colored buttons
-
-      .block
-        button.btn.btn-primary.inline-block-tight Primary
-        button.btn.btn-primary.selected.inline-block-tight Selected Primary
-
-      .block
-        button.btn.btn-info.inline-block-tight Info
-        button.btn.btn-info.selected.inline-block-tight Selected Info
-
-      .block
-        button.btn.btn-success.inline-block-tight Success
-        button.btn.btn-success.selected.inline-block-tight Selected Success
-
-      .block
-        button.btn.btn-warning.inline-block-tight Warning
-        button.btn.btn-warning.selected.inline-block-tight Selected Warning
-
-      .block
-        button.btn.btn-error.inline-block-tight Error
-        button.btn.btn-error.selected.inline-block-tight Selected Error
-
-
-      h3 Button Groups
-
-      .block
-        div Normal size
-        .btn-group
-          button.btn.btn-default One
-          button.btn.btn-default Two
-          button.btn.btn-default Three
-      .block
-        div Extra Small
-        .btn-group.btn-group-xs
-          button.btn.btn-default One
-          button.btn.btn-default Two
-          button.btn.btn-default Three
-      .block
-        div Small
-        .btn-group.btn-group-sm
-          button.btn.btn-default One
-          button.btn.btn-default Two
-          button.btn.btn-default Three
-      .block
-        div Large
-        .btn-group.btn-group-lg
-          button.btn.btn-default One
-          button.btn.btn-default Two
-          button.btn.btn-default Three
+        h3 Button Groups
+        .block
+          .inline-block
+            label .btn-group
+            .btn-group
+              button.btn One
+              button.btn Two
+              button.btn Three
+          .inline-block
+            label .btn-group-xs
+            .btn-group.btn-group-xs
+              button.btn.btn-default One
+              button.btn.btn-default Two
+              button.btn.btn-default Three
+          .inline-block
+            label .btn-group-sm
+            .btn-group.btn-group-sm
+              button.btn.btn-default One
+              button.btn.btn-default Two
+              button.btn.btn-default Three
+          .inline-block
+            label .btn-group-lg
+            .btn-group.btn-group-lg
+              button.btn.btn-default One
+              button.btn.btn-default Two
+              button.btn.btn-default Three
 
 
-      h3 Button Toolbars
-      .btn-toolbar
-        .btn-group
-          button.btn.btn-default One
-          button.btn.btn-default Two
-          button.btn.btn-default Three
-        .btn-group
-          button.btn.btn-default Four
-          button.btn.btn-default Five
-        button.btn.btn-default Six
-        button.btn.btn-default Seven
+        h3 Button Toolbars
+        .btn-toolbar
+          .btn-group
+            button.btn.btn-default One
+            button.btn.btn-default Two
+            button.btn.btn-default Three
+          .btn-group
+            button.btn.btn-default Four
+            button.btn.btn-default Five
+          button.btn.btn-default Six
+          button.btn.btn-default Seven
 
 
-      h3 Selected buttons
+        h3 Selected buttons
 
-      .block
-        .btn-group
-          button.btn.btn-default.selected One
-          button.btn.btn-default Two
-          button.btn.btn-default Three
-      .block
-        .btn-group
-          button.btn.btn-default One
-          button.btn.btn-default.selected  Two
-          button.btn.btn-default Three
-      .block
-        .btn-group
-          button.btn.btn-default One
-          button.btn.btn-default Two
-          button.btn.btn-default.selected Three
-      .block
-        .btn-group
-          button.btn.btn-default.selected One
-          button.btn.btn-default.selected Two
-          button.btn.btn-default Three
+        .block
+          .btn-group
+            button.btn.btn-default.selected One
+            button.btn.btn-default Two
+            button.btn.btn-default Three
+        .block
+          .btn-group
+            button.btn.btn-default One
+            button.btn.btn-default.selected  Two
+            button.btn.btn-default Three
+        .block
+          .btn-group
+            button.btn.btn-default One
+            button.btn.btn-default Two
+            button.btn.btn-default.selected Three
+        .block
+          .btn-group
+            button.btn.btn-default.selected One
+            button.btn.btn-default.selected Two
+            button.btn.btn-default Three
+      section.bordered(data-name='layout')
+        h2 Layout
 
-    section.bordered(data-name='panels')
-      h2 Panels
-      p Useful when you want a block of content with a heading.
+        h3 .block
+        p Sometimes you need to separate components vertically. Say in a form.
 
-      h3 With a heading
+        .block
+          label You might want to type something here.
+          .editor.mini.editor-colors Something you typed...
+        .block
+          label.icon.icon-file-directory Another field with an icon
+          .editor.mini.editor-colors Something else you typed...
+        .block
+          button.btn Do it
 
-      .panel
-        .panel-heading A .panel heading
-        .panel-body.padded Some Content goes here. I am padded!
+        h3 .inline-block
+        p Sometimes you need to separate components horizontally.
 
+        .block
+          label This is a thing with stuff in it
+          div
+            .inline-block.editor.mini.editor-colors Something you typed...
+            .inline-block.btn-group
+              button.btn One
+              button.btn Two
 
-      h3 Bordered with a heading
-      p You can add the class <code>.bordered</code> to the panel to add a border.
+        .block
+          button.inline-block.btn Do it
+          button.inline-block.btn Another
+          button.inline-block.btn OMG again
 
-      .panel.bordered
-        .panel-heading A .panel heading
-        .panel-body.padded Some Content goes here. I am padded!
+        h3 .inline-block-tight
+        p You might want things to be a little closer to each other.
 
+        .block
+          button.inline-block-tight.btn Do it
+          button.inline-block-tight.btn Another
+          button.inline-block-tight.btn OMG again
 
-    section.bordered(data-name='tool-panel')
-      h2 Tool Panel
-      p A container attached to some side of the Atom UI. This styleguide is in a tool panel.
+      section.bordered(data-name='panels')
+        h2 Panels
+        p Useful when you want a block of content with a heading.
 
-      .tool-panel.panel-bottom.padded
-        div Some content
+        h3 With a heading
 
-      p Supports <code>.panel-bottom</code> and <code>.panel-left</code> classes.
-
-    section.bordered(data-name='inset-panel')
-      h2 Inset Panel
-      p Use inside another panel, like a <code>.tool-panel</code>.
-
-      h3 no-heading
-      .tool-panel.panel-bottom.padded
-        .inset-panel.padded Some content
-
-      h3 heading
-      .tool-panel.panel-bottom.padded
-        .inset-panel
-          .panel-heading An inset-panel heading
-          .panel-body.padded Some Content
-
-
-      h3 With buttons in the heading
-      .tool-panel.panel-bottom.padded
-        .inset-panel
-          .panel-heading
-            .btn-toolbar.pull-right
-              .btn-group
-                button.btn Group Button
-                button.btn Second Group Button
-              button.btn A button
-              button.btn.selected Selected
-            span An inset-panel heading
-          .panel-body.padded Some Content
+        .panel
+          .panel-heading A .panel heading
+          .panel-body.padded Some Content goes here. I am padded!
 
 
-    section.bordered(data-name='list')-group
-      h2 List Group
-      p Use for anything that requires a list.
-      .inset-panel.padded
-        .list-group
-          li.list-item Normal item
-          li.list-item.selected
-            span This is the Selected item.
-          li.list-item.text-subtle Subtle
-          li.list-item.text-info Info
-          li.list-item.text-success Success
-          li.list-item.text-warning Warning
-          li.list-item.text-error Error
+        h3 Bordered with a heading
+        p You can add the class <code>.bordered</code> to the panel to add a border.
+
+        .panel.bordered
+          .panel-heading A .panel heading
+          .panel-body.padded Some Content goes here. I am padded!
 
 
-      //- h3 With icons
+      section.bordered(data-name='tool-panel')
+        h2 Tool Panel
+        p A container attached to some side of the Atom UI. This styleguide is in a tool panel.
 
-      //- .list-group
-      //-   .list-item
-      //-     .icon icon-file-directory Using a span with an icon
-      //-   .list-item
-      //-     .icon icon-file-directory
-      //-     @span With .icon-file-directory using <i> tags
-      //-     .list-item.selected
-      //-       .icon icon-file-directory Selected with .icon-file-directory
-      //-     .list-item
-      //-       .no-icon With .no-icon
-      //-     .list-item
-      //-       .icon icon-file-text With icon-file-text
-      //-     .list-item
-      //-       .icon icon-file-media With icon-file-media
-      //-     .list-item
-      //-       .icon icon-file-symlink-file With icon-file-symlink-file
-      //-     .list-item
-      //-       .icon icon-file-submodule With icon-file-submodule
-      //-     .list-item
-      //-       .icon icon-book With icon-book
+        .tool-panel.panel-bottom.padded
+          div Some content
+
+        p Supports <code>.panel-bottom</code> and <code>.panel-left</code> classes.
+
+      section.bordered(data-name='inset-panel')
+        h2 Inset Panel
+        p Use inside another panel, like a <code>.tool-panel</code>.
+
+        h3 no-heading
+        .tool-panel.panel-bottom.padded
+          .inset-panel.padded Some content
+
+        h3 heading
+        .tool-panel.panel-bottom.padded
+          .inset-panel
+            .panel-heading An inset-panel heading
+            .panel-body.padded Some Content
 
 
-      //- h3 In an .inset-panel
+        h3 With buttons in the heading
+        .tool-panel.panel-bottom.padded
+          .inset-panel
+            .panel-heading
+              .btn-toolbar.pull-right
+                .btn-group
+                  button.btn Group Button
+                  button.btn Second Group Button
+                button.btn A button
+                button.btn.selected Selected
+              span An inset-panel heading
+            .panel-body.padded Some Content
 
-      //- .tool-panel.panel-bottom.padded
-      //-   .inset-panel
-      //-     .panel-heading My list-group with icons
-      //-     .panel-body.padded
-      //-       .list-group
+
+      section.bordered(data-name='list')-group
+        h2 List Group
+        p Use for anything that requires a list.
+        .inset-panel.padded
+          .list-group
+            li.list-item Normal item
+            li.list-item.selected
+              span This is the Selected item.
+            li.list-item.text-subtle Subtle
+            li.list-item.text-info Info
+            li.list-item.text-success Success
+            li.list-item.text-warning Warning
+            li.list-item.text-error Error
+
+
+        //- h3 With icons
+
+        //- .list-group
+        //-   .list-item
+        //-     .icon icon-file-directory Using a span with an icon
+        //-   .list-item
+        //-     .icon icon-file-directory
+        //-     @span With .icon-file-directory using <i> tags
+        //-     .list-item.selected
+        //-       .icon icon-file-directory Selected with .icon-file-directory
+        //-     .list-item
+        //-       .no-icon With .no-icon
+        //-     .list-item
+        //-       .icon icon-file-text With icon-file-text
+        //-     .list-item
+        //-       .icon icon-file-media With icon-file-media
+        //-     .list-item
+        //-       .icon icon-file-symlink-file With icon-file-symlink-file
+        //-     .list-item
+        //-       .icon icon-file-submodule With icon-file-submodule
+        //-     .list-item
+        //-       .icon icon-book With icon-book
+
+
+        //- h3 In an .inset-panel
+
+        //- .tool-panel.panel-bottom.padded
+        //-   .inset-panel
+        //-     .panel-heading My list-group with icons
+        //-     .panel-body.padded
+        //-       .list-group
+        //-         .list-item
+        //-             .icon.icon-file-text With icon-file-text
+        //-           .list-item
+        //-             .icon.icon-file-media With icon-file-media
+        //-           .list-item
+        //-             .icon.icon-book With icon-book
+
+
+      //- section.bordered(data-name='list')
+      //-   h2 List Tree
+      //-   p A <code>.list-tree</code> is a special case of <code>.list-group</code>.
+
+      //-   .list-tree
+      //-     .list-nested-item
+      //-       .list-item
+      //-         .icon icon-file-directory A Directory
+      //-       .list-tree
+      //-         .list-nested-item
+      //-           .list-item
+      //-             .icon icon-file-directory Nested Directory
+      //-           .list-tree
+      //-             .list-item
+      //-               .icon icon-file-text File one
+      //-         .list-nested-item collapsed
+      //-           .list-item
+      //-             .icon icon-file-directory Collpased Nested Directory
+      //-           .list-tree
+      //-             .list-item
+      //-               .icon icon-file-text File one
       //-         .list-item
-      //-             .icon.icon-file-text With icon-file-text
+      //-           .icon icon-file-text File one
+      //-         .list-item.selected
+      //-           .icon icon-file-text File three .selected!
+      //-     .list-item
+      //-       .icon icon-file-text .icon-file-text
+      //-     .list-item
+      //-       .icon icon-file-symlink-file .icon-file-symlink-file
+
+
+      //-   h3 With disclosure arrows
+
+      //-   p
+      //-     | Add the class <code>.has-collapsable-children</code> to give
+      //-     | the children with nested items disclosure arrows.
+
+      //-   .list-tree has-collapsable-children
+      //-     .list-nested-item
+      //-       .list-item
+      //-         .icon icon-file-directory A Directory
+      //-         .list-tree
+      //-           .list-nested-item
+      //-             .list-item
+      //-               .icon icon-file-directory Nested Directory
+      //-             .list-tree
+      //-               .list-item
+      //-                 .icon icon-file-text File one
+      //-           .list-nested-item collapsed
+      //-             .list-item
+      //-               .icon icon-file-directory Collpased Nested Directory
+      //-             .list-tree
+      //-               .list-item
+      //-                 .icon icon-file-text File one
       //-           .list-item
-      //-             .icon.icon-file-media With icon-file-media
-      //-           .list-item
-      //-             .icon.icon-book With icon-book
+      //-             .icon icon-file-text File one
+      //-           .list-item.selected
+      //-             .icon icon-file-text File three .selected!
+      //-       .list-item
+      //-         .icon icon-file-text .icon-file-text
+      //-       .list-item
+      //-         .icon icon-file-symlink-file .icon-file-symlink-file
 
 
-    //- section.bordered(data-name='list')
-    //-   h2 List Tree
-    //-   p A <code>.list-tree</code> is a special case of <code>.list-group</code>.
+      //-   h3 With disclosure arrows at only one level.
 
-    //-   .list-tree
-    //-     .list-nested-item
-    //-       .list-item
-    //-         .icon icon-file-directory A Directory
-    //-       .list-tree
-    //-         .list-nested-item
-    //-           .list-item
-    //-             .icon icon-file-directory Nested Directory
-    //-           .list-tree
-    //-             .list-item
-    //-               .icon icon-file-text File one
-    //-         .list-nested-item collapsed
-    //-           .list-item
-    //-             .icon icon-file-directory Collpased Nested Directory
-    //-           .list-tree
-    //-             .list-item
-    //-               .icon icon-file-text File one
-    //-         .list-item
-    //-           .icon icon-file-text File one
-    //-         .list-item.selected
-    //-           .icon icon-file-text File three .selected!
-    //-     .list-item
-    //-       .icon icon-file-text .icon-file-text
-    //-     .list-item
-    //-       .icon icon-file-symlink-file .icon-file-symlink-file
+      //-   p
+      //-     | Add the class <code>.has-flat-children</code> to sub-<code>.list-tree</code>s
+      //-     | to indicate that the children will not be collapsable.
+
+      //-   .list-tree has-collapsable-children
+      //-     .list-nested-item
+      //-       .list-item
+      //-         .icon.bordered icon-file-text This is a collapsable section
+      //-         .list-tree has-flat-children
+      //-           .list-item Something is here
+      //-           .list-item.selected Something .selected
+      //-       .list-nested-item
+      //-         .list-item
+      //-           .icon.bordered icon-file-directory Another collapsable section
+      //-         .list-tree has-flat-children
+      //-           .list-item Something is here
+      //-           .list-item Something else
 
 
-    //-   h3 With disclosure arrows
-
-    //-   p
-    //-     | Add the class <code>.has-collapsable-children</code> to give
-    //-     | the children with nested items disclosure arrows.
-
-    //-   .list-tree has-collapsable-children
-    //-     .list-nested-item
-    //-       .list-item
-    //-         .icon icon-file-directory A Directory
-    //-         .list-tree
-    //-           .list-nested-item
-    //-             .list-item
-    //-               .icon icon-file-directory Nested Directory
-    //-             .list-tree
-    //-               .list-item
-    //-                 .icon icon-file-text File one
-    //-           .list-nested-item collapsed
-    //-             .list-item
-    //-               .icon icon-file-directory Collpased Nested Directory
-    //-             .list-tree
-    //-               .list-item
-    //-                 .icon icon-file-text File one
-    //-           .list-item
-    //-             .icon icon-file-text File one
-    //-           .list-item.selected
-    //-             .icon icon-file-text File three .selected!
-    //-       .list-item
-    //-         .icon icon-file-text .icon-file-text
-    //-       .list-item
-    //-         .icon icon-file-symlink-file .icon-file-symlink-file
+      section.bordered(data-name='overlay')
+        h2 Overlays
+        p Overlays are like dialog boxes.
+        p
+          | Supported classes: <code>.from-top</code>, <code>.from-bottom</code> and <code>.floating</code>.
+          | <code>.from-top</code> will come down from the top of the UI, etc.
 
 
-    //-   h3 With disclosure arrows at only one level.
-
-    //-   p
-    //-     | Add the class <code>.has-flat-children</code> to sub-<code>.list-tree</code>s
-    //-     | to indicate that the children will not be collapsable.
-
-    //-   .list-tree has-collapsable-children
-    //-     .list-nested-item
-    //-       .list-item
-    //-         .icon.bordered icon-file-text This is a collapsable section
-    //-         .list-tree has-flat-children
-    //-           .list-item Something is here
-    //-           .list-item.selected Something .selected
-    //-       .list-nested-item
-    //-         .list-item
-    //-           .icon.bordered icon-file-directory Another collapsable section
-    //-         .list-tree has-flat-children
-    //-           .list-item Something is here
-    //-           .list-item Something else
+        .overlay.from-top
+          div Some content
 
 
-    section.bordered(data-name='overlay')
-      h2 Overlays
-      p Overlays are like dialog boxes.
-      p
-        | Supported classes: <code>.from-top</code>, <code>.from-bottom</code> and <code>.floating</code>.
-        | <code>.from-top</code> will come down from the top of the UI, etc.
+      section.bordered(data-name='select-list')
+        h2 Select List
 
 
-      .overlay.from-top
-        div Some content
+        p This is how you will typically specify a <code>.select-list</code>.
 
+        p The list items have many options you can use, and shows you how they will display.
 
-    section.bordered(data-name='select-list')
-      h2 Select List
+        h3 Basic example with one item.selected
 
-
-      p This is how you will typically specify a <code>.select-list</code>.
-
-      p The list items have many options you can use, and shows you how they will display.
-
-      h3 Basic example with one item.selected
-
-      .overlay.from-top.select-list
-        input.editor.editor-colors.mini
-        ol.list-group
-          li.selected
-            span one
-          li two
-          li three
-
-
-      h3 Single line with icons
-
-      .overlay.from-top.select-list
-        ol.list-group
-          li.selected
-            .status.status-added.icon.icon-diff-added
-            .icon.icon-file-text Some file
-          li
-              .status.status-modified.icon.icon-diff-modified
-              .icon.icon-file-text.Another.file
-            li
-              .status.status-removed.icon.icon-diff-removed
-              .icon.icon-file-text.Yet.another.file
-
-
-      h3 Multiple lines with no icons
-
-      .overlay.from-top.select-list
-        ol.list-group
-          li.two-lines
-            .primary-line Primary line
-            .secondary-line Secondary line
-          li.two-lines.selected
-              .primary-line A thing
-              .secondary-line Description of the thing
-
-
-      h3 Multiple lines with icons
-
-      .overlay.from-top.select-list
-        .list-group
-          .two-lines
-            .status.status-added.icon.icon-diff-added
-            .primary-line.icon.icon-file-text Primary line
-            .secondary-line.no-icon Secondary line
-            .two-lines.selected
-              .status.status-modified.icon.icon-diff-modified
-              .primary-line.icon.icon-file-symlink-file A thing
-              .secondary-line.no-icon Description of the thing
-            .two-lines
-              .status.status-renamed.icon.icon-diff-renamed
-              .primary-line.icon.icon-file-symlink-file A thing
-              .secondary-line.no-icon Description of the thing
-
-
-      h3 Using mark.selected class to indicate the.selected item
-      p Use ...
-
-      .overlay.from-top.select-list
-        ol.list-group.mark.selected
-          li Normal item
-          li.selected Selected &mdash; user is arrowing through the list.
-          li.active This is the active item
-          li.selected.active Selected AND active!
-
-
-      h3 Error messages
-      .example-rendered
         .overlay.from-top.select-list
-          .editor.editor-colors.mini I searched for this
-          .error-message Nothing has been found!
+          input.editor.editor-colors.mini
+          ol.list-group
+            li.selected
+              span one
+            li two
+            li three
 
 
-      h3 Loading message
+        h3 Single line with icons
 
-      .overlay.from-top.select-list
-        .editor.editor-colors.mini User input
-        .loading
-          .loading-message Chill bro. Things are loading.
-          .badge 1234
-
-
-    section.bordered(data-name='popover')-list
-      h2 Popover List
-      p
-        | A <code>.popover-list</code> is a <code>.select-list</code> that
-        | is meant to popover the code for something like autocomplete.
-
-      h3 Basic example with one item.selected
-
-      .select-list.popover-list
-        .editor.mini.editor-colors User types here..
-        ol.list-group
-          li.selected one
-          li two
-          li three
-
-    section.bordered(data-name='tooltips')
-      h2 Tooltips
-      p
-        | You do not create the markup directly. You call
-        | <code>element.setTooltip(title, {command, commandElement}={})</code>.
-        | Passing in a <code>command</code> (like <code>find-and-replace:show-find</code>) and
-        | <code>commandElement</code> (context for the command) will yield a tip with a keystroke.
-
-      .tooltip.top
-        .tooltip-arrow
-        .tooltip-inner This is a message
-
-      .tooltip.top
-        .tooltip-arrow
-        .tooltip-inner
-          | With a keystroke <span class=keystroke>cmd-shift-o</span>
+        .overlay.from-top.select-list
+          ol.list-group
+            li.selected
+              .status.status-added.icon.icon-diff-added
+              .icon.icon-file-text Some file
+            li
+                .status.status-modified.icon.icon-diff-modified
+                .icon.icon-file-text.Another.file
+              li
+                .status.status-removed.icon.icon-diff-removed
+                .icon.icon-file-text.Yet.another.file
 
 
-    section.bordered(data-name='error')-messages
-      h2 Messages
-      p
-        | Use to convey info to the user when something happens. See <code>find-and-replace</code>
-        | for an example.
+        h3 Multiple lines with no icons
+
+        .overlay.from-top.select-list
+          ol.list-group
+            li.two-lines
+              .primary-line Primary line
+              .secondary-line Secondary line
+            li.two-lines.selected
+                .primary-line A thing
+                .secondary-line Description of the thing
 
 
-      h3 Error messages
+        h3 Multiple lines with icons
 
-      ul.error-messages.block
-        li This is an error!
-        li And another
-
-
-      h3 Info messages
-
-      ul.info-messages.block
-        li Info line
-        li Another info line
-
-
-  section.bordered(data-name='background')-messages
-      h2 Background Messages
-      p
-        | Subtle background messages for panes. Use for cases when there are no results.
-
-      ul.background-message
-        li No Results
-
-      p
-        | Centered background messages will center horizontally and vertically.
-        | Your container for this element must have <code>position</code> set with <code>relative</code> or
-        | <code>absolute</code>.
-
-      ul.background-message.centered
-        li No Results
+        .overlay.from-top.select-list
+          .list-group
+            .two-lines
+              .status.status-added.icon.icon-diff-added
+              .primary-line.icon.icon-file-text Primary line
+              .secondary-line.no-icon Secondary line
+              .two-lines.selected
+                .status.status-modified.icon.icon-diff-modified
+                .primary-line.icon.icon-file-symlink-file A thing
+                .secondary-line.no-icon Description of the thing
+              .two-lines
+                .status.status-renamed.icon.icon-diff-renamed
+                .primary-line.icon.icon-file-symlink-file A thing
+                .secondary-line.no-icon Description of the thing
 
 
-    section.bordered(data-name='error')-messages
-      h2 Messages
-      p
-        | Use to convey info to the user when something happens. See <code>find-and-replace</code>
-        | for an example.
+        h3 Using mark.selected class to indicate the.selected item
+        p Use ...
 
-      h3 Error messages
+        .overlay.from-top.select-list
+          ol.list-group.mark.selected
+            li Normal item
+            li.selected Selected &mdash; user is arrowing through the list.
+            li.active This is the active item
+            li.selected.active Selected AND active!
 
-      ul.error-messages.block
-        li This is an error!
-        li And another
+
+        h3 Error messages
+        .example-rendered
+          .overlay.from-top.select-list
+            .editor.editor-colors.mini I searched for this
+            .error-message Nothing has been found!
+
+
+        h3 Loading message
+
+        .overlay.from-top.select-list
+          .editor.editor-colors.mini User input
+          .loading
+            .loading-message Chill bro. Things are loading.
+            .badge 1234
+
+
+      section.bordered(data-name='popover-list')
+        h2 Popover List
+        p
+          | A <code>.popover-list</code> is a <code>.select-list</code> that
+          | is meant to popover the code for something like autocomplete.
+
+        h3 Basic example with one item.selected
+
+        .select-list.popover-list
+          .editor.mini.editor-colors User types here..
+          ol.list-group
+            li.selected one
+            li two
+            li three
+
+      section.bordered(data-name='tooltips')
+        h2 Tooltips
+        p
+          | You do not create the markup directly. You call
+          | <code>element.setTooltip(title, {command, commandElement}={})</code>.
+          | Passing in a <code>command</code> (like <code>find-and-replace:show-find</code>) and
+          | <code>commandElement</code> (context for the command) will yield a tip with a keystroke.
+
+        .tooltip.top
+          .tooltip-arrow
+          .tooltip-inner This is a message
+
+        .tooltip.top
+          .tooltip-arrow
+          .tooltip-inner
+            | With a keystroke <span class=keystroke>cmd-shift-o</span>
+
+
+      section.bordered(data-name='error')-messages
+        h2 Messages
+        p
+          | Use to convey info to the user when something happens. See <code>find-and-replace</code>
+          | for an example.
+
+
+        h3 Error messages
+
+        ul.error-messages.block
+          li This is an error!
+          li And another
+
+
+        h3 Info messages
+
+        ul.info-messages.block
+          li Info line
+          li Another info line
+
+
+      section.bordered(data-name='background-messages')
+          h2 Background Messages
+          p
+            | Subtle background messages for panes. Use for cases when there are no results.
+
+          ul.background-message
+            li No Results
+
+          p
+            | Centered background messages will center horizontally and vertically.
+            | Your container for this element must have <code>position</code> set with <code>relative</code> or
+            | <code>absolute</code>.
+
+          ul.background-message.centered
+            li No Results
+
+
+        section.bordered(data-name='error-messages')
+          h2 Messages
+          p
+            | Use to convey info to the user when something happens. See <code>find-and-replace</code>
+            | for an example.
+
+          h3 Error messages
+
+          ul.error-messages.block
+            li This is an error!
+            li And another

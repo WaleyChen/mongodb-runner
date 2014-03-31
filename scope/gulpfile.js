@@ -30,7 +30,9 @@ gulp.task('assets', function(){
 
 gulp.task('less', function () {
   gulp.src('./app/*.less')
-    .pipe(less({}))
+    .pipe(less({
+      paths: [__dirname + '/app/less', __dirname + '/app/less/atom', __dirname + '/app/less/atom/variables']
+    }))
     .pipe(gulp.dest('../rest/ui'));
 });
 

@@ -1,0 +1,734 @@
+// Import from the syntax theme's variables with a fallback to ./variables/syntax-variables.less
+@import "./atom/variables/syntax-variables";
+
+// Import from the ui theme's variables with a fallback to ./variables/ui-variables.less
+@import "./atom/variables/ui-variables";
+
+@import "./atom/variables/octicon-utf-codes";
+@import "./atom/variables/octicon-mixins";
+
+@import "./atom/workspace-view";
+@import "./atom/bootstrap";
+@import "./atom/buttons";
+@import "./atom/icons";
+@import "./atom/links";
+@import "./atom/panes";
+@import "./atom/panels";
+@import "./atom/sections";
+@import "./atom/overlay";
+@import "./atom/lists";
+@import "./atom/popover-list";
+@import "./atom/notification";
+@import "./atom/messages";
+@import "./atom/markdown";
+@import "./atom/editor";
+@import "./atom/select-list";
+@import "./atom/syntax";
+@import "./atom/utilities";
+@import "./atom/octicons";
+
+
+.workspace {
+  background-color: @app-background-color;
+  border-top: 1px solid rgba(0, 0, 0, .4);
+}
+
+::-webkit-scrollbar {
+    width: 7px;
+}
+
+::-webkit-scrollbar-track {
+    background: #eee;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: #ccc;
+}
+
+.btn-background (@color, @hover-color, @selected-color, @border-color, @text-color, @text-color-hover) {
+  @border-shadow: inset 0 0 0 1px @border-color;
+  @active-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+  color: @text-color;
+  background-color: transparent;
+  background-image: -webkit-linear-gradient(@color, darken(@color, 8%));
+  box-shadow: @border-shadow;
+
+  &:hover {
+    color: @text-color-hover;
+    background-image: -webkit-linear-gradient(@hover-color, darken(@hover-color, 8%));
+  }
+  &:active,
+  &.selected:hover:active {
+    box-shadow: @active-shadow, @border-shadow;
+  }
+  &.selected,
+  &.selected:hover {
+    color: @text-color-selected;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0,.3), @border-shadow;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+    background-image: -webkit-linear-gradient(darken(@selected-color, 8%), @selected-color);
+  }
+  &.selected:hover {
+    box-shadow: @border-shadow;
+    background-image: -webkit-linear-gradient(@selected-color, darken(@selected-color, 8%));
+  }
+}
+
+.btn-variant (@color) {
+  @bg: darken(@color, 10%);
+  @hover: @color;
+  @selected: @color;
+  @border: fadeout(darken(@color, 20%), 50%);
+  .btn-background(@bg, @hover, @selected, @border, @text-color-selected, @text-color-selected);
+}
+
+.btn {
+  .btn-background(@button-background-color, @button-background-color-hover, @button-background-color-selected, @button-border-color, @text-color, @text-color-highlight);
+}
+
+.btn.btn-primary {
+  .btn-variant(@background-color-info);
+}
+.btn.btn-info {
+  .btn-variant(@background-color-info);
+}
+.btn.btn-success {
+  .btn-variant(@background-color-success);
+}
+.btn.btn-warning {
+  .btn-variant(@background-color-warning);
+}
+.btn.btn-error {
+  .btn-variant(@background-color-error);
+}
+
+.btn-group > .btn {
+  border: none;
+}
+
+.editor.mini {
+  color: @text-color;
+  background-color: @input-background-color;
+  border: 1px solid @input-border-color;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  border-radius: @component-border-radius;
+  padding-left: @component-padding/2;
+
+  .cursor { border-color: #000; }
+  .selection .region { background-color: rgba(0, 0, 0, .2); }
+}
+
+.editor.editor-colors.mini.is-focused {
+  background-color: lighten(@input-background-color, 5%);
+  .selection .region { background-color: lighten(@background-color-info, 30%); }
+}
+
+// FIXME: these should go in syntax themes?
+.editor .gutter.drop-shadow {
+  -webkit-box-shadow: -2px 0 10px 2px #222;
+}
+
+@-webkit-keyframes highlight {
+  from { background-color: rgba(100, 255, 100, 0.7); }
+  to { background-color: null; }
+}
+
+.editor .highlighted.selection .region {
+  -webkit-animation-name: highlight;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: 1;
+}
+
+@import "./atom/variables/octicon-mixins";
+
+.list-group, .list-tree {
+  li:not(.list-nested-item),
+  li.list-nested-item > .list-item {
+    .text(normal);
+    color: #000;
+  }
+
+  .generate-list-item-text-color(@class) {
+    li:not(.list-nested-item).text-@{class},
+    li.list-nested-item.text-@{class} > .list-item {
+      .text(@class);
+    }
+  }
+  .generate-list-item-text-color(subtle);
+  .generate-list-item-text-color(info);
+  .generate-list-item-text-color(success);
+  .generate-list-item-text-color(warning);
+  .generate-list-item-text-color(error);
+  .generate-list-item-text-color(selected);
+
+  .generate-list-item-status-color(@color, @status) {
+    li:not(.list-nested-item).status-@{status},
+    li.list-nested-item.status-@{status} > .list-item {
+      color: @color;
+    }
+  }
+  .generate-list-item-status-color(@text-color-subtle, ignored);
+  .generate-list-item-status-color(@text-color-added, added);
+  .generate-list-item-status-color(@text-color-renamed, renamed);
+  .generate-list-item-status-color(@text-color-modified, modified);
+  .generate-list-item-status-color(@text-color-removed, removed);
+
+  li:not(.list-nested-item).selected,
+  li.list-nested-item.selected > .list-item {
+    .text(selected);
+  }
+}
+
+.select-list ol.list-group,
+&.select-list ol.list-group {
+  li.two-lines {
+    .secondary-line { color: @text-color-subtle; }
+    &.selected .secondary-line {
+      color: lighten(@text-color-subtle, 10%);
+      text-shadow: none;
+    }
+  }
+
+  // We want to highlight the background of the list items because we dont
+  // know their size.
+  li.selected {
+    background-color: linear-gradient(rgba(83, 170, 231, 1.0), rgba(51, 142, 218, 1.0)) !important;
+    &:before{ display: none; }
+  }
+
+  &.mark-active{
+    @active-icon-size: 14px;
+
+    // pad in front of the text where the icon would be We'll pad the non-
+    // active items with a 'fake' icon so other classes can pad the item
+    // without worrying about the icon padding.
+    li:before {
+      content: '';
+      background-color: transparent;
+      position: static;
+      display: inline-block;
+      left: auto; right: auto;
+      height: @active-icon-size;
+      width: @active-icon-size;
+    }
+    > li:not(.active):before {
+      margin-right: @component-icon-padding;
+    }
+    li.active {
+      .octicon(check, @active-icon-size);
+      &:before {
+        margin-right: @component-icon-padding;
+        color: @text-color-success;
+      }
+    }
+  }
+}
+
+.select-list.popover-list {
+  background-color: @overlay-background-color;
+  box-shadow: 0 0 10px @base-border-color;
+  padding: @component-padding/2;
+  border-radius: @component-border-radius;
+  border: 1px solid @overlay-border-color;
+
+  .editor {
+    margin-bottom: @component-padding/2;
+  }
+
+  .list-group li {
+    padding-left: @component-padding/2;
+  }
+}
+
+.ui-sortable {
+  li {
+    line-height: 2.5;
+  }
+
+  // For sortable lists in the settings view
+  li.ui-sortable-placeholder {
+    visibility: visible !important;
+    background-color: darken(@pane-item-background-color, 10%);
+  }
+}
+
+li.ui-draggable-dragging, li.ui-sortable-helper {
+  line-height: @component-line-height;
+  height: @component-line-height;
+  border: 0;
+  border-radius: 0;
+  list-style: none;
+  padding: 0 @component-padding;
+  background: @background-color-highlight;
+  box-shadow: 0 0 1px @base-border-color;
+}
+
+ul.background-message {
+  font-weight: bold;
+  color: rgba(0, 0, 0, .18);
+}
+
+
+.overlay {
+  color: @text-color;
+  background-color: @overlay-background-color;
+  padding: @component-padding;
+  border: 1px solid @overlay-border-color;
+  box-shadow: 0 0 10px @base-border-color;
+  border-radius: @component-border-radius;
+
+  .editor.mini {
+    margin-bottom: @component-padding;
+  }
+
+  .select-list ol.list-group,
+  &.select-list ol.list-group {
+
+    background-color: rgba(249, 249, 249, 1.0);
+
+    li {
+      padding: 1px @component-padding;
+      font-size: 11px;
+      border-top: 1px solid @inset-panel-border-color;
+      border-left: 1px solid @inset-panel-border-color;
+      border-right: 1px solid @inset-panel-border-color;
+      &:last-child { border-bottom: 1px solid @inset-panel-border-color; }
+
+      &.two-lines { padding: @component-padding/2 @component-padding; }
+      &.selected {
+        color: @text-color;
+        background-color: rgba(225, 225, 225, 1.0);
+      }
+
+      .status.icon {
+        float: right;
+        margin-left: @component-icon-padding;
+        &:before {
+          margin-right: 0;
+        }
+      }
+    }
+
+  }
+}
+
+
+.panel {
+  &.bordered {
+    border: 1px solid @base-border-color;
+    border-radius: @component-border-radius;
+  }
+}
+
+.tool-panel {
+  .text(normal);
+  position: relative;
+
+  background-color: @tool-panel-background-color;
+
+  &.panel-bottom {
+    border-top: 1px solid @tool-panel-border-color;
+  }
+
+  &.panel-left {
+    border-right: 1px solid @tool-panel-border-color;
+  }
+
+  .inset-panel {
+    border-radius: @component-border-radius;
+
+    border: 1px solid @tool-panel-border-color;
+  }
+}
+
+.inset-panel {
+  position: relative;
+  background-color: @inset-panel-background-color;
+}
+
+.panel-heading {
+  border-bottom: none;
+  padding: @component-padding - 2px @component-padding;
+
+  background-color: transparent;
+  background-image: -webkit-linear-gradient(@panel-heading-background-color, darken(@panel-heading-background-color, 10%));
+
+  .btn {
+    @bg: lighten(@button-background-color, 10%);
+    @hover: lighten(@button-background-color-hover, 10%);
+    @selected: lighten(@button-background-color-selected, 10%);
+    @text: lighten(@text-color, 10%);
+    .btn-background(@bg, @hover, @selected, @button-border-color, @text, @text);
+  }
+}
+
+.panes {
+  .pane {
+    background-color: lighten(@app-background-color, 3%);
+
+    &:focus {
+      background-color: @app-background-color;
+    }
+  }
+
+  .pane-row > * {
+    border-right: 1px solid @pane-item-border-color;
+    &:last-child { border-right: none; }
+  }
+
+  .pane-column > * {
+    border-bottom: 1px solid @pane-item-border-color;
+    &:last-child { border-bottom: none; }
+  }
+}
+
+.ui-site(@num, @color) {
+  .ui-site-@{num} {
+    background-color: @color;
+  }
+}
+
+.ui-site(1, @ui-site-color-1);
+.ui-site(2, @ui-site-color-2);
+.ui-site(3, @ui-site-color-3);
+.ui-site(4, @ui-site-color-4);
+.ui-site(5, @ui-site-color-5);
+
+@tab-radius: 0px;
+@modified-icon-width: 8px;
+@tab-skew: 0deg;
+@tab-top-padding: 5px;
+@tab-bottom-border-height: 5px;
+@tab-border: 1px solid @tab-border-color;
+@tab-bar-bottom-border-color: #111;
+
+.tab-bar {
+  height: @tab-height + @tab-top-padding + 5px;
+  background-image: -webkit-linear-gradient(top, rgba(218, 218, 218, 1.0), rgba(227, 227, 227, 1.0));
+  box-shadow: inset 0 -8px 8px -4px rgba(0,0,0, .15);
+  padding: 0 10px;
+
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    height: @tab-bottom-border-height;
+    left: 0px;
+    width: 100%;
+    background-color: @tab-background-color-active;
+    border-bottom: 1px solid @tab-bar-border-color;
+    border-top: 1px solid @tab-border-color;
+  }
+
+  .tab {
+    position: relative;
+    top: @tab-top-padding;
+    height: @tab-height;
+    line-height: @tab-height;
+    color: @text-color;
+    padding-left: 0;
+    margin-left: 19px;
+    border-top-right-radius: @tab-radius;
+    border-right: @tab-border;
+    box-shadow: inset -1px -1px 1px rgba(0,0,0, .05);
+    // -webkit-transform: skewX(@tab-skew);
+    text-shadow: 0px 1px #fff;
+    transition: color .1s ease-in;
+
+    &, &:before {
+      background-image: -webkit-linear-gradient(top, @tab-background-color, darken(@tab-background-color, 6%));
+      border-top: @tab-border;
+    }
+
+    &:before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: -16px;
+      height: @tab-height;
+      width: 30px;
+      border-top-left-radius: @tab-radius;
+      border-left: @tab-border;
+      box-shadow: inset 1px -1px 1px rgba(0,0,0, .05);
+      // -webkit-transform: skewX(133deg);
+    }
+
+    .close-icon {
+      z-index: 3;
+      line-height: @tab-height;
+      // -webkit-transform: skewX(-@tab-skew);
+    }
+    &.modified:not(:hover) .close-icon {
+      top: @tab-height/2 - @modified-icon-width/2 + 1px;
+      right: 14px;
+      width: @modified-icon-width;
+      height: @modified-icon-width;
+    }
+
+    .title{
+      -webkit-transform: skewX(-@tab-skew);
+    }
+  }
+
+  .tab.active {
+    z-index: 10;
+    line-height: @tab-height - 2px;
+    color: @text-color-highlight;
+    background: rgba(249, 248, 249, 1.0);
+    font-weight: bold;
+
+    .title{
+      position: relative;
+      top: 1px;
+      color: rgba(50, 50, 50, 1.0);
+      text-shadow: 0px 1px #fff;
+    }
+
+    .close-icon {
+      line-height: @tab-height - 1px;
+    }
+
+    &, &:before {
+      background: @tab-background-color-active;
+      height: @tab-height + 1px;
+      box-shadow: none;
+    }
+  }
+
+  .tab:hover {
+    color: @text-color-highlight;
+  }
+
+  .tab.active:hover .close-icon {
+    color: @text-color-highlight;
+  }
+
+  .placeholder {
+    height: @tab-height + @tab-top-padding + @tab-bottom-border-height;
+    &:after {
+      top: @tab-height + @tab-top-padding + @tab-bottom-border-height;
+    }
+  }
+}
+
+
+h1,
+h2,
+h3 {
+  line-height: 1em;
+  margin-bottom: 15px
+}
+h1 { font-size: 2em; }
+h2 { font-size: 1.5em; }
+h3 { font-size: 1.2em; }
+
+p {
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+label {
+  font-weight: normal;
+}
+
+pre {
+  box-shadow: none;
+  color: @text-color;
+  background: @inset-panel-background-color;
+  border-radius: @component-border-radius;
+  border: none;
+  margin: 0;
+}
+
+code {
+  .text(highlight);
+  background: @background-color-highlight;
+  border-radius: @component-border-radius;
+}
+
+.selected { .text(highlight); }
+
+.text-smaller { font-size: 0.9em; }
+
+.text-subtle { .text(subtle); }
+.text-highlight { .text(highlight); }
+
+.text-error { .text(error); }
+.text-info {
+  .text(info);
+  &:hover { color: @text-color-info; }
+}
+.text-warning {
+  .text(warning);
+  &:hover { color: @text-color-warning; }
+}
+.text-success {
+  .text(success);
+  &:hover { color: @text-color-success; }
+}
+
+.highlight {
+  color: @text-color-highlight;
+  font-weight: bold;
+  text-shadow: none;
+  background-color: @background-color-highlight;
+  border-radius: @component-border-radius;
+  padding: 1px 3px;
+}
+
+.highlight-color(@name, @color) {
+  .highlight-@{name} {
+    color: @text-color-selected;
+    font-weight: bold;
+    text-shadow: none;
+    background-color: @color;
+    border-radius: @component-border-radius;
+    padding: 1px 3px;
+  }
+}
+.highlight-color(info, @background-color-info);
+.highlight-color(warning, @background-color-warning);
+.highlight-color(error, @background-color-error);
+.highlight-color(success, @background-color-success);
+
+
+
+.tooltip {
+  @tip-background-color: #333;
+  @tip-text-color: #fff;
+  white-space: nowrap;
+
+  .keystroke {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    color: #c0c0c0;
+    padding-left: 2px;
+  }
+
+  &.in { opacity: 1; }
+
+  .tooltip-inner {
+    line-height: 19px;
+    border-radius: @component-border-radius;
+    background-color: @tip-background-color;
+    color: @tip-text-color;
+    white-space: nowrap;
+    max-width: none;
+  }
+
+  &.top .tooltip-arrow {
+    border-top-color: @tip-background-color;
+  }
+  &.top-left .tooltip-arrow {
+    border-top-color: @tip-background-color;
+  }
+  &.top-right .tooltip-arrow {
+    border-top-color: @tip-background-color;
+  }
+  &.right .tooltip-arrow {
+    border-right-color: @tip-background-color;
+  }
+  &.left .tooltip-arrow {
+    border-left-color: @tip-background-color;
+  }
+  &.bottom .tooltip-arrow {
+    border-bottom-color: @tip-background-color;
+  }
+  &.bottom-left .tooltip-arrow {
+    border-bottom-color: @tip-background-color;
+  }
+  &.bottom-right .tooltip-arrow {
+    border-bottom-color: @tip-background-color;
+  }
+}
+
+
+
+.tree-view {
+  transition: all .2s ease;
+  font-size: 11px;
+  border-right: 1px solid black;
+  background: rgba(209, 217, 226, 1.0);
+  // .selected:before {
+  //  background: #C1C1C1;
+  // }
+}
+
+.focusable-panel {
+  opacity: 1;
+
+  &:focus {
+    // background-image: -webkit-gradient(linear, left top, left bottom, from(#e8ecf1),to(#d1d8e0));
+    // background-image: -webkit-linear-gradient(top, #e8ecf1, #d1d8e0);
+
+    .selected:before {
+      background: @background-color-selected;
+    }
+
+    .selected > .name,
+    .selected > .name:before,
+    .selected > .list-item > .name,
+    .selected > .list-item > .name:before {
+      color: #fff !important;
+    }
+  }
+}
+
+
+// Pattern matching; ish is cray.
+// http://lesscss.org/#-pattern-matching-and-guard-expressions
+.text(normal) {
+  font-weight: normal;
+  color: @text-color;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
+}
+.text(subtle) {
+  font-weight: normal;
+  color: @text-color-subtle;
+  text-shadow: none;
+}
+.text(highlight) {
+  font-weight: normal;
+  color: @text-color-highlight;
+}
+.text(selected) {
+  font-weight: normal;
+  color: @text-color-selected;
+  text-shadow: none;
+}
+
+.text(info) {
+  color: @text-color-info;
+  text-shadow: none;
+}
+.text(success) {
+  color: @text-color-success;
+  text-shadow: none;
+}
+.text(warning) {
+  color: @text-color-warning;
+  text-shadow: none;
+}
+.text(error) {
+  color: @text-color-error;
+  text-shadow: none;
+}
+
+.key-binding {
+  background: #fff;
+  border: 1px solid lighten(@base-border-color, 20%);
+  text-shadow: none;
+  display: inline-block;
+  line-height: 100%;
+  border-radius: @component-border-radius;
+  margin-left: @component-icon-padding;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: @font-size - 1px;
+  padding: @component-padding / 2;
+}
+
+.badge {
+  .text(highlight);
+  background: @background-color-highlight;
+}
