@@ -43,9 +43,10 @@ else
 .row
   .databases.col-md-8
    - for database_name in instance.database_names
-    a(href='#database/#{database_name}')
+    div
       .graph
-      span.name #{database_name}
+      a.name(href='#database/#{database_name}')
+        | #{database_name}
       ul.stats
         li 8 colls
         li 27 indexes

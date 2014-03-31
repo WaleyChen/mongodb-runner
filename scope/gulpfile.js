@@ -57,7 +57,7 @@ gulp.task('manifest', function(){
 
 gulp.task('watch', function (){
   gulp.watch(['./app/{*,**/*}.{js,jade}',], ['js']);
-  gulp.watch(['./app/{*,less/*}.less'], ['less']);
+  gulp.watch(['./app/{*,less/*,less/**/*}.less'], ['less']);
   gulp.watch(['./app/templates/{index,styleguide}.jade'], ['pages']);
   gulp.watch(['./app/{img,fonts}/*'], ['assets']);
 });

@@ -1,209 +1,105 @@
-@import "./less/scope";
-@import "./less/themes/atom-light";
 
-@brand-primary:         #6ba442;
+
+@mongo-green: #6ba442;
+
+@brand-primary: @brand-primary;
 @font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
 
-.log #mongoscope {
-  font-family: @font-family-monospace;
-}
+@matrix-column-width: 36px;
 
-.exploring #mongoscope {
-  .stats {
-    h3 {
-      margin-top: 0;
-    }
-    h5 {
-      padding-top: 0;
-      padding-bottom: 0;
-      margin-top: 0;
-      margin-bottom: 0;
-    }
-    // Hide detailled stats
-    .list-group {
-      display: none;
-    }
-  }
-}
-body {
-  margin: 0;
-}
-.log {
-  .line {
-    white-space: nowrap;
-    border-right: 4px solid @background-color-highlight;
-
-    .message {
-      display: block;
-      max-height: 18px;
-      overflow: hidden;
-      padding-right: 10px;
-      text-overflow: ellipsis;
-    }
-
-    .name, .second, .ms{
-      float: left;
-      color: @text-color-subtle;
-      visibility: hidden;
-    }
-
-    .name {
-      width: 140px;
-      margin-right: 10px;
-      text-align: right;
-    }
-
-    .ms {
-      width: 40px;
-      margin-right: 30px;
-    }
-
-    .second {
-      width: 80px;
-      margin-right: 5px;
-    }
-  }
-  .line.group-by-name {
-    border-top: 1px solid @base-border-color;
-    margin-top: 20px;
-    padding-top: 10px;
-    .name {
-      visibility: visible;
-    }
-  }
-  .line.group-by-second {
-    border-right: 4px solid @base-border-color;
-    margin-top: 20px;
-    .second {
-      visibility: visible;
-    }
-  }
-  .line.group-by-ms {
-    border-right: 4px solid @base-border-color;
-    .ms {
-      visibility: visible;
-    }
-  }
-}
-.log:first-child {
-  margin-top: 0px;
-}
-.log:nth-child(0n+2) {
-  margin-top: 0px;
-}
-
-// ### creek
-//
-// a d3 streaming time-series chart.
-.creek {
-  fill: transparent;
-  border-radius: 2px;
-  .line {
-    stroke: @text-color;
-    stroke-width: 2px;
-  }
-  .area {}
-  .tick {
-    stroke: fadeout(@text-color, 80%);
-    font-size: 10px;
-
-    line {
-      z-index: -1;
-      stroke-width: 1px;
-      stroke-dasharray: 1 1;
-      stroke: fadeout(@text-color, 90%);
-    }
-  }
-}
+body {margin: 0;}
 
 #toolbar {
   position: fixed !important;
   top: 0;
   width: 100%;
   height: 39px;
-  // background-image: -webkit-linear-gradient(@button-background-color, darken(@button-background-color, 2%));
-  // box-shadow: 0 -1px 10px 1px rgba(0, 0, 0, 0.3);
-  // border-bottom: 1px solid rgba(0, 0, 0, 0.3);
   z-index: 1100;
-  // .tool-panel();
-  color: #444444;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  padding-left: 0px;
+  color: @text-color;
   position: relative;
-  background-color: #f4f4f4;
-  ul {
-    .nav();
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    // .navbar-nav();
-
-    li {
-      // box-shadow: 0 0 1px rgba(0, 0, 0, 0.3);
+  background-color: @base-background-color;
+  .btn-group {
+    .btn {
       display: inline-block;
-      a {
-        .yo-transition(all 250ms ease);
-        border-radius: 0;
-        height: 39px;
-        .icon {
-          // .glyphicon();
-          font-size: 18px;
-          padding-top: 8px;
-        }
-        .label {
-          display: none;
-        }
+      border-radius: 0;
+      height: 39px;
+      text-decoration: none;
+      .transition(all 250ms ease);
+      text-align: center;
+      background-color: @base-background-color;
+      background-image: none;
+
+      .icon {
+        .glyphicon();
+        .inline-block-tight();
+        font-size: 18px;
+        vertical-align: middle;
+        padding-left: 6px;
       }
-      a:hover {
-        text-decoration: none;
-        color: #fff;
-        background: @brand-primary;
+      .label {
+        .inline-block-tight();
+        padding-top: 5px;
       }
+    }
+    .btn:first-child {
+      border-left: none;
+    }
+    .btn:last-child,
+    .btn.selected:last-child,
+    .dropdown-toggle {
+      border-right: none;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    .btn:hover {
+      text-decoration: none;
+      color: @text-color-selected;
+      background: @brand-primary;
     }
   }
 }
 
-#logo {
-  height: 28px;
-  width: 26px;
-  margin-left: 2px;
-  margin-right: 40px;
+.logo {
+  float: right;
+  line-height: 25px;
+  display: inline-block;
+  border-radius: 0;
+  height: 39px;
+  text-decoration: none;
+  .transition(all 250ms ease);
+  text-align: center;
+  background-color: @base-background-color;
+  background-image: none;
+  color: fadeout(@text-color-subtle, 20%);
 
-  path {
-    stroke-width: 1;
-    stroke: @text-color-subtle;
-    fill: @text-color-subtle;
+  svg{
+    height: 35px;
+    width: 29px;
+    display: inline;
+
+    path {
+      stroke-width: 1;
+      stroke: fadeout(@text-color-subtle, 20%);
+      fill: fadeout(@text-color-subtle, 20%);
+    }
   }
 }
 
 // ## app container
 #mongoscope {
-  // .container-fluid();
   .workspace();
-  margin-top: 40px;
+  margin-top: 38px;
   // box-shadow: 0px -1px 1px rgba(0, 0, 0, 0.1);
   box-shadow: inset 0 1px 0 @background-color-highlight;
   height: 100%;
   max-height: 100%;
   overflow-y: scroll;
+  width: 100%;
 }
 
-// @import "./less/variables.less";
-// @import "./less/bootstrap/mixins.less";
-// @import "./less/mixins.less";
 
-// // bootstrap core
-// @import "./less/bootstrap/scaffolding.less";
-// @import "./less/bootstrap/type.less";
-// @import "./less/bootstrap/grid.less";
-// @import "./less/bootstrap/code.less";
-// @import "./less/bootstrap/tables.less";
-// @import "./less/bootstrap/forms.less";
-// // @import "./less/bootstrap/buttons.less";
-
-// // bootstrap components
-// // @import "./less/bootstrap/button-groups.less";
-// @import "./less/bootstrap/dropdowns.less";
-// @import "./less/bootstrap/glyphicons.less";
+@import "./less/bootstrap/glyphicons.less";
 // @import "./less/bootstrap/navs.less";
 // @import "./less/bootstrap/navbar.less";
 // @import "./less/bootstrap/pagination.less";
@@ -214,163 +110,10 @@ body {
 // @import "./less/bootstrap/panels.less";
 
 // @import "./less/bootstrap/utilities.less";
-// @import "./less/bootstrap/responsive-utilities.less";
+@import "./less/bootstrap/responsive-utilities.less";
 
-// // @import "./less/chosen.less";
-
-.yo-transition(...) {
-  -webkit-transition: @arguments;
-  -moz-transition: @arguments;
-  -o-transition: @arguments;
-  transition: @arguments;
-}
-
-// * {
-//   -webkit-font-smoothing: auto;
-// }
-// html {
-//   height: 100%;
-// }
-
-// body {
-//   margin: 0;
-//   padding: 0;
-//   height: 100%;
-//   background: @app-background-color;
-//   overflow: hidden;
-// }
-
-// // .btn {
-// //   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-// //   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) ;
-// // }
-
-// // ## app states
-// //
-// // ### Exploring
-// //
-// // The user is actively browsing the contents of a collection.
-// .exploring #mongoscope {
-//   .stats {
-//     h3 {
-//       margin-top: 0;
-//     }
-//     h5 {
-//       padding-top: 0;
-//       padding-bottom: 0;
-//       margin-top: 0;
-//       margin-bottom: 0;
-//     }
-//     // Hide detailled stats
-//     .list-group {
-//       display: none;
-//     }
-//   }
-// }
-
-// .pager {
-//   li {
-//     a {
-//       border-radius: 2px;
-//     }
-//   }
-// }
-
-
-// .log #mongoscope {
-//   font-family: @font-family-monospace;
-// }
-
-// // ## components
-// //
-// // ### log
-
-
-// .databases {
-//   .list-group();
-//   a {
-//     .list-group-item();
-//     margin: 0;
-//     padding: 0;
-//     box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, 0.05);
-//     color: #807f7f;
-//     background: rgba(10, 10, 10, 0.05);
-//     border: 1px solid rgba(0, 0, 0, 0.5);
-
-//     .yo-transition(all 250ms ease);
-
-//     .name {
-//       .h2();
-//       .list-group-item-heading();
-//       color: @text-color;
-//       margin-bottom: 95px;
-//       display: block;
-//       padding-left: 20px;
-//       text-shadow: 0px 0px 10px #000;
-//     }
-
-//     .graph {
-//       top: 10px;
-//       // position: absolute;
-//     }
-
-//     .stats {
-//       border-top: 1px solid rgba(128, 127, 127, 0.2);
-//       font-variant: small-caps;
-//       margin: 0;
-//       .list-inline();
-//       padding-left: 20px;
-
-//       li {
-//         color: rgba(128, 127, 127, 1.0);
-//         border-right:  1px solid rgba(128, 127, 127, 0.2);
-//       }
-//     }
-//   }
-//   a:hover {
-//     box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, 0.3);
-//     color: #D0D0D0;
-//     background: rgba(10, 10, 10, 0.3);
-//     text-decoration: none;
-//   }
-// }
-
-// // @text-color: #aaa;
-// @text-color-subtle: #555;
-// @text-color-highlight: #fff;
-
-// @gray: @text-color-subtle;
-// @white: @text-color;
-// @green: @brand-primary;
-
-// // ### donut
-// //
-// // a d3 annulus chart.
-// .donut {
-//   .title {
-//     fill: @text-color-subtle;
-//     font-size: 120%;
-//   }
-//   .documents {
-//     .arc {
-//       stroke: fadein(@brand-primary, %10);
-//       fill: @brand-primary;
-//     }
-//     .label {
-//       fill: @brand-primary;
-//     }
-//   }
-//   .indexes {
-//     .arc {
-//       stroke: @white;
-//       fill: fadeout(@white, 10%);
-//     }
-//     .label {
-//       fill: @white;
-//     }
-//   }
-// }
-
+@import "./less/mongoscope/animation";
+@import "./less/mongoscope/charts";
 
 
 
@@ -397,53 +140,9 @@ body {
 //   }
 // }
 
-// @matrix-column-width: 36px;
 
-// .top-matrix {
-//   &-header {
-//     &-column {
-//       height: 93px;
-//       float: left;
-//       width: @matrix-column-width;
-//       transform: translate(7px, 45px) rotate(-45deg);
-//       -webkit-transform: translate(7px, 45px) rotate(-45deg);
-//       white-space: nowrap;
-//       div {
 
-//         width: 31px;
-//         text-align: left;
-//         span {
-//           border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-//           padding: 5px 0 5px 0px;
-//           text-align: left;
-//           width: 200px;
-//           display: block;
-//           color: fadeout(@text-color, 60%);
-//         }
-//       }
-//     }
-//   }
-//   &-body{
-//     clear: both;
 
-//     &-row {
-//       clear: both;
-//       height: 31px;
-//       border-left: 1px solid rgba(255, 255, 255, 0.1);
-//       &-column, &-date{
-//         padding: 5px 10px;
-//         float: left;
-//         width: @matrix-column-width;
-//         border-right: 1px solid rgba(255, 255, 255, 0.1);
-//         border-top: 1px solid rgba(255, 255, 255, 0.1);
-//       }
-//       &-date {
-//         width: 100px;
-//         color: fadeout(@text-color, 60%);
-//       }
-//     }
-//   }
-// }
 
 // @todo: refactor.
 // .list-group {
@@ -1147,3 +846,7 @@ body {
 // .select-list ol.list-group li.selected, .select-list ol.list-group li.selected {
 //   background-color: #4182c4;
 // }
+
+
+@import "./less/scope";
+@import "./less/themes/atom-light";

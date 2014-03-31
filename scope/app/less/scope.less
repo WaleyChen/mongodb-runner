@@ -9,7 +9,6 @@
 
 @import "./atom/workspace-view";
 @import "./atom/bootstrap";
-@import "./atom/buttons";
 @import "./atom/icons";
 @import "./atom/links";
 @import "./atom/panes";
@@ -26,6 +25,17 @@
 @import "./atom/syntax";
 @import "./atom/utilities";
 @import "./atom/octicons";
+
+@import "./bootstrap/grid.less";
+@import "./bootstrap/scaffolding.less";
+@import "./variables.less";
+@import "./bootstrap/mixins.less";
+// @import "./mixins.less";
+
+
+@import "./mongoscope/log.less";
+
+@import "./atom/buttons";
 
 
 .workspace {
@@ -103,7 +113,7 @@
   .btn-variant(@background-color-error);
 }
 
-.btn-group > .btn {
+.btn-group .btn {
   border: none;
 }
 
