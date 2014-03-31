@@ -1,0 +1,14 @@
+.row
+  .col-md-6.col-md-push-3
+    .panel.bordered
+      .panel-heading Welcome to mongoscope!
+      .panel-bottom.padded
+        p It appears you don't have any databases on this instance.
+
+        p To get started, open a new terminal window and copy and paste:
+        .inset-panel.padded
+          code
+            pre
+              | mongo --eval "\
+              | db.rating.save( \
+              |   {_id:'mongoscope', votes:[{you: 100}]})"

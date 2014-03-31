@@ -26,7 +26,7 @@ app.set({
   server: server,
   options: {
     connect: {
-      default: 'mongodb://localhost',
+      default: 'mongodb://scopey:scopey@localhost',
       desc: 'connection uri for a mongo instance'
     },
     listen: {
@@ -49,7 +49,9 @@ function validate(){
 
 function connect(){
   app.set('io', require('socket.io').listen(server));
-  debug('connecting to mongod', app.get('mongo'));
+  app.set('connect', 'mongodb://scopey:scopey@localhost');
+
+  debug('connecting to mongod', app.get('connect'));
   MongoClient.connect(app.get('connect'), function(err, db){
     if(err) return console.log(err);
     app.set('db', db);

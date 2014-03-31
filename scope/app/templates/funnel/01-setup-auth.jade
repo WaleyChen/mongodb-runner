@@ -1,0 +1,19 @@
+.row
+  .col-md-6.col-md-push-3
+    .panel.bordered
+      .panel-heading Enable you some security
+      .panel-bottom.padded
+        p To get started, open a new terminal window and copy and paste:
+
+        .inset-panel.padded
+          code
+            pre
+              | mongo --eval "\
+              | admin = db.getSisterDB('admin'); \
+              | admin.createUser({ \
+              |   user: 'scopey', pwd: 'scopey', \
+              |   roles: [ \
+              |   {role: 'clusterMonitor', db: 'admin'},\
+              |   {role: 'readAnyDatabase', db: 'admin'}, \
+              |   {role: 'userAdmin', db: 'admin'} \
+              | ]});"

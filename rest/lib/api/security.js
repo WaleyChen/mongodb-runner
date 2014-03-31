@@ -30,9 +30,11 @@ module.exports = function(app){
 };
 
 var users = function(req, res, next){
-  req.mongo.admin().command({usersInfo: 1}, {}, function(err, data){
+  debug('fetching users');
+  req.mongo.admin().command({usersInfo: 1, showPrivileges: true}, {}, function(err, data){
     if(err) return next(err);
     req.mongo.users = data.documents[0].users;
+    debug('users found', req.mongo.users);
     next();
   });
 };

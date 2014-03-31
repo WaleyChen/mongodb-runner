@@ -1,29 +1,17 @@
 if users.length === 0
-
-:markdown
-  ```
-  use admin;
-  db.addUser({
-    user: 'scopey',
-    pwd: 'scoperson',
-    roles: ['clusterMonitor', 'readAnyDatabase']
-  });
-  ```
+  include funnel/01-setup-auth
 else
 
-.row
-  .col-md-6(style="padding-right: 0px;")
-    select.chosen-select(data-placeholder="security")
-      option
-      optgroup(label="users")
-       - for user in users
-        option #{user._id}
-        option #{user._id}
-        option #{user._id}
+  .row
+    .col-md-6(style="padding-right: 0px;")
+      select.chosen-select(data-placeholder="security")
+        option
+        optgroup(label="users")
+        each user in users
+          option #{user._id}
 
-      optgroup(label="roles")
-        option readAnyDatabase
-        option read
-        option readWrite
+        optgroup(label="roles")
+        each role in roles
+          option #{role._id}
 
-  .col-md-6.details.list-group.list-group-item(style="border-left: 0px;")
+    .col-md-6.details.list-group.list-group-item(style="border-left: 0px;")

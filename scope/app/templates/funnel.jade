@@ -1,0 +1,17 @@
+doctype html
+html(lang='en')
+  head
+    title funnel
+    link(rel='stylesheet', href='index.css')
+    link(rel='icon', href='img/favicon.ico', type='image/x-icon')
+  body
+    #mongoscope.padded(style="margin-top: 0px")
+
+      .panel.block.bordered
+        .panel-heading Create DB
+        include ./funnel/01-create-database
+
+      .panel.block.bordered
+        .panel-heading Auth
+
+        include ./funnel/01-setup-auth

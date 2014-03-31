@@ -53,3 +53,26 @@ npm test
 ```
 npm dist
 ```
+
+
+## security
+
+    killall mongod;
+    rm -rf ~/.mongodb/data;
+    npm start;
+
+/srv/mongo/bin/mongo --eval "\
+  db.rating.save( \
+  {_id:'mongoscope', votes:[{you: 100}]})"
+/srv/mongo/bin/mongo --eval "\
+  admin = db.getSisterDB('admin'); \
+  admin.createUser({ \
+    user: 'scopey', pwd: 'scopey', \
+    roles: [ \
+    {role: 'clusterMonitor', db: 'admin'},\
+    {role: 'readAnyDatabase', db: 'admin'},\
+    {role: 'userAdmin', db: 'admin'} \
+  ]});"
+
+/srv/mongo/bin/mongo -u scopey -p scopey --authenticationDatabase admin --eval "\
+  printjson(db.getSisterDB('admin').runCommand({usersInfo: 1}));";
