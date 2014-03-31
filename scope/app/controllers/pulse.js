@@ -12,7 +12,10 @@ module.exports = Backbone.View.extend({
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);
 
-    this.instance = models.instance.on('sync', this.render, this);
+    this.instance = models.instance
+      .on('sync', this.render, this)
+      .on('error', this.render, this);
+
     this.top = new models.Top().on('sync', this.onTopData, this);
 
     this.metric = 'lock.count';
@@ -29,6 +32,7 @@ module.exports = Backbone.View.extend({
   activate: function(){
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);
+    debug('activated');
 
     // this.top.subscribe();
     this.instance.fetch();
@@ -41,6 +45,10 @@ module.exports = Backbone.View.extend({
 
     clearTimeout(this.poller);
     if(self.instance.get('database_names').length === 0){
+        this.$el.html(this.tpl({
+          'instance': this.instance.toJSON(),
+          'metric': this.metric
+        }));
       return self.poller = setTimeout(function(){
         self.instance.fetch();
       }, 5000);

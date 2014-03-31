@@ -17,5 +17,6 @@ module.exports = function(opts){
     ['security/users/:_id', 'security_user', security.details],
     ['collection/:database_name/:collection_name',  'collection', new (require('./collection'))()],
     ['database/:database_name',  'database', new (require('./database'))()]
+
   );
 };
