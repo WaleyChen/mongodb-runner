@@ -53,7 +53,7 @@ module.exports = Backbone.View.extend({
     html = this.tpl(this.top.toJSON());
 
     this.$el.html(html);
-    this.$tbody = this.$el.find('.top-matrix-body');
+    this.$tbody = this.$el.find('.body');
 
     this.top
       .off('sync', this.render, this)

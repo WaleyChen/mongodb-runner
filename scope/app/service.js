@@ -101,7 +101,7 @@ Service.prototype.securityUsers = function(db, username, fn){
     username = null;
   }
 
-  this.read('/security/' + db + '/users' + (username ? '/' + username : ''), function(err, data){
+  this.read('/security/users' + (db ? '/' + db + (username ? '/' + username : '') : ''), function(err, data){
     if(err) return fn(err);
     fn(null, data);
   });
@@ -119,7 +119,7 @@ Service.prototype.securityRoles = function(db, role, fn){
     role = null;
   }
 
-  this.read('/security/' + db + '/roles' + (role ? '/' + role : ''), function(err, data){
+  this.read('/security/roles' + (db ? '/' + db + (role ? '/' + role : '') : ''), function(err, data){
     if(err) return fn(err);
     fn(null, data);
   });

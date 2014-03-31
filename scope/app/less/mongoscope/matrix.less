@@ -1,45 +1,101 @@
 .matrix, .top-matrix {
-  &-header {
-    &-column {
-      height: 93px;
-      float: left;
-      width: @matrix-column-width;
-      transform: translate(7px, 45px) rotate(-45deg);
-      -webkit-transform: translate(7px, 45px) rotate(-45deg);
-      white-space: nowrap;
-      div {
+  .header {
+    position: fixed;
+    margin-left: -10px;
+    margin-right: 8px;
+    top: 40px;
+    padding-top: 10px;
+    background: @overlay-background-color;
+    box-shadow: 0 -1px 1px inset @overlay-border-color;
+    border-bottom: 1px solid @overlay-border-color;
+    // border-top: 1px solid @base-border-color;
+    width: 100%;
+
+  }
+
+  .ns {
+    text-align: center;
+    display: inline-block;
+    text-align: center;
+    display: inline-block;
+    padding-left: 33px;
+
+    .label {
+      position: absolute;
+      background: #ececec;
+      z-index: 1100;
+      margin-left: 47px;
+      width: 161px;
+      border-bottom: 1px solid @overlay-border-color;
+    }
+  }
+  .ns:first-child {
+    margin-left: 0px;
+    padding-left: 43px;
+    margin-right: -4px;
+
+    // .label {
+    //   margin-left: -10px;
+    //   margin-top: 0px;
+    // }
+  }
+  .ns-column{
+    margin-right: 69px;
+    float: left;
+  }
+
+  .ns-column:last-child{
+    margin-right: 12px;
+    float: left;
+  }
+
+  .header-column {
+    height: 90px;
+    display: inline-block;
+    width: @matrix-column-width;
+    transform: translate(10px, 35px) rotate(-60deg);
+    -webkit-transform: translate(10px, 35px) rotate(-60deg);
+    white-space: nowrap;
+    z-index: -1;
+    div {
         width: 31px;
         text-align: left;
         span {
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-          padding: 5px 0 5px 0px;
+          border-bottom: 1px solid @overlay-border-color;
+          padding: 5px 0 5px 10px;
           text-align: left;
-          width: 200px;
+          width: 81px;
           display: block;
           color: fadeout(@text-color, 60%);
         }
       }
-    }
-  }
-  &-body{
-    clear: both;
+   }
 
-    &-row {
-      clear: both;
-      height: 31px;
-      border-left: 1px solid rgba(255, 255, 255, 0.1);
-      &-column, &-date{
-        padding: 5px 10px;
-        float: left;
-        width: @matrix-column-width;
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-      }
-      &-date {
-        width: 100px;
-        color: fadeout(@text-color, 60%);
-      }
-    }
+  .body{
+    clear: both;
+    margin-top: 80px;
+    margin-left: 40px;
+  }
+
+  .matrix-row {
+    clear: both;
+    border-left: 1px solid @base-border-color;
+  }
+  .column, .date{
+    padding: 0px 10px;
+    display: inline-block;
+    width: @matrix-column-width;
+    border-right: 1px solid @base-border-color;
+    border-top: 1px solid @base-border-color;
+    display: inline-block;
+  }
+  .date {
+    width: 100px;
+    color: fadeout(@text-color, 60%);
+    border: 0;
+  }
+  .column:first-child {
+    border-left: 1px solid @base-border-color;
   }
 }
 

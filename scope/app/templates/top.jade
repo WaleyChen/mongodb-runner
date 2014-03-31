@@ -1,15 +1,16 @@
 mixin cells(namespaces)
   each ns in namespaces
-    .top-matrix-body-row-column #{deltas[ns + '.total.count']}
-    .top-matrix-body-row-column #{deltas[ns + '.read.count'] || '-'}
-    .top-matrix-body-row-column #{deltas[ns + '.insert.count']}
-    .top-matrix-body-row-column #{deltas[ns + '.lock.time']}µs
+    .ns-column
+      .column #{deltas[ns + '.total.count']}
+      .column #{deltas[ns + '.read.count'] || '-'}
+      .column #{deltas[ns + '.insert.count']}
+      .column #{deltas[ns + '.lock.time']}µs
 
 mixin row(namespaces)
-  .top-matrix-body-row
+  .matrix-row
     +cells(namespaces)
     - d = new Date()
-    .top-matrix-body-row-date #{d.getHours()}:#{d.getMinutes()}:#{d.getSeconds()}
+    .date #{d.getHours()}:#{d.getMinutes()}:#{d.getSeconds()}
 
 if update === true
   +row(namespaces)
@@ -17,22 +18,24 @@ else
   .row
     .col-md-8
       .top-matrix
-        .top-matrix-header
-          .top-matrix-header-column
-            div
-              span &nbsp;
+        .header
          - for ns in namespaces
-          .top-matrix-header-column
-            div
-              span #{ns} ops
-          .top-matrix-header-column
-            div
-              span #{ns} reads
-          .top-matrix-header-column
-            div
-              span #{ns} inserts
-          .top-matrix-header-column
-            div
-              span #{ns} µs lock
-        .top-matrix-body
+          .ns
+            .label #{ns}
+            .header-column
+              div
+                span &nbsp;
+            .header-column
+              div
+                span ops
+            .header-column
+              div
+                span reads
+            .header-column
+              div
+                span inserts
+            .header-column
+              div
+                span µs lock
+        .body
           +row(namespaces)

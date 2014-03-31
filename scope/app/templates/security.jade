@@ -2,21 +2,18 @@ if users.length === 0
   include funnel/01-setup-auth
 else
 
-  .row
-    .col-md-6(style="padding-right: 0px;")
-      .overlay.select-list
-        .list-group
-         - for user in users
-          a.two-lines(href="#security/users/#{user.db}/#{user.user}")
-            .primary-line #{user.user} (#{user.db || 'ANY'})
-            .secondary-line #{JSON.stringify(user.roles)}
-         - for user in users
-          a.two-lines.selected(href="#security/users/#{user.db}/#{user.user}")
-            .primary-line #{user.user} (#{user.db || 'ANY'})
-            .secondary-line #{JSON.stringify(user.roles)}
-         - for role in roles
-          a.two-lines(href="#security/roles/#{role.db}/#{role.role}")
-            .primary-line #{role.role} (#{role.db || 'ANY'})
-            .secondary-line blah.
+  .row(style="padding-right: 0px;height: 100%")
+    .col-md-4.tool-panel(style="margin-left: 0;padding-right: 0px;padding: 0;")
+      .overlay.select-list(style="margin: 0;position: relative; width: 100%;left: 0; height: 100%;")
+        .list-group(style="max-height: 100%")
+          li.list-divider users
+          each user in users
+            a.two-lines(href="#security/users/#{user.db}/#{user.user}")
+              .primary-line #{user.user} (#{user.db || 'ANY'})
+              .secondary-line #{JSON.stringify(user.roles)}
+          li.list-divider roles
+          each role in roles
+            a.list-item(href="#security/roles/#{role.db}/#{role.role}")
+              | #{role.role} (#{role.db || 'ANY'})
 
     .col-md-6.details.list-group.list-group-item(style="border-left: 0px;")
