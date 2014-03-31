@@ -36,11 +36,8 @@ module.exports = Backbone.View.extend({
   }
 });
 
-var rolio = require('../templates/security/roles.json');
+var rolio = {};
 rolio.byName = {};
-rolio.roles.map(function(role){
-  rolio.byName[role.name] = role;
-});
 rolio.addToMatrix = function(matrix, database, name){
   // @todo: support custom role look ups.
   if(!rolio.byName[name]) return debug('unknown role', name);

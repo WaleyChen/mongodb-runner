@@ -19,6 +19,7 @@ module.exports = function(app){
   app.get('/api/v1/security/users', users, function(req, res, next){
     res.send(req.mongo.users);
   });
+
   app.get('/api/v1/security/users/:username',  function(req, res, next){
     req.mongo.admin().command({usersInfo: req.param('username'), showPrivileges: true}, {}, function(err, data){
       if(err) return next(err);
@@ -41,4 +42,15 @@ var users = function(req, res, next){
 
 var getRole = function(req, res, next){
   // db.getRole( "siteRole01", { showPrivileges: true } )
+};
+
+
+var roles = function(req, res, next){
+  debug('fetching roles');
+  req.mongo.admin().command({rolesInfo: 1, showPrivileges: 1, showBuiltinRoles: 1}, {}, function(err, data){
+    if(err) return next(err);
+    req.mongo.roles = data.documents[0].roles;
+    debug('roles found', req.mongo.roles);
+    next();
+  });
 };

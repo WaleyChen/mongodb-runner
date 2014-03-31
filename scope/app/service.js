@@ -89,18 +89,41 @@ Service.prototype.security = function(fn){
   });
 };
 
-Service.prototype.securityUsers = function(username, fn){
+Service.prototype.securityUsers = function(db, username, fn){
+  if(typeof db === 'function'){
+    fn = username;
+    username = null;
+    db = 'admin';
+  }
+
   if(typeof username === 'function'){
     fn = username;
     username = null;
   }
 
-  this.read('/security/users' + (username ? '/' + username : ''), function(err, data){
+  this.read('/security/' + db + '/users' + (username ? '/' + username : ''), function(err, data){
     if(err) return fn(err);
     fn(null, data);
   });
 };
 
+Service.prototype.securityRoles = function(db, role, fn){
+  if(typeof db === 'function'){
+    fn = db;
+    role = null;
+    db = 'admin';
+  }
+
+  if(typeof role === 'function'){
+    fn = role;
+    role = null;
+  }
+
+  this.read('/security/' + db + '/roles' + (role ? '/' + role : ''), function(err, data){
+    if(err) return fn(err);
+    fn(null, data);
+  });
+};
 // Get a list of log `line` objects.
 //
 // @param {String, default:global} optional log name to restrict to (default: global).

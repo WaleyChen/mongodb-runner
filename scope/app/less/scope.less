@@ -165,14 +165,19 @@
 
 .list-group, .list-tree {
   li:not(.list-nested-item),
-  li.list-nested-item > .list-item {
+  a:not(.list-nested-item),
+  li.list-nested-item > .list-item,
+  a.list-nested-item > .list-item {
     .text(normal);
     color: #000;
   }
 
+
   .generate-list-item-text-color(@class) {
     li:not(.list-nested-item).text-@{class},
-    li.list-nested-item.text-@{class} > .list-item {
+    a:not(.list-nested-item).text-@{class},
+    li.list-nested-item.text-@{class} > .list-item,
+    a.list-nested-item.text-@{class} > .list-item {
       .text(@class);
     }
   }
@@ -196,14 +201,16 @@
   .generate-list-item-status-color(@text-color-removed, removed);
 
   li:not(.list-nested-item).selected,
-  li.list-nested-item.selected > .list-item {
+  a:not(.list-nested-item).selected,
+  li.list-nested-item.selected > .list-item,
+  a.list-nested-item.selected > .list-item {
     .text(selected);
   }
 }
 
-.select-list ol.list-group,
-&.select-list ol.list-group {
-  li.two-lines {
+.select-list .list-group,
+&.select-list .list-group {
+  .two-lines {
     .secondary-line { color: @text-color-subtle; }
     &.selected .secondary-line {
       color: lighten(@text-color-subtle, 10%);
@@ -213,7 +220,7 @@
 
   // We want to highlight the background of the list items because we dont
   // know their size.
-  li.selected {
+  .selected {
     background-color: linear-gradient(rgba(83, 170, 231, 1.0), rgba(51, 142, 218, 1.0)) !important;
     &:before{ display: none; }
   }
@@ -224,7 +231,7 @@
     // pad in front of the text where the icon would be We'll pad the non-
     // active items with a 'fake' icon so other classes can pad the item
     // without worrying about the icon padding.
-    li:before {
+    li:before, a:before {
       content: '';
       background-color: transparent;
       position: static;
@@ -233,10 +240,10 @@
       height: @active-icon-size;
       width: @active-icon-size;
     }
-    > li:not(.active):before {
+    > li:not(.active):before, > a:not(.active):before {
       margin-right: @component-icon-padding;
     }
-    li.active {
+    .active {
       .octicon(check, @active-icon-size);
       &:before {
         margin-right: @component-icon-padding;
@@ -257,7 +264,7 @@
     margin-bottom: @component-padding/2;
   }
 
-  .list-group li {
+  .list-group li, .list-group a {
     padding-left: @component-padding/2;
   }
 }
@@ -296,19 +303,19 @@ ul.background-message {
   background-color: @overlay-background-color;
   padding: @component-padding;
   border: 1px solid @overlay-border-color;
-  box-shadow: 0 0 10px @base-border-color;
+  // box-shadow: 0 0 10px @base-border-color;
   border-radius: @component-border-radius;
 
   .editor.mini {
     margin-bottom: @component-padding;
   }
 
-  .select-list ol.list-group,
-  &.select-list ol.list-group {
+  .select-list .list-group,
+  &.select-list .list-group {
 
     background-color: rgba(249, 249, 249, 1.0);
 
-    li {
+    li, a {
       padding: 1px @component-padding;
       font-size: 11px;
       border-top: 1px solid @inset-panel-border-color;
@@ -333,7 +340,6 @@ ul.background-message {
 
   }
 }
-
 
 .panel {
   &.bordered {

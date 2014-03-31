@@ -206,26 +206,87 @@ module.exports.Log = List.extend({
   uri: '/log'
 });
 
-var User = Backbone.Model.extend({
+var Role = Backbone.Model.extend({
   defaults: {
-    _id: "admin.scopey",
-    user: "scopey",
-    db: "admin",
-    roles: [
-      {role: "hostManager", db: "admin"},
-      {role: "clusterMonitor", db: "admin"},
-      {role: "userAdminAnyDatabase", db: "admin"}
+    role : 'readAnyDatabase',
+    db : 'admin',
+    isBuiltin : true,
+    roles : [ ],
+    inheritedRoles : [ ],
+    privileges : [
+      {
+        resource: {db : '', collection : ''},
+        actions: ['collStats','dbHash','dbStats','find','killCursors','planCacheRead']
+      },
+      {
+        resource: {cluster : true},
+        actions: ['listDatabases']
+      },
+      {
+        resource: { db : '',  collection : 'system.indexes'},
+        actions: ['collStats', 'dbHash', 'dbStats', 'find', 'killCursors', 'planCacheRead']
+      },
+      {
+        resource: {db : '',  collection : 'system.js'},
+        actions: ['collStats','dbHash','dbStats','find','killCursors','planCacheRead']
+      },
+      {
+        resource: {db : '',collection : 'system.namespaces'},
+        actions: ['collStats','dbHash','dbStats','find','killCursors','planCacheRead']
+      }
+    ],
+    inheritedPrivileges : [
+      {
+        resource: {db : '',collection : ''},
+        actions: ['collStats', 'dbHash', 'dbStats', 'find', 'killCursors', 'planCacheRead']
+      },
+      {
+        resource: {cluster : true},
+        actions: ['listDatabases']
+      },
+      {
+        resource: {db : '', collection : 'system.indexes'},
+        actions: ['collStats','dbHash','dbStats','find','killCursors','planCacheRead']
+      },
+      {
+        resource: {db : '',collection : 'system.js'},
+        actions: [ 'collStats', 'dbHash', 'dbStats', 'find', 'killCursors', 'planCacheRead']
+      },
+      {
+        resource: {db : '', collection : 'system.namespaces'},
+        actions: ['collStats','dbHash','dbStats','find','killCursors','planCacheRead']
+      }
     ]
   },
   service: function(){
-    return {name: 'securityUsers', args: [this.get('_id').replace('admin.', '')]};
+    return {name: 'securityRoles', args: [this.get('db'), this.get('role')]};
+  }
+});
+
+var User = Backbone.Model.extend({
+  defaults: {
+    _id: 'admin.scopey',
+    user: 'scopey',
+    db: 'admin',
+    roles: [
+      {role: 'hostManager', db: 'admin'},
+      {role: 'clusterMonitor', db: 'admin'},
+      {role: 'userAdminAnyDatabase', db: 'admin'}
+    ]
+  },
+  service: function(){
+    return {name: 'securityUsers', args: [this.get('db'), this.get('user')]};
   }
 });
 
 module.exports.Security = Backbone.Model.extend({
   defaults: {
-    users: List.extend({model: User, service: 'users'}),
-    service: 'securityUsers'
+    users: List.extend({
+      model: User, service: 'securityUsers'
+    }),
+    roles: List.extend({
+      model: Role, service: 'securityRoles'
+    })
   },
   service: 'security'
 });
