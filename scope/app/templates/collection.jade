@@ -6,10 +6,13 @@ include mixins/cog
 - stats.index_size_per_document = (stats.index_size/stats.document_count);
 
 .row
-  .col-md-10(style="padding-right: 0;padding-top: 20px;")
-    h5(style="position:absolute;position: absolute;left: 40%;opacity: .7;") #{metric}
-    .collection-creek.mms
-    .explorer
+  .col-md-10
+    .collection-creek
+      .name #{collection.name}
+      ul.stats
+        li #{stats.index_count} indexes
+        li #{stats.document_count} docs
+    .explorer(style="margin-top: 200px;")
 
   .stats.col-md-2(style="padding-left: 0;padding-right: 0;")
     .panel.panel-default

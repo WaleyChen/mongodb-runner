@@ -341,10 +341,6 @@ body {
       th {
         border: 0;
         font-weight: normal;
-        opacity: 0.5;
-        -webkit-transform: rotate(-45deg);
-        white-space: nowrap;
-        text-align: left;
         padding: 0;
         margin: 0;
       }
@@ -546,6 +542,17 @@ mark, .mark {
   position: relative;
 }
 
+a.list-group-item.list-item {
+  .btn();
+  padding: @component-padding;
+}
+
+a.list-group-item.list-item:hover {
+  .btn();
+  padding: @component-padding;
+  background-color: @brand-primary;
+}
+
 .select-list ol.list-group,
 &.select-list ol.list-group {
   li.two-lines {
@@ -701,8 +708,16 @@ div > .inline-block:last-child, div > .inline-block-tight:last-child {
 
 .bordered {
   margin: 0;
-  padding: @component-padding;
   border-color: @base-border-color;
+}
+
+.panel-heading.bordered {
+  border: 1px solid @base-border-color;
+  border-bottom: 0px;
+}
+.panel-bottom.bordered {
+  border: 1px solid @base-border-color;
+  border-top: 0px;
 }
 
 .tool-panel {

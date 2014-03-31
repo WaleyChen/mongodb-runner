@@ -16,18 +16,18 @@ include mixins/bytes
         li #{stats.document_count} docs
 
 .row(style="margin-top: 40px;")
-  .col-md-6
-    .inset-panel
-      .panel-heading collections
-      .panel-bottom.padded
+  .col-md-4
+    .panel
+      .panel-heading.bordered collections
+      .panel-bottom.bordered
         ul.list-group
           for collection_name in database.collection_names
-            a.list-group-item(href='collection/#{database.name}/#{collection_name}') #{collection_name}
+            a.list-group-item.list-item.text-highlight(href='#collection/#{database.name}/#{collection_name}') #{collection_name}
 
 
-  .col-md-6
-    .inset-panel
-      .panel-heading storage
-      .panel-bottom.padded
-        .panel-body.donut
+  .col-md-4
+    .panel
+      .panel-heading.bordered storage
+      .panel-bottom.bordered
+        .panel-body.donut.list-item
 
