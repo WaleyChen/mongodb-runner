@@ -16,7 +16,7 @@ module.exports = Backbone.View.extend({
     this.top = new models.Top().on('sync', this.onTopData, this);
 
     this.metric = 'lock.count';
-    this.graph = creek('.collection-creek', {
+    this.graph = creek('.graph', {
       interpolation: 'step-after'
     });
   },
@@ -46,14 +46,14 @@ module.exports = Backbone.View.extend({
 
     this.graph.render();
 
-    $('.chosen-select').chosen({width: '100%',
-      no_results_text: 'No existing users or roles found matching'
-    }).trigger('chosen:open').on('change', function(e, data) {
-      var uri = 'collection/' + db + '/' + data.selected;
+    // $('.chosen-select').chosen({width: '100%',
+    //   no_results_text: 'No existing users or roles found matching'
+    // }).trigger('chosen:open').on('change', function(e, data) {
+    //   var uri = 'collection/' + db + '/' + data.selected;
 
-      debug('go to', uri);
-      this.router.navigate(uri, {trigger: true});
-    }.bind(this));
+    //   debug('go to', uri);
+    //   this.router.navigate(uri, {trigger: true});
+    // }.bind(this));
 
     donut('.donut', [
       {

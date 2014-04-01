@@ -5,6 +5,7 @@ include mixins/cog
 - stats.document_size_average = (stats.document_size/stats.document_count);
 - stats.index_size_per_document = (stats.index_size/stats.document_count);
 
+
 .row
   .col-md-10
     .collection-creek
@@ -12,6 +13,7 @@ include mixins/cog
       ul.stats
         li #{stats.index_count} indexes
         li #{stats.document_count} docs
+
     .explorer(style="margin-top: 200px;")
 
   .stats.col-md-2(style="padding-left: 0;padding-right: 0;")
