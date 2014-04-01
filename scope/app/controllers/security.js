@@ -38,6 +38,7 @@ var DetailView = Backbone.View.extend({
   show: function(data){
     debug(this + ' updating model ', data);
     this.set(data);
+    this.render();
   },
   // Router telling us to render, in which case we need to have the
   // parent circle back to us when our containing dom is ready.
@@ -52,13 +53,15 @@ var DetailView = Backbone.View.extend({
     debug('fetching and then waiting for parent');
     this.fetch();
 
-    this.router.trigger('route', 'security');
+    // this.router.trigger('route', 'security');
     this.parent.activate(this);
   },
   toString: function(){
     return 'DetailView('+this.type+')';
   },
-  deactivate: function(){},
+  deactivate: function(){
+    this.parent.deactivate();
+  },
   render: function(){
     this.$el = $('.details');
 
@@ -119,7 +122,7 @@ module.exports = Backbone.View.extend({
     }
     else if(users.length > 0){
       debug('switching to first user', users[0]);
-      this.userDetail.show(users[0].database, users[0].username);
+      this.userDetail.show(users[0]);
     }
     return this;
   }

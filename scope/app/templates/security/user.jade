@@ -1,10 +1,14 @@
-.panel.tool-panel.block
+//- .inline-block
+//-   h2 #{user.username}
+//-   h4 #{user.database}
+
+.block
   h3.padded Roles
   .panel-bottom.padded
     each role in user.roles
       a.btn.inline-block(href="#security/roles/#{role.db}/#{role.role}") #{role.db}.#{role.role}
 
-.panel.tool-panel.block
+.block
   h3.padded Action
   .panel-bottom
     each grant in user.inheritedPrivileges
@@ -12,9 +16,9 @@
         - hidden = {}
 
         if grant.resource.cluster
-          h3: code: span cluster wide
+          h3.padded: code: span cluster wide
         else
-          h3: code: span #{grant.resource.db || '<any database>'}.#{grant.resource.collection || '*'}
+          h3.padded: code: span #{grant.resource.db || '<any database>'}.#{grant.resource.collection || '*'}
         div(style="display: flex;flex-flow: row wrap;flex-direction: row;")
           each action in grant.actions
             - act = ACTIONS[action]
