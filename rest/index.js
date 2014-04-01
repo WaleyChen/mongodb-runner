@@ -49,8 +49,6 @@ function validate(){
 
 function connect(){
   app.set('io', require('socket.io').listen(server));
-  app.set('connect', 'mongodb://scopey:scopey@localhost');
-
   debug('connecting to mongod', app.get('connect'));
   MongoClient.connect(app.get('connect'), function(err, db){
     if(err) return console.log(err);

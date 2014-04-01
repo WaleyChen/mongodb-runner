@@ -54,6 +54,29 @@ npm test
 npm dist
 ```
 
+## demo
+
+
+    DEBUG=mg*,mongo* \
+      MG_BIN=/srv/mongo/bin/mongod \
+      MG_CONNECT=mongodb://localhost \
+      MG_DBPATH=~/.mongodb/wikipedia ./bin/mg.js;
+
+    ## Start listening to wikipedia edits to get real data
+    cd ~/imlucas/wikipedia-edit-stream && node example.js;
+
+    open http://localhost:3000/funnel.html;
+
+    DEBUG=mg*,mongo* \
+      MG_BIN=/srv/mongo/bin/mongod \
+      MG_CONNECT=mongodb://scopey:scopey@localhost \
+      MG_DBPATH=~/.mongodb/add-auth ./bin/mg.js;
+
+[@10gen/mongoscope](https://github.com/10gen/mongoscope)
+
+Packaged OSX binaries posted to [releases](https://github.com/10gen/mongoscope/releases)
+
+
 
 ## security
 
