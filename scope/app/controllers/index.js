@@ -14,7 +14,8 @@ module.exports = function(opts){
     ['top', 'top', new (require('./top'))()],
     ['replication', 'replication', new (require('./replication'))()],
     ['security', 'security', security],
-    ['security/users/:_id', 'security_user', security.details],
+    ['security/users/:database/:username', 'security_user', security.userDetail],
+    ['security/roles/:database/:role', 'security_role', security.roleDetail],
     ['collection/:database_name/:collection_name',  'collection', new (require('./collection'))()],
     ['database/:database_name',  'database', new (require('./database'))()]
 

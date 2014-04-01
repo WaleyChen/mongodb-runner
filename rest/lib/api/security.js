@@ -26,7 +26,7 @@ module.exports = function(app){
     req.mongo.admin().command({usersInfo: req.param('username'), showPrivileges: 1}, {}, function(err, data){
       if(err) return next(err);
 
-      res.send(data.documents[0].users);
+      res.send(data.documents[0].users[0]);
     });
   });
 
@@ -34,7 +34,7 @@ module.exports = function(app){
     req.mongo.admin().command({rolesInfo: req.param('role'), showPrivileges: 1, showBuiltinRoles: 1}, {}, function(err, data){
       if(err) return next(err);
 
-      res.send(data.documents[0].roles);
+      res.send(data.documents[0].roles[0]);
     });
   });
 

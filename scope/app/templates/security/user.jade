@@ -1,20 +1,42 @@
+.panel.tool-panel.block
+  h3.padded Roles
+  .panel-bottom.padded
+    each role in user.roles
+      a.btn.inline-block(href="#security/roles/#{role.db}/#{role.role}") #{role.db}.#{role.role}
 
-- l = null
-- byResource = {}
+.panel.tool-panel.block
+  h3.padded Action
+  .panel-bottom
+    each grant in user.inheritedPrivileges
+      .block
+        - hidden = {}
 
-for statement, _id in matrix
-  if l !== statement.resource
-    - byResource[statement.resource] = []
-    - l = statement.resource
+        if grant.resource.cluster
+          h3: code: span cluster wide
+        else
+          h3: code: span #{grant.resource.db || '<any database>'}.#{grant.resource.collection || '*'}
+        div(style="display: flex;flex-flow: row wrap;flex-direction: row;")
+          each action in grant.actions
+            - act = ACTIONS[action]
+            - if(act && act.level === 0) hidden[action] = 1
+            if act
+              if act.level === 1
+                div(style="flex: auto; width: 50%;").padded
+                  .inline-block.highlight.text-smaller #{action}
+                  p #{act.description}
+              if act.level === 2
+                div(style="flex: auto; width: 50%;").padded
+                  .inline-block.highlight-info.text-smaller #{action}
+                  p #{act.description}
+              if act.level === 3
+               div(style="flex: auto; width: 50%;").padded
+                  .inline-block.highlight-warning.text-smaller #{action}
+                  p #{act.description}
 
-  - byResource[statement.resource].push(statement.action)
+          - hiddenActions = Object.keys(hidden)
+          if hiddenActions.length > 0
+               div(style="flex: auto; width: 50%;").padded
+                h4.text-subtle.text-smaller #{hiddenActions.length} hidden
+                each action in hiddenActions
+                  span.text-subtle.inline-block #{action}
 
-h2 actions
-for actions, resource in byResource
-    ul.weld-item.list-unstyled
-      li
-        blockquote for any database, #{user._id} can:
-      for action in actions
-        li(style="padding-left: 40px;margin-bottom: 5px; padding-bottom: 5px;padding-top: 10px; border-bottom: 1px solid rgba(128, 127, 127, 0.2);")
-          .h4  #{action}
-          p &nbsp;&nbsp;This is used to lorem ipsum all day

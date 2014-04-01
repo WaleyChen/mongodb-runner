@@ -265,17 +265,11 @@ var Role = Backbone.Model.extend({
 
 var User = Backbone.Model.extend({
   defaults: {
-    _id: 'admin.scopey',
-    user: 'scopey',
-    db: 'admin',
-    roles: [
-      {role: 'hostManager', db: 'admin'},
-      {role: 'clusterMonitor', db: 'admin'},
-      {role: 'userAdminAnyDatabase', db: 'admin'}
-    ]
+    username: 'scopey',
+    database: 'admin'
   },
   service: function(){
-    return {name: 'securityUsers', args: [this.get('db'), this.get('user')]};
+    return {name: 'securityUsers', args: [this.get('database'), this.get('username')]};
   }
 });
 
@@ -292,3 +286,4 @@ module.exports.Security = Backbone.Model.extend({
 });
 
 module.exports.Security.User = User;
+module.exports.Security.Role = Role;

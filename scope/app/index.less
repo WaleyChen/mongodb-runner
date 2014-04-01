@@ -22,16 +22,20 @@ body {margin: 0;}
   color: @text-color;
   position: relative;
   background-color: @base-background-color;
+  border-bottom: 1px solid @base-border-color;
   .btn-group {
     .btn {
       display: inline-block;
       border-radius: 0;
+      border-right: 1px solid @base-border-color;
+      border-bottom: 1px solid @base-border-color;
       height: 39px;
       text-decoration: none;
       .transition(all 250ms ease);
       text-align: center;
       background-color: @base-background-color;
       background-image: none;
+      box-shadow: none;
 
       @media (max-width: @screen-xs){
         padding-left: 8px;
@@ -61,7 +65,7 @@ body {margin: 0;}
     .btn:last-child,
     .btn.selected:last-child,
     .dropdown-toggle {
-      border-right: none;
+      // border-right: none;
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
     }
@@ -85,6 +89,7 @@ body {margin: 0;}
   background-color: @base-background-color;
   background-image: none;
   color: fadeout(@text-color-subtle, 20%);
+  border-bottom: 1px solid @base-border-color;
 
   svg{
     height: 35px;
@@ -103,18 +108,54 @@ body {margin: 0;}
 #mongoscope {
   .workspace();
   background: @base-background-color;
+  border-top: 0px;
   margin-top: 38px;
   // box-shadow: 0px -1px 1px rgba(0, 0, 0, 0.1);
-  box-shadow: inset 0 1px 0 @background-color-highlight;
   height: 100%;
-  max-height: 100%;
+  // max-height: 100%;
   overflow-y: scroll;
   width: 100%;
+  padding-bottom: 38px;
 
   .row {
-    padding-top: @component-padding;
+    // padding-top: @component-padding;
     .clearfix();
   }
+}
+
+.security {
+  padding-right: 0px;
+  height: 100%;
+  .tool-panel {
+    // height: 100%;
+  }
+  .overlay.select-list {
+    border-top: 0;
+    height: 100%;
+    h2 {
+      padding-left: (@component-padding * 2);
+    }
+    .list-group {
+      li, a {
+        font-size: 13px;
+        padding-left: (@component-padding * 2);
+      }
+
+      a.two-lines,
+      a.list-item {
+        padding-left: (@component-padding * 4);
+      }
+      .list-divider {
+        .text(subtle);
+        background-color: @tool-panel-background-color;
+        border-top: 1px solid @tool-panel-border-color;
+      }
+      .list-divider:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+
 }
 
 // @table-border-color: 1px solid rgba(255, 255, 255, 0.1);
