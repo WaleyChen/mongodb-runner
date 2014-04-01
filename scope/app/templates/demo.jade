@@ -7,6 +7,11 @@ html(lang='en')
 
   body
     #toolbar
+      .btn-group.inline-block.pull-right
+        a.btn.inline-block.pull-right(href='')
+          span(class='icon glyphicon-pulse')
+          div.btn-label github
+
       span.logo.inline-block.pull-right(href="#")
         span.inline-block mongoscope
         svg.inline-block(viewBox="0, 0, 200, 200", version="1.1")
@@ -15,145 +20,134 @@ html(lang='en')
             path(d="M 108.0216 39.6247 C 109.9814 36.9572 117.8735 27.66 117.8735 26.0994 C 117.8735 20.2504 112.7211 10.3777 120.4214 12.2273 C 128.1217 14.0769 141.4273 24.2498 135.5389 27.4866 C 129.6504 30.7235 126.9327 24.77 123.309 30.7813 C 119.6853 36.7925 116.7532 41.8195 116.5146 44.1332 C 116.1749 47.4278 107.512 40.3183 108.0216 39.6247 Z")
             path(d="M 112 64.5 C 117.7454 62.7708 177.5 63.5 182.5 108.5 C 187.0829 149.7462 171.628 175.6394 168.5 182 C 166.9798 185.0911 68.0573 185.9565 65 182 C 48 160 64.5 174 62.5 169.5 C 60.5 165 45.5 172 41 163 C 32.8869 146.7738 24.8783 152.153 48 149 C 70 146 125 146 128 148 C 137.4217 154.2812 134.5 160.5 134.5 160.5 C 134.5 160.5 141.1787 162.9935 144.5 158.5 C 153 147 155.6667 133.8333 155.5 123.5 C 155.4022 117.434 156 95 144.5 91.5 C 132.0469 87.7099 96 89 95 92 C 94 95 107.7083 65.7917 112 64.5 Z")
 
-        .btn-group.inline-block
-            a.btn(href='')
-              span(class='icon glyphicon-pulse')
-              div.btn-label github
-
     #mongoscope
-      .col-md-6.col-md-push-3
+      .col-md-8.col-md-push-2.col-lg-6.col-lg-push-3.col-xl-4.col-xl-push-4.panel
+        section: .row
+          .col-md-6
+            h1 mongoscope
+
+        section: .row
+          .col-md-12: h2 Stack
+          .col-md-6
+            h3 REST
+            dl
+              dt
+                a(href="http://expressjs.com") expressjs
+              dd HTTP
+              dt
+                a(href="http://socket.io") socket.io
+              dd sockets
+
+          .col-md-6
+            h3 UI
+            dl
+              dt
+                a(href="", target="_blank") backbone
+              dd mvc
+              dt
+                a(href="", target="_blank") browserify
+              dd dependency resolution
+              dt
+                a(href="", target="_blank") jade
+              dd templating
+              dt
+                a(href="", target="_blank") bootstrap
+              dd css + js
+              dt
+                a(href="", target="_blank") less
+              dd css pre-processor
+              dt
+                a(href="", target="_blank") d3
+              dd data visualization
+
         section
-            .block.panel.panel-inset.bordered
-            code
-              pre.padded
-                |  # mg: launch mongod and mongorest.
-                |  DEBUG=mg*,mongo* \
-                |      MG_BIN=/srv/mongo/bin/mongod \
-                |      MG_CONNECT=mongodb://localhost \
-                |      MG_DBPATH=~/.mongodb/wikipedia ~/Downloads/mg_001;
+          .row: .col-md-12
+            h2 Architecture
 
-          .block.panel.panel-inset.bordered
-            code
-              pre.padded
-                |  # mg: launch mongod and mongorest.
-                |  DEBUG=mg*,mongo* \
-                |      MG_BIN=/srv/mongo/bin/mongod \
-                |      MG_CONNECT=mongodb://localhost \
-                |      MG_DBPATH=~/.mongodb/wikipedia ./bin/mg.js;
-          h3
-            a(href="http://localhost:29017", target="_blank") http://localhost:29017
+            p 3 nodejs processes + 1 mongod processes
 
-          .block.panel.panel-inset.bordered
-            code
-              pre.padded
-                |  # it's handy to use the actual dev server when
-                |  # slinging code though.
-                |  cd ~/mg/scope && npm start;
+          .row: .col-md-12.bordered.panel.padded.tool-panel
+            h3 mg
+            p launcher
 
-          h3
-            a(href="http://localhost:3000", target="_blank") http://localhost:3000
+            .col-md-4.bordered.panel.inset-panel
+              .col-md-12
+                h4 mongorest
+                p bridge wire protocol for http
+            .col-md-4.bordered.panel.inset-panel.col-md-push-2
+               .col-md-12.padded
+                  h4 mongodmon
+                  p like mongorunner in kernel
+
+                  .bordered.panel.tool-panel.col-md-12
+                    h5 mongod
+                    p bundled or existing
+
+        section .row
+          .row: .col-md-12
+            h2 Distribution
+            p built into nodejs, but no-one knows...
+            p: a(href="https://github.com/joyent/node/blob/master/src/node.js#L70", target="_blank")
+                @joyent/node/blob/master/src/node.js#L70
+          .row: .col-md-12: script(src="https://gist.github.com/imlucas/9915985.js")
+
+          .row: .col-md-12
+            h3 Binaries
+
+            p OSX binaries available on the&nbsp;
+              a(href="https://github.com/10gen/mongoscope/releases") releases page
+
+          .row: .col-md-12
+            h3 Running from Source
+
+            .block.panel
+              code
+                pre.padded
+                  | git clone git@github.com:10gen/mongoscope.git && \
+                  |  cd mongoscope && npm install;
+                  | # mg: launch mongod and mongorest.
+                  | DEBUG=mg*,mongo* \
+                  |     MG_BIN=/srv/mongo/bin/mongod \
+                  |     MG_CONNECT=mongodb://localhost \
+                  |     MG_DBPATH=~/.mongodb/wikipedia ./bin/mg.js;
+
+              h3.mono open &nbsp;
+                a(href="http://localhost:29017", target="_blank") http://localhost:29017
+
+            .block.panel
+              code
+                pre.padded
+                  |  # it's handy to use the actual dev server when
+                  |  # slinging code though.
+                  |  cd ~/mg/scope && npm start;
+
+              h3.mono open&nbsp;
+                a(href="http://localhost:3000", target="_blank")
+                  | http://localhost:3000
 
         section
-          h2 how's it look with real data though?
-          .block.panel.panel-inset.bordered
+          blockquote how's it look with real data though?
+          .block.panel
             code
               pre.padded
-                | cd ~/imlucas/wikipedia-edit-stream && DEBUG=* node example.js;
+                | git clone git@github.com:imlucas/wikipedia-edit-stream ~/;
+                | cd ~/wikipedia-edit-stream && npm install;
+                | DEBUG=* node example.js;
 
-          h3
-            a(href="http://localhost:3000/#database/dataset-wikipedia", target="_blank")
-              | http://localhost:3000/#database/dataset-wikipedia
+          h3.mono open&nbsp;
+            a(href="http://localhost:29017/#database/dataset-wikipedia", target="_blank")
+              | http://localhost:29017/#database/dataset-wikipedia
 
         section
           h2 funnel
-          h3
+          p
+            | because of read-only milestone, show prompt with shell commands
+            | for the user to run in terminal
+          h3.mono open&nbsp;
             a(href="http://localhost:3000/funnel.html", target="_blank") http://localhost:3000/funnel.html
 
         section
-          h2 stack
-          .block.panel.grid
-            .stack
-              h3 rest
-              ul
-                li expressjs
-                li socket.io
-            .stack
-              h3 ui
-              ul
-                li backbone
-                li browserify
-                li jade
-                li bootstrap
-                li less
-                li d3
-
-        section
-          h2 arch
-          h3
-          .block.panel
-            p 3 nodejs processes + 1 mongod processes
-            .bordered.panel.padded
-              h3 mg
-              p launcher
-              ul
-                li.bordered.panel.padded.inset-panel.block
-                  h4 mongorest
-                  p bridge wire protocol for http
-                li.bordered.panel.padded.inset-panel
-                  h4 mongodmon
-                  p like mongorunner in kernel
-                  ul.bordered.panel.padded.tool-panel
-                    li
-                      h5 mongod
-                      p bundled or existing
-
-          .block.panel.bordered.padded.inset-panel
-            h4.inline-block benefits
-            .inline-block-tight security
-            .inline-block-tight decoupled
-            .inline-block-tight extensible
-
-        section
-          h2 distribution
-          p built into nodejs, but no-one knows...
-          h3
-            a(href="https://github.com/joyent/node/blob/master/src/node.js#L70", target="_blank")
-              @joyent/node/blob/master/src/node.js#L70
-
-          :markdown
-            ```
-            // There are various modes that Node can run in. The most common two
-            // are running from a script and running the REPL - but there are a few
-            // others like the debugger or running --eval arguments. Here we decide
-            // which mode we run in.
-
-            if (NativeModule.exists('_third_party_main')) {
-              // To allow people to extend Node in different ways, this hook allows
-              // one to drop a file lib/_third_party_main.js into the build
-              // directory which will be executed instead of Node's normal loading.
-              process.nextTick(function() {
-                NativeModule.require('_third_party_main');
-              });
-            ```
-
-        section
-          :markdown
-            ### Packaged OSX binaries posted to [releases](https://github.com/10gen/mongoscope/releases)
-
-
-          img(src="http://www.jeffersonstolarship.com/wp-content/uploads/2010/09/oprah.gif")
-
-
-          h3 tinker
-          .block.panel.panel-inset.bordered
-            code
-              pre.padded
-                | git clone git@github.com:10gen/mongoscope.git && \
-                |   cd mongoscope && npm install;
-
-
-        section
           h2 gif demo
-          .block.panel.panel-inset.bordered
+          .block.panel
 
-            img(height="300", src="https://camo.githubusercontent.com/5099ab10d6307273602b547ecbc7c208d8dd95e9/687474703a2f2f7265636f726469742e636f2f627171306e396a764d4e2e676966")
+            img(width="100%", src="https://camo.githubusercontent.com/5099ab10d6307273602b547ecbc7c208d8dd95e9/687474703a2f2f7265636f726469742e636f2f627171306e396a764d4e2e676966")
