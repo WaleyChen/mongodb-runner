@@ -2,8 +2,9 @@ mixin cells(namespaces)
   each ns in namespaces
     .ns-column
       .column #{deltas[ns + '.total.count']}
-      .column #{deltas[ns + '.read.count'] || '-'}
+      //- .column #{deltas[ns + '.read.count'] || '-'}
       .column #{deltas[ns + '.insert.count']}
+      .column #{deltas[ns + '.update.count']}
       .column #{deltas[ns + '.lock.time']}µs
 
 mixin row(namespaces)
@@ -30,7 +31,7 @@ else
                 span ops
             .header-column
               div
-                span reads
+                span updates
             .header-column
               div
                 span inserts

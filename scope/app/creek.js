@@ -164,7 +164,7 @@ Creek.prototype.render = function(){
 
   this.paused = false;
 
-  $(this.svg.node().parentElement).parent().css({position: 'absolute'})
+  // $(this.svg.node().parentElement).parent().css({position: 'absolute'})
 
   this.tick();
   return this;
