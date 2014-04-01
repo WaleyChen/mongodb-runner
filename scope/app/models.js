@@ -263,6 +263,9 @@ var Role = Backbone.Model.extend({
   }
 });
 
+  - if(['local', 'config', 'local'].indexOf(grant.resource.collection) > -1) return '';
+  - if(['system.profile', 'system.indexes', ' system.js', 'system.namespaces'].indexOf(grant.resource.db) > -1) return '';
+
 var User = Backbone.Model.extend({
   defaults: {
     username: 'scopey',
@@ -270,6 +273,22 @@ var User = Backbone.Model.extend({
   },
   service: function(){
     return {name: 'securityUsers', args: [this.get('database'), this.get('username')]};
+  },
+  parse: function(data){
+    data.inheritedPrivileges.sort(function(a, b){
+      return a.actions.length - b.actions.length;
+    });
+
+    data.inheritedPrivileges
+
+    // Make these things friendlier...
+    // http://docs.mongodb.org/master/reference/privilege-actions/
+    data.privileges = {
+
+    };
+
+
+    return data;
   }
 });
 

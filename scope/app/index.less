@@ -2,6 +2,100 @@
 @import "./less/bootstrap/glyphicons.less";
 @import "./less/mongoscope/animation";
 @import "./less/mongoscope/charts";
+@import "./less/bootstrap/mixins/grid-framework";
+
+// HD
+@screen-xl: (@screen-md * @line-height-base);
+@screen-xl-min: @screen-xl;
+@container-xl: (@container-md * @line-height-base);
+@component-padding: @line-height-computed;
+
+.make-xl-column(@columns; @gutter: @grid-gutter-width) {
+  position: relative;
+  min-height: 1px;
+  padding-left:  (@gutter / 2);
+  padding-right: (@gutter / 2);
+
+  @media (min-width: @screen-lg-min) {
+    float: left;
+    width: percentage((@columns / @grid-columns));
+  }
+}
+.make-xl-column-offset(@columns) {
+  @media (min-width: @screen-lg-min) {
+    margin-left: percentage((@columns / @grid-columns));
+  }
+}
+.make-xl-column-push(@columns) {
+  @media (min-width: @screen-lg-min) {
+    left: percentage((@columns / @grid-columns));
+  }
+}
+.make-xl-column-pull(@columns) {
+  @media (min-width: @screen-lg-min) {
+    right: percentage((@columns / @grid-columns));
+  }
+}
+
+@media (min-width: @screen-xl-min) {
+  .make-grid(xl);
+}
+
+.container {
+  @media (min-width: @screen-xl-min) {
+    width: @container-xl;
+  }
+}
+
+.mono {
+  font-family: @font-family-monospace;
+}
+
+blockquote {
+  .panel;
+  .tool-panel;
+}
+dl{
+  padding-bottom: @component-padding;
+}
+dt {
+  // float: left;
+  // text-align: left;
+}
+dd {
+  // text-align: left;
+  padding-bottom: @component-padding;
+  display: inline-block;
+
+}
+
+.dl-tight {
+  dt {
+    width: 100px;
+  }
+  dd {
+    margin-left: 100px;
+    padding-bottom: (@component-padding / 2);
+  }
+}
+
+article {
+  .panel;
+  .padded;
+  .clearfix;
+  margin-top: @component-padding;
+  h2 {}
+  h3 {}
+
+
+  border-bottom: 1px solid @background-color-highlight;
+  section:first-child {
+    border-top: initial;
+      margin-top: @component-padding;
+  }
+}
+
+
 
 @mongo-green: #6ba442;
 
@@ -11,6 +105,30 @@
 @matrix-column-width: 40px;
 
 body {margin: 0;}
+
+.grid {
+  display: flex;
+  flex-flow: row wrap;
+  flex-direction: row;
+  align-items: stretch;
+  align-items: center;
+
+  > * {
+    flex: auto;
+  }
+  // .panel {
+  //   margin-right: @component-padding;
+  //   margin-bottom: @component-padding;
+  //   padding-right: initial;
+  // }
+
+  > *:last-child {
+    padding-right: initial;
+  }
+}
+.grid.halves > * {width: 50%;}
+.grid.thirds > * {width: 33.333%;}
+.grid.quarters > * {width: 25%;}
 
 #toolbar {
   position: fixed !important;

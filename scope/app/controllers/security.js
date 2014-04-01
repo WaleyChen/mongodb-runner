@@ -72,6 +72,8 @@ var DetailView = Backbone.View.extend({
     debug('render ' + this, ctx[this.type]);
 
     this.$el.html(this.tpl(ctx));
+
+    $('.pop').popover({container: this.$el});
   }
 });
 
