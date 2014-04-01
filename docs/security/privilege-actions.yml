@@ -1,0 +1,80 @@
+- addShard: {description: User can perform the `addShard` command., tags_cluster: 1,tags_command: 1, tags_shading: 1}
+- appendOplogNote: {description: User can append notes to the oplog., tags_cluster: 1,tags_replication: 1}
+- applicationMessage: {description: User can perform the `logApplicationMessage` command.,tags_cluster: 1, tags_command: 1, tags_server: 1}
+- authSchemaUpgrade: {description: User can perform the `authSchemaUpgrade` command.,tags_cluster: 1, tags_command: 1, tags_deployment: 1}
+- changeCustomData: {description: User can change the custom information of any user in the givenabase., tags_auth: 1}
+- changeOwnCustomData: {description: Users can change their own custom information.,tags_auth: 1}
+- changeOwnPassword: {description: Users can change their own passwords., tags_auth: 1}
+- changePassword: {description: User can change the password of any user in the given database., tags_auth: 1}
+- cleanupOrphaned: {description: User can perform the `cleanupOrphaned` command., tags_cluster: 1,tags_command: 1, tags_deployment: 1}
+- closeAllDatabases: {description: User can perform the `closeAllDatabases` command.,tags_cluster: 1, tags_command: 1, tags_server: 1}
+- collMod: {description: User can perform the `collMod` command., tags_command: 1, tags_server: 1}
+- collStats: {description: User can perform the `collStats` command., tags_command: 1,tags_diagnostic: 1}
+- compact: {description: User can perform the `compact` command., tags_command: 1, tags_server: 1}
+- connPoolStats: {description: User can perform the `connPoolStats` and `shardConnPoolStats`commands.,tags_cluster: 1, tags_command: 1, tags_diagnostic: 1}
+- connPoolSync: {description: User can perform the `connPoolSync` command., tags_cluster: 1,tags_command: 1, tags_server: 1}
+- convertToCapped: {description: User can perform the `convertToCapped` command., tags_command: 1,tags_server: 1}
+- cpuProfiler: {description: User can enable and use the CPU profiler., tags_cluster: 1,tags_deployment: 1}
+- createCollection: {description: User can perform the `db.createCollection` method.,tags_crud: 1}
+- createIndex: {description: Provides access to the `db.collection.createIndex` and the `createIndexes` command., tags_command: 1, tags_crud: 1}
+- createRole: {description: User can create new roles in the given database., tags_auth: 1}
+- createUser: {description: User can create new users in the given database., tags_auth: 1}
+- cursorInfo: {description: User can perform the `cursorInfo` command., tags_cluster: 1,tags_command: 1, tags_diagnostic: 1}
+- dbHash: {description: User can perform the `dbHash` command., tags_command: 1, tags_diagnostic: 1}
+- dbStats: {description: User can perform the `dbStats` command., tags_command: 1, tags_diagnostic: 1}
+- diagLogging: {description: User can perform the `diagLogging` command., tags_cluster: 1,tags_command: 1, tags_diagnostic: 1}
+- dropCollection: {description: User can perform the `db.collection.drop` method., tags_crud: 1}
+- dropDatabase: {description: User can perform the `dropDatabase` command., tags_command: 1,tags_server: 1}
+- dropIndex: {description: User can perform the `dropIndexes` command., tags_command: 1,tags_server: 1}
+- dropRole: {description: User can delete any role from the given database., tags_auth: 1}
+- dropUser: {description: User can remove any user from the given database., tags_auth: 1}
+- emptycapped: {description: User can perform the `emptycapped` command., tags_command: 1,tags_crud: 1}
+- enableProfiler: {description: User can perform the `db.setProfilingLevel` method.,tags_crud: 1}
+- enableSharding: {description: User can perform the `enableSharding` command., tags_cluster: 1,tags_command: 1, tags_shading: 1}
+- find: {description: User can perform the `db.collection.find` method., tags_read: 1}
+- flushRouterConfig: {description: User can perform the `flushRouterConfig` command.,tags_cluster: 1, tags_command: 1, tags_shading: 1}
+- fsync: {description: User can perform the `fsync` command., tags_cluster: 1, tags_command: 1,tags_server: 1}
+- getCmdLineOpts: {description: User can perform the `getCmdLineOpts` command., tags_cluster: 1,tags_command: 1, tags_diagnostic: 1}
+- getLog: {description: User can perform the `getLog` command., tags_cluster: 1, tags_command: 1,tags_diagnostic: 1}
+- getParameter: {description: Provides information about the server the MongoDB instance runs on., hostInfo: null, tags_cluster: 1, tags_command: 1, tags_server: 1}
+- getShardMap: {description: User can perform the `getShardMap` command., tags_cluster: 1,tags_command: 1, tags_shading: 1}
+- getShardVersion: {description: User can perform the `getShardVersion` command., tags_command: 1,tags_shading: 1}
+- grantRole: {description: User can grant any role in the database to any user from any database the system., tags_auth: 1}
+- indexStats: {description: User can perform the `indexStats` command., tags_command: 1,tags_diagnostic: 1}
+- inprog: {description: User can use the `db.currentOp` method to return pending and active operations., tags_cluster: 1, tags_deployment: 1}
+- insert: {description: User can perform the `insert` command., tags_command: 1, tags_write: 1}
+- invalidateUserCache: {description: Provides access to the `invalidateUserCache` command.,tags_cluster: 1, tags_command: 1, tags_deployment: 1}
+- killCursors: {description: Allow language drivers to disconnect themselves., hidden: 1,tags_crud: 1}
+- killop: {description: User can perform the `db.killOp` method., tags_cluster: 1, tags_deployment: 1}
+- listDatabases: {description: User can perform the `listDatabases` command., tags_cluster: 1,tags_command: 1, tags_diagnostic: 1}
+- listShards: {description: User can perform the `listShards` command., tags_cluster: 1,tags_command: 1, tags_shading: 1}
+- logRotate: {description: User can perform the `logRotate` command., tags_cluster: 1,tags_command: 1, tags_server: 1}
+- moveChunk: {description: User can perform the `moveChunk` command., tags_cluster: 1,tags_command: 1, tags_shading: 1}
+- netstat: {description: User can perform the `netstat` command., tags_cluster: 1, tags_command: 1,tags_diagnostic: 1}
+- planCacheRead: {description: User can perform the `planCacheListPlans` and `planCacheListQueryShapes` commands and the `PlanCache.getPlansByQuery` and `PlanCache.listQueryShapes` methods.,tags_command: 1, tags_deployment: 1}
+- planCacheWrite: {description: User can perform the `PlanCache.clear` and `PlanCache.clearPlansByQuery` commands, tags_command: 1, tags_deployment: 1}
+- reIndex: {description: User can perform the `reIndex` command., tags_command: 1, tags_server: 1}
+- remove: {description: User can perform the `db.collection.remove` method., tags_write: 1}
+- removeShard: {description: User can perform the `removeShard` command., tags_cluster: 1,tags_command: 1, tags_shading: 1}
+- renameCollectionSameDB: {description: 'Allows the user to rename collections on the current database using the `renameCollection` command. Apply this action to database resources. Additionally, the user must either *have* :authaction:`find` on the source collection or *not have* :authaction:`find` on the - destination collection. If a collection with the new name already exists, the user must also have the :authaction:`dropCollection` action on the destination collection.', tags_command: 1,tags_server: 1}
+- repairDatabase: {description: User can perform the `repairDatabase` command., tags_command: 1,tags_server: 1}
+- replSetConfigure: {description: User can configure a replica set., tags_cluster: 1,tags_replication: 1}
+- replSetGetStatus: {description: User can perform the `replSetGetStatus` command.,tags_cluster: 1, tags_command: 1, tags_replication: 1}
+- replSetHeartbeat: {description: User can perform the `replSetHeartbeat` command.,tags_cluster: 1, tags_command: 1}
+- replSetStateChange: {description: 'User can change the state of a replica set through the `replSetFreeze`, `replSetMaintenance`, `replSetStepDown`, and `replSetSyncFrom` commands.', tags_cluster: 1, tags_command: 1, tags_replication: 1}
+- resync: {description: User can perform the `resync` command., tags_cluster: 1, tags_command: 1,tags_replication: 1}
+- revokeRole: {description: User can remove any role from any user from any database in the system., tags_auth: 1}
+- serverStatus: {description: User can perform the `serverStatus` command., tags_cluster: 1,tags_command: 1, tags_diagnostic: 1}
+- setParameter: {description: User can perform the `setParameter` command., tags_cluster: 1,tags_command: 1, tags_server: 1}
+- shardingState: {description: User can perform the `shardingState` command., tags_cluster: 1,tags_command: 1, tags_shading: 1}
+- shutdown: {description: User can perform the `shutdown` command., tags_cluster: 1,tags_command: 1, tags_server: 1}
+- splitChunk: {description: User can perform the `splitChunk` command., tags_cluster: 1,tags_command: 1, tags_shading: 1}
+- splitVector: {description: User can perform the `splitVector` command., tags_cluster: 1,tags_command: 1, tags_shading: 1}
+- storageDetails: {description: User can perform the `storageDetails` command., tags_command: 1,tags_deployment: 1}
+- top: {description: User can perform the `top` command., tags_cluster: 1, tags_command: 1,tags_diagnostic: 1}
+- touch: {description: User can perform the `touch` command., tags_cluster: 1, tags_command: 1,tags_server: 1}
+- unlock: {description: User can perform the `db.fsyncUnlock` method., tags_cluster: 1,tags_crud: 1}
+- update: {description: User can perform the `update` command., tags_command: 1, tags_write: 1}
+- validate: {description: User can perform the `validate` command., tags_command: 1,tags_diagnostic: 1}
+- viewRole: {description: User can view information about any role in the given database.,tags_auth: 1}
+- viewUser: {description: User can view the information of any user in the given database.,tags_auth: 1}
