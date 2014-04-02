@@ -282,14 +282,6 @@ body {margin: 0;}
   }
 }
 
-section .logo {
-  svg{
-    path {
-      stroke-width: 1;
-    }
-  }
-}
-
 // ## app container
 #mongoscope {
   .workspace();
@@ -304,7 +296,6 @@ section .logo {
   padding-bottom: 38px + 20px;
 
   .row {
-    // padding-top: @component-padding;
     .clearfix();
   }
   .overlay {
@@ -312,7 +303,15 @@ section .logo {
   }
 }
 
+.btn {
+  .btn-icon {
+    padding-right: @component-padding;
+    .text-subtle;
+  }
+}
+
 .security {
+  height: 100%;
   .block {
     padding-top: (@component-padding * 2);
     border-bottom: 1px solid @background-color-highlight;
@@ -346,7 +345,6 @@ section .logo {
         .text(subtle);
         font-size: 80%;
         cursor: initial;
-        // font-weight: bold;
         background-color: @tool-panel-background-color;
         border-top: 1px solid @tool-panel-border-color;
       }
@@ -355,31 +353,31 @@ section .logo {
       }
     }
   }
+  .panel-heading {
+    margin-left: -(@component-padding * 1.5);
+    padding-left: (@component-padding * 1.5);
+  }
+  table.grants {
+    width: 100%;
+    table-layout: auto;
+    word-break: normal;
 
+    td {
+      border-bottom: 1px dotted lighten(@base-border-color, 20%);
+      padding: (@component-padding / 2) (@component-padding * 1.5);
+    }
+
+    td.tags {
+      width: 260px;
+      text-align: right;
+    }
+    tr:last-child{
+      td {
+        border-bottom: 0;
+      }
+    }
+  }
 }
-
-// @table-border-color: 1px solid rgba(255, 255, 255, 0.1);
-// .table {
-//   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-//   thead {
-//     tr {
-//       th {
-//         border: 0;
-//         font-weight: normal;
-//         padding: 0;
-//         margin: 0;
-//       }
-//     }
-//   }
-//   tbody {
-//     td {
-//       border-top: 1px solid rgba(255, 255, 255, 0.1);
-//       font-weight: 600;
-//       padding: 0;
-//       margin: 0;
-//     }
-//   }
-// }
 
 @import "./less/scope";
 @import "./less/themes/atom-light";

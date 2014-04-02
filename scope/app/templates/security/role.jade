@@ -1,25 +1,16 @@
-mixin blurb(action, hidden)
-  - if(action.level === undefined) action.level = 1;
-  - if(action.level === 0) return hidden[action._id] = action;
-  tr
-    //- dt #{action.name || action._id}
-    td(style="border-bottom: 1px dotted rgba(0, 0, 0, 0.2);padding-top: 5px;padding-bottom: 5px;") #{action.description}
-    td(style="width: 240px;text-align: right;border-bottom: 1px dotted rgba(0, 0, 0, 0.2); padding-top: 5px;padding-bottom: 5px;")
-      each tag in action.tags
-        span.text-smaller.text-subtle.inline-block #{tag}
-      span.glyphicon.glyphicon-tags.inline-block.text-subtle
+include ../mixins/security
 
 h2 #{role.isBuiltin ? 'Builtin Role' : 'Custom Role'}: #{role.role}
 
 div
   each grant in role.grants
     - hidden = {}
-    .bordered.panel(style="margin-bottom: 20px;")
+    .panel(style="margin-bottom: 20px;")
       .panel-heading.mono #{JSON.stringify(role.resource) || 'For any collection in any database'}
-      .panel-body.padded
-        table.table.table-striped(style="width: 100%")
+      .panel-body
+        table.grants
            each action in grant.actions
-            +blurb(action, hidden)
+            +security_row(action, hidden)
 
       .panel-footer.padded(style="#{Object.keys(hidden).length === 0 ? 'display: none' : ''}")
         a.pop.subtle(data-toggle="popover", data-placement="right",

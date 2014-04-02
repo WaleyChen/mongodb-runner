@@ -1,0 +1,48 @@
+mixin security_naturalize(resource)
+  - message = ''
+  - if(resource.cluster){
+  -   message = 'For the deployment';
+  - } else if(resource.collection && resource.db){
+  -   message = 'On ' + resource.db + '.' + resource.collection;
+  - } else {
+  -   if(!resource.collection){
+  -     message += 'On any collection';
+  -   } else {
+  -      message += 'On the ' + resource.collection + ' collection';
+  -   }
+  -   if(!resource.db){
+  -     message += ' in any database';
+  -   } else {
+  -     message += ' in the ' + resource.db + ' database';
+  -   }
+  - }
+  | #{message}
+
+mixin security_row(action, hidden)
+  - if(action.level === undefined) action.level = 1;
+  - if(action.level === 0) return hidden[action._id] = action;
+  tr
+    td #{action.description}
+    td.tags
+      each tag in action.tags
+        span.text-smaller.text-subtle.inline-block #{tag}
+      span.glyphicon.glyphicon-tags.inline-block.text-subtle
+
+mixin security_grantBox(grant)
+  - hidden = {}
+  .panel(style="margin-bottom: 20px;")
+    .panel-heading
+      .mono.pull-right #{JSON.stringify(grant.resource)}
+      +security_naturalize(grant.resource)
+
+
+    .panel-body
+      table.grants
+        each action in grant.actions
+          +security_row(action, hidden)
+
+        tr(style="#{Object.keys(hidden).length === 0 ? 'display: none' : ''}")
+            td(colspan="2")
+              a.pop.subtle(data-toggle="popover", data-placement="right", data-title="low priority actions"
+          data-content="#{Object.keys(hidden).join('\n')}") #{Object.keys(hidden).length} low priority
+

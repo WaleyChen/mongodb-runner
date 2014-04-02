@@ -2,10 +2,9 @@ if users.length === 0
   include funnel/01-setup-auth
 else
 
-  .row.security
-    .col-md-3.tool-panel(style="margin-left: 0;padding-right: 0px;padding: 0;")
-      .overlay.select-list(style="margin: 0;position: relative; width: 100%;left: 0; height: 100%;")
-        h2 Security
+  .row.security(style="height: 100%;")
+    .col-md-3.tool-panel(style="margin-left: 0;padding-right: 0px;padding: 0;height: 100%;")
+      .overlay.select-list(style="margin: 0;position: relative; width: 100%;left: 0; height: 100%;border-bottom: 0; border-radius: 0;")
         .list-group(style="max-height: 100%")
           li.list-divider Users
           each user in users
