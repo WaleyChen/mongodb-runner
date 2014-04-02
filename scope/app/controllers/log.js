@@ -18,7 +18,6 @@ module.exports = Backbone.View.extend({
   },
   deactivate: function(){},
   render: function(){
-    debug('now', moment().format('h:mm:ss'))
     this.$el.html(this.tpl({moment: moment,
       lines: this.log.toJSON()}));
   }

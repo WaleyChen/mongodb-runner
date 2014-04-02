@@ -1,11 +1,20 @@
-.panel.inset-panel.bordered
+.panel
   .col-md-8
-    .graph
+    .graph(id='graph-#{graphId}')
   .col-md-4
     .block
       a(href='#database/#{database.name}')
         h2 #{database.name}
+        .metric-name #{metric}
+        .metric-picker
+        .metric-value -
         .stats
-          .inline-block-tight 8 collections
-          .inline-block-tight 27 indexes
-          .inline-block-tight 120 gb
+          .inline-block-tight
+              .stat-value(data-stat="collection_count") -
+              .stat-label collections
+          .inline-block-tight
+              .stat-value(data-stat="index_count") -
+              .stat-label indexes
+          .inline-block-tight
+              .stat-value(data-stat="document_count") -
+              .stat-label documents

@@ -12,65 +12,123 @@ module.exports = Backbone.View.extend({
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);
 
-    this.database = new models.Database().on('sync', this.render, this);
-    this.top = new models.Top().on('sync', this.onTopData, this);
-
-    this.metric = 'lock.count';
-    this.graph = creek('.graph', {
-      interpolation: 'step-after'
-    });
-  },
-  onTopData: function(){
-      var key =  [
-        this.database.get('name'),
-        this.metric].join('.'),
-      locks = this.top.get('deltas')[key];
-
-    this.graph.inc(locks);
+    this.summary = new Summary();
+    this.database = this.summary.database;
   },
   activate: function(name){
-    this.database.set({name: name}, {silent: true});
-    this.database.fetch();
-
-    this.top.subscribe();
+    debug('activate', name);
+    this.summary.activate(name);
+    this.render();
   },
-  deactivate: function(){},
+  deactivate: function(){
+    this.summary.deactivate();
+  },
   render: function(){
-    var db = this.database.get('name');
+    debug('render database');
+    this.$el = $('#mongoscope');
+    this.el = this.$el.get(0);
 
     this.$el.html(this.tpl({
       'database': this.database.toJSON(),
       'host': models.instance.toJSON().host,
-      'metric': this.metric
-    }));
-
-    this.graph.render();
-
-    // $('.chosen-select').chosen({width: '100%',
-    //   no_results_text: 'No existing users or roles found matching'
-    // }).trigger('chosen:open').on('change', function(e, data) {
-    //   var uri = 'collection/' + db + '/' + data.selected;
-
-    //   debug('go to', uri);
-    //   this.router.navigate(uri, {trigger: true});
-    // }.bind(this));
-
-    donut('.donut', [
-      {
-        name: 'Documents',
-        size: this.database.get('stats').document_size,
-        count: this.database.get('stats').document_count,
-        className: 'documents'
-      },
-      {
-        name: 'Indexes',
-        size: this.database.get('stats').index_size,
-        count: this.database.get('stats').index_count,
-        className: 'indexes'
-      }
-    ], {
-      title: '0.17%'
-    });
+    })).find('.summary').html(this.summary.render().el);
+    this.summary.draw();
   }
 });
 
+var Summary = module.exports.Summary = Backbone.View.extend({
+  tpl: require('../templates/pulse/database.jade'),
+  initialize: function(opts){
+    this.database = new models.Database(opts)
+      .on('sync', this.update, this);
+
+    this.top = models.top;
+    this.metric = 'lock.count';
+    this.$metric = null;
+
+    this.graph = creek('#graph-' +  this.database.cid, {interpolation: 'step-after'});
+  },
+  onTopData: function(){
+    if(!this.top.get('deltas')) return this;
+    var k = this.database.get('name') + '.' + this.metric,
+      delta = this.top.get('deltas')[k];
+
+    this.graph.inc(delta);
+    if(this.$metric){
+      this.$metric.text(this.graph.value);
+    }
+  },
+  activate: function(name){
+    if(name){
+      this.database.set({name: name});
+    }
+
+    this.top
+      .activate()
+      .on('sync', this.onTopData, this);
+
+    this.database.fetch();
+    return this;
+  },
+  update: function(){
+    debug('update summary');
+    var provider = this.database.get('stats');
+
+    this.$el.find('.stats .stat-value').each(function(){
+      var el = $(this),
+        label = el.siblings('.stat-label'),
+        text = label.text(),
+        val = provider[el.data('stat')];
+
+      debug('updating stat', el.data('stat'), val, el);
+      el.html(val);
+
+      if(val === 1){
+        text = text.substring(0, text.length - 1);
+        if(text.charAt(text.length - 1) === 'e'){
+          text = text.substring(0, text.length - 1);
+        }
+        label.text(text);
+      }
+    });
+
+    if(this.$el.find('.donut')){
+      debug('drawing donut');
+      donut('.donut', [
+        {
+          name: 'Documents',
+          size: this.database.get('stats').document_size,
+          count: this.database.get('stats').document_count,
+          className: 'documents'
+        },
+        {
+          name: 'Indexes',
+          size: this.database.get('stats').index_size,
+          count: this.database.get('stats').index_count,
+          className: 'indexes'
+        }
+      ], {
+        title: ''
+      });
+    }
+  },
+  deactivate: function(){
+    this.top
+      .deactivate()
+      .off('sync', this.onTopData, this);
+    return this;
+  },
+  draw: function(){
+    this.graph.draw();
+    this.$metric = this.$el.find('.metric-value');
+  },
+  render: function(){
+    debug('render summary');
+    this.$el.html(this.tpl({
+      database: this.database.toJSON(),
+      metric: this.metric,
+      graphId: this.database.cid
+    }));
+    return this;
+  }
+});

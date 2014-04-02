@@ -7,16 +7,8 @@ module.exports = function(app){
   app.get('/api/v1/log', get);
   app.get('/api/v1/log/:name', get);
 
-  var io = app.get('io'),
-    log = smongo.createLogStream(app.get('db').admin());
-
-  io.sockets.on('connection', function(socket){
-    socket.on('/log', function(){
-      log.on('data', function(lines){
-        socket.emit('log', lines);
-      });
-    });
-  });
+  smongo.createLogStream(app.get('db').admin())
+    .socketio('/log', app.get('io'));
 };
 
 var get = module.exports.get = function(req, res, next){

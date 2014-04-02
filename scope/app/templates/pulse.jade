@@ -24,19 +24,19 @@ else
       .databases
 
     .col-md-3
-      .block.panel.padded.text-smaller
-        .block
-          a.text-subtle(style="font-size: 120%;" href=instance.build.commit_url,
-            title="View commit #{instance.build.commit.substr(0, 8)} on github") #{instance.build.version}
-          +health_bar(instance.build)
-          hr
-          .block.text-smaller.panel
-            div #{instance.host.hostname}
-            .inline-block-tight.text-highlight #{instance.host.os}
-            .inline-block-tight.text-highlight
-              +bytes(instance.host.memory_bits)
-            .inline-block-tight.text-highlight #{instance.host.cpu_cores_physical} Cores
-            div
-              div #{instance.host.cpu_string}
-              div #{instance.host.system_time}
-                span.glyphicon.glyphicon-time(style="font-size: 80%; left: 4px;")
+      //- .block.panel.padded.text-smaller
+      //-   .block
+      //-     a.text-subtle(style="font-size: 120%;" href=instance.build.commit_url,
+      //-       title="View commit #{instance.build.commit.substr(0, 8)} on github") #{instance.build.version}
+      //-     +health_bar(instance.build)
+      //-     hr
+      //-     .block.text-smaller.panel
+      //-       div #{instance.host.hostname}
+      //-       .inline-block-tight.text-highlight #{instance.host.os}
+      //-       .inline-block-tight.text-highlight
+      //-         +bytes(instance.host.memory_bits)
+      //-       .inline-block-tight.text-highlight #{instance.host.cpu_cores_physical} Cores
+      //-       div
+      //-         div #{instance.host.cpu_string}
+      //-         div #{instance.host.system_time}
+      //-           span.glyphicon.glyphicon-time(style="font-size: 80%; left: 4px;")

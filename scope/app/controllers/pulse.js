@@ -4,46 +4,8 @@ var Backbone = require('Backbone'),
   $ = Backbone.$,
   models = require('../models'),
   creek = require('../creek'),
-  debug = require('debug')('mg:scope:pulse');
-
-var DatabasePulseView = Backbone.View.extend({
-  tpl: require('../templates/pulse/database.jade'),
-  initialize: function(opts){
-    this.model = new models.Database({name: opts.name});
-    debug('new database view for', opts);
-
-    this.top = models.top;
-    this.metric = 'lock.count';
-
-    // this.graph = creek('.graph', {interpolation: 'step-after'});
-  },
-  onTopData: function(){
-    if(!this.top.get('deltas')) return this;
-    var k = this.model.get('name') + '.' + this.metric,
-      delta = this.top.get('deltas')[k];
-    debug('top: ' + k, delta);
-    // this.graph.inc(delta);
-  },
-  activate: function(){
-    debug('adding top data listener');
-    this.top.on('sync', this.onTopData, this);
-    return this;
-  },
-  deactivate: function(){
-    debug('removing top data listener');
-    this.top.off();
-    this.top.deactivate();
-    return this;
-  },
-  render: function(){
-    this.$el.html(this.tpl({
-      database: this.model.toJSON(),
-      metric: this.metric
-    }));
-    this.top.activate('sync', this.onTopData);
-    return this;
-  }
-});
+  debug = require('debug')('mg:scope:pulse'),
+  DatabasePulseView = require('./database').Summary;
 
 module.exports = Backbone.View.extend({
   tpl: require('../templates/pulse.jade'),
@@ -97,10 +59,14 @@ module.exports = Backbone.View.extend({
         return new DatabasePulseView({name: name});
       });
     }
-    this.$el.find('.databases').append(this.databases.map(function(database){
 
+    this.$el.find('.databases').append(this.databases.map(function(database){
       return database.activate().render().el;
     }));
+
+    this.databases.map(function(database){
+      database.draw();
+    });
   }
 });
 

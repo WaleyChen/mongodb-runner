@@ -40,7 +40,7 @@ function Creek(opts){
 }
 
 Creek.prototype.layout = function(){
-  var newWidth = $(this.svg.node().parentElement).parent().parent().width(),
+  var newWidth = $(this.svg.node().parentElement).width(),
     delta = this.width - newWidth;
 
   this.width = newWidth;
@@ -66,9 +66,10 @@ Creek.prototype.layout = function(){
   return this;
 };
 
-Creek.prototype.render = function(){
+Creek.prototype.draw = function(){
   this.clipId = ('clip-' + Math.random()).replace('.', '');
   this.selection = d3.select(document.querySelector(this.selector));
+
   var self = this, series;
 
   this.axisOffset = 0;
@@ -90,8 +91,7 @@ Creek.prototype.render = function(){
       .attr('transform', 'translate(0, 8)');
 
   // Manually set the first time and call layout, which keeps code in one spot.
-  this.width = $(this.svg.node().parentElement).parent().parent().width();
-
+  this.width = $(this.svg.node().parentElement).width();
   this.layout();
   $(window).resize(_.debounce(this.layout.bind(this), 300));
 
@@ -190,7 +190,7 @@ Creek.prototype.tick = function(){
   if(this.paused === true) return this;
 
   this.data.push(this.value);
-  this.value = 0;
+  this.value = 2;
   this.data.shift();
 
   var max = d3.max(this.data);
@@ -229,12 +229,13 @@ Creek.prototype.tick = function(){
   // Move the whole world over to expose the next value
   this.area.transition()
     .duration(this.duration)
-    .ease('linear');
+    .ease('linear')
+    .attr('transform', 'translate(' + this.scales.x(this.now - (this.scrollback - 1) * this.duration) + ')');
 
   this.line.transition()
     .duration(this.duration)
     .ease('linear')
-    // .attr('transform', 'translate(' + self.scales.x(self.now - (self.scrollback - 1) * self.duration) + ')')
+    .attr('transform', 'translate(' + this.scales.x(this.now - (this.scrollback - 1) * this.duration) + ')')
 
   this.svg.transition()
     .duration(this.duration)

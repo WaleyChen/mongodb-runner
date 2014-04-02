@@ -15,7 +15,7 @@
     .name, .second, .ms{
       float: left;
       color: @text-color-subtle;
-      visibility: hidden;
+      opacity: 0.2;
     }
 
     .name {
@@ -39,20 +39,20 @@
     margin-top: 20px;
     padding-top: 10px;
     .name {
-      visibility: visible;
+      opacity: 1;
     }
   }
   .line.group-by-second {
     border-right: 4px solid @base-border-color;
     margin-top: 20px;
     .second {
-      visibility: visible;
+      opacity: 1;
     }
   }
   .line.group-by-ms {
     border-right: 4px solid @base-border-color;
     .ms {
-      visibility: visible;
+      opacity: 1;
     }
   }
   .line:first-child {

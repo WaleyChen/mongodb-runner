@@ -4,7 +4,7 @@ include mixins/bytes
 - stats.extent_used_size = stats.document_size + stats.index_size
 - stats.extent_free_size = stats.storage_size - stats.extent_used_size
 - stats.extent_size = stats.storage_size / stats.extent_count
-- host.disk_used = host.disk_total - host.disk_free
+//- - host.disk_used = host.disk_total - host.disk_free
 
 .row
   .block.col-md-3
@@ -17,7 +17,8 @@ include mixins/bytes
   .col-md-9
     .row
       .col-md-12
-        .graph
+        .summary
+
     .row
       .col-md-6
         .panel.bordered
@@ -25,7 +26,6 @@ include mixins/bytes
           .panel-bottom.bordered
               for collection_name in database.collection_names
                 a.padded.text-highlight(href='#collection/#{database.name}/#{collection_name}') #{collection_name}
-
 
       .col-md-6
         .panel.tool-panel.bordered

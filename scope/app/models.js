@@ -7,7 +7,10 @@ var Backbone = require('backbone'),
   debug = require('debug')('mg:scope:models');
 
 // singletons.
-var service, settings, instance, top;
+var service,
+  settings,
+  instance,
+  top;
 
 module.exports = function(opts){
   module.exports.settings = settings = new Settings(opts);
@@ -41,6 +44,7 @@ module.exports.Database = Model.extend({
         data.collection_names.splice(i, 1);
       }
     }
+    data.stats.collection_count = data.collection_names.length;
     return data;
   },
   defaults: {

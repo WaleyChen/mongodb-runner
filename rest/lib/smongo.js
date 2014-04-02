@@ -65,6 +65,43 @@ CommandStream.prototype.sample = function(fn){
   });
 };
 
+CommandStream.prototype.socketio = function(uri, io){
+  this.subscribers = null;
+  this.paused = false;
+  this.uri = uri;
+
+  var self = this;
+  io.sockets.on('connection', function(socket){
+    socket.on(uri, function(){
+        if(self.subscribers === null){
+          self.on('data', function(data){
+            var ids = Object.keys(self.subscribers);
+            debug('pushing to ' + ids.length + ' subscribers');
+
+            ids.map(function(id){
+              self.subscribers[id].emit(uri, data);
+            });
+          });
+          self.subscribers = {};
+          debug('got initial connection');
+        }
+        self.subscribers[socket.id] = socket;
+      })
+      .on(uri + '/unsubscribe', function(){
+        if(self.subscribers[socket.id]){
+          debug('unsubscribing');
+          delete self.subscribers[socket.id];
+        }
+      }).on('disconnect', function(){
+        debug('disconnect');
+        if(self.subscribers !== null && self.subscribers[socket.id]){
+          delete self.subscribers[socket.id];
+        }
+      });
+  });
+  return this;
+};
+
 function TopStream(db, opts){
   opts = opts || {};
   this.prev = null;
