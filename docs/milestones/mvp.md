@@ -18,19 +18,19 @@
   - [x] shell prompt to [create admin user][create-admin] `2h`
   - [x] `mg` starts mongod with `--auth` `#auth` `1h`
   - [x] security tab `#auth` `4hr`
-  - [ ] view a list of users `#auth` `2h`
-  - [ ] view roles `#auth` `2h`
-  - [ ] view the [action matrix][user-actions] for a user or role `#auth` `4h`
-  - [ ] user actions contain friendly descriptions extracted from @mongodb/docs
+  - [x] view a list of users `#auth` `2h`
+  - [x] view roles `#auth` `2h`
+  - [x] view the [action matrix][user-actions] for a user or role `#auth` `4h`
+  - [x] user actions contain friendly descriptions extracted from @mongodb/docs
 - [ ] databases list has quick stats `#pulse` `2h`
-- [ ] stream `currentOp` `#pulse` `2h`
-- [ ] finish bootloader wiring to enable auto ui updating `2h`
 
 [create-admin]: http://docs.mongodb.org/manual/tutorial/add-user-administrator/
 [user-actions]: http://docs.mongodb.org/master/reference/privilege-actions/#security-user-actions
 
 ## Backlog
 
+- [ ] stream `currentOp` `#pulse` `2h`
+- [ ] finish bootloader wiring to enable auto ui updating `2h`
 
 ## Icebox
 
