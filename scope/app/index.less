@@ -194,6 +194,13 @@ body {margin: 0;}
       background: @brand-primary;
     }
   }
+  .btn-group.pull-right {
+    .btn:last-child,
+    .btn.selected:last-child,
+    .dropdown-toggle {
+      border-right: none;
+    }
+  }
   .logo {
     float: right;
     text-align: center;
@@ -214,26 +221,51 @@ body {margin: 0;}
       }
     }
   }
+  .dropdown {
+    margin-right: @component-padding;
+    .dropdown-menu {
+      margin: 0;
+      margin-left: -200px;
+      border-top: none;
+      border-top-right-radius: @component-border-radius;
+      border-bottom-right-radius: @component-border-radius;
+      background-color: @inset-panel-background-color;
+    }
+  }
 }
 
-// .ghost-logo {
-//   h1{
-//     font-size: 36px;
-//     line-height: 40px;
-//     color: fadeout(@text-color-subtle, 80%);
-//     .inline-block;
-//   }
-//   svg{
-//     height: 80px;
-//     width: 80px;
-//     .inline-block;
-//     path {
-//       stroke-width: 2px;
-//       stroke: fadeout(@text-color-subtle, 95%);
-//       fill: fadeout(@text-color-subtle, 80%);
-//     }
-//   }
-// }
+#status {
+  position: fixed;
+  bottom: 0;
+  height: 20px;
+  width: 100%;
+  z-index: 1201;
+  border-top: 1px solid @base-border-color;
+  color: @text-color;
+  background-color: @base-background-color;
+  .logo {
+    float: right;
+    text-align: center;
+    line-height: 14px;
+    display: inline-block;
+    border-radius: 0;
+    height: 18px;
+    text-decoration: none;
+    border-bottom: 1px solid @base-border-color;
+    opacity: 0.4;
+    font-size: 11px;
+    padding-top: 2px;
+    svg {
+      height: 16px;
+      width: 16px;
+      display: inline;
+      path {
+        stroke: @text-color-subtle;
+        fill: @text-color-subtle;
+      }
+    }
+  }
+}
 
 .logo {
   .transition(all 250ms ease);
@@ -269,11 +301,14 @@ section .logo {
   // max-height: 100%;
   overflow-y: scroll;
   width: 100%;
-  padding-bottom: 38px;
+  padding-bottom: 38px + 20px;
 
   .row {
     // padding-top: @component-padding;
     .clearfix();
+  }
+  .overlay {
+    z-index: 1000;
   }
 }
 
