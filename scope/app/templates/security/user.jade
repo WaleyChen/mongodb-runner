@@ -2,18 +2,25 @@
 //-   h2 #{user.username}
 //-   h4 #{user.database}
 
-mixin blurb(action, defs, hidden)
-  - if(!defs[action]) defs[action] = {level: 1, description: '@todo'}
-  - if(defs[action].level === 0) return hidden[action] = 1;
-  dl
-    dt #{action}
-    dd #{defs[action].description}
+mixin blurb(action, hidden)
+  - if(action.level === undefined) action.level = 1;
+  - if(action.level === 0) return hidden[action._id] = action;
+  tr
+    //- dt #{action.name || action._id}
+    td(style="border-bottom: 1px dotted rgba(0, 0, 0, 0.2);padding-top: 5px;padding-bottom: 5px;") #{action.description}
+    td(style="width: 240px;text-align: right;border-bottom: 1px dotted rgba(0, 0, 0, 0.2); padding-top: 5px;padding-bottom: 5px;")
+      each tag in action.tags
+        span.text-smaller.text-subtle.inline-block #{tag}
+      span.glyphicon.glyphicon-tags.inline-block.text-subtle
+
 
 mixin resourceMessage(resource)
   - hidden = {}
   - ns = ''
   - message = ''
-  - if(resource.collection && resource.db){
+  - if(resource.cluster){
+  -   message = 'For the deployment';
+  - } else if(resource.collection && resource.db){
   -   ns = resource.db + '.' + resource.collection;
   -   message = 'On ' + ns;
   - } else {
@@ -23,25 +30,28 @@ mixin resourceMessage(resource)
   -      message += 'On the ' + resource.collection + ' collection';
   -   }
   -   if(!resource.db){
-  -     message += ' in any database:';
+  -     message += ' in any database';
   -   } else {
-  -     message += ' in the ' + resource.db + ' database:';
+  -     message += ' in the ' + resource.db + ' database';
   -   }
   - }
   | #{message}
 
 mixin grantBox(grant)
   - hidden = {}
-  .bordered.panel
+  .bordered.panel(style="margin-bottom: 20px;")
     .panel-heading
+      .mono.pull-right #{JSON.stringify(grant.resource)}
       +resourceMessage(grant.resource)
 
-    .panel-body.padded.grid.thirds
-       each action in grant.actions
-        +blurb(action, ACTIONS, hidden)
+
+    .panel-body.padded
+      table.table.table-striped(style="width: 100%")
+         each action in grant.actions
+          +blurb(action, hidden)
 
     .panel-footer.padded(style="#{Object.keys(hidden).length === 0 ? 'display: none' : ''}")
-      a.pop.subtle(data-toggle="popover", data-placement="top",
+      a.pop.subtle(data-toggle="popover", data-placement="right",
         data-title="low priority actions"
         data-content="#{Object.keys(hidden).join('\n')}") #{Object.keys(hidden).length} low priority
 
@@ -51,5 +61,5 @@ mixin grantBox(grant)
     a.inline-block(href="#security/roles/#{role.db}/#{role.role}") #{role.db}.#{role.role}
 
 div
-  each grant in user.inheritedPrivileges
+  each grant in user.grants
     +grantBox(grant)

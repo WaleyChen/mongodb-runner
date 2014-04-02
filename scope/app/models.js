@@ -206,6 +206,16 @@ module.exports.Log = List.extend({
   uri: '/log'
 });
 
+
+// Action Model-ish, cuz all are not created equal.
+//
+// level:
+// - 0: hidden
+// - 1: highlight
+// - 2: info
+// - 3: warn
+var ACTIONS = require('./templates/security/privilege-actions.json');
+
 var Role = Backbone.Model.extend({
   defaults: {
     role : 'readAnyDatabase',
@@ -263,9 +273,6 @@ var Role = Backbone.Model.extend({
   }
 });
 
-  - if(['local', 'config', 'local'].indexOf(grant.resource.collection) > -1) return '';
-  - if(['system.profile', 'system.indexes', ' system.js', 'system.namespaces'].indexOf(grant.resource.db) > -1) return '';
-
 var User = Backbone.Model.extend({
   defaults: {
     username: 'scopey',
@@ -279,15 +286,32 @@ var User = Backbone.Model.extend({
       return a.actions.length - b.actions.length;
     });
 
-    data.inheritedPrivileges
-
     // Make these things friendlier...
     // http://docs.mongodb.org/master/reference/privilege-actions/
-    data.privileges = {
+    data.grants = [];
+    data.inheritedPrivileges.map(function(grant){
+      // skips
+      if(['local', 'config'].indexOf(grant.resource.db) > -1){
+        debug('skip special db grant', grant.resource);
+        return false;
+      }
 
-    };
+      if(['system.profile', 'system.indexes', 'system.js', 'system.namespaces'].indexOf(grant.resource.collection) > -1){
+        debug('skip special collection grant', grant.resource);
+        return false;
+      }
+      var g = {
+        resource: grant.resource,
+        actions: {}
+      };
 
-
+      debug('adding actions for', grant.resource);
+      grant.actions.map(function(name){
+        ACTIONS[name]._id = name;
+        g.actions[name] = ACTIONS[name];
+      });
+      data.grants.push(g);
+    });
     return data;
   }
 });
@@ -298,10 +322,17 @@ module.exports.Security = Backbone.Model.extend({
       model: User, service: 'securityUsers'
     }),
     roles: List.extend({
-      model: Role, service: 'securityRoles'
+      model: Role,
+      service: 'securityRoles'
     })
   },
-  service: 'security'
+  service: 'security',
+  parse: function(data){
+    data.roles = data.roles.filter(function(role){
+      return role.role !== '__system';
+    });
+    return data;
+  }
 });
 
 module.exports.Security.User = User;
