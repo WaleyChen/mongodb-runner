@@ -1,6 +1,7 @@
 "use strict";
 
 var Backbone = require('backbone'),
+  _ = require('lodash'),
   Model = require('./service').Model,
   List = require('./service').List,
   debug = require('debug')('mg:scope:models');
@@ -270,6 +271,40 @@ var Role = Backbone.Model.extend({
   },
   service: function(){
     return {name: 'securityRoles', args: [this.get('db'), this.get('role')]};
+  },
+  parse: function(data){
+    var privs = [];
+    privs.push.apply(privs, data.privileges, data.inheritedPrivileges);
+    debug('privs', privs);
+    privs.sort(function(a, b){
+      return a.actions.length - b.actions.length;
+    });
+
+    data.grants = [];
+    privs.map(function(grant){
+      // skips
+      // if(['local', 'config'].indexOf(grant.resource.db) > -1){
+      //   debug('skip special db grant', grant.resource);
+      //   return false;
+      // }
+
+      // if(['system.profile', 'system.indexes', 'system.js', 'system.namespaces'].indexOf(grant.resource.collection) > -1){
+      //   debug('skip special collection grant', grant.resource);
+      //   return false;
+      // }
+
+      var g = {
+        resource: grant.resource,
+        actions: {}
+      };
+
+      grant.actions.map(function(name){
+        ACTIONS[name]._id = name;
+        g.actions[name] = ACTIONS[name];
+      });
+      data.grants.push(g);
+    });
+    return data;
   }
 });
 
