@@ -15,30 +15,31 @@ module.exports = function(app){
     top.read(1);
   });
 
-  function pipe(uri, io, readable){
-    io.sockets.on('connection', function(socket){
-      debug('subscribing', uri);
-      function relay(){
-        // data listener triggers start or resume automatically.
-        readable.on('data', function(deltas){
-          socket.emit(uri, deltas);
-        });
-      }
+  var subscribers = {},
+    paused = false;
 
-      socket.on(uri, relay)
-        .on(uri + '/unsubscribe', function(){
-          socket.off(uri, relay);
-          debug('unsubscribed', uri);
-          // @todo: if last subscriber, pause stream.
-        });
+  top.on('data', function(deltas){
+    var ids = Object.keys(subscribers);
+    debug('pushing deltas to ' + ids.length + ' subscribers');
+
+    ids.map(function(id){
+      subscribers[id].emit('/top', deltas);
     });
-  }
 
-  // @todo: make a real Socketio duplex stream so this will all
-  // just be:
-  //
-  // ```
-  // top.pipe(io.createStream('/top'));
-  // ```
-  pipe('/top', io, top);
+  });
+
+  io.sockets.on('connection', function(socket){
+    socket.on('/top', function(){
+        subscribers[socket.id] = socket;
+      })
+      .on('/top/unsubscribe', function(){
+        debug('unsubscribing');
+        delete subscribers[socket.id];
+      }).on('disconnect', function(){
+        debug('disconnect');
+        delete subscribers[socket.id];
+      });
+
+
+  });
 };

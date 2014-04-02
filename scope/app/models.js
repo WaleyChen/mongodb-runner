@@ -7,13 +7,14 @@ var Backbone = require('backbone'),
   debug = require('debug')('mg:scope:models');
 
 // singletons.
-var service, settings, instance;
+var service, settings, instance, top;
 
 module.exports = function(opts){
   module.exports.settings = settings = new Settings(opts);
 
   service = require('./service')(settings.get('host'), settings.get('port'));
   module.exports.instance = instance = new Instance();
+  module.exports.top = top = new Top();
   instance.fetch();
 
   return service;
@@ -26,44 +27,6 @@ var Settings = Backbone.Model.extend({
     }
   }),
   Instance = Backbone.Model.extend({
-    defaults: {
-      database_names: ['mongomin'],
-      host: {
-        system_time: '2014-03-06T21:49:00.576Z',
-        hostname: 'Lucass-MacBook-Air.local',
-        os: 'Mac OS X',
-        os_family: 'darwin',
-        kernel_version: '13.0.0',
-        kernel_version_string: 'Darwin Kernel Version 13.0.0: Thu Sep 19 22:22:27 PDT 2013; root:xnu-2422.1.72~6/RELEASE_X86_64',
-        memory_bits: 4294967296,
-        memory_page_size: 4096,
-        arch: 'x86_64',
-        cpu_cores: 4,
-        cpu_cores_physical: 2,
-        cpu_scheduler: 'traditional_with_pset_runqueue',
-        cpu_frequency: 1700000000,
-        cpu_string: 'Intel(R) Core(TM) i5-2557M CPU @ 1.70GHz',
-        cpu_bits: 64,
-        machine_model: 'MacBookAir4,2',
-        feature_numa: false,
-        feature_always_full_sync: 0,
-        feature_nfs_async: 0
-      },
-      build: {
-        version: '2.6.0-rc1-pre-',
-        commit: '0f42425dd36ef1c872241d7d8264cedbc2ab83b8',
-        commit_url: 'https://github.com/mongodb/mongo/commit/0f42425dd36ef1c872241d7d8264cedbc2ab83b8',
-        openssl_version: null,
-        boost_version: '1.49',
-        flags_loader: '-fPIC -pthread',
-        allocator: 'tcmalloc',
-        javascript_engine: 'V8',
-        debug: false,
-        for_bits: 64,
-        max_bson_object_size: 16777216
-      },
-      replicaset: null
-    },
     service: 'instance'
   });
 
@@ -190,9 +153,31 @@ module.exports.Sample = List.extend({
   }
 });
 
-module.exports.Top = Model.extend({
+var Top = module.exports.Top = Model.extend({
   service: 'top',
-  uri: '/top'
+  uri: '/top',
+  initialize: function(){
+    this.subscribers = 0;
+  },
+  activate: function(){
+    if(this.subscribers === 0){
+      debug('activating top stream');
+      this.active = true;
+      this.fetch();
+      this.subscribe();
+    }
+    this.subscribers++;
+    return this;
+  },
+  deactivate: function(){
+    this.subscribers--;
+    if(this.subscribers === 0){
+      debug('deactivating top stream');
+      this.active = false;
+      this.unsubscribe();
+    }
+    return this;
+  }
 });
 
 module.exports.Log = List.extend({

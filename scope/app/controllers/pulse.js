@@ -6,39 +6,74 @@ var Backbone = require('Backbone'),
   creek = require('../creek'),
   debug = require('debug')('mg:scope:pulse');
 
+var DatabasePulseView = Backbone.View.extend({
+  tpl: require('../templates/pulse/database.jade'),
+  initialize: function(opts){
+    this.model = new models.Database({name: opts.name});
+    debug('new database view for', opts);
+
+    this.top = models.top;
+    this.metric = 'lock.count';
+
+    // this.graph = creek('.graph', {interpolation: 'step-after'});
+  },
+  onTopData: function(){
+    if(!this.top.get('deltas')) return this;
+    var k = this.model.get('name') + '.' + this.metric,
+      delta = this.top.get('deltas')[k];
+    debug('top: ' + k, delta);
+    // this.graph.inc(delta);
+  },
+  activate: function(){
+    debug('adding top data listener');
+    this.top.on('sync', this.onTopData, this);
+    return this;
+  },
+  deactivate: function(){
+    debug('removing top data listener');
+    this.top.off();
+    this.top.deactivate();
+    return this;
+  },
+  render: function(){
+    this.$el.html(this.tpl({
+      database: this.model.toJSON(),
+      metric: this.metric
+    }));
+    this.top.activate('sync', this.onTopData);
+    return this;
+  }
+});
+
 module.exports = Backbone.View.extend({
   tpl: require('../templates/pulse.jade'),
   initialize: function(){
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);
+    this.activated = false;
 
-    this.instance = models.instance
-      .on('sync', this.render, this)
-      .on('error', this.render, this);
-
-    this.top = new models.Top().on('sync', this.onTopData, this);
-
-    this.metric = 'lock.count';
-    this.graph = creek('.graph', {
-      interpolation: 'step-after'
-    });
-  },
-  onTopData: function(){
-    if(!this.top.get('deltas')) return this;
-    var locks = this.top.get('deltas')[this.metric];
-    debug('top: ' + this.metric, this.top.get('deltas'));
-    this.graph.inc(locks);
+    this.instance = models.instance;
+    this.databases = [];
   },
   activate: function(){
-    this.$el = $('#mongoscope');
-    this.el = this.$el.get(0);
-    debug('activated');
-
-    // this.top.subscribe();
-    this.instance.fetch();
+    debug('pulse activated');
+    this.activated = true;
+    if(!this.instance.get('host')){
+      this.instance.once('sync', this.render, this);
+      this.instance.fetch();
+    }
+    else {
+      this.render();
+    }
   },
   deactivate: function(){
-    // this.top.unsubscribe();
+    if(this.databases.length === 0){
+      return this;
+    }
+    this.databases.map(function(database){
+      database.deactivate();
+    });
+    this.activated = false;
   },
   render: function(){
     var self = this;
@@ -53,12 +88,19 @@ module.exports = Backbone.View.extend({
         self.instance.fetch();
       }, 5000);
     }
+    debug('render template', this.instance.toJSON());
+    this.$el.html(this.tpl({instance: this.instance.toJSON()}));
 
-    this.$el.html(this.tpl({
-      'instance': this.instance.toJSON(),
-      'metric': this.metric
+    if(this.databases.length === 0){
+      debug('creating database views');
+      this.databases = this.instance.get('database_names').map(function(name){
+        return new DatabasePulseView({name: name});
+      });
+    }
+    this.$el.find('.databases').append(this.databases.map(function(database){
+
+      return database.activate().render().el;
     }));
-    this.graph.render();
   }
 });
 

@@ -22,18 +22,6 @@ else
   .row
     .col-md-9
       .databases
-       each database_name in instance.database_names
-        .panel.inset-panel.bordered
-          .col-md-8
-            .graph
-          .col-md-4
-            .block
-              a(href='#database/#{database_name}')
-                h2 #{database_name}
-                .stats
-                  .inline-block-tight 8 collections
-                  .inline-block-tight 27 indexes
-                  .inline-block-tight 120 gb
 
     .col-md-3
       .block.panel.padded.text-smaller

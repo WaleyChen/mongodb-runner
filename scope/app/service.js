@@ -205,10 +205,6 @@ var mixins = {
   service: null,
   iohandler: function(data){
     if (!this.set(data)) return false;
-
-    if(this.hasChanged('deltas')){
-      debug('$chang', 'deltas');
-    }
     this.trigger('sync', this, data, {});
   },
   subscribe: function(options){
@@ -221,7 +217,7 @@ var mixins = {
     });
 
     srv.io
-      .on(options.uri, this.iohandler.bind(this))
+      .addListener(options.uri, this.iohandler.bind(this))
       .emit(options.uri);
 
     this.trigger('subscribed', this, srv.io, options);
@@ -237,8 +233,9 @@ var mixins = {
     });
 
     debug('$unsub ' + options.uri);
-
-    srv.io.emit(_.result(this, 'url') + '/unsubscribe');
+    srv.io
+      .removeAllListeners(options.uri)
+      .emit(_.result(this, 'uri') + '/unsubscribe');
 
     this.trigger('unsubscribed', this, srv.io, options);
     return this;

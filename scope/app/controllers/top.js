@@ -13,20 +13,19 @@ module.exports = Backbone.View.extend({
     this.el = this.$el.get(0);
     this.$tbody = null;
 
-    this.activated = false;
-    this.metric = 'lock.count';
-
-    this.top = new models.Top();
+    this.top = models.top;
 
     this.direction = 'up';
   },
   activate: function(){
-    this.top.on('sync', this.render, this)
-    this.top.fetch();
-    this.activated = true;
+    this.top
+      .activate()
+      .on('sync', this.render, this);
   },
   deactivate: function(){
-    this.activated = false;
+    this.top
+      .deactivate()
+      .off('sync', this.onTopData, this);
   },
   onTopData: function(){
     var ctx = this.top.toJSON(), html;
@@ -44,8 +43,6 @@ module.exports = Backbone.View.extend({
     }
   },
   render: function(){
-    if(!this.activated) return this;
-
     var ctx = this.top.toJSON(), html;
     ctx.update = false;
     ctx.moment = moment;
