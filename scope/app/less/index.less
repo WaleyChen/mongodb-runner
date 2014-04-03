@@ -61,6 +61,7 @@ blockquote {
   .panel;
   .tool-panel;
 }
+
 dl{
   padding-bottom: @component-padding;
 }
@@ -102,6 +103,12 @@ article {
 }
 
 body {margin: 0;}
+
+.gist{
+  .highlight {
+    background: initial;
+  }
+}
 
 .grid {
   display: flex;
@@ -298,6 +305,11 @@ body {margin: 0;}
   .overlay {
     z-index: 1000;
   }
+}
+
+.summary {
+  .clearfix;
+  margin-bottom: @component-padding * 2;
 }
 
 .security {

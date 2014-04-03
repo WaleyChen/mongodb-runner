@@ -7,29 +7,25 @@ include mixins/bytes
 //- - host.disk_used = host.disk_total - host.disk_free
 
 .row
-  .block.col-md-3
-    .panel.tool-panel.padded
-      h2.padded #{database.name}
-      .stats.padded
-        div #{stats.index_count} indexes
-        div #{stats.document_count} documents
+  .col-md-12
+    .summary.panel.panel-body.padded
 
-  .col-md-9
-    .row
-      .col-md-12
-        .summary
+.row
+  .col-md-4
+    .panel.inset-panel.bordered
+      .panel-heading collections
+      .panel-bottom
+        .select-list
+          .list-group
+          for collection_name in database.collection_names
+            .list-item
+              a.text-highlight(href='#collection/#{database.name}/#{collection_name}')
+                | #{collection_name}
 
-    .row
-      .col-md-6
-        .panel.bordered
-          .panel-heading collections
-          .panel-bottom.bordered
-              for collection_name in database.collection_names
-                a.padded.text-highlight(href='#collection/#{database.name}/#{collection_name}') #{collection_name}
-
-      .col-md-6
-        .panel.tool-panel.bordered
-          .panel-heading.bordered storage
-          .panel-bottom.bordered
-            .panel-body.donut.list-item
+  .col-md-4
+    .panel.tool-panel.bordered
+      .panel-heading storage
+      .panel-body
+        .donut.list-item
+  .col-md-4
 

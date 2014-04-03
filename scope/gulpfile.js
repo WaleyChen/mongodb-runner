@@ -42,7 +42,7 @@ gulp.task('less', function () {
     .pipe(gulp.dest('../rest/ui'));
 
   gulp.src('./app/less/pages/*.less')
-    .pipe(less({paths: lessPaths}))
+    .pipe(less({paths: lessPaths, sourceMap: true}))
     .pipe(gulp.dest('../rest/ui/css'));
 });
 
@@ -70,8 +70,8 @@ gulp.task('manifest', function(){
 });
 
 gulp.task('watch', function (){
-  gulp.watch(['./app/{*,**/*}.{js,jade}',], ['js']);
+  gulp.watch(['./app/{*,**/*}.js', './app/templates/{*,**/*}.jade'], ['js']);
   gulp.watch(['./app/{*,less/*,less/**/*}.less'], ['less']);
-  gulp.watch(['./app/templates/{index,styleguide,funnel,demo}.jade'], ['pages']);
+  gulp.watch(['./app/pages/*.jade'], ['pages']);
   gulp.watch(['./app/{img,fonts}/*'], ['assets']);
 });

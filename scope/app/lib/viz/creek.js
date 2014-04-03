@@ -105,7 +105,7 @@ Creek.prototype.draw = function(){
   };
 
   var xScaler = function(d, i){
-    return self.scales.x(self.now - (self.scrollback + 3 - i) * self.duration);
+    return self.scales.x(self.now - (self.scrollback - i) * self.duration);
   };
 
   var yScaler = function(d, i){
