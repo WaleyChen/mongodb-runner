@@ -1,3 +1,11 @@
+@series-color-1: @text-color-info;
+ @series-fill-1: fadeout(@series-color-1, 20%);
+@series-color-2: @text-color-warning;
+ @series-fill-2: fadeout(@series-color-2, 20%);
+
+@line-width: 4px;
+
+
 // ### creek
 //
 // a d3 streaming time-series chart.
@@ -5,12 +13,13 @@
   fill: transparent;
   border-radius: @component-border-radius;
   .line {
-    stroke: @ui-site-color-1;
-    stroke-width: 4px;
+    stroke: @series-color-1;
+    stroke-width: @line-width;
   }
   .area {
+    fill: @series-fill-1;
     // stroke: @text-color;
-    fill: fadeout(@ui-site-color-1, 20%);
+    // fill: fadeout(@ui-site-color-1, 20%);
     // stroke-width: 2px;
   }
   .tick {
@@ -36,20 +45,24 @@
   }
   .documents {
     .arc {
-      stroke: fadein(@ui-site-color-1, %10);
-      fill: @ui-site-color-1;
+      stroke: @series-color-1;
+      stroke-width: @line-width / 2;
+      fill: @series-fill-1;
     }
     .label {
-      fill: @ui-site-color-1;
+      fill: @series-color-1;
+      stroke: none;
     }
   }
   .indexes {
     .arc {
-      stroke: @ui-site-color-2;
-      fill: fadeout(@ui-site-color-2, 10%);
+      stroke: @series-color-2;
+      stroke-width: @line-width / 2;
+      fill: @series-fill-2;
     }
     .label {
-      fill: @ui-site-color-2;
+      fill: @series-color-2;
+      stroke: none;
     }
   }
 }

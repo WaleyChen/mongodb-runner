@@ -8,7 +8,6 @@
     background: @overlay-background-color;
     box-shadow: 0 -1px 1px inset @overlay-border-color;
     border-bottom: 1px solid @overlay-border-color;
-    // border-top: 1px solid @base-border-color;
     width: 100%;
 
   }
@@ -21,10 +20,13 @@
     padding-left: 33px;
 
     .label {
+      .mono;
       position: absolute;
-      background: #ececec;
+      background: @background-color-highlight;
+      color: @text-color-highlight;
       z-index: 1100;
       margin-left: 47px;
+      font-size:1.1em;
       width: 161px;
       border-bottom: 1px solid @overlay-border-color;
     }
@@ -33,11 +35,6 @@
     margin-left: 0px;
     padding-left: 43px;
     margin-right: -4px;
-
-    // .label {
-    //   margin-left: -10px;
-    //   margin-top: 0px;
-    // }
   }
   .ns-column{
     margin-right: 69px;
@@ -85,17 +82,22 @@
     padding: 0px 10px;
     display: inline-block;
     width: @matrix-column-width;
-    border-right: 1px solid @base-border-color;
+    border-right: 1px solid fadeout(@base-border-color, 50%);
     border-top: 1px solid @base-border-color;
     display: inline-block;
+    text-align: center;
   }
   .date {
     width: 100px;
     color: fadeout(@text-color, 60%);
     border: 0;
+    text-align: left;
   }
   .column:first-child {
     border-left: 1px solid @base-border-color;
+  }
+  .column:last-child {
+    border-right: 1px solid @base-border-color;
   }
 }
 

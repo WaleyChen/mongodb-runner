@@ -11,21 +11,20 @@ include mixins/bytes
     .summary.panel.panel-body.padded
 
 .row
-  .col-md-4
-    .panel.inset-panel.bordered
-      .panel-heading collections
-      .panel-bottom
-        .select-list
-          .list-group
+  .col-md-2
+    .panel.padded
+        h3 Collections
+        ul.nav.nav-pills.nav-stacked
           for collection_name in database.collection_names
-            .list-item
-              a.text-highlight(href='#collection/#{database.name}/#{collection_name}')
-                | #{collection_name}
+            li
+              a(href='#collection/#{database.name}/#{collection_name}')
+                span #{collection_name}
 
   .col-md-4
-    .panel.tool-panel.bordered
-      .panel-heading storage
-      .panel-body
-        .donut.list-item
+    .panel.padded
+      h3 Storage
+      .donut
+
+
   .col-md-4
 

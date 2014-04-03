@@ -1,42 +1,4 @@
-include mixins/cog
-include mixins/bytes
-
-mixin health_bar(build)
-  .block-tight
-    .label(class="#{instance.host.cpu_bits === 64 ? 'text-success' : 'text-warning'}") #{instance.host.cpu_bits}bit
-    .label(class="#{build.debug === false ? 'text-success' : 'text-warning'}")
-      | debug #{build.debug ? 'on' : 'off'}
-    .label(class="#{build.javascript_engine === 'V8' ? 'text-success' : 'text-warning'}")
-      | #{build.javascript_engine}
-    .label(class="#{build.allocator === 'tcmalloc' ? 'text-success' : 'text-warning'}")
-      | #{build.allocator}
-    .label.text-success boost #{build.boost_version}
-
-    .label(class="#{build.openssl_version ? 'text-success' : 'text-warning'}")
-      | openssl #{build.openssl_version || 'N/A'}
-
 if instance.database_names.length === 0
   include funnel/01-create-database
-
 else
-  .row
-    .col-md-12
-      .databases
-
-    .col-md-3
-      //- .block.panel.padded.text-smaller
-      //-   .block
-      //-     a.text-subtle(style="font-size: 120%;" href=instance.build.commit_url,
-      //-       title="View commit #{instance.build.commit.substr(0, 8)} on github") #{instance.build.version}
-      //-     +health_bar(instance.build)
-      //-     hr
-      //-     .block.text-smaller.panel
-      //-       div #{instance.host.hostname}
-      //-       .inline-block-tight.text-highlight #{instance.host.os}
-      //-       .inline-block-tight.text-highlight
-      //-         +bytes(instance.host.memory_bits)
-      //-       .inline-block-tight.text-highlight #{instance.host.cpu_cores_physical} Cores
-      //-       div
-      //-         div #{instance.host.cpu_string}
-      //-         div #{instance.host.system_time}
-      //-           span.glyphicon.glyphicon-time(style="font-size: 80%; left: 4px;")
+  .row: .col-md-12: .databases

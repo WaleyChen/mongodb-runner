@@ -50,17 +50,22 @@ var Summary = module.exports.Summary = Backbone.View.extend({
     this.metric = 'lock.count';
     this.$metric = null;
 
-    this.graph = creek('#graph-' +  this.database.cid, {interpolation: 'step-before'});
+    this.graph = creek('#graph-' +  this.database.cid);
   },
   graphClicked: function(){
     if(!this.random){
       this.random = d3.random.normal(10, 2);
     }
-    var val = ~~this.random();
+    var val = ~~this.random(),
+      metricEl = this.$metric;
+
     debug('pumping ' + val);
     this.graph.inc(val);
-    if(this.$metric){
-      this.$metric.text(val);
+    if(metricEl){
+      setTimeout(function(){
+        metricEl.text(val);
+      }, 400);
+
     }
   },
   onTopData: function(){

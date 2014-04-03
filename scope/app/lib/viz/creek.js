@@ -18,7 +18,7 @@ function Creek(opts){
   _.extend(this, _.defaults({}, opts, {
     minutes: 1,
     data: [],
-    interpolation: 'cardinal',
+    interpolation: 'step',
     width: 0,
     height: 116,
     selector: 'body',
@@ -32,7 +32,7 @@ function Creek(opts){
 
   // Back fill so if we get an `inc` relatively quickly, we'll
   // be right on the nose instead of a few seconds behind.
-  this.data = d3.range(this.scrollback - 2).map(function(){
+  this.data = d3.range(this.scrollback).map(function(){
     return 0;
   });
 
@@ -105,7 +105,7 @@ Creek.prototype.draw = function(){
   };
 
   var xScaler = function(d, i){
-    return self.scales.x(self.now - (self.scrollback - i) * self.duration);
+    return self.scales.x(self.now - (self.scrollback + 1 - i) * self.duration);
   };
 
   var yScaler = function(d, i){
@@ -123,18 +123,7 @@ Creek.prototype.draw = function(){
       .attr('width', this.stage.width - 25)
       .attr('height', this.stage.height);
 
-  this.axes = {
-    x: this.svg.append('g')
-      .attr('class', 'x-axis axis')
-      .attr('transform', 'translate('+ -25 +',' + (this.stage.height - 8) + ')')
-      .call(this.scales.x.axis = d3.svg.axis().scale(this.scales.x).orient('bottom'))
-      .call(this.scales.x.axis.ticks(4).tickSubdivide(0)),
-    y: this.svg.append('g')
-      .attr('class', 'y-axis axis')
-      .attr('transform', 'translate(' + (this.stage.width - 25) + ', 0)')
-      .call(this.scales.y.axis = d3.svg.axis().scale(this.scales.y).orient('right'))
-      .call(this.scales.y.axis.ticks(4).tickSubdivide(0).tickSize(-this.stage.width))
-  };
+
 
   series = this.svg
     .append('g')
@@ -145,7 +134,7 @@ Creek.prototype.draw = function(){
     this.line = series.append('path')
       .data([this.data])
       .attr('class', 'line')
-      .attr('opacity', 0)
+      // .attr('opacity', 0)
       .attr('d', this.shapes.line);
   }
 
@@ -153,9 +142,22 @@ Creek.prototype.draw = function(){
     this.area = series.append('path')
       .data([this.data])
       .attr('class', 'area')
-      .attr('opacity', 0)
+      // .attr('opacity', 0)
       .attr('d', this.shapes.area);
   }
+
+  this.axes = {
+    x: this.svg.append('g')
+      .attr('class', 'x-axis axis')
+      .attr('transform', 'translate('+ -25 +',0)')
+      .call(this.scales.x.axis = d3.svg.axis().scale(this.scales.x).orient('bottom'))
+      .call(this.scales.x.axis.ticks(4).tickSubdivide(0).tickSize(-this.stage.height)),
+    y: this.svg.append('g')
+      .attr('class', 'y-axis axis')
+      .attr('transform', 'translate(' + (this.stage.width - 25) + ', 0)')
+      .call(this.scales.y.axis = d3.svg.axis().scale(this.scales.y).orient('right'))
+      .call(this.scales.y.axis.ticks(4).tickSubdivide(0).tickSize(-this.stage.width))
+  };
 
   this.paused = false;
   return this.tick();
@@ -218,12 +220,12 @@ Creek.prototype.tick = function(){
 
   this.area.transition().duration(this.duration)
     .attr('transform', 'translate(' + shift + ')')
-    .attr('opacity', 1)
+    // .attr('opacity', 1)
     .ease('linear');
 
   this.line.transition().duration(this.duration)
     .attr('transform', 'translate(' + shift + ')')
-    .attr('opacity', 1)
+    // .attr('opacity', 1)
     .ease('linear');
 
 

@@ -24,7 +24,6 @@
   - }
 
   div(class=classes.join(' '))
-    .name #{line.name}
-    .second #{moment(d).format('h:mm:ss')}
-    .ms #{d.getMilliseconds()}ms
+    .name [#{line.name}]
+    .second #{moment(d).format('h:mm:ss.SSS')}
     .message #{line.message}

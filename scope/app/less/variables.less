@@ -13,7 +13,8 @@
 @gray-light:             lighten(#000, 60%);   // #999
 @gray-lighter:           lighten(#000, 93.5%); // #eee
 
-@brand-primary:         #6ba442;
+// @brand-primary:         #6ba442;
+@brand-primary: @background-color-selected;
 @brand-success:         lighten(#6ba442, 13.5%);
 @brand-info:            #8C8C8C ;
 @brand-warning:         #FD971F;
@@ -30,9 +31,10 @@
 // @text-color:            #aaa;
 
 //** Global textual link color.
-@link-color:            @text-color-info;
+@link-color:             @text-color-selected;
 //** Link hover color set via `darken()` function.
-@link-hover-color:      darken(@link-color, 15%);
+// @link-hover-color:      darken(@link-color, 15%);
+@link-hover-color: @text-color-selected;
 // @link-hover-color:      red;
 
 
@@ -106,9 +108,9 @@
 @border-radius-small:       1px;
 
 //** Global color for active items (e.g., navs or dropdowns).
-@component-active-color:    #fff;
+@component-active-color:    @text-color-selected;
 //** Global background color for active items (e.g., navs or dropdowns).
-@component-active-bg:       @brand-primary;
+@component-active-bg:       @background-color-selected;
 
 //** Width of the `border` for generating carets that indicator dropdowns.
 @caret-width-base:          4px;

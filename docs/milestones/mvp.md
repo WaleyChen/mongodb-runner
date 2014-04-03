@@ -22,7 +22,7 @@
   - [x] view roles `#auth` `2h`
   - [x] view the [action matrix][user-actions] for a user or role `#auth` `4h`
   - [x] user actions contain friendly descriptions extracted from @mongodb/docs
-- [ ] databases list has quick stats `#pulse` `2h`
+- [x] databases list has quick stats `#pulse` `2h`
 
 [create-admin]: http://docs.mongodb.org/manual/tutorial/add-user-administrator/
 [user-actions]: http://docs.mongodb.org/master/reference/privilege-actions/#security-user-actions

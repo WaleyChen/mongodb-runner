@@ -2,16 +2,17 @@
   .col-md-2
     a(href='#database/#{database.name}')
       h2 #{database.name}
-      .stats
-        .inline-block-tight
+      .row
+        .stats.clearfix
+          .col-xs-4
             .stat-value(data-stat="collection_count") -
             .stat-label collections
-        .inline-block-tight
+          .col-xs-4
             .stat-value(data-stat="index_count") -
             .stat-label indexes
-        .inline-block-tight
+          .col-xs-4
             .stat-value(data-stat="document_count") -
-            .stat-label documents
+            .stat-label docs
   .col-md-8
     .graph(id='graph-#{cid}')
   .col-md-2

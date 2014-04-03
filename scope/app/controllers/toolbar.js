@@ -9,13 +9,12 @@ module.exports = Backbone.View.extend({
     this.$el = $('#toolbar');
     this.el = this.$el.get(0);
 
-    this.instance = models.instance
-      .on('sync', this.render, this)
-      .on('error', this.render, this);
+    this.instance = models.instance.on('sync', this.render, this);
   },
   render: function(){
-    var self = this;
-    self.$el.html(self.tpl({
+    debug('rendering', this.instance.toJSON());
+    this.$el.html(this.tpl({
+      instance: this.instance.toJSON(),
       sections: [
         {name: 'pulse', 'icon': 'flash'},
         {name: 'top', icon: 'magnet'},
@@ -24,9 +23,10 @@ module.exports = Backbone.View.extend({
         {name: 'replication', icon: 'send'}
       ]
     }));
-    if(self.instance.get('database_names').length === 0){
-      self.$el.find('.log').hide();
-      self.$el.find('.top').hide();
+
+    if(this.instance.get('database_names').length === 0){
+      this.$el.find('.log').hide();
+      this.$el.find('.top').hide();
     }
   }
 });

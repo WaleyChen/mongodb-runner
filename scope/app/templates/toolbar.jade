@@ -1,28 +1,8 @@
-.navbar.navbar-nav
-  .btn-group.pull-right
-    .dropdown
-      ul.dropdown-menu
-        li.active
-          a localhost
-        li
-          a mongod2
-        li
-          a arbiter1
-        li.divider
-        li
-          .panel.padded.text-smaller
-            ul.list-unstyled
-              li Lucass-MacBook-Pro.local
-              li Mac OS X 16 GB2 Cores
-              li Intel(R) Core(TM) i7-4558U CPU @ 2.80GHz
-              li 2014-04-02T13:33:07.829Z
 
-      a.btn.inline-block(data-toggle="dropdown", href="#", data-target=".dropdown")
-        .btn-label localhost
-        b.caret
+include includes/host-picker
 
-  .btn-group.inline-block
-    - for section in sections
-      a(class="btn #{section.name}", href='##{section.name}')
-        span(class='icon glyphicon-#{section.icon}')
-        div.btn-label #{section.name}
+.btn-group.inline-block
+  - for section in sections
+    a(class="btn #{section.name}", href='##{section.name}')
+      span(class='icon glyphicon-#{section.icon}')
+      div.btn-label #{section.name}

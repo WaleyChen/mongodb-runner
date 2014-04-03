@@ -214,9 +214,10 @@ TopStream.prototype.normalize = function(data){
     if(self.exclude.test(ns)) return;
 
     var src = ns, dest = ns;
-    if(ns === ''){
-      dest = 'total';
-    }
+
+    // Skip the special total key because it will have stats in there
+    // for internal only calls and it won t make any sense to the user.
+    if(ns === '') return false;
 
     res.namespaces.push(dest);
 
