@@ -1,20 +1,37 @@
 .panel
+  .col-md-2
+    a(href='#database/#{database.name}')
+      h2 #{database.name}
+      .stats
+        .inline-block-tight
+            .stat-value(data-stat="collection_count") -
+            .stat-label collections
+        .inline-block-tight
+            .stat-value(data-stat="index_count") -
+            .stat-label indexes
+        .inline-block-tight
+            .stat-value(data-stat="document_count") -
+            .stat-label documents
   .col-md-8
-    .graph(id='graph-#{graphId}')
-  .col-md-4
-    .block
-      a(href='#database/#{database.name}')
-        h2 #{database.name}
-        .metric-name #{metric}
-        .metric-picker
-        .metric-value -
-        .stats
-          .inline-block-tight
-              .stat-value(data-stat="collection_count") -
-              .stat-label collections
-          .inline-block-tight
-              .stat-value(data-stat="index_count") -
-              .stat-label indexes
-          .inline-block-tight
-              .stat-value(data-stat="document_count") -
-              .stat-label documents
+    .graph(id='graph-#{cid}')
+  .col-md-2
+    .block(style="text-align: center")
+      a.inline-block(data-toggle="dropdown", href="#", data-target="#dropdown-#{cid}")
+        span.metric-name #{metric}
+      .dropdown(id='dropdown-#{cid}')
+        ul.dropdown-menu
+          li.active
+            a #{metric}
+          li
+            a read.time
+          li
+            a read.count
+          li
+            a write.time
+          li
+            a write.count
+
+
+
+      .metric-value(style="font-size: 400%").text-subtle -
+

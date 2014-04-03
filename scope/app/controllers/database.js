@@ -4,6 +4,7 @@ var Backbone = require('Backbone'),
   models = require('../models'),
   creek = require('../creek'),
   donut = require('../donut'),
+  d3 = require('d3'),
   debug = require('debug')('mg:scope:database');
 
 module.exports = Backbone.View.extend({
@@ -37,6 +38,9 @@ module.exports = Backbone.View.extend({
 });
 
 var Summary = module.exports.Summary = Backbone.View.extend({
+  events: {
+    'click .graph': 'graphClicked'
+  },
   tpl: require('../templates/pulse/database.jade'),
   initialize: function(opts){
     this.database = new models.Database(opts)
@@ -46,7 +50,18 @@ var Summary = module.exports.Summary = Backbone.View.extend({
     this.metric = 'lock.count';
     this.$metric = null;
 
-    this.graph = creek('#graph-' +  this.database.cid, {interpolation: 'step-after'});
+    this.graph = creek('#graph-' +  this.database.cid, {interpolation: 'step-before'});
+  },
+  graphClicked: function(){
+    if(!this.random){
+      this.random = d3.random.normal(10, 2);
+    }
+    var val = ~~this.random();
+    debug('pumping ' + val);
+    this.graph.inc(val);
+    if(this.$metric){
+      this.$metric.text(val);
+    }
   },
   onTopData: function(){
     if(!this.top.get('deltas')) return this;
@@ -116,6 +131,7 @@ var Summary = module.exports.Summary = Backbone.View.extend({
     this.top
       .deactivate()
       .off('sync', this.onTopData, this);
+    this.graph.pause();
     return this;
   },
   draw: function(){
@@ -127,7 +143,7 @@ var Summary = module.exports.Summary = Backbone.View.extend({
     this.$el.html(this.tpl({
       database: this.database.toJSON(),
       metric: this.metric,
-      graphId: this.database.cid
+      cid: this.database.cid
     }));
     return this;
   }

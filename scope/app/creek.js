@@ -16,7 +16,7 @@ module.exports = function(selector, opts){
 
 function Creek(opts){
   _.extend(this, _.defaults({}, opts, {
-    minutes: 2,
+    minutes: 1,
     data: [],
     interpolation: 'cardinal',
     width: 0,
@@ -80,12 +80,12 @@ Creek.prototype.draw = function(){
       .attr('class', 'creek')
       .attr('height', this.height)
       .attr('width', '100%')
-      .on('click', function(){
-        if(self.paused){
-          return self.resume();
-        }
-        return self.pause();
-      })
+      // .on('click', function(){
+      //   if(self.paused){
+      //     return self.resume();
+      //   }
+      //   return self.pause();
+      // })
       // .attr('transform', 'translateZ(0)')
     .append('g')
       .attr('transform', 'translate(0, 8)');
@@ -97,31 +97,24 @@ Creek.prototype.draw = function(){
 
   this.scales = {
     x: d3.time.scale()
-      .domain([self.now - (this.scrollback - 2) * this.duration, this.now - this.duration])
+      .domain([self.now - (this.scrollback) * this.duration, this.now - this.duration])
       .range([0, this.stage.width]),
     y: d3.scale.linear()
-    .range([this.stage.height-8, 0])
-    .domain([0, 1])
+      .range([this.stage.height, 0])
+      .domain([0, 1])
+  };
+
+  var xScaler = function(d, i){
+    return self.scales.x(self.now - (self.scrollback + 3 - i) * self.duration);
+  };
+
+  var yScaler = function(d, i){
+    return self.scales.y(d);
   };
 
   this.shapes = {
-    line: d3.svg.line().interpolate(this.interpolation)
-      .x(function(d, i){
-        return self.scales.x(self.now - (self.scrollback - 1 - i) * self.duration);
-      })
-      .tension(0.5)
-      .y(function(d, i){
-        return self.scales.y(d);
-      }),
-    area: d3.svg.area().interpolate(this.interpolation)
-      .x(function(d, i){
-        return self.scales.x(self.now - (self.scrollback - 1 - i) * self.duration);
-      })
-      .y1(function(d, i){
-        return self.scales.y(d);
-      })
-      .y0(self.stage.height)
-      .tension(0.5)
+    line: d3.svg.line().interpolate(this.interpolation).x(xScaler).y(yScaler).tension(0.5),
+    area: d3.svg.area().interpolate(this.interpolation).x(xScaler).y1(yScaler).y0(self.stage.height).tension(0.5)
   };
 
   this.svg.append('defs').append('clipPath')
@@ -152,6 +145,7 @@ Creek.prototype.draw = function(){
     this.line = series.append('path')
       .data([this.data])
       .attr('class', 'line')
+      .attr('opacity', 0)
       .attr('d', this.shapes.line);
   }
 
@@ -159,15 +153,12 @@ Creek.prototype.draw = function(){
     this.area = series.append('path')
       .data([this.data])
       .attr('class', 'area')
+      .attr('opacity', 0)
       .attr('d', this.shapes.area);
   }
 
   this.paused = false;
-
-  // $(this.svg.node().parentElement).parent().css({position: 'absolute'})
-
-  this.tick();
-  return this;
+  return this.tick();
 };
 
 Creek.prototype.pause = function(i){
@@ -190,7 +181,7 @@ Creek.prototype.tick = function(){
   if(this.paused === true) return this;
 
   this.data.push(this.value);
-  this.value = 2;
+  this.value = 0;
   this.data.shift();
 
   var max = d3.max(this.data);
@@ -216,28 +207,28 @@ Creek.prototype.tick = function(){
   }
 
   // Adjust axes and scaling for incoming value
-  this.axes.x.transition()
-    .duration(this.duration)
-    .ease('linear')
+  this.axes.x.transition().duration(this.duration).ease('linear')
     .call(this.scales.x.axis);
 
-  this.axes.y.transition()
-    .duration(this.duration)
-    .ease('linear')
+  this.axes.y.transition().duration(this.duration).ease('linear')
     .call(this.scales.y.axis);
 
   // Move the whole world over to expose the next value
-  this.area.transition()
-    .duration(this.duration)
-    .ease('linear')
-    .attr('transform', 'translate(' + this.scales.x(this.now - (this.scrollback - 1) * this.duration) + ')');
+  var shift = this.scales.x(this.now - (this.scrollback - 1) * this.duration);
 
-  this.line.transition()
-    .duration(this.duration)
-    .ease('linear')
-    .attr('transform', 'translate(' + this.scales.x(this.now - (this.scrollback - 1) * this.duration) + ')')
+  this.area.transition().duration(this.duration)
+    .attr('transform', 'translate(' + shift + ')')
+    .attr('opacity', 1)
+    .ease('linear');
+
+  this.line.transition().duration(this.duration)
+    .attr('transform', 'translate(' + shift + ')')
+    .attr('opacity', 1)
+    .ease('linear');
+
 
   this.svg.transition()
     .duration(this.duration)
     .each('end', this.tick.bind(this));
+  return this;
 };

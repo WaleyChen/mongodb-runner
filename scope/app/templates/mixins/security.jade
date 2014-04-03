@@ -31,8 +31,8 @@ mixin security_row(action, hidden)
 mixin security_grantBox(grant)
   - hidden = {}
   .panel(style="margin-bottom: 20px;")
-    .panel-heading
-      .mono.pull-right #{JSON.stringify(grant.resource)}
+    h3
+      .mono.pull-right.text-smaller #{JSON.stringify(grant.resource)}
       +security_naturalize(grant.resource)
 
 
