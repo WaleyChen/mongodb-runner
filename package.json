@@ -20,11 +20,15 @@
     "ignore": [
       "scope/**",
       "rest/**",
+      "docs/**",
       "bin/*.sh",
+      "node_modules/.bin/**",
+      "node_modules/node-zip/**",
       "**/mocha/**",
       "**/flash-src/**",
       "**/socket.io-client/components/**",
       "**/node_modules/redis/**",
+      "**/active-x-obfuscator/**",
       "**/test/**",
       "**/example/**"
     ]

@@ -42,7 +42,7 @@ gulp.task('less', function () {
     .pipe(gulp.dest('../rest/ui'));
 
   gulp.src('./app/less/pages/*.less')
-    .pipe(less({paths: lessPaths, sourceMap: true}))
+    .pipe(less({paths: lessPaths}))
     .pipe(gulp.dest('../rest/ui/css'));
 });
 
