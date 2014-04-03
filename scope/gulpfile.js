@@ -26,6 +26,8 @@ gulp.task('js', function(){
 gulp.task('assets', function(){
   gulp.src(['./app/{img,fonts}/*'])
     .pipe(gulp.dest('../rest/ui'));
+  gulp.src(['./app/less/atom/{img,fonts}/*'])
+    .pipe(gulp.dest('../rest/ui'));
 });
 
 gulp.task('less', function () {
