@@ -1,10 +1,10 @@
 var Backbone = require('Backbone'),
   $ = Backbone.$,
   _ = require('underscore'),
-  models = require('../models'),
-  creek = require('../creek'),
-  donut = require('../donut'),
   d3 = require('d3'),
+  creek = require('../lib/viz/creek'),
+  donut = require('../lib/viz/donut'),
+  models = require('../models'),
   debug = require('debug')('mg:scope:database');
 
 module.exports = Backbone.View.extend({

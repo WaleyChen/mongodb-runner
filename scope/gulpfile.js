@@ -29,15 +29,27 @@ gulp.task('assets', function(){
 });
 
 gulp.task('less', function () {
-  gulp.src('./app/*.less')
-    .pipe(less({
-      paths: [__dirname + '/app/less', __dirname + '/app/less/atom', __dirname + '/app/less/atom/variables']
-    }))
+  var lessPaths = [
+    __dirname + '/app/less',
+    __dirname + '/app/less/atom',
+    __dirname + '/app/less/atom/variables'
+  ];
+
+  gulp.src('./app/less/index.less')
+    .pipe(less({paths: lessPaths}))
     .pipe(gulp.dest('../rest/ui'));
+
+  gulp.src('./app/less/pages/*.less')
+    .pipe(less({paths: lessPaths}))
+    .pipe(gulp.dest('../rest/ui/css'));
 });
 
 gulp.task('pages', function(){
-  gulp.src('./app/templates/{index,styleguide,funnel,demo}.jade')
+  gulp.src('./app/templates/index.jade')
+    .pipe(jade({pretty: false}))
+    .pipe(gulp.dest('../rest/ui'));
+
+  gulp.src('./app/pages/*.jade')
     .pipe(jade({pretty: false}))
     .pipe(gulp.dest('../rest/ui'));
 });

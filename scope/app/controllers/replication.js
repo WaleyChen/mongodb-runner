@@ -1,6 +1,6 @@
 "use strict";
 
-var Controller = require('../splint').Controller;
+var Controller = require('../lib/splint').Controller;
 
 module.exports = Controller.extend({
   models: {

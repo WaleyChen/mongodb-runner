@@ -25,7 +25,8 @@ mixin security_row(action, hidden)
     td #{action.description}
     td.tags
       each tag in action.tags
-        span.text-smaller.text-subtle.inline-block #{tag}
+        if tag !== 'command'
+          span.text-smaller.text-subtle.inline-block #{tag}
       span.glyphicon.glyphicon-tags.inline-block.text-subtle
 
 mixin security_grantBox(grant)
@@ -40,9 +41,13 @@ mixin security_grantBox(grant)
       table.grants
         each action in grant.actions
           +security_row(action, hidden)
+        +security_hiddenActions(hidden)
 
-        tr(style="#{Object.keys(hidden).length === 0 ? 'display: none' : ''}")
-            td(colspan="2")
-              a.pop.subtle(data-toggle="popover", data-placement="right", data-title="low priority actions"
-          data-content="#{Object.keys(hidden).join('\n')}") #{Object.keys(hidden).length} low priority
+mixin security_hiddenActions(hidden)
+  if Object.keys(hidden).length > 0
+    tr
+      td(colspan="2")
+        a.pop.subtle(data-toggle="popover", data-placement="right",
+          data-title="low priority actions" data-content="#{Object.keys(hidden).join('\n')}")
+          | #{Object.keys(hidden).length} low priority
 

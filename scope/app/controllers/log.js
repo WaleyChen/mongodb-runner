@@ -1,8 +1,7 @@
 var Backbone = require('backbone'),
   $ = Backbone.$,
-  _ = require('underscore'),
-  models = require('../models'),
   moment = require('moment'),
+    models = require('../models'),
   debug = require('debug')('mongoscope:log');
 
 module.exports = Backbone.View.extend({

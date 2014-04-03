@@ -1,9 +1,7 @@
 var Backbone = require('Backbone'),
   $ = Backbone.$,
   _ = require('underscore'),
-  d3 = require('d3'),
   models = require('../models'),
-  creek = require('../creek'),
   debug = require('debug')('mg:scope:collection');
 
 module.exports = Backbone.View.extend({
@@ -20,10 +18,6 @@ module.exports = Backbone.View.extend({
 
     this.top = new models.Top()
       .on('sync', this.onTopData, this);
-
-    this.graph = creek('.collection-creek', {
-      interpolation: 'step-after'
-    });
 
     this.explorer = new ExplorerView({
       collection: this.collection

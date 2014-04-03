@@ -13,5 +13,14 @@ include ../mixins/security
             | #{role.role}
 
 .row: .col-md-12
-  each grant in user.grants
-    +security_grantBox(grant)
+ each grant in user.grants
+  - hidden = {}
+  .section
+    .section-heading
+      h4
+        +security_naturalize(grant.resource)
+
+    table
+      each action in grant.actions
+        +security_row(action, hidden)
+      +security_hiddenActions(hidden)

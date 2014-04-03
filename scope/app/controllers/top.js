@@ -2,9 +2,9 @@
 
 var Backbone = require('backbone'),
   models = require('../models'),
-  debug = require('debug')('mg:scope:top'),
-  creek = require('../creek'),
-  moment = require('moment');
+  creek = require('../lib/viz/creek'),
+  moment = require('moment'),
+  debug = require('debug')('mg:scope:top');
 
 module.exports = Backbone.View.extend({
   tpl: require('../templates/top.jade'),

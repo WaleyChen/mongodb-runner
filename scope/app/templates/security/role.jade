@@ -2,17 +2,13 @@ include ../mixins/security
 
 h2 #{role.isBuiltin ? 'Builtin Role' : 'Custom Role'}: #{role.role}
 
-div
+.row: .col-md-12
   each grant in role.grants
     - hidden = {}
-    .panel(style="margin-bottom: 20px;")
-      .panel-heading.mono #{JSON.stringify(role.resource) || 'For any collection in any database'}
-      .panel-body
-        table.grants
-           each action in grant.actions
-            +security_row(action, hidden)
-
-      .panel-footer.padded(style="#{Object.keys(hidden).length === 0 ? 'display: none' : ''}")
-        a.pop.subtle(data-toggle="popover", data-placement="right",
-          data-title="low priority actions"
-          data-content="#{Object.keys(hidden).join('\n')}") #{Object.keys(hidden).length} low priority
+    .section
+      .section-heading
+        h4.mono #{JSON.stringify(role.resource) || 'For any collection in any database'}
+      table
+       each action in grant.actions
+        +security_row(action, hidden)
+      +security_hiddenActions(hidden)

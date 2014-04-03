@@ -3,9 +3,9 @@
 var Backbone = require('Backbone'),
   $ = Backbone.$,
   models = require('../models'),
-  creek = require('../creek'),
-  debug = require('debug')('mg:scope:pulse'),
-  DatabasePulseView = require('./database').Summary;
+  creek = require('../lib/viz/creek'),
+  DatabasePulseView = require('./database').Summary,
+  debug = require('debug')('mg:scope:pulse');
 
 module.exports = Backbone.View.extend({
   tpl: require('../templates/pulse.jade'),

@@ -1,6 +1,6 @@
 "use strict";
 
-var splint = require('../splint'),
+var splint = require('../lib/splint'),
   debug = require('debug')('mg:scope:router');
 
 new (require('./toolbar'))();
