@@ -3,12 +3,27 @@
 var splint = require('../lib/splint'),
   debug = require('debug')('mg:scope:router');
 
+require('../models')({
+  error: function(instance, err, options){
+    if(err.status === 401){
+      return window.location.hash = 'authenticate';
+    }
+
+    debug('unexpected initialization error...');
+    throw err;
+  },
+  success: function(){
+    debug('ready');
+  }
+});
+
 new (require('./toolbar'))();
 
 var security = new (require('./security'))();
 
 module.exports = function(opts){
   return splint(
+    ['authenticate', 'authenticate', new (require('./auth'))()],
     ['pulse', 'pulse', new (require('./pulse'))(), {index: true}],
     ['log', 'log', new (require('./log'))()],
     ['top', 'top', new (require('./top'))()],
@@ -18,6 +33,5 @@ module.exports = function(opts){
     ['security/roles/:database/:role', 'security_role', security.roleDetail],
     ['collection/:database_name/:collection_name',  'collection', new (require('./collection'))()],
     ['database/:database_name',  'database', new (require('./database'))()]
-
   );
 };

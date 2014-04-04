@@ -28,7 +28,6 @@
       "**/flash-src/**",
       "**/socket.io-client/components/**",
       "**/node_modules/redis/**",
-      "**/active-x-obfuscator/**",
       "**/test/**",
       "**/example/**"
     ]

@@ -14,7 +14,9 @@
     "debug": "^0.7.4",
     "mongolog": "^0.0.5",
     "lodash": "^2.4.1",
-    "diskspace": "^0.1.5"
+    "diskspace": "^0.1.5",
+    "express-jwt": "^0.2.0",
+    "jsonwebtoken": "^0.2.0"
   },
   "devDependencies": {
     "mocha": "^1.17.1"
@@ -24,7 +26,14 @@
     "node": true,
     "indent": 2,
     "newcap": true,
-    "predef": [ "describe", "it", "before", "beforeEach", "after", "afterEach"],
+    "predef": [
+      "describe",
+      "it",
+      "before",
+      "beforeEach",
+      "after",
+      "afterEach"
+    ],
     "quotmark": "single",
     "unused": true,
     "trailing": true,

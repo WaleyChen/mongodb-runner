@@ -13,21 +13,21 @@ var service,
   top;
 
 module.exports = function(opts){
-  module.exports.settings = settings = new Settings(opts);
+  module.exports.settings = settings = new Settings({
+    host: window.location.hostname,
+    port: 29017
+  });
 
   service = require('./service')(settings.get('host'), settings.get('port'));
-  module.exports.instance = instance = new Instance();
-  module.exports.top = top = new Top();
-  instance.fetch();
 
-  return service;
+  module.exports.instance = instance = new Instance();
+  instance.fetch({error: opts.error, success: opts.success});
+
+  module.exports.top = top = new Top();
 };
 
 var Settings = Backbone.Model.extend({
-    defaults: {
-      host: window.document.hostname,
-      port: 29017
-    }
+    defaults: {}
   }),
   Instance = Backbone.Model.extend({
     service: 'instance'

@@ -1,11 +1,13 @@
 "use strict";
 
 var $ = require('jquery')
+  , _ = require('underscore')
   , debug = require('debug')('mg:scope:service')
   , socketio = require('socket.io-client')
   , srv;
 
 module.exports = function(hostname, port){
+  debug('init', hostname, port);
   if(!srv) srv = new Service(hostname, port).connect();
   return srv;
 };
@@ -25,9 +27,7 @@ Service.prototype.connect = function(){
   if(this.connected) return this;
 
   this.origin = 'http://' + this.hostname + ':' + this.port;
-  this.io = socketio.connect(this.origin).on('connected', function(){
-    debug('socketio connected');
-  });
+  this.io = socketio;
   this.connected = true;
   return this;
 };
@@ -44,15 +44,43 @@ Service.prototype.read = function(pathname, params, fn){
     params = {};
   }
 
-  // debug('$get  ' + pathname, params);
-
   $.get(this.origin + '/api/v1' + pathname, params, function(data){
     if(typeof data === 'string'){
       data = JSON.parse(data);
     }
-
-    // debug('$res  ' + pathname, data);
     fn(null, data);
+  }).fail(function(xhr){
+    var err = new Error(xhr.responseText.replace('Error: ', ''));
+    err.status = xhr.status;
+    err.statusText = xhr.statusText;
+    fn(err);
+  });
+};
+
+Service.prototype.post = function(pathname, params, fn){
+  if(typeof params === 'function'){
+    fn = params;
+    params = {};
+  }
+
+  params = params || {};
+  var headers = {
+    'Accept': 'application/json'
+  };
+
+  if(pathname !== 'token'){
+    headers.Authorization = 'Bearer ' + this.token;
+  }
+
+  $.ajax({
+      url: this.origin + '/api/v1' + pathname,
+      data: params,
+      headers: headers,
+      type: 'post',
+      dataType: 'json',
+      success: function(data){
+        fn(null, data);
+      }
   });
 };
 
@@ -179,6 +207,66 @@ Service.prototype.collection = function(db, name, fn){
   this.read('/' + db + '/' + name, function(err, data){
     if(err) return fn(err);
     fn(null, data);
+  });
+};
+
+Service.prototype.setCredentials = function(username, password, options, fn){
+  if(typeof options === 'function'){
+    fn = options;
+    options = {};
+  }
+
+  var self = this,
+    // Refresh our token 15 seconds before it expires.
+    expirationRedLine = 15 * 1000;
+
+  function _bakeToken(done){
+    var data = _.extend({
+      username: username,
+      password: password
+    }, {}, options);
+
+    debug('getting token');
+    self.post('token', data, done);
+  }
+
+  function _refreshToken(){
+    _bakeToken(username, password, options, function(err, res){
+      if(err) self.emit('error', err);
+      self.token = res.token;
+
+      debug('token refreshed successfully');
+      return _scheduleRefresh(res);
+    });
+  }
+
+  function _scheduleRefresh(res){
+    var ms = (new Date(res.expiration) - Date.now()) - expirationRedLine;
+    debug('token refresh goes down in ' + ms + 'ms');
+    setTimeout(_refreshToken, ms);
+  }
+
+  // Bake the initial token.
+  _bakeToken(function(err, res){
+    if(err) return fn(err);
+
+    debug('baked fresh token');
+    self.token = res.token;
+
+    // Connect to socketio and be ready to respond to challenges
+    // with our tasty new token.
+    self.io = socketio.connect(this.origin)
+      .on('connected', function(socket){
+        debug('socketio connected');
+      })
+      .on('challenge', function(socket){
+        socket.emit('challenge', {token: self.token});
+      });
+
+    debug('starting refresh loop');
+    _scheduleRefresh(res);
+
+    fn();
   });
 };
 
