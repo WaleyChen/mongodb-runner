@@ -1,0 +1,2 @@
+sudo /home/ubuntu/startup.sh
+exit 0
