@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var smongo = require('../smongo'),
   debug = require('debug')('mg:mongorest:top');

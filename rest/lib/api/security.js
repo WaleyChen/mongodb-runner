@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var mw = require('../db-middleware'),
   NotAuthorized = require('./errors').NotAuthorized,

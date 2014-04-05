@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var smongo = require('../smongo'),
   NotAuthorized = require('./errors').NotAuthorized,

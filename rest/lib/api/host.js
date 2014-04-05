@@ -1,11 +1,8 @@
-"use strict";
-
-var express = require('express'),
-  NotAuthorized = require('./errors').NotAuthorized,
-  debug = require('debug')('mg:rest:host');
+'use strict';
+var NotAuthorized = require('./errors').NotAuthorized;
 
 module.exports = function(app){
-  app.get('/api/v1/:host', info, dbNames, build, deployment, function(req, res, next){
+  app.get('/api/v1/:host', info, dbNames, build, deployment, function(req, res){
     res.send({
       database_names: req.mongo.database_names,
       deployment: req.deployment,
@@ -22,6 +19,7 @@ function deployment(req, res, next){
       req.deployment = deployment;
     }
   });
+  next();
 }
 
 function info(req, res, next){
@@ -68,7 +66,7 @@ function dbNames(req, res, next){
     if(err) return next(err);
     if(!data) return next(new NotAuthorized('not authorized to list databases'));
 
-   req.mongo.database_names = data.databases.filter(function(db){
+    req.mongo.database_names = data.databases.filter(function(db){
       return ['local', 'admin'].indexOf(db.name) === -1;
     }).map(function(db){
       return db.name;
@@ -83,18 +81,18 @@ function build(req, res, next){
     if(!data) return next(new NotAuthorized('not authorized to view build info'));
 
     req.mongo.build = {
-        version: data.version,
-        commit: data.gitVersion,
-        commit_url: 'https://github.com/mongodb/mongo/commit/' + data.gitVersion,
-        openssl_version: data.OpenSSLVersion || null,
-        boost_version: /BOOST_LIB_VERSION=([\d_]+)/.exec(data.sysInfo)[1].replace('_', '.'),
-        flags_loader: data.loaderFlags,
-        flags_compiler: data.compilerFlags,
-        allocator: data.allocator,
-        javascript_engine: data.javascriptEngine,
-        debug: data.debug,
-        for_bits: data.bits,
-        max_bson_object_size: data.maxBsonObjectSize,
+      version: data.version,
+      commit: data.gitVersion,
+      commit_url: 'https://github.com/mongodb/mongo/commit/' + data.gitVersion,
+      openssl_version: data.OpenSSLVersion || null,
+      boost_version: /BOOST_LIB_VERSION=([\d_]+)/.exec(data.sysInfo)[1].replace('_', '.'),
+      flags_loader: data.loaderFlags,
+      flags_compiler: data.compilerFlags,
+      allocator: data.allocator,
+      javascript_engine: data.javascriptEngine,
+      debug: data.debug,
+      for_bits: data.bits,
+      max_bson_object_size: data.maxBsonObjectSize,
     };
     next();
   });

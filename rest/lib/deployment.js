@@ -1,7 +1,6 @@
-"use strict";
+'use strict';
 
 var connect = require('mongodb').MongoClient;
-
 
 module.exports = function discover(seed, fn){
   var deployment = new Deployment(seed);

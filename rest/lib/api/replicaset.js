@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // @todo: all of the below was debug out of various company repos,
 // trying to figure out what data/operations people actually care about

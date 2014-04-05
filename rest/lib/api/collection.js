@@ -1,7 +1,6 @@
-"use strict";
+'use strict';
 
 var mw = require('../db-middleware'),
-  errors = mw.errors,
   prefix = '/api/v1/:host/:database_name/:collection_name';
 
 module.exports = function(app){
@@ -40,7 +39,7 @@ function read(method){
   };
 }
 
-function get(req, res, next){
+function get(req, res){
   req.collection.indexes.map(function(index, i){
     req.collection.indexes[i].size = req.collection.stats.index_sizes[index.name];
   });
@@ -54,7 +53,7 @@ function get(req, res, next){
     indexes: req.collection.indexes,
     stats: req.collection.stats
   });
-};
+}
 
 function stats(req, res, next){
   req.database.command({collStats: req.param('collection_name')}, {}, function(err, data){
@@ -75,7 +74,7 @@ function stats(req, res, next){
     };
     next();
   });
-};
+}
 
 function indexes(req, res, next){
   var ns = req.param('database_name') + '.' + req.param('collection_name');

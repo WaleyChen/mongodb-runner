@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var mw = require('../db-middleware'),
   errors = require('./errors'),
@@ -6,7 +6,7 @@ var mw = require('../db-middleware'),
   debug = require('debug')('mg:mongorest:database');
 
 module.exports = function(app){
-  app.get('/api/v1/:host/:database_name', mw.database(), stats, collections, function(req, res, next){
+  app.get('/api/v1/:host/:database_name', mw.database(), stats, collections, function(req, res){
     res.send({
       name: req.param('database_name'),
       collection_names: req.database.collection_names,

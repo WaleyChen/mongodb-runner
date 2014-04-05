@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var http = function(code, message, ref){
   var err = new Error();

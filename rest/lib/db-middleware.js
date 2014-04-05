@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var errors = require('./api/errors'),
   debug = require('debug')('mg:scope:db-middleware');
