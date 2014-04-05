@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var Controller = require('../lib/splint').Controller;
 
@@ -8,4 +8,3 @@ module.exports = Controller.extend({
   },
   tpl: require('../templates/replication.jade')
 });
-

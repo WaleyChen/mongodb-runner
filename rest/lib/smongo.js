@@ -33,7 +33,7 @@ CommandStream.prototype._pause = function(){
   clearTimeout(this.intervalId);
 };
 
-CommandStream.prototype._resume = function(size){
+CommandStream.prototype._resume = function(){
   var self = this;
   function go(){
     self.sample(function(err, data){
@@ -187,7 +187,6 @@ TopStream.prototype.compute = function(ns, res){
 };
 
 TopStream.prototype.normalize = function(data){
-  var totals = data[':'];
   delete data[':'];
   delete data.note;
 

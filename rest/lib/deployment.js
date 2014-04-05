@@ -85,6 +85,18 @@ function getSeedType(res, fn){
   }
 }
 
+module.exports.ping = function(uri, app){
+  module.exports(uri, function(err, deployment){
+    var existing = app.get('deployments');
+    existing.map(function(deploy, i){
+      if(deploy.seed === deployment.seed){
+        existing[i] = deployment;
+      }
+    });
+    app.set('deployments', existing);
+  });
+};
+
 function Deployment(seed){
   this.seed = seed;
   this.hosts = {};

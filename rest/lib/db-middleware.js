@@ -1,7 +1,6 @@
 'use strict';
 
-var errors = require('./api/errors'),
-  debug = require('debug')('mg:scope:db-middleware');
+var errors = require('./api/errors');
 
 module.exports = function(app){
   app.use(function(req, res, next){

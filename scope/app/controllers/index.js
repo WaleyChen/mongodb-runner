@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
 var splint = require('../lib/splint'),
   debug = require('debug')('mg:scope:router');
 
 require('../models')({
-  error: function(instance, err, options){
+  error: function(instance, err){
     if(err.status === 401){
       return window.location.hash = 'authenticate';
     }
@@ -21,7 +21,7 @@ new (require('./toolbar'))();
 
 var security = new (require('./security'))();
 
-module.exports = function(opts){
+module.exports = function(){
   return splint(
     ['authenticate', 'authenticate', new (require('./auth'))()],
     ['pulse', 'pulse', new (require('./pulse'))(), {index: true}],

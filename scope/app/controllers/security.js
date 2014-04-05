@@ -1,8 +1,7 @@
-"use strict";
+'use strict';
 
 var Backbone = require('backbone'),
   $ = Backbone.$,
-  _ = require('underscore'),
   models = require('../models'),
   debug = require('debug')('mongoscope:security');
 
@@ -53,7 +52,7 @@ var DetailView = Backbone.View.extend({
   // parent circle back to us when our containing dom is ready.
   activate: function(db, _id){
     debug('activate ' + this, db, _id);
-    if(this.type == 'user'){
+    if(this.type === 'user'){
       this.set({database: db, username: _id});
     }
     else {
@@ -107,7 +106,7 @@ module.exports = Backbone.View.extend({
   markSelected: function(e){
     debug('mark selected', e.target, e);
 
-    var lg = this.$el.find('.list-group')
+    var lg = this.$el.find('.list-group');
     lg.find('a.selected').removeClass('selected');
     $(e.currentTarget).addClass('selected');
   },

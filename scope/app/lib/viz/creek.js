@@ -1,12 +1,11 @@
-"use strict";
+'use strict';
 
 // Simple way to make a nice chart with a single metric being streamed into it.
 //
 // @todo: make this an actual duplex stream.
 var _ = require('lodash'),
   $ = require('jquery'),
-  d3 = require('d3'),
-  debug = require('debug')('creek');
+  d3 = require('d3');
 
 module.exports = function(selector, opts){
   opts = opts || {};

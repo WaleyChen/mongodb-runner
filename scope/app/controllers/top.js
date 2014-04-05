@@ -1,10 +1,8 @@
-"use strict";
+'use strict';
 
 var Backbone = require('backbone'),
   models = require('../models'),
-  creek = require('../lib/viz/creek'),
-  moment = require('moment'),
-  debug = require('debug')('mg:scope:top');
+  moment = require('moment');
 
 module.exports = Backbone.View.extend({
   tpl: require('../templates/top.jade'),

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var Backbone = require('backbone'),
   Backbone = require('Backbone'),
@@ -28,7 +28,7 @@ module.exports = function splint(){
   router._nameToHandler = {};
 
   // Deactivate the previous controller
-  router.on('route', function(name, args){
+  router.on('route', function(name){
 
     if(router._current){
       debug('deactivating', router._current.name);

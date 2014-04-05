@@ -1,9 +1,8 @@
-"use strict";
+'use strict';
 
 var Backbone = require('Backbone'),
   $ = Backbone.$,
   models = require('../models'),
-  creek = require('../lib/viz/creek'),
   DatabasePulseView = require('./database').Summary,
   debug = require('debug')('mg:scope:pulse');
 
@@ -42,7 +41,7 @@ module.exports = Backbone.View.extend({
 
     clearTimeout(this.poller);
     if(self.instance.get('database_names').length === 0){
-        this.$el.html(this.tpl({
+      this.$el.html(this.tpl({
           'instance': this.instance.toJSON(),
           'metric': this.metric
         }));
@@ -69,4 +68,3 @@ module.exports = Backbone.View.extend({
     });
   }
 });
-

@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
-var $ = require('jquery')
-  , _ = require('underscore')
-  , debug = require('debug')('mg:scope:service')
-  , socketio = require('socket.io-client')
-  , srv;
+var $ = require('jquery'),
+  _ = require('underscore'),
+  debug = require('debug')('mg:scope:service'),
+  socketio = require('socket.io-client'),
+  srv;
 
 module.exports = function(hostname, port){
   debug('init', hostname, port);
@@ -81,7 +81,7 @@ Service.prototype.post = function(pathname, params, fn){
       success: function(data){
         fn(null, data);
       }
-  });
+    });
 };
 
 // An easier to use top.
@@ -210,6 +210,9 @@ Service.prototype.collection = function(db, name, fn){
   });
 };
 
+// Get a short lived auth token that will be automatically refreshed.
+// Tokens are 1:1 for deployments.  Want to access another deployment?
+// You'll need to get another token for it.
 Service.prototype.setCredentials = function(username, password, options, fn){
   if(typeof options === 'function'){
     fn = options;
@@ -226,7 +229,9 @@ Service.prototype.setCredentials = function(username, password, options, fn){
       password: password
     }, {}, options);
 
-    debug('getting token');
+    options.host = options.host || 'localhost:27017';
+
+    debug('getting token for', options.host);
     self.post('token', data, done);
   }
 
@@ -256,7 +261,7 @@ Service.prototype.setCredentials = function(username, password, options, fn){
     // Connect to socketio and be ready to respond to challenges
     // with our tasty new token.
     self.io = socketio.connect(this.origin)
-      .on('connected', function(socket){
+      .on('connected', function(){
         debug('socketio connected');
       })
       .on('challenge', function(socket){

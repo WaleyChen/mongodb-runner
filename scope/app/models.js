@@ -1,7 +1,6 @@
-"use strict";
+'use strict';
 
 var Backbone = require('backbone'),
-  _ = require('lodash'),
   Model = require('./service').Model,
   List = require('./service').List,
   debug = require('debug')('mg:scope:models');
@@ -9,8 +8,7 @@ var Backbone = require('backbone'),
 // singletons.
 var service,
   settings,
-  instance,
-  top;
+  instance;
 
 module.exports = function(opts){
   module.exports.settings = settings = new Settings({
@@ -23,7 +21,7 @@ module.exports = function(opts){
   module.exports.instance = instance = new Instance();
   instance.fetch({error: opts.error, success: opts.success});
 
-  module.exports.top = top = new Top();
+  module.exports.top = instance.top = new Top();
 };
 
 var Settings = Backbone.Model.extend({
@@ -129,8 +127,6 @@ module.exports.Sample = List.extend({
     this.fetch({reset: true});
   },
   collectionChange: function(){
-    var isFirst = this.database === null;
-
     this.database = this.collection.get('database');
     this.name = this.collection.get('name');
     this.fetch({reset: true});
@@ -343,7 +339,8 @@ var User = Backbone.Model.extend({
 module.exports.Security = Backbone.Model.extend({
   defaults: {
     users: List.extend({
-      model: User, service: 'securityUsers'
+      model: User,
+      service: 'securityUsers'
     }),
     roles: List.extend({
       model: Role,
