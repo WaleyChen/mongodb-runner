@@ -22,6 +22,8 @@ function databases(fn){
   });
 }
 
+function configServers(){}
+
 function collections(databaseId, fn){
   if(!db.partitioned) return fn();
 

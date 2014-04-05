@@ -5,24 +5,23 @@ var express = require('express'),
   debug = require('debug')('mg:rest:host');
 
 module.exports = function(app){
-  app.get('/api/v1/:host', info, dbNames, build, function(req, res, next){
+  app.get('/api/v1/:host', info, dbNames, build, deployment, function(req, res, next){
     res.send({
       database_names: req.mongo.database_names,
-      deployment: getDeployment(req.param('host'), req.deployments),
+      deployment: req.deployment,
       host: req.mongo.host,
       build: req.mongo.build
     });
   });
 };
 
-function getDeployment(uri, deployments){
-  var d = null;
-  deployments.map(function(deployment){
+function deployment(req, res, next){
+  var uri = req.param('host');
+  req.deployments.map(function(deployment){
     if(deployment[uri]){
-      d = deployment;
+      req.deployment = deployment;
     }
   });
-  return d;
 }
 
 function info(req, res, next){

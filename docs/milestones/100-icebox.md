@@ -6,10 +6,11 @@
 
 ## `#shell`
   - read only shell
+  - mine docs for autocomplete http://docs.mongodb.org/master/reference/command/
   - tabbed shells
   - extensible enough to support
     - imonogo (eg `histogram('users', 'friend_count')`)
-    - run script from gist url
+    - run script from gist url.  https://developer.github.com/v3/gists/
 
 ## `#stats`
   - pulse level:

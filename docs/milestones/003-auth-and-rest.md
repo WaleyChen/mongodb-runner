@@ -29,6 +29,11 @@
   - sharding
   - more replication methods
   - stream `currentOp`
+  - sse
+    - https://segment.io/blog/2014-04-03-server-sent-events-the-simplest-realtime-browser-spec/
+    - https://github.com/segmentio/sse
+    - http://www.html5rocks.com/en/tutorials/eventsource/basics/
+    - https://github.com/Yaffle/EventSource/
 
 ### UI
 
