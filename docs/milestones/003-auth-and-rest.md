@@ -16,8 +16,8 @@
 - [x] server: way to use token to map to connections and hosts
 - [x] can pass an initial seed uri to `/api/v1/token` that will add the first deployment
 - [x] api route to 'attach mongoscope', aka add a new deployment
+- [x] `smongo` needs to support on the fly stream creation for a host
 
-- [ ] `smongo` needs to support on the fly stream creation for a host
 - [ ] add working section to onesheet for authentication
 - [ ] send onesheet to security team and schedule review meeting
 

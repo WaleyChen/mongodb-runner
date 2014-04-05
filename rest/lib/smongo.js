@@ -5,6 +5,33 @@ var stream = require('stream'),
   mongolog = require('mongolog'),
   debug = require('debug')('mg:smongo');
 
+module.exports.top = function(app){
+  var io = app.get('io'),
+    tops = {};
+
+  function getStream(uri){
+    if(!tops[uri]){
+      tops[uri] = new TopStream(app._connections[uri].admin());
+    }
+    return tops[uri];
+  }
+
+  // @todo: token challenge.
+  io.sockets.on('connection', function(socket){
+    socket.on('/top', function(uri){
+      getStream(uri).socketio('/top', socket);
+    });
+  });
+
+  return function(req, res){
+    var top = getStream(req.param('host'));
+    top.once('data', function(data){
+      res.send(data);
+    });
+    top.read(1);
+  };
+};
+
 module.exports.createTopStream = function(db, opts){
   return new TopStream(db, opts);
 };
@@ -65,40 +92,34 @@ CommandStream.prototype.sample = function(fn){
   });
 };
 
-CommandStream.prototype.socketio = function(uri, io){
-  this.subscribers = null;
-  this.paused = false;
-  this.uri = uri;
-
+CommandStream.prototype.socketio = function(prefix, socket){
   var self = this;
-  io.sockets.on('connection', function(socket){
-    socket.on(uri, function(){
-        if(self.subscribers === null){
-          self.on('data', function(data){
-            var ids = Object.keys(self.subscribers);
-            debug('pushing to ' + ids.length + ' subscribers');
 
-            ids.map(function(id){
-              self.subscribers[id].emit(uri, data);
-            });
-          });
-          self.subscribers = {};
-          debug('got initial connection');
-        }
-        self.subscribers[socket.id] = socket;
-      })
-      .on(uri + '/unsubscribe', function(){
-        if(self.subscribers[socket.id]){
-          debug('unsubscribing');
-          delete self.subscribers[socket.id];
-        }
-      }).on('disconnect', function(){
-        debug('disconnect');
-        if(self.subscribers !== null && self.subscribers[socket.id]){
-          delete self.subscribers[socket.id];
-        }
+  if(!this.subscribers){
+    this.subscribers = {};
+    this.paused = false;
+
+    this.on('data', function(data){
+      var ids = Object.keys(self.subscribers);
+      debug('pushing to ' + ids.length + ' subscribers');
+
+      ids.map(function(id){
+        self.subscribers[id].emit(prefix, data);
       });
-  });
+    });
+    debug('got initial connection');
+  }
+  this.subscribers[socket.id] = socket;
+
+  function unsub(){
+    if(self.subscribers[socket.id]){
+      debug('unsubscribing');
+      delete self.subscribers[socket.id];
+    }
+  }
+
+  socket.on(prefix + '/unsubscribe', unsub)
+    .on('disconnect', unsub);
   return this;
 };
 

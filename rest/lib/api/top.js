@@ -1,9 +1,7 @@
 'use strict';
 
-var smongo = require('../smongo'),
-  debug = require('debug')('mg:mongorest:top');
+var smongo = require('../smongo');
 
 module.exports = function(app){
-  var top = smongo.createTopStream(req.mongo.admin());
-  top.socketio('/top', app.get('io'));
+  app.get('/api/v1/top/:host', smongo.top(app));
 };
