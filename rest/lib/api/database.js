@@ -2,29 +2,23 @@
 
 var mw = require('../db-middleware'),
   errors = require('./errors'),
+  NotAuthorized = errors.NotAuthorized,
   debug = require('debug')('mg:mongorest:database');
 
 module.exports = function(app){
-  app.get('/api/v1/:database_name', mw.database(), stats, collection_names, function(req, res, next){
-    debug('building response');
+  app.get('/api/v1/:host/:database_name', mw.database(), stats, collections, function(req, res, next){
     res.send({
       name: req.param('database_name'),
       collection_names: req.database.collection_names,
       stats: req.database.stats
     });
   });
-
-  app.put('/api/v1/:database_name', create);
-  app.post('/api/v1/:database_name/clone', clone);
-  app.post('/api/v1/:database_name/drop', drop);
-  app.post('/api/v1/:database_name/repair', repair);
-  app.post('/api/v1/:database_name/fsync', fsync);
 };
 
-var stats = module.exports.stats = function(req, res, next){
-  debug('fetching stats');
+function stats(req, res, next){
   req.database.command({dbStats: 1}, {}, function(err, data){
     if(err) return next(err);
+    if(!data) return next(new NotAuthorized('not authorized to view stats for this database'));
 
     req.database.stats = {
       document_count: data.objects,
@@ -38,15 +32,14 @@ var stats = module.exports.stats = function(req, res, next){
     };
     next();
   });
-};
+}
 
-var collection_names = module.exports.collection_names = function(req, res, next){
-  debug('fetching collection names');
+function collections(req, res, next){
   req.mongo.find(req.database, 'system.namespaces', {}, function(err, data){
     if(err) return next(err);
+    if(!data) return next(new NotAuthorized('not authorized to view collections for this database'));
 
     debug('collection data', err, data, req.database.name);
-
     req.database.collection_names = data.filter(function(col){
       return !(col.name.indexOf('$') >= 0 && col.name.indexOf('.oplog.$') < 0);
     }).map(function(col){
@@ -54,26 +47,4 @@ var collection_names = module.exports.collection_names = function(req, res, next
     });
     next();
   });
-};
-
-// @todo: dont allow creating databases with stupid names like 'databases'.
-// it will just be confusing.
-function create(req, res, next){
-  next(new errors.NotImplemented());
-}
-
-function clone(req, res, next){
-  next(new errors.NotImplemented());
-}
-
-function drop(req, res, next){
-  next(new errors.NotImplemented());
-}
-
-function repair(req, res, next){
-  next(new errors.NotImplemented());
-}
-
-function fsync(req, res, next){
-  next(new errors.NotImplemented());
 }

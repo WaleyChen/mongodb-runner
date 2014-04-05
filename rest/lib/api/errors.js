@@ -17,6 +17,10 @@ module.exports.NotFound = function(message){
   return http(404, message, module.exports.NotFound);
 };
 
+module.exports.NotAuthorized = function(message){
+  return http(403, message, module.exports.NotAuthorized);
+};
+
 module.exports.BadRequest = function(message){
   return http(400, message, module.exports.BadRequest);
 };

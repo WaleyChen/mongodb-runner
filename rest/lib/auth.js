@@ -24,7 +24,7 @@ module.exports = function(app){
   app.use(validateToken(options.read), function(req, res, next){
       // Ok we have a valid token!  Let's get our connection
       // and ditch the unfortunate name choice...
-      req.db = app._connections[req.user];
+      req.mongo = app._connections[req.user];
       delete req.user;
       next();
     });

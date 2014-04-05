@@ -1,20 +1,22 @@
 "use strict";
 
 var smongo = require('../smongo'),
+  NotAuthorized = require('./errors').NotAuthorized,
   mongolog = require('mongolog');
 
 module.exports = function(app){
-  app.get('/api/v1/log', get);
-  app.get('/api/v1/log/:name', get);
+  app.get('/api/v1/:host/log', get);
+  app.get('/api/v1/:host/log/:name', get);
 
   smongo.createLogStream(app.get('db').admin())
     .socketio('/log', app.get('io'));
 };
 
-var get = module.exports.get = function(req, res, next){
+function get(req, res, next){
   req.mongo.admin().command({getLog: req.param('name', 'global')}, function(err, data){
     if(err) return next(err);
+    if(!data) return next(new NotAuthorized('do not have permission to view logs'));
 
     res.send(mongolog.parse(data.documents[0].log));
   });
-};
+}

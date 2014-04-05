@@ -4,9 +4,7 @@ var errors = require('./api/errors'),
   debug = require('debug')('mg:scope:db-middleware');
 
 module.exports = function(app){
-  return function(req, res, next){
-    req.mongo = app.get('db');
-
+  app.use(function(req, res, next){
     req.mongo.find = function find(db, name, opts, fn){
       db.collection(name, function(err, coll){
         if(err) return fn(err);
@@ -14,14 +12,14 @@ module.exports = function(app){
         coll.find({}, [], opts || {}, function(err, data){
           if(err) return fn(err);
           data.toArray(function(err, data){
-            if(data === null) return fn(new Error('Not authoirzed to run this query? ' + db.databaseName + '.' + name + '.find()'));
+            if(data === null) return fn(new Error('Not authorized?'));
             fn(null, data);
           });
         });
       });
     };
     next();
-  };
+  });
 };
 
 module.exports.admin = function(){

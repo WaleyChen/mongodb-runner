@@ -192,7 +192,9 @@
 //     }
 // }
 
-var debug = require('debug')('mg:mongorest:replicaset');
+var NotAuthorized = require('./errors').NotAuthorized,
+  debug = require('debug')('mg:mongorest:replicaset');
+
 var mock = {
   documents: [{
     ok: 1,
@@ -241,14 +243,15 @@ var mock = {
 };
 
 module.exports = function(app){
-  app.get('/api/v1/replicaset', get, function(req, res, next){
+  app.get('/api/v1/:host/replicaset', get, function(req, res, next){
     res.send(req.mongo.replicaset);
   });
 };
 
-var get = module.exports.get = function(req, res, next){
+function get(req, res, next){
   req.mongo.admin().command({replSetGetStatus: 1}, {}, function(err, data){
     if(err) return next(err);
+    if(!data) return next(new NotAuthorized('not authorized to replicaset status'));
 
     data = mock;
 
@@ -285,6 +288,21 @@ var get = module.exports.get = function(req, res, next){
           ping: member.pingMs
         };
 
+        // struct MemberState {
+        // enum MS {
+        //     RS_STARTUP = 0,
+        //     RS_PRIMARY = 1,
+        //     RS_SECONDARY = 2,
+        //     RS_RECOVERING = 3,
+        //     RS_FATAL = 4,
+        //     RS_STARTUP2 = 5,
+        //     RS_UNKNOWN = 6, /* remote node not yet reached */
+        //     RS_ARBITER = 7,
+        //     RS_DOWN = 8, /* node not reachable for a report */
+        //     RS_ROLLBACK = 9,
+        //     RS_SHUNNED = 10, /* node shunned from replica set */
+        // } s;
+
         if(member.optime){
           doc.optime_count = member.optime.i;
         }
@@ -315,4 +333,4 @@ var get = module.exports.get = function(req, res, next){
       });
     next();
   });
-};
+}
