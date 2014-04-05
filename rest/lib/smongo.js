@@ -5,6 +5,25 @@ var stream = require('stream'),
   mongolog = require('mongolog'),
   debug = require('debug')('mg:smongo');
 
+module.exports.log = function(app){
+  var io = app.get('io'),
+    logs = {};
+
+  function getStream(uri){
+    if(!logs[uri]){
+      logs[uri] = new LogStream(app._connections[uri].admin());
+    }
+    return logs[uri];
+  }
+
+  // @todo: token challenge.
+  io.sockets.on('connection', function(socket){
+    socket.on('/log', function(uri){
+      getStream(uri).socketio('/log', socket);
+    });
+  });
+};
+
 module.exports.top = function(app){
   var io = app.get('io'),
     tops = {};

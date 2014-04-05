@@ -8,8 +8,7 @@ module.exports = function(app){
   app.get('/api/v1/:host/log', get);
   app.get('/api/v1/:host/log/:name', get);
 
-  smongo.createLogStream(app.get('db').admin())
-    .socketio('/log', app.get('io'));
+  smongo.log(app);
 };
 
 function get(req, res, next){
