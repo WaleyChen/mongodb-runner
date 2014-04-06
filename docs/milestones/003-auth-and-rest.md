@@ -22,13 +22,13 @@
 - [ ] send onesheet to security team and schedule review meeting
 
 - other rest features to push through on:
-  - tailing / mydb / pub sub
-  - aggregation
-  - serverStatus
-  - profiling
-  - sharding
-  - more replication methods
-  - stream `currentOp`
+  - [ ] tailing / mydb / pub sub
+  - [ ] aggregation
+  - [x] serverStatus
+  - [ ] profiling
+  - [ ] sharding
+  - [ ] more replication methods
+  - [ ] stream `currentOp`
   - sse
     - https://segment.io/blog/2014-04-03-server-sent-events-the-simplest-realtime-browser-spec/
     - https://github.com/segmentio/sse

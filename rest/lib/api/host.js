@@ -2,15 +2,26 @@
 var NotAuthorized = require('./errors').NotAuthorized;
 
 module.exports = function(app){
-  app.get('/api/v1/:host', info, dbNames, build, deployment, function(req, res){
+  app.get('/api/v1/:host', info, dbNames, build, deployment, status, function(req, res){
     res.send({
       database_names: req.mongo.database_names,
       deployment: req.deployment,
       host: req.mongo.host,
-      build: req.mongo.build
+      build: req.mongo.build,
+      status: req.mongo.status
     });
   });
 };
+
+function status(req, res, next){
+  req.mongo.admin().serverStatus(function(err, data){
+    if(err) return next(err);
+    if(!data) return next(new NotAuthorized('not authorized to view server status'));
+
+    req.mongo.status = data;
+    next();
+  });
+}
 
 function deployment(req, res, next){
   var uri = req.param('host');
