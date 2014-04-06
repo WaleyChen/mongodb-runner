@@ -11,7 +11,32 @@ module.exports = function(app){
       status: req.mongo.status
     });
   });
+
+  app.get('/api/v1/:host/profile', profiling, getProfilingEntries, function(req, res){
+    res.send({
+      profiling: req.profiling,
+      entries: req.profilingEntries
+    });
+  });
 };
+
+function profiling(req, res, next){
+  req.mongo.admin().profilingLevel(function(err, data){
+    if(err) return next(err);
+    if(!data) return next(new NotAuthorized('not authorized to view profiling level'));
+    req.profiling = data;
+    next();
+  });
+}
+
+function getProfilingEntries(req, res, next){
+  req.mongo.admin().profilingInfo(function(err, docs){
+    if(err) return next(err);
+    if(!docs) return next(new NotAuthorized('not authorized to view profiling data'));
+    req.profilingEntries = docs;
+    next();
+  });
+}
 
 function status(req, res, next){
   req.mongo.admin().serverStatus(function(err, data){
