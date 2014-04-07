@@ -143,6 +143,9 @@ function getId(uri){
   return uri;
 }
 
+var connections = {},
+  reapers = {};
+
 function Deployment(seed){
   seed = seed.replace('mongodb://', '');
 
@@ -150,10 +153,9 @@ function Deployment(seed){
   this.instances = {};
   this._id = getId(seed);
   this.name = '';
-  this.reapers = {};
 
-  // token -> active connection
-  this.connections = {};
+  reapers[this._id] = {};
+  connections[this._id] = {};
 }
 
 Deployment.prototype.ping = function(){
@@ -185,18 +187,18 @@ Deployment.prototype.add = function(uri, type){
 };
 
 Deployment.prototype.connection = function(token, db){
-  if(arguments.length === 1) return this.connections[token];
+  if(arguments.length === 1) return connections[this._id][token];
 
-  this.connections[token] = db;
+  connections[this._id][token] = db;
   // Set a timeout to reap the connection a little after the token
   // is supposed to expire.
-  if(this.reapers[token]) clearTimeout(this.reapers[token]);
+  if(reapers[this._id][token]) clearTimeout(reapers[this._id][token]);
 
   var self = this;
 
-  this.reapers[token] = setTimeout(function(){
-    if(self.connections[token]){
-      delete self.connections[token];
+  reapers[this._id][token] = setTimeout(function(){
+    if(connections[self._id][token]){
+      delete connections[self._id][token];
       debug('reaped connection for token', token);
     }
   }, nconf.get('token:lifetime') * 60 * 1000 + 1000);

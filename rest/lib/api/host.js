@@ -1,53 +1,238 @@
 'use strict';
 var NotAuthorized = require('../errors').NotAuthorized,
-  diskspace = require('diskspace');
+  diskspace = require('diskspace'),
+  deployment = require('../deployment');
 
 module.exports = function(app){
-  app.get('/api/v1/:host', info, dbNames, build, deployment, admin('serverStatus', 'status'), function(req, res){
+  app.get('/api/v1/:host', info, dbNames, build, function(req, res){
+    res.send(res.instance);
+  });
+
+  app.get('/api/v1/:host/metrics', getMetrics);
+
+  app.get('/api/v1/:host/profiling', admin('profilingLevel'),
+      admin('profilingInfo', 'profilingEntries'), function(req, res){
     res.send({
-      database_names: req.db.database_names,
-      deployment: req.deployment,
-      host: req.db.host,
-      build: req.db.build,
-      status: req.db.status
+      level: res.instance.profilingLevel,
+      entries: res.instance.profilingEntries
     });
   });
 
-  app.get('/api/v1/:host/profile', admin('profilingLevel'),
-      admin('profilingInfo', 'profilingEntries'), function(req, res){
-    res.send({
-      level: res.profilingLevel,
-      entries: res.profilingEntries
-    });
+  app.get('/api/v1/:host/profiling/entries', admin('profilingInfo', 'profilingEntries'), function(req, res){
+    res.send(res.instance.profilingEntries);
   });
 };
+
+
+function getMetrics(req, res, next){
+  var metrics = {};
+
+  req.mongo.admin().serverStatus(function(err, data){
+    if(err) return next(err);
+    if(!data) return next(new NotAuthorized('not authorized to run serverStatus'));
+
+    metrics.memory = {
+      assert_regular_count: data.asserts.regular,
+      assert_warning_count: data.asserts.warning,
+      assert_msg_count: data.asserts.msg,
+      assert_user_count: data.asserts.user,
+      assert_rollovers_count: data.asserts.rollovers,
+      resident_size: data.mem.resident,
+      virtual_size: data.mem.virtual,
+      mapped_size: data.mem.mapped,
+      mapped_journal_size: data.mem.mappedWithJournal - data.mem.mapped
+    };
+
+    metrics.network = {
+      connections_count: data.connections.current,
+      connections_available_count: data.connections.available,
+      connections_created_count: data.connections.totalCreated,
+      in_size: data.network.bytesIn,
+      out_size: data.network.bytesOut,
+      request_count: data.network.numRequests
+    };
+
+    metrics.durability = {
+      flush_total: data.backgroundFlushing.flushes,
+      flush_time: data.backgroundFlushing.total_ms,
+      flush_last_time: data.backgroundFlushing.last_ms,
+      flush_last_finished_at: data.backgroundFlushing.last_finished,
+      commits_count: data.dur.commits,
+      commits_early_count: data.dur.earlyCommits,
+      commits_inwritelock_count: data.dur.commitsInWriteLock,
+      journaled_size: data.dur.journaledMB * 1024 * 1024,
+      datafile_write_size: data.dur.writeToDataFilesMB * 1024 * 1024,
+      compression: data.dur.compression,
+      dt_time: data.dur.timeMs.dt,
+      preplogbuffer_time: data.dur.timeMs.prepLogBuffer,
+      journal_write_time: data.dur.timeMs.writeToJournal,
+      datafile_write_time: data.dur.timeMs.writeToDataFiles,
+      remap_time: data.dur.timeMs.remapPrivateView
+    };
+
+    metrics.lock = {
+      time: data.globalLock.totalTime,
+      locked_time: data.globalLock.lockTime,
+      readers_queued_count: data.globalLock.currentQueue.readers,
+      readers_active_count: data.globalLock.activeClients.readers,
+      writers_queued_count: data.globalLock.currentQueue.writers,
+      writers_active_count: data.globalLock.activeClients.writers
+    };
+
+    Object.keys(data.locks).map(function(name){
+      if(name.length > 2){
+        metrics.lock['db_' + name + '_readlocked_time'] = data.locks[name].timeLockedMicros.R * 1000;
+        metrics.lock['db_' + name + '_writelocked_time'] = data.locks[name].timeLockedMicros.W * 1000;
+        metrics.lock['db_' + name + '_readacquiring_time'] = data.locks[name].timeAcquiringMicros.R * 1000;
+        metrics.lock['db_' + name + '_writeacquiring_time'] = data.locks[name].timeAcquiringMicros.W * 1000;
+      }
+    });
+
+    metrics.indexes = {
+      accesses_count: data.indexCounters.accesses,
+      hits_count: data.indexCounters.hits,
+      misses_count: data.indexCounters.misses,
+      resets_count: data.indexCounters.resets
+    };
+
+    metrics.operations = {
+      insert_count: data.opcounters.insert,
+      query_count: data.opcounters.query,
+      update_count: data.opcounters.update,
+      delete_count: data.opcounters.delete,
+      getmore_count: data.opcounters.getmore,
+      command_count: data.opcounters.command,
+      repl_insert_count: data.opcountersRepl.insert,
+      repl_query_count: data.opcountersRepl.query,
+      repl_update_count: data.opcountersRepl.update,
+      repl_delete_count: data.opcountersRepl.delete,
+      repl_getmore_count: data.opcountersRepl.getmore,
+      repl_command_count: data.opcountersRepl.command
+    };
+// @todo: still to consolidate:
+//     "recordStats": {
+//       "accessesNotInMemory": 1,
+//       "pageFaultExceptionsThrown": 0,
+//       "admin": {
+//         "accessesNotInMemory": 0,
+//         "pageFaultExceptionsThrown": 0
+//       },
+//       "local": {
+//         "accessesNotInMemory": 1,
+//         "pageFaultExceptionsThrown": 0
+//       }
+//     },
+//     "metrics": {
+//       "cursor": {
+//         "timedOut": 0,
+//         "open": {
+//           "noTimeout": 0,
+//           "pinned": 0,
+//           "total": 0
+//         }
+//       },
+//       "document": {
+//         "deleted": 0,
+//         "inserted": 1,
+//         "returned": 0,
+//         "updated": 0
+//       },
+//       "getLastError": {
+//         "wtime": {
+//           "num": 0,
+//           "totalMillis": 0
+//         },
+//         "wtimeouts": 0
+//       },
+//       "operation": {
+//         "fastmod": 0,
+//         "idhack": 0,
+//         "scanAndOrder": 0
+//       },
+//       "queryExecutor": {
+//         "scanned": 0,
+//         "scannedObjects": 0
+//       },
+//       "record": {
+//         "moves": 0
+//       },
+//       "repl": {
+//         "apply": {
+//           "batches": {
+//             "num": 0,
+//             "totalMillis": 0
+//           },
+//           "ops": 0
+//         },
+//         "buffer": {
+//           "count": 0,
+//           "maxSizeBytes": 268435456,
+//           "sizeBytes": 0
+//         },
+//         "network": {
+//           "bytes": 0,
+//           "getmores": {
+//             "num": 0,
+//             "totalMillis": 0
+//           },
+//           "ops": 0,
+//           "readersCreated": 0
+//         },
+//         "preload": {
+//           "docs": {
+//             "num": 0,
+//             "totalMillis": 0
+//           },
+//           "indexes": {
+//             "num": 0,
+//             "totalMillis": 0
+//           }
+//         }
+//       },
+//       "storage": {
+//         "freelist": {
+//           "search": {
+//             "bucketExhausted": 0,
+//             "requests": 0,
+//             "scanned": 0
+//           }
+//         }
+//       },
+//       "ttl": {
+//         "deletedDocuments": 0,
+//         "passes": 122
+//       }
+    res.send(metrics);
+  });
+}
 
 function admin(cmd, sets){
   sets = sets || cmd;
 
   return function(req, res, next){
-    req.db.admin()[cmd](function(err, data){
+    req.mongo.admin()[cmd](function(err, data){
       if(err) return next(err);
       if(!data) return next(new NotAuthorized('not authorized to run ' + cmd));
 
-      res[sets] = data;
+      if(!res.instance){
+        res.instance = {};
+      }
+
+      res.instance[sets] = data;
       next();
     });
   };
 }
 
-function deployment(req, res, next){
-  req.deployment = deployment.get(req.param('host'));
-  next();
-}
-
 function info(req, res, next){
-  req.db.admin().command({hostInfo: 1}, {}, function(err, data){
+  res.instance = {};
+
+  req.mongo.admin().command({hostInfo: 1}, {}, function(err, data){
     if(err) return next(err);
     if(!data) return next(new NotAuthorized('not authorized to view host information'));
 
     data = data.documents[0];
-    req.db.host = {
+    res.instance.host = {
       system_time: data.system.currentTime,
       hostname:  data.system.hostname,
       os: data.os.name,
@@ -71,20 +256,20 @@ function info(req, res, next){
     };
 
     diskspace.check('/', function(total, free, state){
-      req.db.host.disk_total = total;
-      req.db.host.disk_free = free;
-      req.db.host.disk_state = state;
+      res.instance.host.disk_total = total;
+      res.instance.host.disk_free = free;
+      res.instance.host.disk_state = state;
       next();
     });
   });
 }
 
 function dbNames(req, res, next){
-  req.db.admin().listDatabases(function(err, data){
+  req.mongo.admin().listDatabases(function(err, data){
     if(err) return next(err);
     if(!data) return next(new NotAuthorized('not authorized to list databases'));
 
-    req.db.database_names = data.databases.filter(function(db){
+    res.instance.database_names = data.databases.filter(function(db){
       return ['local', 'admin'].indexOf(db.name) === -1;
     }).map(function(db){
       return db.name;
@@ -94,11 +279,11 @@ function dbNames(req, res, next){
 }
 
 function build(req, res, next){
-  req.db.admin().buildInfo(function(err, data){
+  req.mongo.admin().buildInfo(function(err, data){
     if(err) return next(err);
     if(!data) return next(new NotAuthorized('not authorized to view build info'));
 
-    req.db.build = {
+    res.instance.build = {
       version: data.version,
       commit: data.gitVersion,
       commit_url: 'https://github.com/mongodb/mongo/commit/' + data.gitVersion,

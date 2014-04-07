@@ -6,25 +6,21 @@ var helpers = require('./helpers'),
   assert = require('assert'),
   debug = require('debug')('mg:rest:test:index');
 
-function getToken(done){
-  post('/api/v1/token')
-    .send({host: 'localhost:27017'})
-    .expect(200)
-    .expect('Content-Type', /json/)
-    .end(function(err, res){
-      assert(res.body.token);
-      done(null, res.body.token);
-    });
-}
-
 describe('rest', function(){
-  var token;
+  var token, host = 'localhost:27017';
+
   before(function(done){
-    getToken(function(err, data){
-      if(err) return done(err);
-      token = data;
-      done();
-    });
+    debug('get fixture token for', host);
+    post('/api/v1/token')
+      .send({host: host})
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res){
+        if(err) return done(err);
+        assert(res.body.token);
+        token = res.body.token;
+        done();
+      });
   });
 
   describe('api root', function(){
@@ -55,8 +51,45 @@ describe('rest', function(){
     });
   });
   describe('host', function(){
-    it('should get instance details');
-    it('should return default profiling info');
+    it('should get instance details', function(done){
+      get('/api/v1/' + host)
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200)
+        .end(function(err){
+          if(err) return done(err);
+          done();
+        });
+    });
+
+    it('should get instance metrics', function(done){
+      get('/api/v1/' + host + '/metrics')
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200)
+        .end(function(err){
+          if(err) return done(err);
+          done();
+        });
+    });
+
+    it('should return default profiling info', function(done){
+      get('/api/v1/' + host + '/profiling')
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200)
+        .end(function(err){
+          if(err) return done(err);
+          done();
+        });
+    });
+
+    it('should return profiling entries', function(done){
+      get('/api/v1/' + host + '/profiling/entries')
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200)
+        .end(function(err){
+          if(err) return done(err);
+          done();
+        });
+    });
   });
 
   describe('database', function(){

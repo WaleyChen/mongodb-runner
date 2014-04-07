@@ -29,7 +29,7 @@ module.exports.required = function(req, res, next){
 
     if(req.param('host')){
       debug('token validated.  getting connection for context.');
-      req.mongo = deployment.get(req.param('host')).connection(decoded.deployment, token);
+      req.mongo = deployment.get(req.param('host')).connection(token);
       if(!req.mongo){
         return next(new BadRequest('Could not find connection.  New token required.'));
       }
