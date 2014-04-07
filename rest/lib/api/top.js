@@ -1,8 +1,7 @@
 'use strict';
 
-var smongo = require('../smongo'),
-  token = require('../token');
+var smongo = require('../smongo');
 
 module.exports = function(app){
-  app.get('/api/v1/top/:host', token.required, smongo.top(app));
+  app.get('/api/v1/top/:host', smongo.top(app));
 };

@@ -2,10 +2,11 @@
   "name": "mongorest",
   "description": "Wouldn't it be great if monogo just had this stuff builtin instead of rolling it yourself?",
   "version": "0.0.1",
+  "main": "lib/index",
   "scripts": {
-    "start": "NODE_ENV=development DEBUG=* gulp dev",
+    "start": "DEBUG=mg* gulp dev",
     "dist": "lone",
-    "test": "mocha"
+    "test": "NODE_ENV=testing DEBUG=mg* mocha"
   },
   "dependencies": {
     "express": "~3.4.8",

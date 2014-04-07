@@ -5,42 +5,60 @@ var MongoClient = require('mongodb').MongoClient,
   debug = require('debug')('mg:rest:deployment'),
   store = {};
 
-module.exports = function discover(seed, fn){
-  var deployment = store[seed] || new Deployment(seed);
-  debug('descovering ' + seed);
+store._keys = [];
 
-  MongoClient.connect(seed, function(err, db){
+store.keys = function(){
+  return store._keys;
+};
+store.set = function(key, val, fn){
+  store[key] = val;
+  store._keys.push(key);
+  fn();
+  return store;
+};
+
+module.exports.discover = function discover(seed, fn){
+  var deployment = new Deployment(seed);
+  debug('discovering ' + seed);
+
+  connect(seed, function(err, db){
+    debug('connection error?', err);
+
     if(err) return fn(err);
     if(!db) return fn(new Error('could not connect'));
 
+    debug('checking isMaster');
     db.command({ismaster: true}, function(err, res){
+      debug('command error?', err);
       if(err) return fn(err);
-
-      db.close();
 
       getSeedType(res, function(err, type){
         if(err) return fn(err);
+
+        debug('seed has type', type);
 
         deployment.instances = {};
 
         deployment.add(seed, type);
 
-        if(type === 'standalone') return fn(null, deployment);
+        if(type !== 'standalone'){
+          // current primary member of the replica set
+          deployment.add(res.primary, 'primary');
 
-        // current primary member of the replica set
-        deployment.add(res.primary, 'primary');
+          // members that are neither hidden, passive, nor arbiters
+          deployment.add(res.hosts, 'secondary');
 
-        // members that are neither hidden, passive, nor arbiters
-        deployment.add(res.hosts, 'secondary');
+          // members which have a priority of 0.
+          deployment.add(res.passive, 'secondary');
 
-        // members which have a priority of 0.
-        deployment.add(res.passive, 'secondary');
+          deployment.add(res.arbiters, 'arbiter');
+        }
+        deployment.db = db;
 
-        deployment.add(res.arbiters, 'arbiter');
-
-        store[seed] = deployment;
-
-        return fn(null, deployment);
+        debug('putting in store', deployment._id);
+        store.set(deployment._id, deployment, function(){
+          return fn(null, deployment);
+        });
       });
     });
   });
@@ -94,33 +112,52 @@ function getSeedType(res, fn){
 }
 
 module.exports.all = function(){
-  return Object.keys(store).map(function(seed){
-    return store[seed];
+  debug('all keys', store.keys());
+  return store.keys().map(function(_id){
+    return store[_id];
   });
 };
 
 // Find a deployment with just a host:port `uri`
 module.exports.get = function(uri){
-  if(store[uri]) return store[uri];
+  var _id = getId(uri);
+  debug('get', _id);
+  if(store[_id]) return store[_id];
 
   var res = null;
   Object.keys(store).map(function(seed){
-    if(store[seed].instances[uri]) res = store[seed];
+    if(!store[seed].instances){
+      throw new Error('Bad deployment in store!');
+    }
+    if(store[seed].instances[_id]) res = store[seed];
   });
   return res;
 };
 
+var connect = module.exports.connect = function(uri, fn){
+  debug('connect', uri);
+  MongoClient.connect(uri, {}, fn);
+};
+
+function getId(uri){
+  return uri;
+}
+
 function Deployment(seed){
+  seed = seed.replace('mongodb://', '');
+
   this.seed = seed;
   this.instances = {};
-  this.id = '';
+  this._id = getId(seed);
   this.name = '';
+  this.reapers = {};
 
   // token -> active connection
   this.connections = {};
 }
 
 Deployment.prototype.ping = function(){
+  debug('ping', this._id);
   module.exports(this.seed, function(){});
   return this;
 };
@@ -133,10 +170,17 @@ Deployment.prototype.add = function(uri, type){
     return this;
   }
 
-  if(this.instances[uri]) return this;
+  var _id = Instance.getId(uri.replace('mongodb://', ''));
+
+  if(this.instances[_id]){
+    debug('already have instance', _id);
+    return this;
+  }
+
+  debug('add instance', uri, type);
 
   var instance = new Instance(uri, type);
-  this.instances[uri] = instance;
+  this.instances[_id] = instance;
   return this;
 };
 
@@ -161,9 +205,13 @@ Deployment.prototype.connection = function(token, db){
 
 
 function Instance(uri, type){
-  this.uri = uri;
+  this.uri = uri.replace('mongodb://', '');
   this.type = type;
 }
+
+Instance.getId = function(v){
+  return v;
+};
 Instance.prototype.uri = 'localhost:27017';
 
 Instance.prototype.type = 'standalone';

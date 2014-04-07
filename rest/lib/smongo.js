@@ -11,12 +11,12 @@ function middleware(klass, app){
     uri = '/' + klass.prototype.name;
 
   // @todo: token challenge.
-  io.sockets.on('connection', function(socket){
-    socket.on(uri, function(host){
-      Poller.getInstance(klass, app._connections[host].admin())
-        .socketio(uri, socket);
-    });
-  });
+  // io.sockets.on('connection', function(socket){
+  //   socket.on(uri, function(host){
+  //     Poller.getInstance(klass, app._connections[host].admin())
+  //       .socketio(uri, socket);
+  //   });
+  // });
 
   return function(req, res){
     var stream = Poller.getInstance(klass, app._connections[req.param('host')].admin());

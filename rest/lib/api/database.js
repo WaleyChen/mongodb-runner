@@ -1,27 +1,23 @@
 'use strict';
 
-var mw = require('../db-middleware'),
-  token = mw.token,
-  errors = require('./errors'),
-  NotAuthorized = errors.NotAuthorized,
-  debug = require('debug')('mg:mongorest:database');
+var debug = require('debug')('mg:rest:database');
 
 module.exports = function(app){
-  app.get('/api/v1/:host/:database_name', token.required, mw.database(), stats, collections, function(req, res){
+  app.get('/api/v1/:host/:database_name', stats, collections, function(req, res){
     res.send({
-      name: req.param('database_name'),
-      collection_names: req.database.collection_names,
-      stats: req.database.stats
+      name: req.db.name,
+      collection_names: req.db.collection_names,
+      stats: req.db.stats
     });
   });
 
-  app.get('/api/v1/:host/:database_name/currentOp', token.required, mw.database(), currentOp);
-  app.get('/api/v1/:host/:database_name/oplog', token.required, mw.database(), oplog);
+  app.get('/api/v1/:host/:database_name/currentOp', currentOp);
+  app.get('/api/v1/:host/:database_name/oplog', oplog);
 };
 
 
 function currentOp(req, res, next){
-  req.database.collection('$cmd.sys.inprog', {strict: true}, function(err, col){
+  req.db.collection('$cmd.sys.inprog', {strict: true}, function(err, col){
     if(err) return next(err);
 
     col.find({}).stream({transform: function(doc){
@@ -33,7 +29,7 @@ function currentOp(req, res, next){
 // @todo: https://github.com/cloudup/mydb-tail/blob/master/index.js
 // @todo: tailable + socketio stream
 function oplog(req, res, next){
-  req.database.collection('local.oplog.$main', {strict: true}, function(err, collection){
+  req.db.collection('local.oplog.$main', {strict: true}, function(err, collection){
     collection.find({}).toArray(function(err, docs){
       if(err) return next(err);
       res.send(docs);
@@ -64,11 +60,11 @@ function oplog(req, res, next){
 }
 
 function stats(req, res, next){
-  req.database.command({dbStats: 1}, {}, function(err, data){
+  req.db.command({dbStats: 1}, {}, function(err, data){
     if(err) return next(err);
     if(!data) return next(new NotAuthorized('not authorized to view stats for this database'));
 
-    req.database.stats = {
+    req.db.stats = {
       document_count: data.objects,
       document_size: data.dataSize,
       storage_size: data.storageSize,
@@ -83,15 +79,15 @@ function stats(req, res, next){
 }
 
 function collections(req, res, next){
-  req.mongo.find(req.database, 'system.namespaces', {}, function(err, data){
+  req.mongo.find(req.db, 'system.namespaces', {}, function(err, data){
     if(err) return next(err);
     if(!data) return next(new NotAuthorized('not authorized to view collections for this database'));
 
-    debug('collection data', err, data, req.database.name);
-    req.database.collection_names = data.filter(function(col){
+    debug('collection data', err, data, req.db.name);
+    req.db.collection_names = data.filter(function(col){
       return !(col.name.indexOf('$') >= 0 && col.name.indexOf('.oplog.$') < 0);
     }).map(function(col){
-      return col.name.replace(req.database.databaseName + '.', '');
+      return col.name.replace(req.db.databaseName + '.', '');
     });
     next();
   });

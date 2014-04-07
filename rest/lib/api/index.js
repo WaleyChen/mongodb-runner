@@ -1,12 +1,66 @@
+'use strict';
+
 var deployment = require('../deployment'),
+  nconf = require('nconf'),
+  jwt = require('jsonwebtoken'),
+  Forbidden = require('../errors').Forbidden,
   token = require('../token'),
-  prefix = '/api/v1';
+  debug = require('debug')('mg:rest:api');
 
 module.exports = function(app){
-  app.get(prefix, token.required, function(req, res){
+  app.param('database_name', function(req, res, next, name){
+    req.db = req.mongo.db(name);
+    req.db.name = name;
+    next();
+  });
+
+  app.param('collection_name', function(req, res, next, name){
+    req.db.collection(name, {strict: true}, function(err, col){
+      if(err) return next(err);
+      req.col = col;
+      next();
+    });
+  });
+
+  app.param('host', token.required);
+
+  app.get('/api/v1', token.required, function(req, res){
     res.send(deployment.all().map(function(d){
-      return {seed: d.seed, instances: d.instances};
+      return {_id: d._id, instances: d.instances};
     }));
+  });
+
+  // Actor sends a post request with their `username` and `password`.
+  // Try and connect to mongo with those credentials.
+  app.post('/api/v1/token', function(req, res, next){
+    debug('token request');
+    var username = req.param('username'),
+      password = req.param('password'),
+      host = req.param('host', 'localhost:27017'),
+      uri = 'mongodb://';
+
+    if(username && password){
+      uri += username + ':' + password + '@';
+    }
+    uri += host;
+    debug('expanded uri to', uri);
+
+    deployment.discover(uri, function(err, dep){
+      // If we can't connect, either mongo is not running these
+      // or the credentials are invalid.
+      if(err) return next(err);
+
+      debug('generating token');
+      // If we're able to successfully connect, generate a signed json web
+      // token that contains an id to use the connection.
+      var token = jwt.sign({deployment: host},
+        nconf.get('token:secret'), {expiresInMinutes: nconf.get('token:lifetime')});
+
+      debug('adding connection for new token session');
+      deployment.get(host).connection(token, dep.db);
+
+      return res.send(200, {token: token});
+    });
   });
 
   ['replicaset', 'host', 'log', 'top', 'security', 'database', 'collection'].map(function(name){

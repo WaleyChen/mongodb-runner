@@ -1,53 +1,39 @@
 'use strict';
-var NotAuthorized = require('./errors').NotAuthorized,
-  token = require('../token');
+var NotAuthorized = require('../errors').NotAuthorized,
+  diskspace = require('diskspace');
 
 module.exports = function(app){
-  app.get('/api/v1/:host', token.required, info, dbNames, build, deployment, status, function(req, res){
+  app.get('/api/v1/:host', info, dbNames, build, deployment, admin('serverStatus', 'status'), function(req, res){
     res.send({
-      database_names: req.mongo.database_names,
+      database_names: req.db.database_names,
       deployment: req.deployment,
-      host: req.mongo.host,
-      build: req.mongo.build,
-      status: req.mongo.status
+      host: req.db.host,
+      build: req.db.build,
+      status: req.db.status
     });
   });
 
-  app.get('/api/v1/:host/profile', token.required, profiling, getProfilingEntries, function(req, res){
+  app.get('/api/v1/:host/profile', admin('profilingLevel'),
+      admin('profilingInfo', 'profilingEntries'), function(req, res){
     res.send({
-      profiling: req.profiling,
-      entries: req.profilingEntries
+      level: res.profilingLevel,
+      entries: res.profilingEntries
     });
   });
 };
 
-function profiling(req, res, next){
-  req.mongo.admin().profilingLevel(function(err, data){
-    if(err) return next(err);
-    if(!data) return next(new NotAuthorized('not authorized to view profiling level'));
-    req.profiling = data;
-    next();
-  });
-}
+function admin(cmd, sets){
+  sets = sets || cmd;
 
-// @todo: tailable.
-function getProfilingEntries(req, res, next){
-  req.mongo.admin().profilingInfo(function(err, docs){
-    if(err) return next(err);
-    if(!docs) return next(new NotAuthorized('not authorized to view profiling data'));
-    req.profilingEntries = docs;
-    next();
-  });
-}
+  return function(req, res, next){
+    req.db.admin()[cmd](function(err, data){
+      if(err) return next(err);
+      if(!data) return next(new NotAuthorized('not authorized to run ' + cmd));
 
-function status(req, res, next){
-  req.mongo.admin().serverStatus(function(err, data){
-    if(err) return next(err);
-    if(!data) return next(new NotAuthorized('not authorized to view server status'));
-
-    req.mongo.status = data;
-    next();
-  });
+      res[sets] = data;
+      next();
+    });
+  };
 }
 
 function deployment(req, res, next){
@@ -56,12 +42,12 @@ function deployment(req, res, next){
 }
 
 function info(req, res, next){
-  req.mongo.admin().command({hostInfo: 1}, {}, function(err, data){
+  req.db.admin().command({hostInfo: 1}, {}, function(err, data){
     if(err) return next(err);
     if(!data) return next(new NotAuthorized('not authorized to view host information'));
 
     data = data.documents[0];
-    req.mongo.host = {
+    req.db.host = {
       system_time: data.system.currentTime,
       hostname:  data.system.hostname,
       os: data.os.name,
@@ -83,23 +69,22 @@ function info(req, res, next){
       feature_always_full_sync: data.extra.alwaysFullSync,
       feature_nfs_async: data.extra.nfsAsync
     };
-    next();
 
-    // diskspace.check('/', function(total, free, state){
-    //   req.mongo.host.disk_total = total;
-    //   req.mongo.host.disk_free = free;
-    //   req.mongo.host.disk_state = state;
-    //   next();
-    // });
+    diskspace.check('/', function(total, free, state){
+      req.db.host.disk_total = total;
+      req.db.host.disk_free = free;
+      req.db.host.disk_state = state;
+      next();
+    });
   });
 }
 
 function dbNames(req, res, next){
-  req.mongo.admin().listDatabases(function(err, data){
+  req.db.admin().listDatabases(function(err, data){
     if(err) return next(err);
     if(!data) return next(new NotAuthorized('not authorized to list databases'));
 
-    req.mongo.database_names = data.databases.filter(function(db){
+    req.db.database_names = data.databases.filter(function(db){
       return ['local', 'admin'].indexOf(db.name) === -1;
     }).map(function(db){
       return db.name;
@@ -109,11 +94,11 @@ function dbNames(req, res, next){
 }
 
 function build(req, res, next){
-  req.mongo.admin().buildInfo(function(err, data){
+  req.db.admin().buildInfo(function(err, data){
     if(err) return next(err);
     if(!data) return next(new NotAuthorized('not authorized to view build info'));
 
-    req.mongo.build = {
+    req.db.build = {
       version: data.version,
       commit: data.gitVersion,
       commit_url: 'https://github.com/mongodb/mongo/commit/' + data.gitVersion,

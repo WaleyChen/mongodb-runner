@@ -1,55 +1,18 @@
 'use strict';
 
-var jwt = require('jsonwebtoken'),
-  connect = require('mongodb').MongoClient.connect,
-  errors = require('./api/errors'),
+var nconf = require('nconf'),
+  jwt = require('jsonwebtoken'),
+  errors = require('./errors'),
   NotAuthorized = errors.NotAuthorized,
   BadRequest = errors.BadRequest,
   Forbidden = errors.Forbidden,
-  nconf = require('nconf'),
-  deployment = require('./deployment');
-
-module.exports = function(app){
-  // Require the client to send a valid token to any requests except
-  // login post and form.
-
-  // Where we'll keep successfully opened connections.
-  app._connections = {};
-  app._connectionReaperTimeouts = {};
-
-  // Actor sends a post request with their `username` and `password`.
-  // Try and connect to mongo with those credentials.
-  app.post('/api/v1/token', function(req, res, next){
-    var username = req.param('username'),
-      password = req.param('password'),
-      host = req.param('host', 'localhost:27017'),
-      uri = 'monogodb://';
-
-    if(username && password){
-      uri += username + ':' + password + '@';
-    }
-    uri += host;
-
-    connect(uri, function(err, db){
-      // If we can't connect, either mongo is not running these
-      // or the credentials are invalid.
-      if(err || !db) return next(new Forbidden('Invalid credentials'));
-
-      // If we're able to successfully connect, generate a signed json web
-      // token that contains an id to use the connection.
-      var token = jwt.sign({deployment: host},
-        nconf.get('token:secret'), {expiresInMinutes: nconf.get('token:lifetime')});
-
-      deployment.get(host).connection(token, db).ping();
-
-      return res.send(200, {token: token});
-    });
-  });
-};
+  deployment = require('./deployment'),
+  debug = require('debug')('mg:rest:token');
 
 module.exports.required = function(req, res, next){
   if (req.method === 'OPTIONS' && req.headers.hasOwnProperty('access-control-request-headers')) {
     if (req.headers['access-control-request-headers'].split(', ').indexOf('authorization') !== -1) {
+      debug('handing off cors pre-flight');
       return next();
     }
   }
@@ -58,12 +21,19 @@ module.exports.required = function(req, res, next){
   var parts = req.headers.authorization.split(' '),
     token = parts[1];
 
-  if(parts.length !== 2) return next(new BadRequest('Authorization header malformed'));
+  if(parts.length !== 2 || parts[0] !== 'Bearer') return next(new BadRequest('Authorization header missing Bearer scheme'));
 
+  debug('verifying token');
   jwt.verify(token, nconf.get('token:secret'), function(err, decoded) {
-    if (err) return next(new Forbidden('Invalid Token: ' + err.message));
+    if (err) return next(new Forbidden(err.message));
 
-    req.mongo = deployment.get(req.param('host')).connection(decoded.deployment, token);
+    if(req.param('host')){
+      debug('token validated.  getting connection for context.');
+      req.mongo = deployment.get(req.param('host')).connection(decoded.deployment, token);
+      if(!req.mongo){
+        return next(new BadRequest('Could not find connection.  New token required.'));
+      }
+    }
     next();
   });
 };
