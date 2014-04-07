@@ -1,6 +1,7 @@
 'use strict';
 
 var stream = require('stream'),
+  sse = require('sse-stream'),
   util = require('util'),
   mongolog = require('mongolog'),
   debug = require('debug')('mg:smongo');
@@ -18,10 +19,14 @@ function middleware(klass, app){
   });
 
   return function(req, res){
-    Poller.getInstance(klass, app._connections[req.param('host')].admin())
-      .once('data', function(data){
-        res.send(data);
-      }).read(1);
+    var stream = Poller.getInstance(klass, app._connections[req.param('host')].admin());
+    if(req.headers.accept === 'text/event-stream'){
+      return stream.pipe(sse()).pipe(res);
+    }
+
+    stream.once('data', function(data){
+      res.send(data);
+    }).read(1);
   };
 }
 

@@ -13,6 +13,7 @@ module.exports = function(app){
   app.get(prefix + '/aggregate', mw.database(), mw.collection(), aggregate);
 };
 
+// @todo: socketio + tailable
 function aggregate(req, res, next){
   req.collection.aggregate(JSON.parse(req.param('pipeline')), function(err, result){
     if(err) return next(err);
@@ -20,6 +21,7 @@ function aggregate(req, res, next){
   });
 }
 
+// @todo: socketio + tailable
 function read(method){
   return function(req, res, next){
     var limit = Math.min(10, req.param('limit', 10)),

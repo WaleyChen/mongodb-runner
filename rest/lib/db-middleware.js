@@ -5,7 +5,7 @@ var errors = require('./api/errors');
 module.exports = function(app){
   app.use(function(req, res, next){
     req.mongo.find = function find(db, name, opts, fn){
-      db.collection(name, function(err, coll){
+      db.collection(name, {strict: true}, function(err, coll){
         if(err) return fn(err);
 
         coll.find({}, [], opts || {}, function(err, data){
@@ -44,7 +44,7 @@ module.exports.database = function(){
 module.exports.collection = function(){
   return function(req, res, next){
     var name = req.param('collection_name');
-    req.database.collection(name, function(err, collection){
+    req.database.collection(name, {strict: true}, function(err, collection){
       if(err) return next(err);
 
       req.collection = collection;

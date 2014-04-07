@@ -16,7 +16,8 @@
     "lodash": "^2.4.1",
     "diskspace": "^0.1.5",
     "express-jwt": "^0.2.0",
-    "jsonwebtoken": "^0.2.0"
+    "jsonwebtoken": "^0.2.0",
+    "sse-stream": "0.0.4"
   },
   "devDependencies": {
     "mocha": "^1.17.1"
