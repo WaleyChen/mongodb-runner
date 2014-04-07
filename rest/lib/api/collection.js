@@ -1,16 +1,16 @@
 'use strict';
 
-var token = require('../token'),
-  prefix = '/api/v1/:host/:database_name/:collection_name';
+var debug = require('debug')('mg:rest:collection'),
+  errors = require('../errors');
 
 module.exports = function(app){
-  app.get(prefix, token.required, stats, indexes, get);
+  app.get('/api/v1/:host/:database_name/:collection_name', stats, indexes, get);
 
   ['find', 'count'].map(function(method){
-    app.get(prefix + '/' + method, token.required, read(method));
+    app.get('/api/v1/:host/:database_name/:collection_name/' + method, read(method));
   });
 
-  app.get(prefix + '/aggregate', token.required, aggregate);
+  app.get('/api/v1/:host/:database_name/:collection_name/aggregate', aggregate);
 };
 
 // @todo: socketio + tailable
@@ -28,7 +28,14 @@ function read(method){
       skip = Math.max(0, req.param('skip', 0)),
       explain = req.param('explain', 0),
       where = JSON.parse(req.param('where', '{}')),
-      cursor = req.col[method](where).skip(skip).limit(limit);
+      cursor = req.col.find(where).skip(skip).limit(limit);
+
+    if(method === 'count'){
+      return cursor.count(function(err, data){
+        if(err) return next(err);
+        res.send({count: data});
+      });
+    }
 
     if(explain){
       return cursor.explain(function(err, data){
@@ -60,8 +67,14 @@ function get(req, res){
 }
 
 function stats(req, res, next){
+  debug('get stats');
   req.db.command({collStats: req.param('collection_name')}, {}, function(err, data){
-    if(err) return next(err);
+    if(err){
+      if(err.message.indexOf('not found') > -1){
+        return next(new errors.NotFound('Collection does not exist'));
+      }
+      return next(err);
+    }
 
     req.col.stats = {
       index_sizes: data.indexSizes,
@@ -82,9 +95,11 @@ function stats(req, res, next){
 
 function indexes(req, res, next){
   var ns = req.param('database_name') + '.' + req.param('collection_name');
-  req.mongo.find(req.db, 'system.indexes', {ns: ns}, function(err, data){
-    if(err) return next(err);
-    req.col.indexes = data;
-    next();
+  req.db.collection('system.indexes', function(err, col){
+    col.find({ns: ns}).toArray(function(err, data){
+      if(err) return next(err);
+      req.col.indexes = data;
+      next();
+    });
   });
 }

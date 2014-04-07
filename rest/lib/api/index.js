@@ -4,18 +4,21 @@ var deployment = require('../deployment'),
   nconf = require('nconf'),
   jwt = require('jsonwebtoken'),
   Forbidden = require('../errors').Forbidden,
+  NotFound = require('../errors').NotFound,
   token = require('../token'),
-  debug = require('debug')('mg:rest:api');
+  debug = require('debug')('mg:rest');
 
 module.exports = function(app){
   app.param('database_name', function(req, res, next, name){
+    debug('for database', name);
     req.db = req.mongo.db(name);
     req.db.name = name;
     next();
   });
 
   app.param('collection_name', function(req, res, next, name){
-    req.db.collection(name, {strict: true}, function(err, col){
+    debug('for collection', name);
+    req.db.collection(name, function(err, col){
       if(err) return next(err);
       req.col = col;
       next();

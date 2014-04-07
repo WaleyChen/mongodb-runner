@@ -90,19 +90,96 @@ describe('rest', function(){
           done();
         });
     });
+    it('should return in-progress operations', function(done){
+      get('/api/v1/' + host + '/ops')
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200)
+        .end(function(err){
+          if(err) return done(err);
+          done();
+        });
+      it('should return the oplog');
+    });
+
   });
 
   describe('database', function(){
-    it('should return database details');
-    it('should return in-progress operations');
-    it('should return the oplog');
+    it('should return database details', function(done){
+      get('/api/v1/' + host + '/test')
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200)
+        .end(function(err){
+          if(err) return done(err);
+          done();
+        });
+    });
   });
 
   describe('collection', function(){
-    it('should return collection details');
-    it('should be able to run find');
-    it('should be able to run count');
-    it('should be able to run find with explain');
-    it('should be able to run aggregate');
+    after(helpers.after);
+
+    it('should not create collections automatically', function(done){
+      get('/api/v1/' + host + '/test/scopes')
+        .set('Authorization', 'Bearer ' + token)
+        .expect(404)
+        .end(function(err){
+          if(err) return done(err);
+          done();
+        });
+    });
+
+    it('should return collection details', function(done){
+      helpers.createCollection('scopes', function(){
+        get('/api/v1/' + host + '/test/scopes')
+          .set('Authorization', 'Bearer ' + token)
+          .expect(200)
+          .end(function(err){
+            if(err) return done(err);
+            done();
+          });
+      });
+    });
+    it('should be able to run find', function(done){
+      get('/api/v1/' + host + '/test/scopes/find')
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200)
+        .end(function(err, res){
+          if(err) return done(err);
+          assert(res.body.length === 1, 'should have got the dummy insert');
+          done();
+        });
+    });
+    it('should be able to run count', function(done){
+      get('/api/v1/' + host + '/test/scopes/count')
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200)
+        .end(function(err, res){
+          if(err) return done(err);
+          assert(res.body.count === 1, 'should have got the dummy insert');
+          done();
+        });
+    });
+    it('should be able to run find with explain', function(done){
+      get('/api/v1/' + host + '/test/scopes/find')
+        .set('Authorization', 'Bearer ' + token)
+        .query({explain: 1})
+        .expect(200)
+        .end(function(err, res){
+          if(err) return done(err);
+          assert(res.body.cursor === 'BasicCursor');
+          done();
+        });
+    });
+    it('should be able to run aggregate', function(done){
+      get('/api/v1/' + host + '/test/scopes/aggregate')
+        .set('Authorization', 'Bearer ' + token)
+        .query({pipeline: JSON.stringify([{$group: {_id: '$_id'}}])})
+        .expect(200)
+        .end(function(err, res){
+          if(err) return done(err);
+          assert(res.body.length === 1);
+          done();
+        });
+    });
   });
 });
