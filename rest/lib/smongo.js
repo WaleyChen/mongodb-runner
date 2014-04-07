@@ -5,61 +5,35 @@ var stream = require('stream'),
   mongolog = require('mongolog'),
   debug = require('debug')('mg:smongo');
 
-module.exports.log = function(app){
+function middleware(klass, app){
   var io = app.get('io'),
-    logs = {};
-
-  function getStream(uri){
-    if(!logs[uri]){
-      logs[uri] = new LogStream(app._connections[uri].admin());
-    }
-    return logs[uri];
-  }
+    uri = '/' + klass.prototype.name;
 
   // @todo: token challenge.
   io.sockets.on('connection', function(socket){
-    socket.on('/log', function(uri){
-      getStream(uri).socketio('/log', socket);
-    });
-  });
-};
-
-module.exports.top = function(app){
-  var io = app.get('io'),
-    tops = {};
-
-  function getStream(uri){
-    if(!tops[uri]){
-      tops[uri] = new TopStream(app._connections[uri].admin());
-    }
-    return tops[uri];
-  }
-
-  // @todo: token challenge.
-  io.sockets.on('connection', function(socket){
-    socket.on('/top', function(uri){
-      getStream(uri).socketio('/top', socket);
+    socket.on(uri, function(host){
+      Poller.getInstance(klass, app._connections[host].admin())
+        .socketio(uri, socket);
     });
   });
 
   return function(req, res){
-    var top = getStream(req.param('host'));
-    top.once('data', function(data){
-      res.send(data);
-    });
-    top.read(1);
+    Poller.getInstance(klass, app._connections[req.param('host')].admin())
+      .once('data', function(data){
+        res.send(data);
+      }).read(1);
   };
+}
+
+module.exports.log = function(app){
+  return middleware(LogStream, app);
 };
 
-module.exports.createTopStream = function(db, opts){
-  return new TopStream(db, opts);
+module.exports.top = function(app){
+  return middleware(TopStream, app);
 };
 
-module.exports.createLogStream = function(db, opts){
-  return new LogStream(db, opts);
-};
-
-function CommandStream(db, cmd, opts){
+function Poller(db, cmd, opts){
   opts = opts || {};
   this.db = db;
   this.cmd = cmd;
@@ -73,27 +47,34 @@ function CommandStream(db, cmd, opts){
 
   stream.Readable.call(this, {objectMode: true});
 }
-util.inherits(CommandStream, stream.Readable);
+util.inherits(Poller, stream.Readable);
 
-CommandStream.prototype._pause = function(){
+Poller.instances = {};
+
+Poller.getInstance = function(klass, db){
+  var name = klass.prototype.name;
+
+  if(!Poller.instances[name]) Poller.instances[name] = {};
+
+  if(!Poller.instances[name][db.id]){
+    Poller.instances[name][db.id] = new TopStream(db);
+  }
+  return Poller.instances[name][db.id];
+};
+
+Object.defineProperty(Poller.prototype, 'uri', {get: function(){
+  return '/' + this.name;
+}});
+
+Poller.prototype._pause = function(){
   clearTimeout(this.intervalId);
 };
 
-CommandStream.prototype._resume = function(){
-  var self = this;
-  function go(){
-    self.sample(function(err, data){
-      if(err) return self.emit('error', err);
-      self.emit('sample', data);
-    });
-  }
-
-  this.intervalId = setInterval(function(){
-    go();
-  }, this.interval);
+Poller.prototype._resume = function(){
+  this.intervalId = setInterval(this.sample.bind(this), this.interval);
 };
 
-CommandStream.prototype._read = function(size){
+Poller.prototype._read = function(size){
   var self = this;
   this.sample(function(err, data){
     if(err) return self.emit('error', err);
@@ -103,41 +84,45 @@ CommandStream.prototype._read = function(size){
   });
 };
 
-CommandStream.prototype.sample = function(fn){
+Poller.prototype.sample = function(fn){
   var self = this;
   self.db.command(self.cmd, {}, function(err, data){
-    if(err) return fn(err);
-    fn(null, data);
+    if(fn){
+      if(err) return fn(err);
+      return fn(null, data);
+    }
+
+    if(err) return self.emit('error', err);
+    self.emit('sample', data);
   });
 };
 
-CommandStream.prototype.socketio = function(prefix, socket){
+Poller.prototype.socketio = function(socket){
   var self = this;
 
-  if(!this.subscribers){
-    this.subscribers = {};
-    this.paused = false;
+  if(!stream.subscribers){
+    stream.subscribers = {};
 
-    this.on('data', function(data){
-      var ids = Object.keys(self.subscribers);
-      debug('pushing to ' + ids.length + ' subscribers');
+    stream.on('data', function(data){
+      var ids = Object.keys(stream.subscribers);
+      self.debug('pushing to ' + ids.length + ' subscribers');
 
       ids.map(function(id){
-        self.subscribers[id].emit(prefix, data);
+        stream.subscribers[id].emit(this.uri, data);
       });
     });
-    debug('got initial connection');
+    self.debug('got initial connection');
   }
-  this.subscribers[socket.id] = socket;
+  stream.subscribers[socket.id] = socket;
 
   function unsub(){
-    if(self.subscribers[socket.id]){
-      debug('unsubscribing');
-      delete self.subscribers[socket.id];
+    if(stream.subscribers[socket.id]){
+      self.debug('unsubscribing');
+      delete stream.subscribers[socket.id];
     }
   }
 
-  socket.on(prefix + '/unsubscribe', unsub)
+  socket.on(this.uri + '/unsubscribe', unsub)
     .on('disconnect', unsub);
   return this;
 };
@@ -184,19 +169,19 @@ function TopStream(db, opts){
       namespaces: res.namespaces,
       deltas: self.calculateDeltas(res.metrics)
     }, force);
-    // debug('#sample', self.sampleCount);
-    // debug('mongodmon.namespaces.count', res.namespaces.length);
-    // debug('mongodmon.metrics.count', res.metric_count);
+
     self.sampleCount++;
 
     self.prev = res;
   });
 
-  CommandStream.call(this, db, {top: 1}, opts);
+  Poller.call(this, {top: 1}, opts);
 
   this.debug = require('debug')('mg:smongo:top');
 }
-util.inherits(TopStream, CommandStream);
+util.inherits(TopStream, Poller);
+
+TopStream.prototype.name = 'top';
 
 TopStream.prototype.calculateDeltas = function(metrics){
   var deltas = {}, self = this;
@@ -281,6 +266,7 @@ TopStream.prototype.normalize = function(data){
 
 function LogStream(db, opts){
   opts = opts || {};
+  this.name = 'log';
   this.prev = null;
 
   var self = this;
@@ -309,9 +295,10 @@ function LogStream(db, opts){
     }
   });
 
-  CommandStream.call(this, db, {getLog: opts.name || 'global'}, opts);
+  Poller.call(this, db, {getLog: opts.name || 'global'}, opts);
 
   this.debug = require('debug')('mg:smongo:log');
 }
-util.inherits(LogStream, CommandStream);
+util.inherits(LogStream, Poller);
 
+LogStream.prototype.name = 'log';

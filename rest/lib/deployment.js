@@ -99,9 +99,14 @@ module.exports.ping = function(uri, app){
 
 function Deployment(seed){
   this.seed = seed;
-  this.hosts = {};
+  this.instances = {};
+  this.id = '';
+  this.name = '';
+
+  // token -> active connection
+  this.connections = {};
 }
-Deployment.prototype.hosts = {};
+
 Deployment.prototype.add = function(uri, type){
   if(Array.isArray(uri)){
     return uri.map(function(_uri){
@@ -109,12 +114,19 @@ Deployment.prototype.add = function(uri, type){
     }.bind(this));
   }
 
-  if(this.hosts[uri]) return false;
+  if(this.instances[uri]) return false;
 
   var instance = new Instance(uri, type);
-  this.hosts[uri] = instance;
+  this.instances[uri] = instance;
   return true;
 };
+
+var store = {};
+
+// Find a deployment with just a host:port `uri`, which might be any instance
+// in the deployment.
+module.exports.get = function(uri){};
+module.exports.connection = function(token, uri){};
 
 
 function Instance(uri, type){

@@ -29,7 +29,7 @@ html(lang='en')
         section: .row
           .col-md-12
             h2 Security
-          .col-md-12
+
             h3 Token Authentication
             p Modelled on&nbsp;
               a(href="http://docs.aws.amazon.com/STS/latest/APIReference/Welcome.html", target="_blank")
@@ -38,9 +38,18 @@ html(lang='en')
               a(href="http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html", target="_blank")
               | JSON Web Tokens.
 
-          .col-md-12
-            a(href="img/token-based-auth.001.png", target="_blank")
-              img(width="100%", src="img/token-based-auth.001.png")
+            .block
+              a(href="img/token-based-auth.001.png", target="_blank")
+                img(width="100%", src="img/token-based-auth.001.png")
+
+            p kerberos, ldap, x509 options can be input in the auth form.
+
+            h3 Questions
+            ul
+              li ssl: how could we offer this?
+              li two factor auth?
+              li request signing?
+
 
         section: .row
           .col-md-12: h2 Stack
@@ -153,6 +162,18 @@ html(lang='en')
           h3.mono open&nbsp;
             a(href="http://localhost:29017/#database/dataset-wikipedia", target="_blank")
               | http://localhost:29017/#database/dataset-wikipedia
+          :markdown
+            ### Visualization/Charting/Dashboards
+            - https://github.com/CarlosCondor/chartFromMongo
+
+            ### Dataset Importers/Ingestion
+            - http://blueqnx.github.io/wikinmongo/
+            - https://github.com/kaniska/project-mongo-logviewer
+
+            ### Workshops
+            - http://mongodbschool.io/
+            - https://github.com/sridharn/dataweek_2013
+            - https://github.com/RyanMullins/Tutorial-LeafletMongoDB
 
         section
           h2 funnel

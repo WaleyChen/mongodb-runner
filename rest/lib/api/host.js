@@ -29,6 +29,7 @@ function profiling(req, res, next){
   });
 }
 
+// @todo: tailable.
 function getProfilingEntries(req, res, next){
   req.mongo.admin().profilingInfo(function(err, docs){
     if(err) return next(err);

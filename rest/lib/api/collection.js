@@ -9,7 +9,16 @@ module.exports = function(app){
   ['find', 'count'].map(function(method){
     app.get(prefix + '/' + method, mw.database(), mw.collection(), read(method));
   });
+
+  app.get(prefix + '/aggregate', mw.database(), mw.collection(), aggregate);
 };
+
+function aggregate(req, res, next){
+  req.collection.aggregate(JSON.parse(req.param('pipeline')), function(err, result){
+    if(err) return next(err);
+    res.send(result);
+  });
+}
 
 function read(method){
   return function(req, res, next){
@@ -17,24 +26,18 @@ function read(method){
       skip = Math.max(0, req.param('skip', 0)),
       explain = req.param('explain', 0),
       where = JSON.parse(req.param('where', '{}')),
-      name = req.collection.collectionName;
+      cursor = req.collection[method](where).skip(skip).limit(limit);
 
-    req.database.collection(name, function(err, coll){
-      if(err) return next(err);
-
-      var cursor = coll[method](where).skip(skip).limit(limit);
-
-      if(explain){
-        return cursor.explain(function(err, data){
-          if(err) return next(err);
-          res.send(data);
-        });
-      }
-
-      cursor.toArray(function(err, data){
+    if(explain){
+      return cursor.explain(function(err, data){
         if(err) return next(err);
         res.send(data);
       });
+    }
+
+    cursor.toArray(function(err, data){
+      if(err) return next(err);
+      res.send(data);
     });
   };
 }

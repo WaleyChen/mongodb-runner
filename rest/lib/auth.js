@@ -63,6 +63,8 @@ module.exports = function(app){
 
       deployment.ping(host, app);
 
+      // @todo: connections should be applied to the deployment, which can
+      // be a better container for all of this.
       app._connections[host] = db;
 
       // Set a timeout to reap the connection a little after the token
