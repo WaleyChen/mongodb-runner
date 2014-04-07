@@ -1,25 +1,28 @@
 'use strict';
 
-var errors = require('./api/errors');
+var errors = require('./api/errors'),
+  token = require('./token');
 
 module.exports = function(app){
   app.use(function(req, res, next){
-    req.mongo.find = function find(db, name, opts, fn){
-      db.collection(name, {strict: true}, function(err, coll){
-        if(err) return fn(err);
+    // req.mongo.find = function find(db, name, opts, fn){
+    //   db.collection(name, {strict: true}, function(err, coll){
+    //     if(err) return fn(err);
 
-        coll.find({}, [], opts || {}, function(err, data){
-          if(err) return fn(err);
-          data.toArray(function(err, data){
-            if(data === null) return fn(new Error('Not authorized?'));
-            fn(null, data);
-          });
-        });
-      });
-    };
+    //     coll.find({}, [], opts || {}, function(err, data){
+    //       if(err) return fn(err);
+    //       data.toArray(function(err, data){
+    //         if(data === null) return fn(new Error('Not authorized?'));
+    //         fn(null, data);
+    //       });
+    //     });
+    //   });
+    // };
     next();
   });
 };
+
+module.exports.token = token;
 
 module.exports.admin = function(){
   return function(req, res, next){

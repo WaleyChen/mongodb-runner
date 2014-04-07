@@ -1,16 +1,17 @@
 'use strict';
 
 var mw = require('../db-middleware'),
+  token = mw.token,
   prefix = '/api/v1/:host/:database_name/:collection_name';
 
 module.exports = function(app){
-  app.get(prefix, mw.database(), mw.collection(), stats, indexes, get);
+  app.get(prefix, token.required, mw.database(), mw.collection(), stats, indexes, get);
 
   ['find', 'count'].map(function(method){
-    app.get(prefix + '/' + method, mw.database(), mw.collection(), read(method));
+    app.get(prefix + '/' + method, token.required, mw.database(), mw.collection(), read(method));
   });
 
-  app.get(prefix + '/aggregate', mw.database(), mw.collection(), aggregate);
+  app.get(prefix + '/aggregate', token.required, mw.database(), mw.collection(), aggregate);
 };
 
 // @todo: socketio + tailable

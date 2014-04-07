@@ -1,11 +1,15 @@
 'use strict';
 
-var connect = require('mongodb').MongoClient;
+var MongoClient = require('mongodb').MongoClient,
+  nconf = require('nconf'),
+  debug = require('debug')('mg:rest:deployment'),
+  store = {};
 
 module.exports = function discover(seed, fn){
-  var deployment = new Deployment(seed);
+  var deployment = store[seed] || new Deployment(seed);
+  debug('descovering ' + seed);
 
-  connect(seed, function(err, db){
+  MongoClient.connect(seed, function(err, db){
     if(err) return fn(err);
     if(!db) return fn(new Error('could not connect'));
 
@@ -16,6 +20,8 @@ module.exports = function discover(seed, fn){
 
       getSeedType(res, function(err, type){
         if(err) return fn(err);
+
+        deployment.instances = {};
 
         deployment.add(seed, type);
 
@@ -31,6 +37,8 @@ module.exports = function discover(seed, fn){
         deployment.add(res.passive, 'secondary');
 
         deployment.add(res.arbiters, 'arbiter');
+
+        store[seed] = deployment;
 
         return fn(null, deployment);
       });
@@ -85,16 +93,21 @@ function getSeedType(res, fn){
   }
 }
 
-module.exports.ping = function(uri, app){
-  module.exports(uri, function(err, deployment){
-    var existing = app.get('deployments');
-    existing.map(function(deploy, i){
-      if(deploy.seed === deployment.seed){
-        existing[i] = deployment;
-      }
-    });
-    app.set('deployments', existing);
+module.exports.all = function(){
+  return Object.keys(store).map(function(seed){
+    return store[seed];
   });
+};
+
+// Find a deployment with just a host:port `uri`
+module.exports.get = function(uri){
+  if(store[uri]) return store[uri];
+
+  var res = null;
+  Object.keys(store).map(function(seed){
+    if(store[seed].instances[uri]) res = store[seed];
+  });
+  return res;
 };
 
 function Deployment(seed){
@@ -107,26 +120,44 @@ function Deployment(seed){
   this.connections = {};
 }
 
+Deployment.prototype.ping = function(){
+  module.exports(this.seed, function(){});
+  return this;
+};
+
 Deployment.prototype.add = function(uri, type){
   if(Array.isArray(uri)){
-    return uri.map(function(_uri){
+    uri.map(function(_uri){
       return this.add(_uri, type);
     }.bind(this));
+    return this;
   }
 
-  if(this.instances[uri]) return false;
+  if(this.instances[uri]) return this;
 
   var instance = new Instance(uri, type);
   this.instances[uri] = instance;
-  return true;
+  return this;
 };
 
-var store = {};
+Deployment.prototype.connection = function(token, db){
+  if(arguments.length === 1) return this.connections[token];
 
-// Find a deployment with just a host:port `uri`, which might be any instance
-// in the deployment.
-module.exports.get = function(uri){};
-module.exports.connection = function(token, uri){};
+  this.connections[token] = db;
+  // Set a timeout to reap the connection a little after the token
+  // is supposed to expire.
+  if(this.reapers[token]) clearTimeout(this.reapers[token]);
+
+  var self = this;
+
+  this.reapers[token] = setTimeout(function(){
+    if(self.connections[token]){
+      delete self.connections[token];
+      debug('reaped connection for token', token);
+    }
+  }, nconf.get('token:lifetime') * 60 * 1000 + 1000);
+  return this;
+};
 
 
 function Instance(uri, type){

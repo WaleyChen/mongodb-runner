@@ -2,87 +2,39 @@
 
 var express = require('express'),
   app = module.exports = express(),
-  server = require('http').createServer(app),
-  discover = require('./lib/deployment'),
-  debug = require('debug')('mg:rest'),
-  _ = require('lodash'),
-  urllib = require('url');
+  nconf = require('nconf');
 
-app.set = function(setting, val){
-  if (1 === arguments.length){
-    if(typeof setting === 'object'){
-      _.each(arguments, function(setting){
-        app.settings = _.extend(app.settings, setting);
-      });
-      return app;
-    }
-    return app.settings[setting];
-  }
-  app.settings[setting] = val;
-  return app;
-};
+app.use(function(req, res, next){
+  req.io = app.get('io');
 
-app.set({
-  server: server,
-  options: {
-    seed: {
-      default: 'mongodb://localhost:27017',
-      desc: 'uri of a mongo instance to discover a deployment'
-    },
-    listen: {
-      default: 'http://127.0.0.1:29017',
-      desc: 'uri for rest server to listen on'
-    }
-  }
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
 });
 
-// Validate, correct and set any
-function validate(){
-  var listen = app.get('listen');
-  if(!/^https?:\/\//.test(listen)) listen = 'http://' + listen;
-  var parsed = urllib.parse(listen);
-  ['href', 'port', 'hostname', 'protocol'].map(function(k){
-    app.set(k, parsed[k]);
-  });
-  app.set('listen', listen);
-}
+app.start = function(){
+  var up = require('up'),
+    http = require('http');
 
-module.exports = function(config){
-  app.set(config);
-  validate();
-  discover(app.get('seed'), function(err, deployment){
-    app.set('deployments', [deployment]);
-    app.set('io', require('socket.io').listen(server));
+  require(__dirname + '/config.js');
 
-    app.use(function(req, res, next){
-      req.deployments = app.get('deployments');
-      req.io = app.get('io');
+  var file = __dirname + '/server.js',
+    // numWorkers = require('os').cpus().length,
+    numWorkers = 1,
+    workerTimeout = null,
+    keepAlive = true;
 
+  console.log(nconf.get('port'));
 
-      res.header('Access-Control-Allow-Origin', '*');
-      res.header('Access-Control-Allow-Methods', 'GET');
-      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-      next();
-    });
-
-    app.use(express.static(__dirname + '/../ui'));
-
-    require('./lib/auth')(app);
-    require('./lib/db-middleware')(app);
-    require('./lib/api')(app);
-
-    app.use(function(err, req, res, next){
-      // handle http errors bubbled up from middlewares.
-      if(!err.http) return next(err);
-      res.send(err.code, err.message);
-    });
-
-    app.get('server').listen(app.get('port'), function(){
-      debug('listening', 'http://' + app.get('hostname') + ':' + app.get('port'));
-      app.emit('ready', {host: app.get('hostname'), port: app.get('port')});
-    });
+  var httpServer = http.Server().listen(nconf.get('port'));
+  app.srv = up(httpServer, file, {
+    numWorkers: numWorkers,
+    workerTimeout: workerTimeout,
+    keepAlive: keepAlive
   });
 };
 
-module.exports.get = app.get;
-module.exports.set = app.set;
+app.reload = function(){
+  app.srv.reload();
+};

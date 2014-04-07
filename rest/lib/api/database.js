@@ -1,30 +1,32 @@
 'use strict';
 
 var mw = require('../db-middleware'),
+  token = mw.token,
   errors = require('./errors'),
   NotAuthorized = errors.NotAuthorized,
   debug = require('debug')('mg:mongorest:database');
 
 module.exports = function(app){
-  app.get('/api/v1/:host/:database_name', mw.database(), stats, collections, function(req, res){
+  app.get('/api/v1/:host/:database_name', token.required, mw.database(), stats, collections, function(req, res){
     res.send({
       name: req.param('database_name'),
       collection_names: req.database.collection_names,
       stats: req.database.stats
     });
   });
-  app.get('/api/v1/:host/:database_name/currentOp', mw.database(), currentOp);
-  app.get('/api/v1/:host/:database_name/oplog', mw.database(), oplog);
+
+  app.get('/api/v1/:host/:database_name/currentOp', token.required, mw.database(), currentOp);
+  app.get('/api/v1/:host/:database_name/oplog', token.required, mw.database(), oplog);
 };
 
-// @todo: tailable + socketio stream
-function currentOp(req, res, next){
-  req.database.collection('$cmd.sys.inprog', function(err, collection) {
-    collection.find({}).toArray(function(err, docs){
-      if(err) return next(err);
 
-      res.send(docs[0].inprog);
-    });
+function currentOp(req, res, next){
+  req.database.collection('$cmd.sys.inprog', {strict: true}, function(err, col){
+    if(err) return next(err);
+
+    col.find({}).stream({transform: function(doc){
+      return doc.inprog;
+    }}).pipe(res);
   });
 }
 

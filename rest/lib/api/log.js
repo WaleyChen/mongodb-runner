@@ -1,12 +1,13 @@
 'use strict';
 
 var smongo = require('../smongo'),
+  token = require('../token'),
   NotAuthorized = require('./errors').NotAuthorized,
   mongolog = require('mongolog');
 
 module.exports = function(app){
-  app.get('/api/v1/:host/log', get);
-  app.get('/api/v1/:host/log/:name', get);
+  app.get('/api/v1/:host/log', token.required, get);
+  app.get('/api/v1/:host/log/:name', token.required, get);
 
   smongo.log(app);
 };

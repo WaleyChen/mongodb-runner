@@ -1,8 +1,9 @@
 'use strict';
-var NotAuthorized = require('./errors').NotAuthorized;
+var NotAuthorized = require('./errors').NotAuthorized,
+  token = require('../token');
 
 module.exports = function(app){
-  app.get('/api/v1/:host', info, dbNames, build, deployment, status, function(req, res){
+  app.get('/api/v1/:host', token.required, info, dbNames, build, deployment, status, function(req, res){
     res.send({
       database_names: req.mongo.database_names,
       deployment: req.deployment,
@@ -12,7 +13,7 @@ module.exports = function(app){
     });
   });
 
-  app.get('/api/v1/:host/profile', profiling, getProfilingEntries, function(req, res){
+  app.get('/api/v1/:host/profile', token.required, profiling, getProfilingEntries, function(req, res){
     res.send({
       profiling: req.profiling,
       entries: req.profilingEntries
@@ -50,12 +51,7 @@ function status(req, res, next){
 }
 
 function deployment(req, res, next){
-  var uri = req.param('host');
-  req.deployments.map(function(deployment){
-    if(deployment[uri]){
-      req.deployment = deployment;
-    }
-  });
+  req.deployment = deployment.get(req.param('host'));
   next();
 }
 

@@ -3,24 +3,29 @@
   "description": "Wouldn't it be great if monogo just had this stuff builtin instead of rolling it yourself?",
   "version": "0.0.1",
   "scripts": {
-    "start": "NODE_ENV=development DEBUG=mongorest:* node index",
+    "start": "NODE_ENV=development DEBUG=* gulp dev",
     "dist": "lone",
     "test": "mocha"
   },
   "dependencies": {
     "express": "~3.4.8",
     "socket.io": "~0.9.16",
-    "mongodb": "~1.3.23",
+    "mongodb": "latest",
     "debug": "^0.7.4",
     "mongolog": "^0.0.5",
     "lodash": "^2.4.1",
-    "diskspace": "^0.1.5",
+    "diskspace": "^0.1.6",
     "express-jwt": "^0.2.0",
     "jsonwebtoken": "^0.2.0",
-    "sse-stream": "0.0.4"
+    "sse-stream": "0.0.4",
+    "up": "git://github.com/learnboost/up",
+    "nconf": "^0.6.9"
   },
   "devDependencies": {
-    "mocha": "^1.17.1"
+    "mocha": "^1.17.1",
+    "gulp": "~3.5.2",
+    "gulp-util": "~2.2.14",
+    "supertest": "^0.10.0"
   },
   "jshintConfig": {
     "eqeqeq": true,

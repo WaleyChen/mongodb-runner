@@ -2,10 +2,8 @@ var gulp = require('gulp'),
   gutil = require('gulp-util'),
   browserify = require('gulp-browserify'),
   jade = require('gulp-jade'),
-  concat = require('gulp-concat'),
   manifest = require('gulp-sterno-manifest'),
-  less = require('gulp-less'),
-  es = require('event-stream');
+  less = require('gulp-less');
 
 // "form of: a webapp!"
 gulp.task('build', ['pages', 'assets', 'js', 'less', 'manifest']);
@@ -15,7 +13,7 @@ gulp.task('dev', ['build', 'serve', 'watch', 'ready']);
 
 gulp.task('ready', function(){
     gutil.log('mongoscope ready to use!', 'http://localhost:3000/');
-});
+  });
 
 gulp.task('js', function(){
   gulp.src('./app/index.js')

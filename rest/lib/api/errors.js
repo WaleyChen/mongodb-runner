@@ -18,7 +18,11 @@ module.exports.NotFound = function(message){
 };
 
 module.exports.NotAuthorized = function(message){
-  return http(403, message, module.exports.NotAuthorized);
+  return http(401, message, module.exports.NotAuthorized);
+};
+
+module.exports.Forbidden = function(message){
+  return http(403, message, module.exports.Forbidden);
 };
 
 module.exports.BadRequest = function(message){

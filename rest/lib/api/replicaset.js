@@ -193,6 +193,7 @@
 // }
 
 var NotAuthorized = require('./errors').NotAuthorized,
+  token = require('../token'),
   debug = require('debug')('mg:mongorest:replicaset');
 
 var mock = {
@@ -243,7 +244,7 @@ var mock = {
 };
 
 module.exports = function(app){
-  app.get('/api/v1/:host/replicaset', get, function(req, res, next){
+  app.get('/api/v1/:host/replicaset', token.required, get, function(req, res){
     res.send(req.mongo.replicaset);
   });
 };
