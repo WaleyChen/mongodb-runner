@@ -182,4 +182,21 @@ describe('rest', function(){
         });
     });
   });
+
+  describe('log', function(){
+    it('should return the global log', function(done){
+      get('/api/v1/' + host + '/log')
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200)
+        .end(function(err, res){
+          if(err) return done(err);
+          assert(res.body.length > 10);
+          done();
+        });
+    });
+  });
+
+  describe('top', function(){
+    it('should return initial data log');
+  });
 });
