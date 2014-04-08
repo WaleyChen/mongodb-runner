@@ -6,7 +6,7 @@
     "start": "gulp dev",
     "build": "gulp build",
     "test": "mocha",
-    "deploy": "./bin/deploy.sh"
+    "deploy": "./bin/gh-deploy.sh"
   },
   "dependencies": {
     "underscore": "~1.5.2",
