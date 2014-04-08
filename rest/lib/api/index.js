@@ -28,15 +28,16 @@ module.exports = function(app){
   app.param('host', token.required);
 
   app.get('/api/v1', token.required, function(req, res){
-    res.send(deployment.all().map(function(d){
-      return {_id: d._id, instances: d.instances};
-    }));
+    deployment.all(function(err, docs){
+      res.send(docs.map(function(d){
+        return {_id: d._id, instances: d.instances};
+      }));
+    });
   });
 
   // Actor sends a post request with their `username` and `password`.
   // Try and connect to mongo with those credentials.
   app.post('/api/v1/token', function(req, res, next){
-    debug('token request');
     var username = req.param('username'),
       password = req.param('password'),
       host = req.param('host', 'localhost:27017'),
@@ -46,8 +47,8 @@ module.exports = function(app){
       uri += username + ':' + password + '@';
     }
     uri += host;
-    debug('expanded uri to', uri);
 
+    debug('discovering deployment', uri);
     deployment.discover(uri, function(err, dep){
       // If we can't connect, either mongo is not running these
       // or the credentials are invalid.
@@ -60,9 +61,10 @@ module.exports = function(app){
         nconf.get('token:secret'), {expiresInMinutes: nconf.get('token:lifetime')});
 
       debug('adding connection for new token session');
-      deployment.get(host).connection(token, dep.db);
-
-      return res.send(200, {token: token});
+      deployment.get(host, function(err, deploy){
+        deploy.connection(token, dep.db);
+        return res.send(200, {token: token});
+      });
     });
   });
 

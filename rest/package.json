@@ -6,7 +6,7 @@
   "scripts": {
     "start": "DEBUG=mg* gulp dev",
     "dist": "lone",
-    "test": "NODE_ENV=testing DEBUG=mg* mocha"
+    "test": "NODE_ENV=testing mocha"
   },
   "dependencies": {
     "express": "~3.4.8",

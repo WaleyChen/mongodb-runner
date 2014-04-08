@@ -4,6 +4,7 @@ var supertest = require('supertest'),
   MongoClient = require('mongodb').MongoClient,
   assert = require('assert'),
   app = require('../lib/'),
+  deployment = require('../lib/deployment'),
   debug = require('debug')('mg:rest:test:helpers');
 
 exports = {
@@ -15,7 +16,7 @@ exports = {
     return supertest(app).post(path);
   },
   before: function(done){
-    debug('get fixture token');
+    debug('\n-------------------------------\nsetup');
 
     exports.post('/api/v1/token')
       .send({host: 'localhost:27017'})
@@ -26,20 +27,26 @@ exports = {
 
         assert(res.body.token);
         exports.ctx.token = res.body.token;
+        debug('running test\n-------------------------------\n');
         done();
       });
   },
   beforeEach: function(){},
   after: function(done){
-    var names = Object.keys(exports.collections),
-      pending = names.length;
+    debug('\n-------------------------------\nteardown');
+    deployment.store.clear(function(){
+      var names = Object.keys(exports.collections),
+        pending = names.length;
 
-    names.map(function(col){
-      exports.collections[col].drop(function(){
-        pending--;
-        if(pending === 0){
-          return done();
-        }
+      if(pending === 0) return done();
+
+      names.map(function(col){
+        exports.collections[col].drop(function(){
+          pending--;
+          if(pending === 0){
+            return done();
+          }
+        });
       });
     });
   },
@@ -59,3 +66,5 @@ exports = {
   },
   ctx: {}
 };
+
+module.exports = exports;

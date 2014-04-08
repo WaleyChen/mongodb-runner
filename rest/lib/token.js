@@ -24,16 +24,27 @@ module.exports.required = function(req, res, next){
   if(parts.length !== 2 || parts[0] !== 'Bearer') return next(new BadRequest('Authorization header missing Bearer scheme'));
 
   debug('verifying token');
+
   jwt.verify(token, nconf.get('token:secret'), function(err, decoded) {
     if (err) return next(new Forbidden(err.message));
-
-    if(req.param('host')){
-      debug('token validated.  getting connection for context.');
-      req.mongo = deployment.get(req.param('host')).connection(token);
-      if(!req.mongo){
-        return next(new BadRequest('Could not find connection.  New token required.'));
-      }
+    debug('token validated');
+    if(!req.param('host')){
+      return next();
     }
-    next();
+
+    debug('looking up deployment for', req.param('host'));
+    deployment.get(req.param('host'), function(err, deploy){
+      if(!deploy){
+        return next(new BadRequest('Could not find deployment for ' + req.param('host')));
+      }
+
+      req.deployment = deploy;
+      req.mongo = deploy.connection(token);
+
+      if(!req.mongo){
+        return next(new BadRequest('Not connection for token.  Must request a new one.'));
+      }
+      next();
+    });
   });
 };

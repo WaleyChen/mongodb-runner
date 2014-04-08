@@ -2,19 +2,64 @@
 
 var MongoClient = require('mongodb').MongoClient,
   nconf = require('nconf'),
-  debug = require('debug')('mg:rest:deployment'),
-  store = {};
+  debug = require('debug')('mg:rest:deployment');
 
-store._keys = [];
+var store_data = {},
+  store_keys = [];
 
-store.keys = function(){
-  return store._keys;
-};
-store.set = function(key, val, fn){
-  store[key] = val;
-  store._keys.push(key);
-  fn();
-  return store;
+var store = module.exports.store = {
+  keys: function(fn){
+    fn(null, store_keys);
+  },
+  get: function(key, fn){
+    fn(null, store_data[key]);
+  },
+  remove: function(key, fn){
+    delete store_data[key];
+    store_keys.splice(store_keys.indexOf(key), 1);
+    return fn();
+  },
+  find: function(query, fn){
+    var keys = Object.keys(query);
+    if(keys.length === 0){
+      return fn(null, store_keys.map(function(k){
+        return store_data[k];
+      }));
+    }
+
+    var docs = [];
+    store_keys.map(function(k){
+      var item = store_data[k];
+
+      keys.every(function(_k){
+        if(item[_k]){
+          docs.push(item);
+        }
+      });
+    });
+    fn(null, docs);
+  },
+  clear: function(fn){
+    debug('clearing deployment store');
+    store.find({}, function(err, docs){
+      if(err) return fn(err);
+      if(docs.length === 0) return fn();
+
+      var pending = docs.length;
+      docs.map(function(doc){
+        store.remove(doc._id, function(){
+          pending--;
+          if(pending === 0) return fn();
+        });
+      });
+    });
+  },
+  set: function(key, val, fn){
+    debug('store set', key);
+    store_data[key] = val;
+    store_keys.push(key);
+    fn();
+  }
 };
 
 module.exports.discover = function discover(seed, fn){
@@ -22,14 +67,11 @@ module.exports.discover = function discover(seed, fn){
   debug('discovering ' + seed);
 
   connect(seed, function(err, db){
-    debug('connection error?', err);
-
     if(err) return fn(err);
     if(!db) return fn(new Error('could not connect'));
 
-    debug('checking isMaster');
+    debug('classifying nodes');
     db.command({ismaster: true}, function(err, res){
-      debug('command error?', err);
       if(err) return fn(err);
 
       getSeedType(res, function(err, type){
@@ -55,7 +97,6 @@ module.exports.discover = function discover(seed, fn){
         }
         deployment.db = db;
 
-        debug('putting in store', deployment._id);
         store.set(deployment._id, deployment, function(){
           return fn(null, deployment);
         });
@@ -111,27 +152,23 @@ function getSeedType(res, fn){
   }
 }
 
-module.exports.all = function(){
-  debug('all keys', store.keys());
-  return store.keys().map(function(_id){
-    return store[_id];
-  });
+module.exports.all = function(fn){
+  store.find({}, fn);
 };
 
 // Find a deployment with just a host:port `uri`
-module.exports.get = function(uri){
+module.exports.get = function(uri, fn){
   var _id = getId(uri);
-  debug('get', _id);
-  if(store[_id]) return store[_id];
 
-  var res = null;
-  Object.keys(store).map(function(seed){
-    if(!store[seed].instances){
-      throw new Error('Bad deployment in store!');
-    }
-    if(store[seed].instances[_id]) res = store[seed];
+  store.get(_id, function(err, res){
+    if(err) return fn(err);
+    if(res) return fn(null, res);
+
+    store.find({instances: _id}, function(err, docs){
+      if(err) return fn(err);
+      fn(null, docs[0]);
+    });
   });
-  return res;
 };
 
 var connect = module.exports.connect = function(uri, fn){
