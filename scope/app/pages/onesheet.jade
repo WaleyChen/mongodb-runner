@@ -1,21 +1,22 @@
 mixin slide(title, number)
   .slide
     .col-md-4
-      h4 #{number}. #{title}
+      h4
+        +anchor(number + '. ' +title)(prefix='token-auth')
       block
 
     .col-md-8
       a(href="img/token-based-auth.00#{number + 1}.png",
         title="Open full version in a new window", target="_blank")
         img(alt="#{title}", width="100%",
-          src="img/token-based-auth.00#{number + 1}.png",
-          style="border: 1px solid #9f9f9f;border-radius: 2px;")
+          src="img/token-based-auth.00#{number + 1}.png")
 
 mixin title(text)
   h1 #{text}
 
 mixin anchor(text)
-  - id = text.toLowerCase().replace(/[^\w]+/g, '-')
+  - id = (attributes.prefix ? attributes.prefix + '-' : '')
+  - id += text.toLowerCase().replace(/[^\w]+/g, '-')
   a.anchor(name="#{id}", href="##{id}")
     span.icon.icon-link
   | #{text}

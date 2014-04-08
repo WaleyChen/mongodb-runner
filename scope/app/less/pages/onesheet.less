@@ -23,12 +23,15 @@ h5:hover a.anchor,
 h6:hover a.anchor {
   text-decoration: none;
   line-height: 1;
-  padding-right: 2px;
-  padding-left: 0px;
-  margin-left: -20px;
+  margin-left: -(@component-padding*3.33);
   display: block;
   cursor: pointer;
   position: absolute;
+  padding-left: (@component-padding*2);
+  padding-bottom: @component-padding;
+  padding-top: @component-padding;
+  padding-right: @component-padding;
+  margin-top: (@component-padding*-1);
 }
 
 
@@ -102,6 +105,16 @@ section {
     .slide {
       margin-bottom: @component-padding * 2;
       .row;
+
+      img {
+        border: 1px solid @base-border-color;
+
+        &:hover {
+          border-color: @button-background-color-hover;
+          border-radius: @component-border-radius;
+          box-shadow: 0 0 (@component-border-radius*4) #ccc;
+        }
+      }
     }
     pre > code {
       font-family: @font-family-monospace;
