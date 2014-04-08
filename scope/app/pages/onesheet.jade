@@ -12,9 +12,7 @@ mixin slide(title, number)
           style="border: 1px solid #9f9f9f;border-radius: 2px;")
 
 mixin title(text)
-  //- section
-  //-   article
-  //-     h1: +anchor(text)
+  h1 #{text}
 
 mixin anchor(text)
   - id = text.toLowerCase().replace(/[^\w]+/g, '-')
@@ -43,9 +41,10 @@ html(lang='en')
   body
     #toolbar
       .btn-group.inline-block.pull-right
-        a.btn.inline-block.pull-right(href='')
+        a.btn.inline-block.pull-right(href="http://github.com/10gen/monogscope")
+          span(class='icon icon-mark-github')
           div.btn-label github
-          //- span(class='icon icon-mark-github')
+
     #status
       span.logo.inline-block.pull-right(href="#")
         span.inline-block mongoscope
