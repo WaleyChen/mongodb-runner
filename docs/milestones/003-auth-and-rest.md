@@ -18,8 +18,8 @@
 - [x] api route to 'attach mongoscope', aka add a new deployment
 - [x] `smongo` needs to support on the fly stream creation for a host
 
-- [ ] add working section to onesheet for authentication
-- [ ] send onesheet to security team and schedule review meeting
+- [x] add working section to onesheet for authentication
+- [x] send onesheet to security team and schedule review meeting
 
 - other rest features to push through on:
   - [x] tailing / mydb / pub sub
