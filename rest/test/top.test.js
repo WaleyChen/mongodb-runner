@@ -1,4 +1,13 @@
-// "use strict";
+'use strict';
+
+var assert = require('assert'),
+  helpers = require('./helpers'),
+  get = helpers.get, post = helpers.post,
+  debug = require('debug')('test:top');
+
+describe('top', function(){
+  it('should return initial data log');
+});
 
 // var smongo = require('../lib/smongo'),
 //   connect = require('mongodb').MongoClient.connect,

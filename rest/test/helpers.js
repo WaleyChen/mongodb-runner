@@ -2,10 +2,11 @@
 
 var supertest = require('supertest'),
   MongoClient = require('mongodb').MongoClient,
+  assert = require('assert'),
   app = require('../lib/'),
   debug = require('debug')('mg:rest:test:helpers');
 
-module.exports = {
+exports = {
   collections: {},
   get: function(path){
     return supertest(app).get(path);
@@ -13,14 +14,28 @@ module.exports = {
   post: function(path){
     return supertest(app).post(path);
   },
-  before: function(){},
+  before: function(done){
+    debug('get fixture token');
+
+    exports.post('/api/v1/token')
+      .send({host: 'localhost:27017'})
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res){
+        if(err) return done(err);
+
+        assert(res.body.token);
+        exports.ctx.token = res.body.token;
+        done();
+      });
+  },
   beforeEach: function(){},
   after: function(done){
-    var names = Object.keys(module.exports.collections),
+    var names = Object.keys(exports.collections),
       pending = names.length;
 
     names.map(function(col){
-      module.exports.collections[col].drop(function(){
+      exports.collections[col].drop(function(){
         pending--;
         if(pending === 0){
           return done();
@@ -35,11 +50,12 @@ module.exports = {
       db.collection(name, function(err, collection){
         if(err) return done(err);
         debug('created collection', name);
-        module.exports.collections[name] = collection;
+        exports.collections[name] = collection;
         collection.insert({_id: 'dummy'}, function(){
           done();
         });
       });
     });
-  }
+  },
+  ctx: {}
 };
