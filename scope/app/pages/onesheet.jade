@@ -21,34 +21,114 @@ html(lang='en')
             path(d="M 112 64.5 C 117.7454 62.7708 177.5 63.5 182.5 108.5 C 187.0829 149.7462 171.628 175.6394 168.5 182 C 166.9798 185.0911 68.0573 185.9565 65 182 C 48 160 64.5 174 62.5 169.5 C 60.5 165 45.5 172 41 163 C 32.8869 146.7738 24.8783 152.153 48 149 C 70 146 125 146 128 148 C 137.4217 154.2812 134.5 160.5 134.5 160.5 C 134.5 160.5 141.1787 162.9935 144.5 158.5 C 153 147 155.6667 133.8333 155.5 123.5 C 155.4022 117.434 156 95 144.5 91.5 C 132.0469 87.7099 96 89 95 92 C 94 95 107.7083 65.7917 112 64.5 Z")
 
     #mongoscope
-      .col-md-8.col-md-push-2.col-lg-6.col-lg-push-3.col-xl-4.col-xl-push-4.panel
+      .col-md-10.col-md-push-1.panel
         section: .row
           .col-md-6
             h1 mongoscope
 
+        a(name="security")
         section: .row
           .col-md-12
+
             h2 Security
 
             h3 Token Authentication
-            p Modelled on&nbsp;
-              a(href="http://docs.aws.amazon.com/STS/latest/APIReference/Welcome.html", target="_blank")
-                | Amazon STS
-              | &nbsp;using&nbsp;
-              a(href="http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html", target="_blank")
-              | JSON Web Tokens.
+            .row.block
+              .col-md-12
+                p Modelled on&nbsp;
+                  a(href="http://docs.aws.amazon.com/STS/latest/APIReference/Welcome.html", target="_blank")
+                    | Amazon STS
+                  | &nbsp;using&nbsp;
+                  a(href="http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html", target="_blank")
+                    | JSON Web Tokens
+                  |.
 
-            .block
-              a(href="img/token-based-auth.001.png", target="_blank")
-                img(width="100%", src="img/token-based-auth.001.png")
+                p
+                  | All actors use dedicated connections: 1 token = 1
+                  | connection = 1 kernel instance. There is no system-
+                  | level sharing or cherry-picking between sessions and
+                  | there is no "scope" tooling user. This provides
+                  | clean audit trails and high-level cleaving should a
+                  | user's credentials become compromised.
+            .row.block(style="margin-bottom: 60px;")
+              .col-md-4
+                :markdown
+                  #### 1. Client Requests a Token
 
-            p kerberos, ldap, x509 options can be input in the auth form.
+                  When the UI is loaded, the first thing it does is present an
+                  auth dialog for username and password.  When the form is
+                  submitted an XHR request is made to `/api/v1/token` which
+                  will attempt to connect to the seed host with those credentials.
 
-            h3 Questions
-            ul
-              li ssl: how could we offer this?
-              li two factor auth?
-              li request signing?
+              .col-md-8
+                a(href="img/token-based-auth.002.png", target="_blank")
+                  img(width="100%", src="img/token-based-auth.002.png", style="border: 1px solid #9f9f9f;border-radius: 2px;")
+
+            .row.block(style="margin-bottom: 60px;")
+              .col-md-4
+                :markdown
+                  #### 2. Check Credentials with Kernel
+
+                  If the seed host rejects those credentials, we just close
+                  the connection and return an error message to the client.
+
+                  The REST API provides no higher abstraction for ACL's.
+                  It merely acts as a passthrough to the kernel.
+
+              .col-md-8
+                a(href="img/token-based-auth.003.png", target="_blank")
+                  img(width="100%", src="img/token-based-auth.003.png", style="border: 1px solid #9f9f9f;border-radius: 2px;")
+            .row.block(style="margin-bottom: 60px;")
+              .col-md-4
+                :markdown
+                  #### 3. REST Server Generates Token
+
+                  If the seed host accepts the credentials, we then generate
+                  a JSON Web Token with a pointer to the connection we just created.
+                  It's important to note, the credentials are not stored on the
+                  server at any time. Like STS, it is up to the client to request
+                  a new token for use when a token expires.
+
+                  By default, tokens expire after **60 minutes**. This is
+                  configurable via the `token:lifetime` option.
+
+                  When the token is generated, a reaper task is
+                  scheduled to nuke it's associated connection just after
+                  it is set to expire.
+
+              .col-md-8
+                a(href="img/token-based-auth.004.png", target="_blank")
+                  img(width="100%", src="img/token-based-auth.004.png", style="border: 1px solid #9f9f9f;border-radius: 2px;")
+
+            .row.block(style="margin-bottom: 60px;")
+              .col-md-4
+                :markdown
+                  #### 4. Send Token in `Authorization` Header
+
+                  Those routes which require authentication, automatically
+                  get the token from the header, verify it's contents,
+                  and select it's connection to the kernel to use for the
+                  request context.
+
+              .col-md-8
+                a(href="img/token-based-auth.005.png", target="_blank")
+                  img(width="100%", src="img/token-based-auth.005.png", style="border: 1px solid #9f9f9f;border-radius: 2px;")
+
+            .row.block(style="margin-bottom: 60px;")
+              .col-md-4
+                :markdown
+                  #### 5. Refresh New Token
+
+                  The "token redline" is the timeframe 15 seconds before a
+                  token is scheduled to expire.  At this point, the client
+                  should resend the credentials to generate a new token.
+
+              .col-md-8
+                a(href="img/token-based-auth.006.png", target="_blank")
+                  img(width="100%", src="img/token-based-auth.006.png", style="border: 1px solid #9f9f9f;border-radius: 2px;")
+
+            p
+              | Kerberos, LDAP, and x509 options
 
 
         section: .row
@@ -90,6 +170,9 @@ html(lang='en')
             h2 Architecture
 
             p 3 nodejs processes + 1 mongod processes
+
+            blockquote
+              | @note: out of date after v0.2.0.  needs update.
 
           .row: .col-md-12.bordered.panel.padded.tool-panel
             h3 mg
@@ -162,21 +245,25 @@ html(lang='en')
           h3.mono open&nbsp;
             a(href="http://localhost:29017/#database/dataset-wikipedia", target="_blank")
               | http://localhost:29017/#database/dataset-wikipedia
-          :markdown
-            ### Visualization/Charting/Dashboards
-            - https://github.com/CarlosCondor/chartFromMongo
-
-            ### Dataset Importers/Ingestion
-            - http://blueqnx.github.io/wikinmongo/
-            - https://github.com/kaniska/project-mongo-logviewer
-
-            ### Workshops
-            - http://mongodbschool.io/
-            - https://github.com/sridharn/dataweek_2013
-            - https://github.com/RyanMullins/Tutorial-LeafletMongoDB
 
         section
-          h2 funnel
+          h2 Potential Extension Points
+          .block.panel
+            :markdown
+              ### Visualization/Charting/Dashboards
+              - https://github.com/CarlosCondor/chartFromMongo
+
+              ### Dataset Importers/Ingestion
+              - http://blueqnx.github.io/wikinmongo/
+              - https://github.com/kaniska/project-mongo-logviewer
+
+              ### Workshops
+              - http://mongodbschool.io/
+              - https://github.com/sridharn/dataweek_2013
+              - https://github.com/RyanMullins/Tutorial-LeafletMongoDB
+
+        section
+          h2 Funnel
           p
             | because of read-only milestone, show prompt with shell commands
             | for the user to run in terminal
