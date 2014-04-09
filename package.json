@@ -25,6 +25,7 @@
       "docs/**",
       "ui/**",
       "test/**",
+      "static/img/*.0*.png",
       "**/.bin/**",
       "**/mocha/**",
       "**/flash-src/**",
