@@ -30,11 +30,14 @@
     "ecstatic": "~0.4.13",
     "gulp": "~3.5.2",
     "gulp-uglify": "~0.2.1",
-    "gulp-browserify": "~0.4.2",
     "gulp-jade": "~0.4.1",
     "gulp-manifest": "0.0.2",
     "gulp-sterno-manifest": "~0.0.1",
     "gulp-util": "~2.2.14",
-    "gulp-less": "^1.2.3"
+    "gulp-less": "^1.2.3",
+    "vinyl-source-stream": "^0.1.1",
+    "gulp-livereload": "^1.2.0",
+    "browserify": "^3.39.0",
+    "node-notifier": "^2.0.4"
   }
 }

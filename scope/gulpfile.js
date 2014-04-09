@@ -1,11 +1,13 @@
 var gulp = require('gulp'),
   gutil = require('gulp-util'),
-  browserify = require('gulp-browserify'),
+  browserify = require('browserify'),
   jade = require('gulp-jade'),
   manifest = require('gulp-sterno-manifest'),
-  less = require('gulp-less');
+  livereload = require('gulp-livereload'),
+  Notification = require('node-notifier'),
+  source = require('vinyl-source-stream');
 
-// "form of: a webapp!"
+// 'form of: a webapp!'
 gulp.task('build', ['pages', 'assets', 'js', 'less', 'manifest']);
 
 // What we'll call from `npm start` to work on this project
@@ -16,9 +18,19 @@ gulp.task('ready', function(){
   });
 
 gulp.task('js', function(){
-  gulp.src('./app/index.js')
-    .pipe(browserify({debug : false, transform: ['jadeify']}))
-    .pipe(gulp.dest('../rest/ui'));
+  var notifier = new Notification({});
+  browserify({entries: ['./app/index.js']})
+    .transform(require('jadeify'))
+    .bundle({debug: false})
+    .on('error', function(err){
+      var path = err.annotated.replace(__dirname + '/', '').split('\n')[1],
+        title = 'err: ' + path;
+      notifier.notify({title: title, message: err.annotated});
+      console.error(title, err.annotated);
+    })
+    .pipe(source('index.js'))
+    .pipe(gulp.dest('../rest/ui'))
+    .pipe(livereload());
 });
 
 gulp.task('assets', function(){
@@ -30,17 +42,28 @@ gulp.task('assets', function(){
 
 gulp.task('less', function () {
   var lessPaths = [
-    __dirname + '/app/less',
-    __dirname + '/app/less/atom',
-    __dirname + '/app/less/atom/variables'
-  ];
+      __dirname + '/app/less',
+      __dirname + '/app/less/atom',
+      __dirname + '/app/less/atom/variables'
+    ],
+    notifier = new Notification({}),
+    less = function(){
+      return require('gulp-less')({paths: lessPaths}).on('error', function(err){
+        var filename = err.filename.replace(__dirname + '/', ''),
+          title = 'err: ' + filename,
+          message = err.line + ': ' + err.message.split(' in file ')[0].replace(/`/g, '"');
+
+        notifier.notify({title: title, message: message});
+        console.error(title, message);
+      });
+    };
 
   gulp.src('./app/less/index.less')
-    .pipe(less({paths: lessPaths}))
+    .pipe(less())
     .pipe(gulp.dest('../rest/ui'));
 
   gulp.src('./app/less/pages/*.less')
-    .pipe(less({paths: lessPaths}))
+    .pipe(less())
     .pipe(gulp.dest('../rest/ui/css'));
 });
 
