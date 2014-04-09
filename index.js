@@ -1,3 +1,3 @@
 'use strict';
 
-module.exports = require('mongorest');
+module.exports = require('./lib');

@@ -1,51 +1,33 @@
 {
-  "name": "mg",
-  "version": "0.0.0",
-  "description": "MongoDB Launcher",
-  "dependencies": {
-    "yargs": "^1.2.1",
-    "debug": "^0.7.4",
-    "mongodmon": "^0.2.2",
-    "underscore": "^1.6.0",
-    "mongorest": "*"
-  },
+  "name": "mongoscope",
+  "description": "Wouldn't it be great if monogo just had this stuff builtin instead of rolling it yourself?",
+  "version": "0.0.2",
   "scripts": {
-    "dist": "DEBUG=* lone",
-    "start": "DEBUG=* MG_BIN=/srv/mongo/bin/mongod MG_DBPATH=~/.mongodb/data ./bin/mg.js",
-    "install": "./bin/install-children.sh"
-  },
-  "devDependencies": {
-    "lone": "imlucas/lone"
-  },
-  "lone": {
-    "ignore": [
-      "scope/**",
-      "rest/**",
-      "docs/**",
-      "bin/*.sh",
-      "node_modules/.bin/**",
-      "node_modules/node-zip/**",
-      "**/mocha/**",
-      "**/flash-src/**",
-      "**/socket.io-client/components/**",
-      "**/node_modules/redis/**",
-      "**/test/**",
-      "**/example/**"
-    ]
+    "start": "DEBUG=mg* gulp dev",
+    "dist": "lone",
+    "test": "NODE_ENV=testing mocha"
   },
   "bin": {
-    "mg": "./bin/mg.js"
+    "mongoscope": "./bin/mongoscope.js"
   },
-  "jshintConfig": {
-    "eqeqeq": true,
-    "node": true,
-    "indent": 2,
-    "newcap": true,
-    "predef": [ "describe", "it", "before", "beforeEach", "after", "afterEach"],
-    "quotmark": "single",
-    "unused": true,
-    "trailing": true,
-    "boss": true,
-    "loopfunc": true
+  "dependencies": {
+    "express": "~3.4.8",
+    "socket.io": "~0.9.16",
+    "mongodb": "latest",
+    "debug": "^0.7.4",
+    "mongolog": "^0.0.5",
+    "lodash": "^2.4.1",
+    "diskspace": "^0.1.6",
+    "express-jwt": "^0.2.0",
+    "jsonwebtoken": "^0.2.0",
+    "sse-stream": "0.0.4",
+    "up": "git://github.com/learnboost/up",
+    "nconf": "^0.6.9"
+  },
+  "devDependencies": {
+    "mocha": "^1.17.1",
+    "gulp": "~3.5.2",
+    "gulp-util": "~2.2.14",
+    "supertest": "^0.10.0"
   }
 }

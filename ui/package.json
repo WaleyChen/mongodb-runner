@@ -4,9 +4,7 @@
   "version": "0.0.2",
   "scripts": {
     "start": "gulp dev",
-    "build": "gulp build",
-    "test": "mocha",
-    "deploy": "./bin/gh-deploy.sh"
+    "build": "gulp build"
   },
   "dependencies": {
     "underscore": "~1.5.2",
