@@ -1,10 +1,18 @@
-# features
+## feature requests and ideas
 
-## `#aggregation`
+in no particular order.  feel free to add your own.
+
+### auth
+
+- nagging funnel to turn on auth for your deployment
+- "create role" wizard
+- [clippy-js](https://www.smore.com/clippy-js)
+
+### `#aggregation`
 
 - [ ] pipeline builder UI
 
-## `#shell`
+### `#shell`
   - read only shell
   - mine docs for autocomplete http://docs.mongodb.org/master/reference/command/
   - tabbed shells
@@ -12,7 +20,7 @@
     - imonogo (eg `histogram('users', 'friend_count')`)
     - run script from gist url.  https://developer.github.com/v3/gists/
 
-## `#stats`
+### `#stats`
   - pulse level:
     - [working set](http://docs.mongodb.org/master/reference/command/serverStatus/#workingset)
     - [index counters](http://docs.mongodb.org/master/reference/command/serverStatus/#indexcounters)
@@ -39,16 +47,16 @@
   - [ ] slow query finder like https://github.com/idealo/mongodb-slow-operations-profiler
   - [ ] might be something here or someone to lend an extra hand? https://github.com/Zarkantho/mongoui
 
-## `#sharding`
+### `#sharding`
 
-### read
+#### read
 
   - see `shell/utils_sh.js` in server
   - `getBalancerState()` - return true if enabled"
   - `isBalancerRunning()` - return true if the balancer has work in progress on any mongos"
   - `status()` - prints a general overview of the cluster
 
-### write
+#### write
 
   - `addShard( host )` - server:port OR setname/server:port
   - `enableSharding(dbname` - enables sharding on the database dbname
@@ -61,7 +69,7 @@
   - `removeShardTag(shard,tag` - removes the tag from the shard"
   - `addTagRange(fullName,min,max,tag` - tags the specified range of the given collection"
 
-### kiosk mode
+#### kiosk mode
 
 beacause there will be a lot of demoing...
 

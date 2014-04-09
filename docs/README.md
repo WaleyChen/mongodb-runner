@@ -1,4 +1,16 @@
-# UX
+# mongoscope-docs
+
+## milestones
+
+[feature requests and ideas](./milestones/100-icebox.md)
+
+### [auth](./milestones/003-mvp.md)
+
+### [mvp](./milestones/001-mvp.md)
+
+### [sketch](./milestones/000-sketch.md)
+
+## ux
 
 micro-framework for thinking about how to tackle this product and remove bias:
 
