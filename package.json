@@ -1,7 +1,7 @@
 {
   "name": "mongoscope",
   "description": "Wouldn't it be great if monogo just had this stuff builtin instead of rolling it yourself?",
-  "version": "0.0.2",
+  "version": "0.2.0",
   "scripts": {
     "start": "DEBUG=mg* gulp dev",
     "dist": "lone",
@@ -9,6 +9,22 @@
   },
   "bin": {
     "mongoscope": "./bin/mongoscope.js"
+  },
+  "lone": {
+    "ignore": [
+      "scope/**",
+      "rest/**",
+      "docs/**",
+      "bin/*.sh",
+      "node_modules/.bin/**",
+      "node_modules/node-zip/**",
+      "**/mocha/**",
+      "**/flash-src/**",
+      "**/socket.io-client/components/**",
+      "**/node_modules/redis/**",
+      "**/test/**",
+      "**/example/**"
+    ]
   },
   "dependencies": {
     "express": "~3.4.8",
@@ -28,6 +44,7 @@
     "mocha": "^1.17.1",
     "gulp": "~3.5.2",
     "gulp-util": "~2.2.14",
-    "supertest": "^0.10.0"
+    "supertest": "^0.10.0",
+    "lone": "imlucas/lone"
   }
 }
