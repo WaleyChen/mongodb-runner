@@ -29,6 +29,9 @@ mixin article(title)
     h3: +anchor(title)
     block
 
+mixin label(huh, type)
+  div(style="display: inline-block; margin-left: 10px;font-size: 10px;", class="label label-#{type}") #{huh}
+
 doctype html
 html(lang='en')
   head
@@ -198,19 +201,18 @@ html(lang='en')
             | and most likely on a different machine.
 
       +section('Distribution')
-        p
-          | The current plan is to include a single binary with the
-          | mongodb distribution. There are no pre-requisites or
-          | platform limitations because the investment of the node.js
-          | community (yes it should run [just fine on a RaspberryPi](https://gist.github.com/stolsma/3301813)). We
-          | take advantage of the built-in, but not very well-known
-          | capability of extending node.js with a single file.
-          | From&nbsp;
-          a(href="https://github.com/joyent/node/blob/master/src/node.js#L70", target="_blank")
-            | @joyent/node/blob/master/src/node.js#L70
-          |:
+        .row
+          .col-md-4
+            :markdown
+              The current plan is to include a single binary with the
+              mongodb distribution. There are no pre-requisites or
+              platform limitations because the investment of the node.js
+              community (yes it should run [just fine on a RaspberryPi](https://gist.github.com/stolsma/3301813)). We
+              take advantage of the built-in, but not very well-known
+              capability of extending node.js with a single file.
 
-        script(src="https://gist.github.com/imlucas/9915985.js")
+          .col-md-8
+            script(src="https://gist.github.com/imlucas/9915985.js")
 
         +article('Binaries')
           p OSX binaries available on the&nbsp;
@@ -262,6 +264,7 @@ html(lang='en')
               ul.list-unstyled
                 li
                   h4 Try It
+                    +label('e\'rybody', 'success')
                   :markdown
                     `mongoscope` is still very very much a work in progress
                     and having extra sets of eyes to say where things are
@@ -270,16 +273,21 @@ html(lang='en')
 
                 li
                   h4 Collection Sampling
+                    +label('kernel', 'default')
                   p
                     | If mongod had built-in resevoir sampling of documents
                     | in a collection would allow observing sparseness,
                     | outliers, hot corners, and a lot more.
                 li
                   h4 Query Linter
+                    +label('js', 'danger')
+                    +label('kernel', 'default')
+
                   p Catch the dumb stuff while it's still in the editor,
                     | not hanging with the global lock.
                 li
                   h4 Datasets
+                    +label('intern', 'info')
                   :markdown
                     Figuring out whether a feature is actually going to
                     work/be useful would be dramatically easier with
@@ -288,6 +296,8 @@ html(lang='en')
 
                 li
                   h4 Emscripten
+                    +label('js', 'danger')
+                    +label('kernel', 'default')
                   :markdown
                     There is a lot of business logic in the server that
                     would cut down on a lot of mistakes and bad information
@@ -299,6 +309,7 @@ html(lang='en')
               ul.list-unstyled
                 li
                   h4 Structured Data from docs
+                    +label('intern', 'info')
                   p
                     | Parse the mongo docs from RST to JSON for things
                     | like autocomplete for the webshell, help annotations
@@ -309,11 +320,14 @@ html(lang='en')
 
                 li
                   h4 Visualization
+                    +label('js', 'danger')
+                    +label('dataviz', 'warning')
                   p there are a lot of hard visualization problems with
                     | sharding, replication, and security that would
                     | be a great fit for summer research.
                 li
                   h4 Chrome/atom/Sublime Text
+                    +label('js', 'danger')
                   P
                     | Being able to interact with mongod over vanilla HTTP
                     | means you can move mongo closer to users than the other
@@ -323,6 +337,7 @@ html(lang='en')
                     | useful.
                 li
                   h4 Phonegap
+                    +label('js', 'danger')
                   p
                     | who doesn't like looking at pretty charts or running
                     | queries to get the latest signup counts from their
