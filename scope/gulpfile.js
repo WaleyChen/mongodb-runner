@@ -2,7 +2,7 @@ var gulp = require('gulp'),
   gutil = require('gulp-util'),
   browserify = require('browserify'),
   manifest = require('gulp-sterno-manifest'),
-  livereload = require('gulp-livereload'),
+  // livereload = require('gulp-livereload'),
   Notification = require('node-notifier'),
   source = require('vinyl-source-stream');
 
@@ -28,8 +28,7 @@ gulp.task('js', function(){
       console.error(title, err.annotated);
     })
     .pipe(source('index.js'))
-    .pipe(gulp.dest('../rest/ui'))
-    .pipe(livereload());
+    .pipe(gulp.dest('../rest/ui'));
 });
 
 gulp.task('assets', function(){
