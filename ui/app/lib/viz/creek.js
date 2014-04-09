@@ -1,5 +1,3 @@
-'use strict';
-
 // Simple way to make a nice chart with a single metric being streamed into it.
 //
 // @todo: make this an actual duplex stream.

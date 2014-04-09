@@ -1,5 +1,3 @@
-'use strict';
-
 var Backbone = require('backbone'),
   Model = require('./service').Model,
   List = require('./service').List,

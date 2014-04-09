@@ -1,9 +1,7 @@
-'use strict';
-
 var assert = require('assert'),
   helpers = require('./helpers'),
   get = helpers.get, ctx = helpers.ctx,
-  debug = require('debug')('mg:rest:test:index');
+  debug = require('debug')('mongoscope:test:index');
 
 describe('api root', function(){
   before(helpers.before);

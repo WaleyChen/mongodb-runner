@@ -1,9 +1,7 @@
-'use strict';
-
 var assert = require('assert'),
   helpers = require('./helpers'),
   get = helpers.get, post = helpers.post,
-  debug = require('debug')('test:top');
+  debug = require('debug')('mongoscope:test:top');
 
 describe('top', function(){
   it('should return initial data log');

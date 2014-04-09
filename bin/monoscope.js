@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-'use strict';
 
 var nconf = require('nconf'),
   app = require(__dirname + '/../lib'),

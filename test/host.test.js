@@ -1,8 +1,6 @@
-'use strict';
-
 var helpers = require('./helpers'),
   get = helpers.get, ctx = helpers.ctx,
-  debug = require('debug')('test:host');
+  debug = require('debug')('mongoscope:test:host');
 
 describe('host', function(){
   before(helpers.before);

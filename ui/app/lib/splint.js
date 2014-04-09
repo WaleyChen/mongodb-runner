@@ -1,7 +1,4 @@
-'use strict';
-
 var Backbone = require('backbone'),
-  Backbone = require('Backbone'),
   _ = require('underscore'),
   debug = require('debug')('mg:splint');
 

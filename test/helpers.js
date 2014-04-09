@@ -1,11 +1,9 @@
-'use strict';
-
 var supertest = require('supertest'),
   MongoClient = require('mongodb').MongoClient,
   assert = require('assert'),
   app = require('../lib/'),
   deployment = require('../lib/deployment'),
-  debug = require('debug')('mg:rest:test:helpers');
+  debug = require('debug')('mongoscope:test:helpers');
 
 exports = {
   collections: {},

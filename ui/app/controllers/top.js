@@ -1,5 +1,3 @@
-'use strict';
-
 var Backbone = require('backbone'),
   models = require('../models'),
   moment = require('moment');

@@ -1,5 +1,3 @@
-'use strict';
-
 var splint = require('../lib/splint'),
   debug = require('debug')('mg:scope:router');
 

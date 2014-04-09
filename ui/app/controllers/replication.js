@@ -1,5 +1,3 @@
-'use strict';
-
 var Controller = require('../lib/splint').Controller;
 
 module.exports = Controller.extend({

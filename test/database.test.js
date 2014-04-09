@@ -1,9 +1,7 @@
-'use strict';
-
 var helpers = require('./helpers'),
   get = helpers.get, ctx = helpers.ctx,
   assert = require('assert'),
-  debug = require('debug')('test:database');
+  debug = require('debug')('mongoscope:test:database');
 
 describe('database', function(){
   before(helpers.before);

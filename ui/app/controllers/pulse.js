@@ -1,5 +1,3 @@
-'use strict';
-
 var Backbone = require('Backbone'),
   $ = Backbone.$,
   models = require('../models'),

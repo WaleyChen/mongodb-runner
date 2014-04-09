@@ -1,5 +1,3 @@
-'use strict';
-
 var $ = require('jquery'),
   _ = require('underscore'),
   debug = require('debug')('mg:scope:service'),
