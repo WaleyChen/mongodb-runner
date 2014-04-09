@@ -3,8 +3,8 @@
   "description": "Wouldn't it be great if monogo just had this stuff builtin instead of rolling it yourself?",
   "version": "0.2.0",
   "scripts": {
-    "start": "DEBUG=mg* gulp dev",
-    "dist": "lone",
+    "start": "NODE_ENV=development DEBUG=mongo* gulp dev",
+    "dist": "NODE_ENV=production DEBUG=* lone",
     "test": "NODE_ENV=testing mocha",
     "install": "echo 'install ui dependencies' && cd ui && npm install;"
   },
@@ -19,6 +19,8 @@
   },
   "lone": {
     "ignore": [
+      "gulpfile.js",
+      "README.md",
       "aws/**",
       "docs/**",
       "ui/**",
@@ -28,8 +30,25 @@
       "**/flash-src/**",
       "**/socket.io-client/components/**",
       "**/node_modules/redis/**",
-      "**/test/**",
-      "**/example/**"
+      "node_modules/**/bin/**",
+      "node_modules/**/test/**",
+      "node_modules/**/tests/**",
+      "node_modules/**/example/**",
+      "node_modules/**/examples/**",
+      "node_modules/**/benchmarks/**",
+      "node_modules/**/benchmark.html",
+      "node_modules/**/tools/**",
+      "node_modules/gulp/**",
+      "node_modules/gulp-util/**",
+      "node_modules/**/docs/**",
+      "node_modules/**/doc/**",
+      "node_modules/**/*.log",
+      "node_modules/**/ext/win32/**",
+      "node_modules/**/tmp/**",
+      "node_modules/**/*.swf",
+      "node_modules/**/*.min.js",
+      "node_modules/**/browser_build/**",
+      "**/socket.io-client/lib/vendor/**"
     ]
   },
   "dependencies": {
@@ -38,9 +57,7 @@
     "mongodb": "latest",
     "debug": "^0.7.4",
     "mongolog": "^0.0.5",
-    "lodash": "^2.4.1",
     "diskspace": "^0.1.6",
-    "express-jwt": "^0.2.0",
     "jsonwebtoken": "^0.2.0",
     "sse-stream": "0.0.4",
     "up": "git://github.com/learnboost/up",
