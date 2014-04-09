@@ -1,7 +1,6 @@
 var gulp = require('gulp'),
   gutil = require('gulp-util'),
   browserify = require('browserify'),
-  jade = require('gulp-jade'),
   manifest = require('gulp-sterno-manifest'),
   livereload = require('gulp-livereload'),
   Notification = require('node-notifier'),
@@ -68,12 +67,19 @@ gulp.task('less', function () {
 });
 
 gulp.task('pages', function(){
+  var notifier = new Notification({}),
+    jade = function(){
+        return require('gulp-jade')({pretty: false}).on('error', function(err){
+          notifier.notify({title: 'jade error', message: err.message});
+        });
+      };
+
   gulp.src('./app/templates/index.jade')
-    .pipe(jade({pretty: false}))
+    .pipe(jade())
     .pipe(gulp.dest('../rest/ui'));
 
   gulp.src('./app/pages/*.jade')
-    .pipe(jade({pretty: false}))
+    .pipe(jade())
     .pipe(gulp.dest('../rest/ui'));
 });
 

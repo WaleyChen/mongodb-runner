@@ -68,92 +68,6 @@ html(lang='en')
 
 
     .onesheet: .col-md-10.col-md-push-1.col-sm-12
-      section
-        h2: +anchor('Skunkworks / Intern Ideas')
-        article
-          .row
-            .col-md-5
-              ul.list-unstyled
-                li
-                  h4 Try It
-                  :markdown
-                    `mongoscope` is still very very much a work in progress
-                    and having extra sets of eyes to say where things are
-                    truly horrible or even better, lend a hand to implement
-                    those fixes, would be extremely appreciated.
-
-                li
-                  h4 Collection Sampling
-                  p
-                    | If mongod had built-in resevoir sampling of documents
-                    | in a collection would allow observing sparseness,
-                    | outliers, hot corners, and a lot more.
-                li
-                  h4 Query Linter
-                  p Catch the dumb stuff while it's still in the editor,
-                    | not hanging with the global lock.
-                li
-                  h4 Datasets
-                  :markdown
-                    Figuring out whether a feature is actually going to
-                    work/be useful would be dramatically easier with
-                    real datasets to use like [replicating wikipedia](http://blueqnx.github.io/wikinmongo/)
-                    or the npm registry.
-
-                li
-                  h4 Emscripten
-                  :markdown
-                    There is a lot of business logic in the server that
-                    would cut down on a lot of mistakes and bad information
-                    if it was portable: everything from the query language
-                    and planner to what `ActionSet`'s a built-in role
-                    has access to.
-
-            .col-md-5.col-md-push-2
-              ul.list-unstyled
-                li
-                  h4 Structured Data from docs
-                  p
-                    | Parse the mongo docs from RST to JSON for things
-                    | like autocomplete for the webshell, help annotations
-                    | in the Security/Replication/Sharding UI's.  The initial
-                    | script hack is pretty trivial but working with the docs
-                    | team to make things highly reliable, as well as updating
-                    | existing docs will take some time.
-
-                li
-                  h4 Visualization
-                  p there are a lot of hard visualization problems with
-                    | sharding, replication, and security that would
-                    | be a great fit for summer research.
-                li
-                  h4 Chrome/atom/Sublime Text
-                  P
-                    | Being able to interact with mongod over vanilla HTTP
-                    | means you can move mongo closer to users than the other
-                    | way around.  Things like a Chrome app to run queries
-                    | right from a github repo or keeping an eye on mongotop
-                    | while you're working on your python app would be extremely
-                    | useful.
-                li
-                  h4 Phonegap
-                  p
-                    | who doesn't like looking at pretty charts or running
-                    | queries to get the latest signup counts from their
-                    | pocket?
-
-
-          //- ### Visualization/Charting/Dashboards
-          //- - https://github.com/CarlosCondor/chartFromMongo
-
-          //- ### Dataset Importers/Ingestion
-          //- - http://blueqnx.github.io/wikinmongo/
-          //- - https://github.com/kaniska/project-mongo-logviewer
-
-          //- ### Workshops
-          //- - http://mongodbschool.io/
-          //- - https://github.com/sridharn/dataweek_2013
-          //- - https://github.com/RyanMullins/Tutorial-LeafletMongoDB
 
       +section('Security')
         +article('Token Authentication')
@@ -340,6 +254,96 @@ html(lang='en')
                 DEBUG=* node example.js;
                 open http://localhost:29017/#database/dataset-wikipedia
                 ```
+
+      section
+        h2: +anchor('Skunkworks / Intern Ideas')
+        article
+          .row
+            .col-md-5
+              ul.list-unstyled
+                li
+                  h4 Try It
+                  :markdown
+                    `mongoscope` is still very very much a work in progress
+                    and having extra sets of eyes to say where things are
+                    truly horrible or even better, lend a hand to implement
+                    those fixes, would be extremely appreciated.
+
+                li
+                  h4 Collection Sampling
+                  p
+                    | If mongod had built-in resevoir sampling of documents
+                    | in a collection would allow observing sparseness,
+                    | outliers, hot corners, and a lot more.
+                li
+                  h4 Query Linter
+                  p Catch the dumb stuff while it's still in the editor,
+                    | not hanging with the global lock.
+                li
+                  h4 Datasets
+                  :markdown
+                    Figuring out whether a feature is actually going to
+                    work/be useful would be dramatically easier with
+                    real datasets to use like [replicating wikipedia](http://blueqnx.github.io/wikinmongo/)
+                    or the npm registry.
+
+                li
+                  h4 Emscripten
+                  :markdown
+                    There is a lot of business logic in the server that
+                    would cut down on a lot of mistakes and bad information
+                    if it was portable: everything from the query language
+                    and planner to what `ActionSet`'s a built-in role
+                    has access to.
+
+            .col-md-5.col-md-push-2
+              ul.list-unstyled
+                li
+                  h4 Structured Data from docs
+                  p
+                    | Parse the mongo docs from RST to JSON for things
+                    | like autocomplete for the webshell, help annotations
+                    | in the Security/Replication/Sharding UI's.  The initial
+                    | script hack is pretty trivial but working with the docs
+                    | team to make things highly reliable, as well as updating
+                    | existing docs will take some time.
+
+                li
+                  h4 Visualization
+                  p there are a lot of hard visualization problems with
+                    | sharding, replication, and security that would
+                    | be a great fit for summer research.
+                li
+                  h4 Chrome/atom/Sublime Text
+                  P
+                    | Being able to interact with mongod over vanilla HTTP
+                    | means you can move mongo closer to users than the other
+                    | way around.  Things like a Chrome app to run queries
+                    | right from a github repo or keeping an eye on mongotop
+                    | while you're working on your python app would be extremely
+                    | useful.
+                li
+                  h4 Phonegap
+                  p
+                    | who doesn't like looking at pretty charts or running
+                    | queries to get the latest signup counts from their
+                    | pocket?
+
+          .row
+            .col-md-12
+              h3 Contribute/Collaborate on Existing Projects
+              :markdown
+                #### Visualization/Charting/Dashboards
+                - [@CarlosCondor/chartFromMongo](https://github.com/CarlosCondor/chartFromMongo)
+
+                #### Dataset Importers/Ingestion
+                - [@blueqnx/wikinmongo](http://blueqnx.github.io/wikinmongo/)
+                - [@kaniska/project-mongo-logviewer](https://github.com/kaniska/project-mongo-logviewer)
+
+                #### Workshops
+                - [mongodbschool.io](http://mongodbschool.io/)
+                - [@sridharn/dataweek_2013](https://github.com/sridharn/dataweek_2013)
+                - [@RyanMullins/Tutorial-LeafletMongoDB](https://github.com/RyanMullins/Tutorial-LeafletMongoDB)
 
       //- section
       //-   h2 Funnel
