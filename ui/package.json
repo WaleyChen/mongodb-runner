@@ -4,7 +4,8 @@
   "version": "0.0.2",
   "scripts": {
     "start": "gulp dev",
-    "build": "gulp build"
+    "build": "gulp build",
+    "postinstall": "gulp build"
   },
   "author": "Lucas Hrabovsky <lucas@mongodb.com> (http://imlucas.com)",
   "homepage": "http://10gen.github.io/mongoscope/index.html",

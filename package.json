@@ -6,7 +6,7 @@
     "start": "NODE_ENV=development DEBUG=mongo* gulp dev",
     "dist": "NODE_ENV=production DEBUG=* lone",
     "test": "NODE_ENV=testing mocha",
-    "install": "echo 'install ui dependencies' && cd ui && npm install;"
+    "install": "echo 'install ui deps and building' && cd ui && npm install;"
   },
   "author": "Lucas Hrabovsky <lucas@mongodb.com> (http://imlucas.com)",
   "homepage": "http://10gen.github.io/mongoscope/onesheet.html",
@@ -69,6 +69,7 @@
     "gulp": "~3.5.2",
     "gulp-util": "~2.2.14",
     "supertest": "^0.10.0",
-    "lone": "imlucas/lone"
+    "lone": "imlucas/lone",
+    "lodash": "^2.4.1"
   }
 }

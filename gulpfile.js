@@ -1,7 +1,7 @@
 var gulp = require('gulp'),
   gutil = require('gulp-util'),
   exec = require('child_process').exec,
-  app = require('./'),
+  app = require('./lib/index'),
   pkg = require('./package.json');
 
 gulp.task('server', function(){app.start();});
