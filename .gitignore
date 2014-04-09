@@ -3,4 +3,14 @@ node_modules/
 .dist/
 .build/
 npm-debug.log
-static/
+
+static/css
+static/fonts
+static/img
+static/funnel.html
+static/index.css
+static/index.html
+static/index.js
+static/onesheet.html
+static/sterno-manifest.json
+static/styleguide.html
