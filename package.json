@@ -5,7 +5,14 @@
   "scripts": {
     "start": "DEBUG=mg* gulp dev",
     "dist": "lone",
-    "test": "NODE_ENV=testing mocha"
+    "test": "NODE_ENV=testing mocha",
+    "install": "echo 'install ui dependencies' && cd ui && npm install;"
+  },
+  "author": "Lucas Hrabovsky <lucas@mongodb.com> (http://imlucas.com)",
+  "homepage": "http://10gen.github.io/mongoscope/onesheet.html",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/10gen/mongoscope.git"
   },
   "bin": {
     "mongoscope": "./bin/mongoscope.js"

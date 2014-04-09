@@ -1,10 +1,16 @@
 {
-  "name": "mongoscope",
+  "name": "mongoscope-ui",
   "description": "Gleefully work with MongoDB in your browser.",
   "version": "0.0.2",
   "scripts": {
     "start": "gulp dev",
     "build": "gulp build"
+  },
+  "author": "Lucas Hrabovsky <lucas@mongodb.com> (http://imlucas.com)",
+  "homepage": "http://10gen.github.io/mongoscope/index.html",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/10gen/mongoscope.git"
   },
   "dependencies": {
     "underscore": "~1.5.2",
