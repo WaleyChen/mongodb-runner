@@ -12,12 +12,11 @@
   },
   "lone": {
     "ignore": [
-      "scope/**",
-      "rest/**",
+      "aws/**",
       "docs/**",
-      "bin/*.sh",
-      "node_modules/.bin/**",
-      "node_modules/node-zip/**",
+      "ui/**",
+      "test/**",
+      "**/.bin/**",
       "**/mocha/**",
       "**/flash-src/**",
       "**/socket.io-client/components/**",
