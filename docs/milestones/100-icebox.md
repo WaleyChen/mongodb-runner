@@ -60,3 +60,32 @@
   - `addShardTag(shard,tag` - adds the tag to the shard"
   - `removeShardTag(shard,tag` - removes the tag from the shard"
   - `addTagRange(fullName,min,max,tag` - tags the specified range of the given collection"
+
+### kiosk mode
+
+beacause there will be a lot of demoing...
+
+> I have created `demo` `demo` user in mongod already
+> that has readOnly access to the `wikipedia.edits` collection,
+> can view database/collection stats, can view all of the roles and
+> users in the `wikipedia` database.
+
+## EKG
+
+- EKG-like viz of instance health fills header and provides background
+- Full-screen/dim-the-lights-mode: just EKG and hostname on dark background
+- Is something is wrong, background flashing red
+- This is going to be fucking rad as a Phonegap app
+
+## MongoDBSpeed
+
+- Graded Health based on best practices
+- What would [YSlow!](http://developer.yahoo.com/yslow/) or
+  [PageSpeed](https://developers.google.com/speed/pagespeed/) grading
+  rules be for a instance?
+
+## MongoDB University integration
+
+- Use the shell as a tutorial/wizard-mode?
+- "Install mongodb" -> click here to launch mongoscope shell in fullscreen
+  mode
