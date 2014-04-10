@@ -1,7 +1,7 @@
 {
   "name": "mongoscope",
   "description": "Wouldn't it be great if monogo just had this stuff builtin instead of rolling it yourself?",
-  "version": "0.2.0",
+  "version": "0.0.3",
   "scripts": {
     "start": "NODE_ENV=development DEBUG=mongo* gulp dev",
     "dist": "NODE_ENV=production DEBUG=* lone",
