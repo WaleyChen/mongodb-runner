@@ -69,12 +69,17 @@ h6:hover a.anchor {
   .container-fluid;
   .panel;
   .inset-panel;
-  height: 150px;
-  // background-color: @tab-background-color;
+  height: 450px;
   box-shadow: 0px -10px 4px 10px #ccc;
   background: transparent;
   background: darken(@text-color-subtle, 20%);
-
+  padding-top: 50px;
+  img {
+    margin-top: 20px;
+    border-radius: 2px;
+    box-shadow: 0 0 (@component-border-radius) #ccc;
+    margin-left: -10px;
+  }
   h1 {
     // margin-top: 200px;
     // color: fadeout(@text-color-subtle, 20%);
@@ -90,14 +95,26 @@ h6:hover a.anchor {
     font-weight: bold;
 
   }
+  .btn.btn-primary {
+    font-size: 2em;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    &:hover {
+      text-decoration: none;
+    }
+    .icon-mark-github:before {
+      font-size: 36px;
+      width: initial;
+      height: initial;
+      padding-right: 10px;
+    }
+  }
   .logo {
     margin-right: -10px;
     svg {
       width: 100px;
       height: 80px;
       path {
-        // stroke: darken(@text-color-subtle, 20%);
-        // fill: darken(@text-color-subtle, 20%);
         stroke: @tab-background-color;
         fill: @tab-background-color;
       }
@@ -105,6 +122,7 @@ h6:hover a.anchor {
   }
   p{
     color: @tab-background-color;
+    margin-bottom: 30px;
   }
 
   ul {
@@ -150,7 +168,6 @@ section {
   }
 
   article {
-    // border-top: 1px solid @base-border-color;
     padding: 0;
     margin-top: @component-padding * 2;
     padding-top: @component-padding;
