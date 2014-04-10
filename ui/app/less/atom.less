@@ -658,8 +658,8 @@ code {
 }
 
 .btn-variant (@color) {
-  @bg: darken(@color, 10%);
-  @hover: @color;
+  @bg: @color;
+  @hover: lighten(@color, 10%);
   @selected: @color;
   @border: fadeout(darken(@color, 20%), 50%);
   .btn-background(@bg, @hover, @selected, @border, @text-color-selected, @text-color-selected);
@@ -670,7 +670,7 @@ code {
 }
 
 .btn.btn-primary {
-  .btn-variant(@background-color-info);
+  .btn-variant(@brand-primary);
   color: #FFF;
 }
 .btn.btn-primary:hover {

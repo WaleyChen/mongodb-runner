@@ -104,7 +104,7 @@ gulp.task('less', function () {
       });
     };
 
-  gulp.src(ui.src + '/less/index.less')
+  gulp.src(ui.src + '/less/{theme-*,index}.less')
     .pipe(less())
     .pipe(gulp.dest(ui.dest));
 
