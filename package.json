@@ -4,7 +4,7 @@
   "version": "0.0.3",
   "scripts": {
     "start": "NODE_ENV=development DEBUG=mongo* gulp dev",
-    "dist": "NODE_ENV=production DEBUG=* lone",
+    "dist": "rm -rf node_modules/ && npm install --production && NODE_ENV=production DEBUG=* lone",
     "test": "NODE_ENV=testing mocha",
     "install": "echo 'install ui deps and building' && cd ui && npm install && cd ../; gulp ui;"
   },
@@ -23,6 +23,7 @@
       "README.md",
       "aws/**",
       "docs/**",
+      "data/**",
       "ui/**",
       "test/**",
       "static/img/*.0*.png",
@@ -62,8 +63,7 @@
     "jsonwebtoken": "^0.2.0",
     "sse-stream": "^0.0.4",
     "up": "learnboost/up",
-    "nconf": "^0.6.9",
-    "requests": "0.0.1"
+    "nconf": "^0.6.9"
   },
   "devDependencies": {
     "mocha": "^1.17.1",

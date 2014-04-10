@@ -1,5 +1,8 @@
 # mongoscope
 
+![mongoscope-demo-v0.0.3](https://cloud.githubusercontent.com/assets/23074/2672671/b55006be-c0e9-11e3-958e-d1e15bc496f6.gif)
+
+
 ```
 > ./bin/mongoscope.js
 ```
