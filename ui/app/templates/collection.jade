@@ -7,25 +7,16 @@ include mixins/cog
 
 
 .row
-  .col-md-10
-    .collection-creek
-      .name #{collection.name}
-      ul.stats
-        li #{stats.index_count} indexes
-        li #{stats.document_count} docs
+  .col-md-2
+    .panel
+      .panel.padded
+        h1 #{collection.name}
+        h2: a(href="#database/#{collection.database}") #{collection.database}
 
-    .explorer(style="margin-top: 200px;")
-
-  .stats.col-md-2(style="padding-left: 0;padding-right: 0;")
-    .panel.panel-default
-      .panel-heading
-        h3(style="margin-bottom: 0;") #{collection.name}
-        h5(style="margin-bottom: 0; margin-top: 0;")
-          a(href="#database/#{collection.database}") #{collection.database}
-
-      .panel-heading
-        h5 Documents #{collection.stats.document_count}
-      ul.list-group.panel-body
+      ul.list-group
+        li.list-group-item
+          span.badge #{collection.stats.document_count}
+          | Documents
         li.list-group-item
           span.badge
             +bytes(collection.stats.document_size)
@@ -34,24 +25,20 @@ include mixins/cog
           span.badge
             +bytes(stats.document_size_average)
           strong Average
-      .panel-heading
-        h5 Indexes #{collection.indexes.length}
-        //- h4
-        //-   +bytes(collection.stats.index_size)
-        //- h4
-        //-   +bytes(stats.index_size_per_document)
-        //-   | per
 
-      ul.list-group.panel-body
-       - for index in collection.indexes
+      ul.list-group
         li.list-group-item
-          span.badge
-            +bytes(index.size)
-          //- code #{JSON.stringify(index.key)}
-          | #{index.name}
-      .panel-heading
-        h5 Advanced
-      ul.list-group.panel-body
+          span.badge #{collection.indexes.length}
+          | Indexes
+
+        each index in collection.indexes
+          li.list-group-item
+            span.badge
+              +bytes(index.size)
+            | #{index.name}
+
+      ul.list-group
+        li.list-group-item: h5 Advanced
         li.list-group-item
           span.badge
             +bytes(collection.stats.extent_last_size)
@@ -65,3 +52,5 @@ include mixins/cog
           span.badge #{collection.stats.padding_factor}
           strong Padding Factor
 
+  .col-md-10
+    .explorer

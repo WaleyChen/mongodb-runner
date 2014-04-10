@@ -187,10 +187,12 @@ module.exports.Sample = List.extend({
   },
   next: function(){
     this.skip += this.limit;
+    debug('skip now at', this.skip);
     this.fetch({reset: true});
   },
   prev: function(){
     this.skip -= this.limit;
+    debug('skip now at', this.skip);
     this.fetch({reset: true});
   },
   collectionChange: function(){
@@ -213,7 +215,7 @@ module.exports.Sample = List.extend({
     for(var k in res[0]){
       this.schema.keys.push(k);
     }
-    debug('guess schema', this.schema);
+    debug('guess schema', this.schema, this.skip);
     this.hasMore = (res.length >= this.limit);
     this.hasPrev = (this.skip > 0);
     return res;

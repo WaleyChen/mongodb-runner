@@ -12,6 +12,8 @@
 // @import "./themes/soda-light";
 @import "./themes/atom-light";
 
+@font-size: 14px;
+
 // HD
 @import "./bootstrap/mixins/grid-framework";
 @screen-xl: (@screen-md * @line-height-base);
@@ -379,7 +381,7 @@ body {margin: 0;}
     border-radius: 0;
     height: 18px;
     text-decoration: none;
-    border-bottom: 1px solid @base-border-color;
+    // border-bottom: 1px solid @base-border-color;
     opacity: 0.4;
     font-size: 11px;
     padding-top: 2px;
@@ -412,7 +414,8 @@ body {margin: 0;}
 
 // ## app container
 #mongoscope {
-  .workspace();
+  .workspace;
+  .container-fluid;
   // display: block;
   border-color: @pane-item-border-color;
   background-color: @base-background-color;

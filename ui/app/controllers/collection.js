@@ -39,14 +39,21 @@ module.exports = Backbone.View.extend({
     debug('activate', database, name);
     this.collection.set({database: database, name: name});
     this.collection.fetch();
-
-    // this.top.fetch();
-    // this.top.subscribe();
+  },
+  activateExplorer: function(database, name, skip){
+    if(database === 'deactivate'){
+      return this.deactivate;
+    }
+    debug('explore', database, name, skip);
+    this.explorer.skip = skip;
+    this.collection.set({database: database, name: name});
+    this.collection.fetch();
   },
   onTopData: function(){
     var key =  [
         this.collection.get('database'),
-        this.collection.get('name'), this.metric].join('.'),
+        this.collection.get('name'), this.metric
+      ].join('.'),
       val = this.top.get('deltas')[key];
     debug(this.metric, val);
     this.graph.inc(val);
@@ -62,7 +69,6 @@ module.exports = Backbone.View.extend({
       'metric': this.metric,
       'collection': this.collection.toJSON()
     }));
-    this.graph.render();
     this.explorer.render();
   }
 });
@@ -71,8 +77,8 @@ module.exports = Backbone.View.extend({
 var ExplorerView = Backbone.View.extend({
   tpl: require('../templates/explorer.jade'),
   events: {
-    'click .next a': 'next',
-    'click .prev a': 'prev',
+    'click .next:not(.disabled) a': 'next',
+    'click .previous:not(.disabled) a': 'prev',
     'click .activate': 'activate'
   },
   initialize: function(opts){
@@ -86,15 +92,16 @@ var ExplorerView = Backbone.View.extend({
     this.samples.fetch();
   },
   prev: function(){
+    debug('prev sample');
     this.samples.prev();
   },
   next: function(){
+    debug('next sample');
     this.samples.next();
   },
   render: function(){
     this.$el = $('.explorer');
     this.el = this.$el.get(0);
-    this.delegateEvents(this.events);
 
     this.$el.html(this.tpl({
       limit: this.samples.limit,
@@ -105,7 +112,7 @@ var ExplorerView = Backbone.View.extend({
     }));
 
     if(this.active){
-      // Backbone.$('#mongoscope').addClass('exploring');
+      Backbone.$('#mongoscope').addClass('exploring');
       if(!this.samples.hasMore){
         this.$el.find('.next').addClass('disabled');
       }
@@ -113,6 +120,7 @@ var ExplorerView = Backbone.View.extend({
         this.$el.find('.previous').addClass('disabled');
       }
     }
+    this.delegateEvents(this.events);
     return this;
   }
 });

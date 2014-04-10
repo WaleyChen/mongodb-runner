@@ -12,8 +12,8 @@ include mixins/bytes
 .row
   .col-md-2
     .panel.padded
-        h3 Collections
         ul.nav.nav-pills.nav-stacked
+          li.padded Collections
           for collection_name in database.collection_names
             li
               a(href='#collection/#{database.name}/#{collection_name}')

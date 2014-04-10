@@ -23,6 +23,7 @@ module.exports = Backbone.View.extend({
     debug('auth activated');
     var self = this;
     this.dirty = false;
+    $('#modal').modal({backdrop: 'static', keyboard: false});
     this.render({host: 'localhost:27017'})
       .$host.focus().on('keydown', function(){
         debug('keydown', event);
@@ -72,9 +73,8 @@ module.exports = Backbone.View.extend({
     }
     // $('.modal-backdrop').fadeOut({duration: 1000});
 
-    $('#modal').modal('hide').on('hidden.bs.modal', function(){
-      $('body').removeClass('authenticate');
-    });
+    $('#modal').modal('hide');
+    $('body').removeClass('authenticate');
 
 
     debug('success!  redirecting to ', this.redirect);

@@ -29,7 +29,12 @@ module.exports = function splint(){
     debug('caught router event', name);
     if(router._current){
       debug('deactivating', router._current.name);
-      router._current.deactivate.apply(router._current);
+      if(typeof router._current === 'function'){
+        router._current.call(router._current, 'deactivate');
+      }
+      else {
+        router._current.deactivate.apply(router._current);
+      }
       body.removeClass(router._current.name);
     }
     debug('switching current to', name);
@@ -43,7 +48,7 @@ module.exports = function splint(){
       controller = spec[2],
       name = spec[1],
       opts = spec[3] || {},
-      handler = controller.activate.bind(controller);
+      handler = controller.activate ? controller.activate.bind(controller) : controller;
 
     controller.router = router;
 
