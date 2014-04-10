@@ -10,6 +10,7 @@
 // @import "./themes/atom-dark";
 // @import "./themes/soda-dark";
 // @import "./themes/soda-light";
+@import "./themes/atom-light";
 
 // HD
 @import "./bootstrap/mixins/grid-framework";
@@ -298,8 +299,11 @@ body {margin: 0;}
 }
 
 .databases {
+  a {
+    color: @background-color-selected;
+  }
   h2 {
-    .mono;
+    // .mono;
   }
 
   .graph {}
@@ -486,6 +490,102 @@ body {margin: 0;}
       tr:last-child{
         td {
           border-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+@auth-form-offset: 104px;
+
+.authenticate {
+  #mongoscope {
+    border-top: 0px;
+    margin-top: 0;
+    padding-top: 20%;
+    background-color: fadeout(@text-color-subtle, 80%);
+    .transition(background-color 750ms ease);
+    .transition(padding-top 750ms ease);
+  }
+  #toolbar {
+    // .transition(all 250ms ease);
+    background: transparent;
+    border-bottom: 0px;
+  }
+  .modal{
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    h1 {
+      display: none;
+    }
+    form {
+      margin-left: @auth-form-offset + 10px;
+
+      .message {
+        display: none;
+        position: absolute;
+        z-index: -1;
+        margin-left: -@auth-form-offset;
+        margin-top: 0;
+      }
+
+      button.btn.btn-primary {
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+        display: inline-block;
+        margin: 0;
+        padding-top: 13px;
+        padding-bottom: 13px;
+        width: 20%;
+      }
+
+      .input {
+        .input-lg;
+        background-color: @text-color-selected;
+        margin: 0;
+        float: left;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border: 0px solid;
+        border-right: 0px;
+        width: 80%;
+        box-shadow: inset 0 0 0 1px rgba(0, 91, 153, 0.5);
+        margin-left: -(@auth-form-offset + 10px);
+        padding-left: @auth-form-offset + 10px;
+
+        #host {
+          padding-top: 4px;
+        }
+        ::selection {
+          background-color: @background-color-selected;
+          color: @text-color-selected;
+        }
+        .mask {
+          position: absolute;
+          padding-top: 4px;
+          margin-left: -@auth-form-offset;
+          font-size: 17px;
+        }
+      }
+
+      &.has-error {
+        color: @text-color-error;
+        ::selection {
+          background-color: @text-color-error;
+          color: @text-color-selected;
+        }
+      }
+      &.has-warning {
+        color: @text-color-warning;
+        ::selection {
+          background-color: @text-color-warning;
+          color: @text-color-selected;
+        }
+      }
+      &.has-error, &.has-warning {
+        .message {
+          margin-top: -25px;
         }
       }
     }

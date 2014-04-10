@@ -19,6 +19,7 @@ function Service(hostname, port){
   this.hostname = hostname;
   this.port = port;
   this.connected = false;
+  this.token = null;
 }
 
 Service.prototype.connect = function(){
@@ -42,11 +43,26 @@ Service.prototype.read = function(pathname, params, fn){
     params = {};
   }
 
-  $.get(this.origin + '/api/v1' + pathname, params, function(data){
-    if(typeof data === 'string'){
-      data = JSON.parse(data);
+  var headers = {
+    'Accept': 'application/json'
+  };
+
+  if(this.token){
+    headers.Authorization = 'Bearer ' + this.token;
+  }
+
+  $.ajax({
+    url: this.origin + '/api/v1' + pathname,
+    data: params,
+    headers: headers,
+    type: 'get',
+    dataType: 'json',
+    success: function(data){
+      if(typeof data === 'string'){
+        data = JSON.parse(data);
+      }
+      fn(null, data);
     }
-    fn(null, data);
   }).fail(function(xhr){
     var err = new Error(xhr.responseText.replace('Error: ', ''));
     err.status = xhr.status;
@@ -82,15 +98,32 @@ Service.prototype.post = function(pathname, params, fn){
     });
 };
 
+Service.prototype.get = function(host, pathname, params, fn){
+  debug('get', host, pathname, params, fn);
+  // if(typeof host === 'function'){
+  //   fn = host;
+  //   host = '';
+  // }
+
+  // if(typeof pathname === 'function'){
+  //   fn = pathname;
+  //   pathname = '';
+  // }
+
+  // if(typeof params === 'function'){
+  //   fn = params;
+  //   params = {};
+  // }
+  if(!host || host.indexOf(':') === -1) return fn(new Error('Must specify host'));
+  return this.read('/' + host + pathname, params, fn);
+};
+
 // An easier to use top.
 //
 // @param {Function} fn `(err, {Top})`
 // @api public
-Service.prototype.top = function(fn){
-  this.read('/top', function(err, data){
-    if(err) return fn(err);
-    fn(null, data);
-  });
+Service.prototype.top = function(host, fn){
+  this.get(host, '/top', {}, fn);
 };
 
 // Instance level metadata:
@@ -101,21 +134,19 @@ Service.prototype.top = function(fn){
 //
 // @param {Function} fn `(err, data)`
 // @api public
-Service.prototype.instance = function(fn){
-  this.read('/', function(err, data){
-    if(err) return fn(err);
-    fn(null, data);
-  });
+Service.prototype.instance = function(host, fn){
+  this.get(host, '', {}, fn);
 };
 
-Service.prototype.security = function(fn){
-  this.read('/security', function(err, data){
-    if(err) return fn(err);
-    fn(null, data);
-  });
+Service.prototype.deployments = function(fn){
+  this.read('/', fn);
 };
 
-Service.prototype.securityUsers = function(db, username, fn){
+Service.prototype.security = function(host, fn){
+  this.get(host, '/security', {}, fn);
+};
+
+Service.prototype.securityUsers = function(host, db, username, fn){
   if(typeof db === 'function'){
     fn = username;
     username = null;
@@ -126,14 +157,12 @@ Service.prototype.securityUsers = function(db, username, fn){
     fn = username;
     username = null;
   }
+  var pathname = (db ? '/' + db + (username ? '/' + username : '') : '');
 
-  this.read('/security/users' + (db ? '/' + db + (username ? '/' + username : '') : ''), function(err, data){
-    if(err) return fn(err);
-    fn(null, data);
-  });
+  this.get(host, '/security/users' + pathname, {}, fn);
 };
 
-Service.prototype.securityRoles = function(db, role, fn){
+Service.prototype.securityRoles = function(host, db, role, fn){
   if(typeof db === 'function'){
     fn = db;
     role = null;
@@ -145,29 +174,24 @@ Service.prototype.securityRoles = function(db, role, fn){
     role = null;
   }
 
-  this.read('/security/roles' + (db ? '/' + db + (role ? '/' + role : '') : ''), function(err, data){
-    if(err) return fn(err);
-    fn(null, data);
-  });
+  var pathname = (db ? '/' + db + (role ? '/' + role : '') : '');
+  this.get(host, '/security/roles' + pathname, {}, fn);
 };
 // Get a list of log `line` objects.
 //
 // @param {String, default:global} optional log name to restrict to (default: global).
 // @param {Function} fn `(err, [line])`
 // @api public
-Service.prototype.log = function(name, fn){
-  var path;
+Service.prototype.log = function(host, name, fn){
+  var pathname;
   if(typeof name === 'function'){
     fn = name;
-    path = '/log';
+    pathname = '/log';
   }
   else {
-    path = '/log/' + name;
+    pathname = '/log/' + name;
   }
-  this.read(path, function(err, data){
-    if(err) return fn(err);
-    fn(null, data);
-  });
+  this.get(host, pathname, {}, fn);
 };
 
 
@@ -176,11 +200,8 @@ Service.prototype.log = function(name, fn){
 // @param {String} db A database name
 // @param {Function} fn `fn(err, database)`
 // @api public
-Service.prototype.database = function(name, fn){
-  this.read('/' + name, function(err, data){
-    if(err) return fn(err);
-    fn(null, data);
-  });
+Service.prototype.database = function(host, name, fn){
+  this.get(host, '/' + name, {}, fn);
 };
 
 // @param {String} db database name
@@ -188,11 +209,8 @@ Service.prototype.database = function(name, fn){
 // @param {String, default:{}} [spec] query spec to use
 // @param {Function} fn `(err, docs)`
 // @api private
-Service.prototype.find = function(db, name, spec, fn){
-  this.read('/' + db + '/' + name + '/find', spec, function(err, data){
-    if(err) return fn(err);
-    fn(null, data);
-  });
+Service.prototype.find = function(host, db, name, spec, fn){
+  this.get(host, '/' + db + '/' + name + '/find', spec, fn);
 };
 
 // Get all collection metadata.
@@ -201,17 +219,14 @@ Service.prototype.find = function(db, name, spec, fn){
 // @param {String} name A collection name
 // @param {Function} fn `fn(err, data)`
 // @api public
-Service.prototype.collection = function(db, name, fn){
-  this.read('/' + db + '/' + name, function(err, data){
-    if(err) return fn(err);
-    fn(null, data);
-  });
+Service.prototype.collection = function(host, db, name, fn){
+  this.get(host, '/' + db + '/' + name, {}, fn);
 };
 
 // Get a short lived auth token that will be automatically refreshed.
 // Tokens are 1:1 for deployments.  Want to access another deployment?
 // You'll need to get another token for it.
-Service.prototype.setCredentials = function(username, password, options, fn){
+Service.prototype.setCredentials = function(host, options, fn){
   if(typeof options === 'function'){
     fn = options;
     options = {};
@@ -222,19 +237,24 @@ Service.prototype.setCredentials = function(username, password, options, fn){
     expirationRedLine = 15 * 1000;
 
   function _bakeToken(done){
-    var data = _.extend({
-      username: username,
-      password: password
-    }, {}, options);
+    var data = _.extend({host: host}, {}, options);
+    debug('getting token for', host);
+    self.post('/token', data, function(err, data){
+      if(err) return done(err);
 
-    options.host = options.host || 'localhost:27017';
+      if(!data.expires_at || !data.created_at){
+        return new Error('Malformed response.  Missing expires_at or created_at');
+      }
 
-    debug('getting token for', options.host);
-    self.post('token', data, done);
+      if(new Date(data.expires_at) - Date.now() < (1 * 60 * 1000)){
+        return new Error('Got an expires that is less than a minute from now.');
+      }
+      return done(null, data);
+    });
   }
 
   function _refreshToken(){
-    _bakeToken(username, password, options, function(err, res){
+    _bakeToken(function(err, res){
       if(err) self.emit('error', err);
       self.token = res.token;
 
@@ -244,8 +264,8 @@ Service.prototype.setCredentials = function(username, password, options, fn){
   }
 
   function _scheduleRefresh(res){
-    var ms = (new Date(res.expiration) - Date.now()) - expirationRedLine;
-    debug('token refresh goes down in ' + ms + 'ms');
+    var ms = (new Date(res.expires_at) - Date.now()) - expirationRedLine;
+    debug('token redline in ' + ms + 'ms', (ms/1000/60) + 'minutes');
     setTimeout(_refreshToken, ms);
   }
 
@@ -269,7 +289,7 @@ Service.prototype.setCredentials = function(username, password, options, fn){
     debug('starting refresh loop');
     _scheduleRefresh(res);
 
-    fn();
+    fn(null, res);
   });
 };
 

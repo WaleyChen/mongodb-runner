@@ -2,7 +2,7 @@ var splint = require('../lib/splint'),
   debug = require('debug')('mg:scope:router');
 
 require('../models')({
-  error: function(instance, err){
+  error: function(deployments, err){
     if(err.status === 401){
       return window.location.hash = 'authenticate';
     }

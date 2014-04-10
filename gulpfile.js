@@ -16,6 +16,8 @@ gulp.task('dev', ['ui', 'server', 'watch']);
 gulp.task('ui', ['pages', 'assets', 'js', 'less', 'manifest']);
 
 gulp.task('server', function(){app.start();});
+
+// @todo: if there is an error, show notification
 gulp.task('reload', function(){app.reload();});
 
 gulp.task('watch', function(){
@@ -67,7 +69,7 @@ gulp.task('js', function(){
     .transform(require('jadeify'))
     .bundle({debug: false})
     .on('error', function(err){
-      var path = err.annotated.replace(__dirname + '/', '').split('\n')[1],
+      var path = (err.annotated || err.message).replace(__dirname + '/', '').split('\n')[1],
         title = 'err: ' + path;
       notifier.notify({title: title, message: err.annotated});
       console.error(title, err.annotated);
@@ -93,9 +95,9 @@ gulp.task('less', function () {
     notifier = new Notification({}),
     less = function(){
       return require('gulp-less')({paths: lessPaths}).on('error', function(err){
-        var filename = err.filename.replace(__dirname + '/', ''),
+        var filename = err.fileName.replace(__dirname + '/', ''),
           title = 'err: ' + filename,
-          message = err.line + ': ' + err.message.split(' in file ')[0].replace(/`/g, '"');
+          message = err.lineNumber + ': ' + err.message.split(' in file ')[0].replace(/`/g, '"');
 
         notifier.notify({title: title, message: message});
         console.error(title, message);

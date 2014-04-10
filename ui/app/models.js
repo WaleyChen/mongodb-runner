@@ -6,7 +6,9 @@ var Backbone = require('backbone'),
 // singletons.
 var service,
   settings,
-  instance;
+  deployments,
+  instance,
+  topHolder;
 
 module.exports = function(opts){
   module.exports.settings = settings = new Settings({
@@ -16,24 +18,90 @@ module.exports = function(opts){
 
   service = require('./service')(settings.get('host'), settings.get('port'));
 
-  module.exports.instance = instance = new Instance();
-  instance.fetch({error: opts.error, success: opts.success});
+  module.exports.deployments = deployments = new DeploymentList();
+  deployments.fetch({error: opts.error, success: function(){
+    debug('got deployments', deployments);
+    opts.success.apply(this, arguments);
 
-  module.exports.top = instance.top = new Top();
+    // @todo: handle startup run like binding top.
+  }});
 };
+
+Object.defineProperty(module.exports, 'instance', {get: function(){
+  if(!instance){
+    instance = new Instance({});
+  }
+  return instance;
+}});
+
+Object.defineProperty(module.exports, 'top', {get: function(){
+  if(!topHolder){
+    topHolder = new Top({});
+  }
+  return topHolder;
+}});
 
 var Settings = Backbone.Model.extend({
     defaults: {}
   }),
-  Instance = Backbone.Model.extend({
-    service: 'instance'
+  Instance = Model.extend({
+    defaults: {
+      uri: 'localhost:27017',
+      type: 'standalone',
+      deployment_id: 'localhost:27017'
+    },
+    service: function(){
+      return {name: 'instance', args: this.get('uri')};
+    }
+  }),
+  InstanceList = List.extend({
+    initialize: function(models, opts){
+      this.models = models;
+      this.deployment_id = opts.deployment_id;
+    },
+    model: Instance,
+    service: function(){
+      return {name: 'deployment', args: this.deployment_id};
+    }
+  }),
+  Deployment = Model.extend({
+    defaults: {
+      _id: 'localhost:27017',
+      instances: new InstanceList([], {deployment_id: 'localhost:27017'})
+    },
+    service: function(){
+      return {name: 'deployment', args: this.get('_id')};
+    }
+  }),
+  DeploymentList = List.extend({
+    model: Deployment,
+    service: 'deployments',
+    parse: function(data){
+      debug('parsing deployments');
+      var res = [];
+      Object.keys(data).map(function(_id){
+        var deployment,
+          instances = new InstanceList([], {deployment_id: _id});
+
+        Object.keys(data[_id]).map(function(instance_id){
+          var skel = data[_id][instance_id];
+          skel.deployment_id = _id;
+          instances.add(new Instance(skel));
+        });
+
+        deployment = new Deployment({_id: _id, instances: instances});
+        res.push(deployment);
+      });
+      return res;
+    }
   });
 
 module.exports.Database = Model.extend({
   service: function(){
-    return {name: 'database', args: this.get('name')};
+    return {name: 'database', args: [instance.get('uri'), this.get('name')]};
   },
   parse: function(data){
+    debug('parse database', data);
     if(data.collection_names.length > 0){
       var i = data.collection_names.indexOf('system.indexes');
       if(i > -1 ){
@@ -91,10 +159,11 @@ module.exports.Collection = Model.extend({
     }
   },
   service: function(){
-    return {name: 'collection', args: [this.get('database'), this.get('name')]};
+    return {name: 'collection', args: [instance.get('uri'),
+      this.get('database'), this.get('name')]};
   },
   uri: function(){
-    return this.get('database') + '/' + this.get('name');
+    return this.get('database') + '/' + this.get('name') + '/' + instance.get('uri');
   }
 });
 
@@ -130,11 +199,11 @@ module.exports.Sample = List.extend({
     this.fetch({reset: true});
   },
   service: function(){
-    return {name: 'find', args: [this.database, this.name,
+    return {name: 'find', args: [instance.get('uri'), this.database, this.name,
       {skip: this.skip, limit: this.limit}]};
   },
   uri: function(){
-    return this.database + '/' + this.name + '/sample';
+    return this.database + '/' + this.name + '/sample/' + instance.get('uri');
   },
   parse: function(res){
     // @todo: just temporary
@@ -152,8 +221,12 @@ module.exports.Sample = List.extend({
 });
 
 var Top = module.exports.Top = Model.extend({
-  service: 'top',
-  uri: '/top',
+  service: function(){
+    return {name: 'top', args: instance.get('uri')};
+  },
+  uri: function(){
+    return '/top/' + instance.get('uri');
+  },
   initialize: function(){
     this.subscribers = 0;
   },
@@ -186,8 +259,12 @@ module.exports.Log = List.extend({
       date: new Date()
     }
   }),
-  service: 'log',
-  uri: '/log'
+  service: function(){
+    return {name: 'log', args: [instance.get('uri')]};
+  },
+  uri: function(){
+    return '/log/' + instance.get('uri');
+  }
 });
 
 
@@ -253,7 +330,7 @@ var Role = Backbone.Model.extend({
     ]
   },
   service: function(){
-    return {name: 'securityRoles', args: [this.get('db'), this.get('role')]};
+    return {name: 'securityRoles', args: [instance.get('uri'), this.get('db'), this.get('role')]};
   },
   parse: function(data){
     var privs = [];
@@ -297,7 +374,7 @@ var User = Backbone.Model.extend({
     database: 'admin'
   },
   service: function(){
-    return {name: 'securityUsers', args: [this.get('database'), this.get('username')]};
+    return {name: 'securityUsers', args: [instance.get('uri'), this.get('database'), this.get('username')]};
   },
   parse: function(data){
     data.inheritedPrivileges.sort(function(a, b){
@@ -345,7 +422,9 @@ module.exports.Security = Backbone.Model.extend({
       service: 'securityRoles'
     })
   },
-  service: 'security',
+  service: function(){
+    return {name: 'security', args: [instance.get('service')]};
+  },
   parse: function(data){
     data.roles = data.roles.filter(function(role){
       return role.role !== '__system';

@@ -201,60 +201,27 @@ html(lang='en')
             | and most likely on a different machine.
 
       +section('Distribution')
-        .row
-          .col-md-4
-            :markdown
-              The current plan is to include a single binary with the
-              mongodb distribution. There are no pre-requisites or
-              platform limitations because the investment of the node.js
-              community (yes it should run [just fine on a RaspberryPi](https://gist.github.com/stolsma/3301813)). We
-              take advantage of the built-in, but not very well-known
-              capability of extending node.js with a single file.
+        :markdown
+          The current plan is to include a single binary with the
+          mongodb distribution. There are no pre-requisites or
+          platform limitations because the investment of the node.js
+          community (yes it should run [just fine on a RaspberryPi](https://gist.github.com/stolsma/3301813)). We
+          take advantage of the built-in, but not very well-known
+          capability of extending node.js with a single file.
 
-          .col-md-8
-            script(src="https://gist.github.com/imlucas/9915985.js")
+        script(src="https://gist.github.com/imlucas/9915985.js")
 
-        +article('Binaries')
+        +article('Download a Binary')
           p OSX binaries available on the&nbsp;
             a(href="https://github.com/10gen/mongoscope/releases") releases page
 
-        +article('Running from Source')
-          :markdown
-            ```
-            git clone git@github.com:10gen/mongoscope.git ~/projects/mongoscope &&\
-              cd ~/projects/mongoscope && npm install;
-
-            DEBUG=mongo* ./bin/mongoscope.js;
-            open http://localhost:29017/;
-            ```
-
-            It's handy to use the actual dev server when
-            slinging code though:
-
-            ```
-            cd ~/projects/mongoscope && npm start;
-            open http://localhost:3000;
-            ```
-
-        +article('Simulation')
-          .row
-            .col-md-6
-              :markdown
-                [@imlucas/wikipedia-edit-stream][edit-stream] is a little app
-                to simulate action in the kernel you would see IRL.  Every
-                wikipedia page edit is posted to an IRC channel.  This app
-                listens for those incoming messages, transforms them into a
-                document and then streams them into a kernel instance.
-                [edit-stream]: https://github.com/imlucas/wikipedia-edit-stream
-
-            .col-md-6
-              :markdown
-                ```
-                git clone git@github.com:imlucas/wikipedia-edit-stream ~/;
-                cd ~/wikipedia-edit-stream && npm install;
-                DEBUG=* node example.js;
-                open http://localhost:29017/#database/dataset-wikipedia
-                ```
+        .row
+          .col-md-6
+            +article('Running from Source')
+              script(src='https://gist.github.com/imlucas/10327125.js')
+          .col-md-6
+            +article('Build a Binary')
+              script(src='https://gist.github.com/imlucas/10327218.js')
 
       section
         h2: +anchor('Skunkworks / Intern Ideas')
@@ -358,6 +325,21 @@ html(lang='en')
                 - [mongodbschool.io](http://mongodbschool.io/)
                 - [@sridharn/dataweek_2013](https://github.com/sridharn/dataweek_2013)
                 - [@RyanMullins/Tutorial-LeafletMongoDB](https://github.com/RyanMullins/Tutorial-LeafletMongoDB)
+
+      +section('Simulation')
+        +article('wikipedia-edit-stream')
+          .row
+            .col-md-6
+              :markdown
+                [@imlucas/wikipedia-edit-stream][edit-stream] is a little app
+                to simulate action in the kernel you would see IRL.  Every
+                wikipedia page edit is posted to an IRC channel.  This app
+                listens for those incoming messages, transforms them into a
+                document and then streams them into a kernel instance.
+                [edit-stream]: https://github.com/imlucas/wikipedia-edit-stream
+
+            .col-md-6
+              script(src='https://gist.github.com/imlucas/10327583.js')
 
       //- section
       //-   h2 Funnel

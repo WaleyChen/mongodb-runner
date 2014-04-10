@@ -2,7 +2,7 @@ var Controller = require('../lib/splint').Controller;
 
 module.exports = Controller.extend({
   models: {
-    instance: require('../models').instance
+    deployments: require('../models').deployments
   },
   tpl: require('../templates/replication.jade')
 });
