@@ -311,38 +311,50 @@ body {margin: 0;}
 .databases {
   color: @text-color;
   margin-top: @component-padding * 2;
+
+  .row {
+    margin-top: @component-padding * 2;
+  }
   a {
-    color: @text-color;
+    color: @background-color-selected;
   }
   h2 {
     // .mono;
     color: @background-color-selected;
+    border-bottom: 1px solid @background-color-highlight;
+    padding-bottom: 15px;
   }
 
   .graph {}
 
   .stats {
-    border-top: 1px solid @background-color-highlight;
-    border-bottom: 1px solid @background-color-highlight;
-    margin-bottom: @component-padding;
-    > * {
-      border-left: 1px solid @background-color-highlight;
-      border-right: 1px solid @background-color-highlight;
-    }
+    margin-top: 50px;
+    // border-top: 1px solid @background-color-highlight;
+    // border-bottom: 1px solid @background-color-highlight;
+    // margin-bottom: @component-padding;
+    // > * {
+    //   border-left: 1px solid @background-color-highlight;
+    //   border-right: 1px solid @background-color-highlight;
+    // }
     // >:first-child {
     //   border-left: 0px;
     // }
     // >:last-child {
     //   border-right: 0px;
     // }
-    .stat-value {
+    .stat-value, .metric-value {
       font-size: 200%;
       text-align: center;
     }
-    .stat-label {
-      font-variant: small-caps;
+    .stat-label, .metric-label {
       text-align: center;
       padding-bottom: @component-padding / 2;
+    }
+
+    .metric-label {
+      .dropdown {
+        text-align: left;
+      }
     }
   }
 }

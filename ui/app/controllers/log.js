@@ -13,6 +13,8 @@ module.exports = Backbone.View.extend({
     this.log = new models.Log().on('sync', this.render, this);
   },
   activate: function(){
+    this.$el = $('#mongoscope');
+    this.el = this.$el.get(0);
     this.log.fetch();
   },
   deactivate: function(){},

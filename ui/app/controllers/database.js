@@ -21,7 +21,10 @@ module.exports = Backbone.View.extend({
     // this.render();
   },
   deactivate: function(){
+    debug('deactivate');
     this.summary.deactivate();
+    debug('deactivate complete');
+    return this;
   },
   render: function(){
     debug('render database');
@@ -40,6 +43,8 @@ var Summary = module.exports.Summary = Backbone.View.extend({
   events: {
     'click .graph': 'graphClicked'
   },
+  tagName: 'div',
+  className: 'row',
   tpl: require('../templates/pulse/database.jade'),
   initialize: function(opts){
     this.database = new models.Database(opts)
@@ -90,7 +95,6 @@ var Summary = module.exports.Summary = Backbone.View.extend({
     return this;
   },
   update: function(){
-    debug('update summary');
     var provider = this.database.get('stats');
 
     this.$el.find('.stats .stat-value').each(function(){
@@ -98,8 +102,6 @@ var Summary = module.exports.Summary = Backbone.View.extend({
         label = el.siblings('.stat-label'),
         text = label.text(),
         val = provider[el.data('stat')];
-
-      debug('updating stat', el.data('stat'), val, el);
       el.html(val);
 
       if(val === 1){
@@ -111,31 +113,28 @@ var Summary = module.exports.Summary = Backbone.View.extend({
       }
     });
 
-    if(this.$el.find('.donut')){
-      debug('drawing donut');
-      donut('.donut', [
-        {
-          name: 'Documents',
-          size: this.database.get('stats').document_size,
-          count: this.database.get('stats').document_count,
-          className: 'documents'
-        },
-        {
-          name: 'Indexes',
-          size: this.database.get('stats').index_size,
-          count: this.database.get('stats').index_count,
-          className: 'indexes'
-        }
-      ], {
-        title: ''
-      });
-    }
+    donut('.donut', [
+      {
+        name: 'Documents',
+        size: this.database.get('stats').document_size,
+        count: this.database.get('stats').document_count,
+        className: 'documents'
+      },
+      {
+        name: 'Indexes',
+        size: this.database.get('stats').index_size,
+        count: this.database.get('stats').index_count,
+        className: 'indexes'
+      }
+    ], {
+      title: ''
+    });
   },
   deactivate: function(){
     this.top
-      .deactivate()
+      // .deactivate()
       .off('sync', this.onTopData, this);
-    this.graph.pause();
+    // this.graph.pause();
     return this;
   },
   draw: function(){
@@ -143,7 +142,7 @@ var Summary = module.exports.Summary = Backbone.View.extend({
     this.$metric = this.$el.find('.metric-value');
   },
   render: function(){
-    debug('render summary');
+    // debug('render summary');
     this.$el.html(this.tpl({
       database: this.database.toJSON(),
       metric: this.metric,

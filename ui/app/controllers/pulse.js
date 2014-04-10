@@ -17,13 +17,13 @@ module.exports = Backbone.View.extend({
   activate: function(){
     debug('pulse activated');
     this.activated = true;
-    // if(!this.instance.get('host')){
-    this.instance.once('sync', this.render, this);
-    //   this.instance.fetch();
-    // }
-    // else {
-    //   this.render();
-    // }
+    if(!this.instance.get('host')){
+      this.instance.once('sync', this.render, this);
+      this.instance.fetch();
+    }
+    else {
+      this.render();
+    }
   },
   deactivate: function(){
     if(this.databases.length === 0){
