@@ -5,8 +5,10 @@ var $ = require('jquery'),
   srv;
 
 module.exports = function(hostname, port){
-  debug('init', hostname, port);
-  if(!srv) srv = new Service(hostname, port).connect();
+  if(!srv){
+    debug('init', hostname, port);
+    srv = new Service(hostname, port).connect();
+  }
   return srv;
 };
 
@@ -49,6 +51,11 @@ Service.prototype.read = function(pathname, params, fn){
 
   if(this.token){
     headers.Authorization = 'Bearer ' + this.token;
+  }
+  else {
+    var err = new Error('Token required');
+    err.status = 401;
+    return fn(err);
   }
 
   $.ajax({
@@ -99,21 +106,6 @@ Service.prototype.post = function(pathname, params, fn){
 };
 
 Service.prototype.get = function(host, pathname, params, fn){
-  debug('get', host, pathname, params, fn);
-  // if(typeof host === 'function'){
-  //   fn = host;
-  //   host = '';
-  // }
-
-  // if(typeof pathname === 'function'){
-  //   fn = pathname;
-  //   pathname = '';
-  // }
-
-  // if(typeof params === 'function'){
-  //   fn = params;
-  //   params = {};
-  // }
   if(!host || host.indexOf(':') === -1) return fn(new Error('Must specify host'));
   return this.read('/' + host + pathname, params, fn);
 };

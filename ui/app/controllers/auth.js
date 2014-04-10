@@ -16,9 +16,11 @@ module.exports = Backbone.View.extend({
     form: 'form',
     message: '.message'
   },
-  initialize: function(){},
-  activate: function(redirect){
-    this.redirect = redirect || 'pulse';
+  initialize: function(){
+    this.redirect = 'pulse';
+  },
+  activate: function(){
+    debug('auth activated');
     var self = this;
     this.dirty = false;
     this.render({host: 'localhost:27017'})
@@ -65,9 +67,19 @@ module.exports = Backbone.View.extend({
     return this;
   },
   success: function(){
+    if(this.redirect === 'authenticate'){
+      this.redirect = 'pulse';
+    }
+    // $('.modal-backdrop').fadeOut({duration: 1000});
+
+    $('#modal').modal('hide').on('hidden.bs.modal', function(){
+      $('body').removeClass('authenticate');
+    });
+
+
     debug('success!  redirecting to ', this.redirect);
-    // models.instance.fetch();
-    window.location.hash = this.redirect;
+    models.instance.fetch();
+    Backbone.history.navigate(this.redirect, {trigger: true});
     return this;
   },
   submit: function(){
@@ -109,8 +121,9 @@ module.exports = Backbone.View.extend({
 
   },
   render: function(ctx){
-    this.$el = $('#mongoscope');
+    this.$el = $('#modal');
     this.$el.html(this.tpl(ctx));
+    this.$el.animate({'margin-top': '20%'});
 
     this.findElements();
     this.delegateEvents();

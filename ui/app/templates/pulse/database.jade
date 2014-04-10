@@ -4,15 +4,15 @@
       h2 #{database.name}
       .row
         .stats.clearfix
-          .col-xs-4
+          .col-xs-6
             .stat-value(data-stat="collection_count") -
             .stat-label collections
-          .col-xs-4
+          .col-xs-6
             .stat-value(data-stat="index_count") -
             .stat-label indexes
-          .col-xs-4
-            .stat-value(data-stat="document_count") -
-            .stat-label docs
+          //- .col-xs-4
+          //-   .stat-value(data-stat="document_count") -
+          //-   .stat-label docs
   .col-md-8
     .graph(id='graph-#{cid}')
   .col-md-2

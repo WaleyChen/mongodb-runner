@@ -59,7 +59,7 @@ gulp.task('watch', function(){
   ], ['js']);
 
   gulp.watch([ui.src + '/{*,less/*,less/**/*}.less'], ['less']);
-  gulp.watch([ui.src + '/pages/*.jade'], ['pages']);
+  gulp.watch([ui.src + '/pages/*.jade', ui.src + '/templates/index.jade'], ['pages']);
   gulp.watch([ui.src + '/{img,fonts}/*'], ['assets']);
 });
 

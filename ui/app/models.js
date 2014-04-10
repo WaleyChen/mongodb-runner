@@ -112,20 +112,20 @@ module.exports.Database = Model.extend({
     return data;
   },
   defaults: {
-    name: 'mongomin',
-    collection_names: ['fixture', 'system.indexes'],
-    stats: {
-      object_count: 5,
-      object_size: 304,
-      storage_size: 24576,
-      index_count: 1,
-      index_size: 8176,
-      extent_count: 3,
-      extent_freelist_count: 0,
-      extent_freelist_size: 0,
-      file_size: 67108864,
-      ns_size: 16777216
-    }
+    // name: 'mongomin',
+    // collection_names: ['fixture', 'system.indexes'],
+    // stats: {
+    //   object_count: 5,
+    //   object_size: 304,
+    //   storage_size: 24576,
+    //   index_count: 1,
+    //   index_size: 8176,
+    //   extent_count: 3,
+    //   extent_freelist_count: 0,
+    //   extent_freelist_size: 0,
+    //   file_size: 67108864,
+    //   ns_size: 16777216
+    // }
   }
 });
 

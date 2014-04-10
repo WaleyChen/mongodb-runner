@@ -10,16 +10,15 @@ var Backbone = require('Backbone'),
 module.exports = Backbone.View.extend({
   tpl: require('../templates/database.jade'),
   initialize: function(){
-    this.$el = $('#mongoscope');
-    this.el = this.$el.get(0);
-
     this.summary = new Summary();
-    this.database = this.summary.database;
+    this.database = this.summary.database.on('sync', this.render, this);
   },
   activate: function(name){
     debug('activate', name);
+    this.$el = $('#mongoscope');
+    this.el = this.$el.get(0);
     this.summary.activate(name);
-    this.render();
+    // this.render();
   },
   deactivate: function(){
     this.summary.deactivate();

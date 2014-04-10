@@ -26,7 +26,7 @@ module.exports = function splint(){
 
   // Deactivate the previous controller
   router.on('route', function(name){
-
+    debug('caught router event', name);
     if(router._current){
       debug('deactivating', router._current.name);
       router._current.deactivate.call(router._current);
@@ -55,8 +55,7 @@ module.exports = function splint(){
       router._nameToHandler.index = controller;
     }
   });
-
-  Backbone.history.start();
+  debug('router ready', router);
   return router;
 };
 

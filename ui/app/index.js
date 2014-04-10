@@ -9,7 +9,7 @@ window.jQuery = require('backbone').$ = require('jquery');
 require('bootstrap/js/tooltip.js');
 require('bootstrap/js/popover.js');
 require('bootstrap/js/dropdown.js');
-
+require('bootstrap/js/modal.js');
 require('debug').enable('*');
 
 module.exports = require('./controllers')({});
