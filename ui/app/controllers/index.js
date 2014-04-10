@@ -1,8 +1,10 @@
 var splint = require('../lib/splint'),
-  debug = require('debug')('mg:scope:router');
+  debug = require('debug')('mg:scope:router'),
+  $ = require('jquery');
 
 require('../models')({
   error: function(deployments, err){
+    $('#mongoscope').removeClass('loading');
     if(err.status === 401){
       return window.location.hash = 'authenticate';
     }

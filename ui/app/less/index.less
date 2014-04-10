@@ -132,6 +132,15 @@ body {margin: 0;}
 .grid.thirds > * {width: 33.333%;}
 .grid.quarters > * {width: 25%;}
 
+.loading {
+  #toolbar {
+    display: none;
+  }
+  #mongoscope {
+    margin-top: 0;
+  }
+}
+
 #toolbar {
   .tool-panel;
   .clearfix;
@@ -300,10 +309,11 @@ body {margin: 0;}
 
 .databases {
   a {
-    color: @background-color-selected;
+
   }
   h2 {
     // .mono;
+    color: @background-color-selected;
   }
 
   .graph {}
