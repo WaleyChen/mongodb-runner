@@ -7,50 +7,42 @@ include mixins/cog
 
 
 .row
-  .col-md-2
-    .panel
-      .panel.padded
-        h1 #{collection.name}
-        h2: a(href="#database/#{collection.database}") #{collection.database}
+  .col-md-12
+    ul.list-group.list-group-horizontal
+      li.list-group-item localhost:27017
+      li.list-group-item
+        a(href="#database/#{collection.database}") #{collection.database}
+      li.list-group-item #{collection.name}
+      li.list-group-item
+        //- span.badge
+        //-   +bytes(stats.document_size_average)
+        span.badge #{collection.stats.document_count}
+        | Documents
+        span.badge
+          +bytes(collection.stats.document_size)
 
-      ul.list-group
-        li.list-group-item
-          span.badge #{collection.stats.document_count}
-          | Documents
-        li.list-group-item
-          span.badge
-            +bytes(collection.stats.document_size)
-          strong Total
-        li.list-group-item
-          span.badge
-            +bytes(stats.document_size_average)
-          strong Average
+      //- li.list-group-item
+      //-   span.badge
+      //-     +bytes(collection.stats.extent_last_size)
+      //-   | Last Extent
 
-      ul.list-group
-        li.list-group-item
-          span.badge #{collection.indexes.length}
-          | Indexes
+      //- li.list-group-item
+      //-   span.badge #{collection.stats.extent_count}
+      //-   | Extents
 
-        each index in collection.indexes
-          li.list-group-item
-            span.badge
-              +bytes(index.size)
-            | #{index.name}
+      //- li.list-group-item
+      //-   span.badge #{collection.stats.padding_factor}
+      //-   | Padding Factor
 
-      ul.list-group
-        li.list-group-item: h5 Advanced
-        li.list-group-item
-          span.badge
-            +bytes(collection.stats.extent_last_size)
-          strong Last Extent
+      li.list-group-item
+        span.badge #{collection.indexes.length}
+        | Indexes
 
-        li.list-group-item
-          span.badge #{collection.stats.extent_count}
-          strong Extents
-
-        li.list-group-item
-          span.badge #{collection.stats.padding_factor}
-          strong Padding Factor
-
-  .col-md-10
+      //- each index in collection.indexes
+      //-   li.list-group-item
+      //-     span.badge
+      //-       +bytes(index.size)
+      //-     | #{index.name}
+.row
+  .col-md-12
     .explorer

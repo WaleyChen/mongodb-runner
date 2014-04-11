@@ -1,4 +1,11 @@
 if active
+  div
+    a.btn.btn-default
+      span.glyphicon.glyphicon-list-alt
+    a.btn.btn-default
+      span.glyphicon.glyphicon-align-center
+    a.btn.btn-default
+      span.glyphicon.glyphicon-asterisk
   .table-responsive
     table.table
       thead
@@ -8,7 +15,7 @@ if active
       tfoot
         tr
           td(colspan="#{schema.keys.length}", style="text-align: center;")
-            | #{skip} - #{samples.length}
+            | #{skip} - #{skip+samples.length}
       tbody
       for doc in samples
         tr
@@ -87,7 +94,7 @@ else
             td 71
             td Add hd and 1080 to lede
 
-    div(style="position:absolute;width: 100%;")
-      a.btn.btn-primary.btn-lg.activate(style="margin-left: 40%;margin-top: -40%;")
+    div(style="position:absolute;width: 100%;margin-top: -200px;")
+      a.btn.btn-primary.btn-lg.activate(style="margin-left: 40%;")
         span.glyphicon.glyphicon-list-alt
         | &nbsp;Explore Documents

@@ -1,6 +1,5 @@
 var Backbone = require('Backbone'),
   $ = Backbone.$,
-  _ = require('underscore'),
   d3 = require('d3'),
   creek = require('../lib/viz/creek'),
   donut = require('../lib/viz/donut'),
@@ -142,12 +141,27 @@ var Summary = module.exports.Summary = Backbone.View.extend({
     this.$metric = this.$el.find('.metric-value');
   },
   render: function(){
-    // debug('render summary');
     this.$el.html(this.tpl({
       database: this.database.toJSON(),
       metric: this.metric,
       cid: this.database.cid
     }));
+    donut('.donut', [
+      {
+        name: 'Documents',
+        size: this.database.get('stats').document_size,
+        count: this.database.get('stats').document_count,
+        className: 'documents'
+      },
+      {
+        name: 'Indexes',
+        size: this.database.get('stats').index_size,
+        count: this.database.get('stats').index_count,
+        className: 'indexes'
+      }
+    ], {
+      title: 'storage'
+    });
     return this;
   }
 });
