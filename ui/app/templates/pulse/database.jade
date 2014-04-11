@@ -1,18 +1,25 @@
 .col-md-12(style='padding-left: 60px;')
   h2: a(href='#database/#{database.name}') #{database.name}
 
-- stats = database.stats
+- stats = database.stats || {}
+
+mixin stat(name)
+  | #{stats[name] || '-'}
+
 .col-md-12
   .col-md-4
     .stats.clearfix
       .col-xs-3
-        .stat-value(data-stat="collection_count") #{stats.collection_count}
+        .stat-value(data-stat="collection_count")
+          +stat('collection_count')
         .stat-label collections
       .col-xs-3
-        .stat-value(data-stat="index_count") #{stats.index_count}
+        .stat-value(data-stat="index_count") #
+          +stat('index_count')
         .stat-label indexes
       .col-xs-3
-        .stat-value(data-stat="document_count") #{stats.document_count}
+        .stat-value(data-stat="document_count")
+          +stat('document_count')
         .stat-label docs
       .col-xs-3
         .metric-value -

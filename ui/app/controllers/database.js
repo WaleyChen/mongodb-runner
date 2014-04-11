@@ -1,12 +1,13 @@
 var Backbone = require('Backbone'),
   $ = Backbone.$,
+  _ = require('underscore'),
   d3 = require('d3'),
   creek = require('../lib/viz/creek'),
   donut = require('../lib/viz/donut'),
   models = require('../models'),
   debug = require('debug')('mg:scope:database');
 
-module.exports = Backbone.View.extend({
+var Database = Backbone.View.extend({
   tpl: require('../templates/database.jade'),
   initialize: function(){
     this.summary = new Summary();
@@ -38,7 +39,7 @@ module.exports = Backbone.View.extend({
   }
 });
 
-var Summary = module.exports.Summary = Backbone.View.extend({
+var Summary = Backbone.View.extend({
   events: {
     'click .graph': 'graphClicked'
   },
@@ -146,22 +147,53 @@ var Summary = module.exports.Summary = Backbone.View.extend({
       metric: this.metric,
       cid: this.database.cid
     }));
-    donut('.donut', [
-      {
-        name: 'Documents',
-        size: this.database.get('stats').document_size,
-        count: this.database.get('stats').document_count,
-        className: 'documents'
-      },
-      {
-        name: 'Indexes',
-        size: this.database.get('stats').index_size,
-        count: this.database.get('stats').index_count,
-        className: 'indexes'
-      }
-    ], {
-      title: 'storage'
-    });
+    if(this.database.get('stats')){
+      donut('.donut', [
+        {
+          name: 'Documents',
+          size: this.database.get('stats').document_size,
+          count: this.database.get('stats').document_count,
+          className: 'documents'
+        },
+        {
+          name: 'Indexes',
+          size: this.database.get('stats').index_size,
+          count: this.database.get('stats').index_count,
+          className: 'indexes'
+        }
+      ], {
+        title: 'storage'
+      });
+    }
     return this;
   }
 });
+
+var Create = Backbone.View.extend({
+  tpl: require('../templates/pulse/create-collection.jade'),
+  activate: function(database_name){
+    this.database_name = database_name;
+    this.render();
+  },
+  deactivate: function(){},
+  render: function(){
+    debug('rendering create collection');
+    this.$el = $('#mongoscope');
+    this.$el.html(this.tpl({
+      'database_name': this.database_name
+    }));
+  }
+});
+
+module.exports = function(){
+  return new Database();
+};
+
+module.exports.createCollection = function(){
+  return new Create();
+};
+
+module.exports.Summary = Summary;
+module.exports.summary = function(opts){
+  return new Summary(opts);
+};

@@ -3,7 +3,16 @@ var Backbone = require('backbone'),
   mongodb = require('../lib/mongodb'),
   service = require('../service')(),
   models = require('../models'),
+  sessionStore = require('../lib/sessionStore').backbone('auth'),
   debug = require('debug')('mongoscope:auth');
+
+var Credentials = Backbone.Model.extend({
+    sync: sessionStore.sync
+  }),
+  History = Backbone.Collection.extend({
+    model: Credentials,
+    sync: sessionStore.sync
+  });
 
 module.exports = Backbone.View.extend({
   tpl: require('../templates/auth.jade'),
@@ -18,14 +27,28 @@ module.exports = Backbone.View.extend({
   },
   initialize: function(){
     this.redirect = 'pulse';
+    this.history = new History().on('sync', this.historySync, this);
+    this.history.fetch();
+  },
+  historySync: function(){
+    debug('historySync', this.history);
   },
   activate: function(){
     debug('auth activated');
+
     var self = this;
     this.dirty = false;
     $('#modal').modal({backdrop: 'static', keyboard: false});
-    this.render({host: 'localhost:27017'})
-      .$host.focus().on('keydown', function(){
+    this.render({host: 'localhost:27017'});
+
+    if(this.history.length > 0){
+      var previous = this.history.at(0);
+      debug('trying last used host', previous);
+      this.$host.text(previous.get('host'));
+      this.process(previous.get('host'), previous.get('id'));
+    }
+
+    this.$host.focus().on('keydown', function(){
         debug('keydown', event);
         self.reset();
         if(event.keyIdentifier === 'Enter'){
@@ -82,10 +105,9 @@ module.exports = Backbone.View.extend({
     Backbone.history.navigate(this.redirect, {trigger: true});
     return this;
   },
-  submit: function(){
-    this.reset();
+  process: function(host, id){
     try{
-      var data = mongodb.parse('mongodb://' + this.$host.text()),
+      var data = mongodb.parse('mongodb://' + host),
         options = data.auth || {},
         server, hostnameport;
 
@@ -100,12 +122,24 @@ module.exports = Backbone.View.extend({
 
       this.loading('requesting access');
       service.setCredentials(hostnameport, options, function(err){
-        return (err) ? this.error(err) : this.success();
+        if(err) return this.error(err);
+
+        if(!id){
+          new Credentials({
+            host: this.$host.text()
+          }).save();
+        }
+
+        return this.success();
       }.bind(this));
     }
     catch(err){
       this.error(err);
     }
+  },
+  submit: function(){
+    this.reset();
+    this.process(this.$host.text());
     return false;
   },
   reset: function(){

@@ -1,0 +1,31 @@
+h1 Create a Collection
+
+form.form
+  .form-group
+    input.form-control(style="background: transparent;",
+      placeholder='name', name='write.0.args.1')
+    input(type='hidden', value='mongodb://', name='write.0.args.0')
+    input(type='hidden', value='mongo', name='write.0.name')
+
+  .form-group
+    select.form-control(style="background: transparent;", name="read.0.name")
+      option(value='url') url
+      option(value='mongo') mongodb collection
+      option(value='file') file
+
+    input.form-control(style="background: transparent;",
+      placeholder='', name="read.0.args.0")
+  .form-group.transforms
+    .list-group
+      a.list-group-item(href='#') gzipped
+        input.pull-right(type='checkbox', name='transform.gzip')
+      a.list-group-item(href='#') json
+        input(placeholder='docs')
+        input.pull-right(type='checkbox', name='transform.json')
+      a.list-group-item(href='#') comma separated values
+        input.pull-right(type='checkbox', name='transform.csv')
+      a.list-group-item(href='#') tab separated values
+        input.pull-right(type='checkbox', name='transform.tsv')
+  button.btn.btn-primary(type='submit') Create
+  button.btn.btn-default Cancel
+

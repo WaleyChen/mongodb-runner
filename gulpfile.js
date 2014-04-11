@@ -55,7 +55,8 @@ gulp.task('watch', function(){
 
   gulp.watch([
     ui.src + '/{*,**/*}.js',
-    ui.src + '/templates/{*,**/*}.jade'
+    ui.src + '/templates/*.jade',
+    ui.src + '/templates/pulse/*.jade'
   ], ['js']);
 
   gulp.watch([ui.src + '/{*,less/*,less/**/*}.less'], ['less']);

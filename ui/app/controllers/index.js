@@ -1,7 +1,6 @@
 var splint = require('../lib/splint'),
   debug = require('debug')('mongoscope:router'),
   $ = require('jquery'),
-  _ = require('underscore'),
   Backbone = require('backbone'),
   auth, security;
 
@@ -13,7 +12,8 @@ var start = function(){
 
   security = new (require('./security'))();
 
-  var collection = new (require('./collection'))();
+  var collection = new (require('./collection'))(),
+    database = require('./database');
 
   var router =  splint(
     ['authenticate', 'authenticate', auth],
@@ -27,7 +27,8 @@ var start = function(){
     ['collection/:database_name/:collection_name',  'collection', collection],
     ['collection/:database_name/:collection_name/explore/:skip',
       'explore_collection', function(){collection.activateExplorer.apply(collection, arguments);}],
-    ['database/:database_name',  'database', new (require('./database'))()]
+    ['database/:database_name',  'database', database()],
+    ['databases/:database_name/collection',  'create collection', database.createCollection()]
   );
 
   return router;
@@ -50,7 +51,7 @@ require('../models')({
       auth = new (require('./auth'))();
       auth.redirect = redirect;
       auth.activate();
-      setTimeout(start, 1000);
+      start();
       return;
     }
 
