@@ -15,7 +15,7 @@ require('debug').enable('*');
 // but we could easily switch to zepto instead.
 window.jQuery = require('backbone').$ = require('jquery');
 
-// Pull in any bootstrap pplugins
+// Pull in any bootstrap plugins
 require('bootstrap/js/tooltip.js');
 require('bootstrap/js/popover.js');
 require('bootstrap/js/dropdown.js');
@@ -24,7 +24,7 @@ require('bootstrap/js/modal.js');
 var routes = require('./routes.js'),
   debug = require('debug')('mongoscope');
 
-require('../models')({
+require('./models.js')({
   error: function(deployments, err){
     window.jQuery('body').removeClass('loading');
     debug('models', deployments, err);
@@ -41,4 +41,4 @@ require('../models')({
   }
 });
 
-require('./toolbar')();
+require('./views/toolbar')();

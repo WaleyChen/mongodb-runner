@@ -1,8 +1,8 @@
 var Backbone = require('Backbone'),
   $ = Backbone.$,
   d3 = require('d3'),
-  creek = require('../lib/viz/creek'),
-  donut = require('../lib/viz/donut'),
+  creek = require('../viz/creek'),
+  donut = require('../viz/donut'),
   models = require('../models'),
   service = require('../service'),
   debug = require('debug')('mg:scope:database');

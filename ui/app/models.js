@@ -277,7 +277,7 @@ module.exports.Log = List.extend({
 // - 1: highlight
 // - 2: info
 // - 3: warn
-var ACTIONS = require('./templates/security/privilege-actions.json');
+var ACTIONS = require('./views/tpl/security/privilege-actions.json');
 
 var Role = Backbone.Model.extend({
   defaults: {

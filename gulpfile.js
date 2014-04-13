@@ -59,14 +59,14 @@ gulp.task('watch', function(){
 
 gulp.task('js', function(){
   var notifier = new Notification({});
-  browserify({entries: ['ui/app/index.js']})
+  browserify({entries: ['./ui/app/index.js']})
     .transform(require('jadeify'))
     .bundle({debug: false})
     .on('error', function(err){
       var path = (err.annotated || err.message).replace(__dirname + '/', '').split('\n')[1],
         title = 'err: ' + path;
       notifier.notify({title: title, message: err.annotated});
-      console.error(title, err.annotated);
+      console.error('js error', err);
     })
     .pipe(source('index.js'))
     .pipe(gulp.dest('static/'));
@@ -108,6 +108,7 @@ gulp.task('pages', function(){
     jade = function(){
         return require('gulp-jade')({pretty: false}).on('error', function(err){
           notifier.notify({title: 'jade error', message: err.message});
+          console.error('jade error', err);
         });
       };
 
