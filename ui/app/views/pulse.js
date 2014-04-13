@@ -1,4 +1,4 @@
-var Backbone = require('Backbone'),
+var Backbone = require('backbone'),
   $ = Backbone.$,
   models = require('../models'),
   DatabasePulseView = require('./database').Summary,

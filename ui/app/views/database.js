@@ -1,4 +1,4 @@
-var Backbone = require('Backbone'),
+var Backbone = require('backbone'),
   $ = Backbone.$,
   d3 = require('d3'),
   creek = require('../viz/creek'),
