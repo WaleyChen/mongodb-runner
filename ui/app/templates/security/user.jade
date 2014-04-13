@@ -6,6 +6,8 @@ include ../mixins/security
     h2 #{user.username}
     h3.text-subtle #{user.database}
   .col-md-8
+    //- @todo: make this a pillbox
+    //- http://exacttarget.github.io/fuelux/#pillbox
     .btn-group.h3
       each role in user.roles
         a.btn.btn-default(href="#security/roles/#{role.db}/#{role.role}")
