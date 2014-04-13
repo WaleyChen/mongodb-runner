@@ -1,5 +1,6 @@
 from fabric.api import env, get, put, sudo, task, cd, run, hosts
 from fabric.contrib.files import append, upload_template, exists
+from fabric.context_managers.shell_env
 
 env.username = 'ubuntu'
 
@@ -82,5 +83,3 @@ def bake():
     with cd('~/mongoscope'):
         run('git pull --rebase')
         run('npm run-script dist')
-        run('mv ./.lone/dist/mongoscope ./mongoscope-linux-64')
-        # todo: upload to github releases

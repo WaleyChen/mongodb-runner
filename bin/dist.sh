@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source ../.dist-vars.sh;
+
 echo "--------------------------------"
 echo "1. Build ui"
 echo "--------------------------------"
@@ -16,3 +18,8 @@ echo "--------------------------------"
 echo "3. Sprinkle lone liberally"
 echo "--------------------------------"
 NODE_ENV=production DEBUG=* lone;
+
+echo "--------------------------------"
+echo "4. Upload to le' GitHub"
+echo "--------------------------------"
+./upload-release.js $RELEASE $RELEASE_FILENAME;

@@ -3,6 +3,7 @@ node_modules/
 .lone/
 npm-debug.log
 *.pyc
+.dist-vars.sh
 
 static/css
 static/fonts
