@@ -18,7 +18,7 @@ gulp.task('ui', ['pages', 'assets', 'js', 'less', 'manifest']);
 gulp.task('server', function(){app.start();});
 
 // @todo: if there is an error, show notification
-gulp.task('reload', function(){app.reload();});
+gulp.task('server reload', function(){app.reload();});
 
 gulp.task('watch', function(){
   var tty = require('tty');
@@ -51,16 +51,15 @@ gulp.task('watch', function(){
     console.log('[ctrl+r to reload]');
   }
 
-  gulp.watch(['./lib/{*,**/*}.js'], ['reload']);
+  gulp.watch(['./lib/{*,**/*}.js'], ['server reload']);
 
-  gulp.watch([
-    ui.src + '/{*,**/*}.js',
-    ui.src + '/templates/*.jade',
-    ui.src + '/templates/pulse/*.jade'
-  ], ['js']);
+  gulp.watch([ui.src + '/{*,**/*}.js', ui.src + '/templates/{*,**/*}.jade'], ['js']);
 
   gulp.watch([ui.src + '/{*,less/*,less/**/*}.less'], ['less']);
-  gulp.watch([ui.src + '/pages/*.jade', ui.src + '/templates/index.jade'], ['pages']);
+
+  gulp.watch([ui.src + '/pages/*.less'], ['pages less']);
+  gulp.watch([ui.src + '/pages/*.jade'], ['pages']);
+
   gulp.watch([ui.src + '/{img,fonts}/*'], ['assets']);
 });
 
@@ -87,33 +86,34 @@ gulp.task('assets', function(){
     .pipe(gulp.dest(ui.dest));
 });
 
+var lessPaths = [
+    ui.src + '/less',
+    ui.src + '/less/atom',
+    ui.src + '/less/atom/variables'
+  ],
+  notifier = new Notification({}),
+  less = function(){
+    return require('gulp-less')({paths: lessPaths}).on('error', function(err){
+      var filename = err.fileName.replace(__dirname + '/', ''),
+        title = 'err: ' + filename,
+        message = err.lineNumber + ': ' + err.message.split(' in file ')[0].replace(/`/g, '"');
+
+      notifier.notify({title: title, message: message});
+      console.error(title, message);
+    });
+  };
+
 gulp.task('less', function () {
-  var lessPaths = [
-      ui.src + '/less',
-      ui.src + '/less/atom',
-      ui.src + '/less/atom/variables'
-    ],
-    notifier = new Notification({}),
-    less = function(){
-      return require('gulp-less')({paths: lessPaths}).on('error', function(err){
-        var filename = err.fileName.replace(__dirname + '/', ''),
-          title = 'err: ' + filename,
-          message = err.lineNumber + ': ' + err.message.split(' in file ')[0].replace(/`/g, '"');
-
-        notifier.notify({title: title, message: message});
-        console.error(title, message);
-      });
-    };
-
-  gulp.src(ui.src + '/less/{theme-*,index}.less')
-    .pipe(less())
-    .pipe(gulp.dest(ui.dest));
-
-  gulp.src(ui.src + '/less/pages/*.less')
+  gulp.src(ui.src + '/less/index.less')
     .pipe(less())
     .pipe(gulp.dest(ui.dest + '/css'));
 });
 
+gulp.task('pages less', function(){
+  gulp.src(ui.src + '/pages/*.less')
+    .pipe(less())
+    .pipe(gulp.dest(ui.dest + '/css'));
+});
 gulp.task('pages', function(){
   var notifier = new Notification({}),
     jade = function(){
@@ -121,10 +121,6 @@ gulp.task('pages', function(){
           notifier.notify({title: 'jade error', message: err.message});
         });
       };
-
-  gulp.src(ui.src + '/templates/index.jade')
-    .pipe(jade())
-    .pipe(gulp.dest(ui.dest));
 
   gulp.src(ui.src + '/pages/*.jade')
     .pipe(jade())
