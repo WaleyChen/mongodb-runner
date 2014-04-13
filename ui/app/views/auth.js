@@ -17,7 +17,7 @@ var Credentials = Backbone.Model.extend({
   });
 
 var Auth = Backbone.View.extend({
-  tpl: require('../templates/auth.jade'),
+  tpl: require('./tpl/auth.jade'),
   events: {
     'keydown #host': 'keydown',
     'click button': 'submit'

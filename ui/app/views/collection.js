@@ -4,7 +4,7 @@ var Backbone = require('Backbone'),
   debug = require('debug')('mg:scope:collection');
 
 var Collection = Backbone.View.extend({
-  tpl: require('../templates/collection.jade'),
+  tpl: require('./tpl/collection.jade'),
   initialize: function(){
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);
@@ -61,7 +61,7 @@ var Collection = Backbone.View.extend({
 
 
 var ExplorerView = Backbone.View.extend({
-  tpl: require('../templates/explorer.jade'),
+  tpl: require('./tpl/explorer.jade'),
   events: {
     'click .next:not(.disabled) a': 'next',
     'click .previous:not(.disabled) a': 'prev',

@@ -3,7 +3,7 @@ var Backbone = require('backbone'),
   moment = require('moment');
 
 var Top = Backbone.View.extend({
-  tpl: require('../templates/top.jade'),
+  tpl: require('./tpl/top.jade'),
   initialize: function(){
     this.$el = Backbone.$('#mongoscope');
     this.el = this.$el.get(0);

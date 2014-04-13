@@ -6,18 +6,18 @@ var Backbone = require('backbone'),
 
 module.exports = function(opts){
   return create()
-    .add('authenticate', require('./controllers/auth'))
-    .add('pulse', require('./controllers/pulse'))
-    .add('log', require('./controllers/log'))
-    .add('top', require('./controllers/top'))
-    .add('security', require('./controllers/security'), function(){
+    .add('authenticate', require('./views/auth'))
+    .add('pulse', require('./views/pulse'))
+    .add('log', require('./views/log'))
+    .add('top', require('./views/top'))
+    .add('security', require('./views/security'), function(){
       this.add('user', 'users/:database/:username', 'userDetail');
       this.add('role', 'roles/:database/:role', 'roleDetail');
     })
-    .add('collection', 'collection/:database_name/:collection_name', require('./controllers/collection'), function(){
+    .add('collection', 'collection/:database_name/:collection_name', require('./views/collection'), function(){
       this.add('explore', '/explore/:skip', 'activateExplorer');
     })
-    .add('database', 'database/:database_name', require('./controllers/database'), function(){
+    .add('database', 'database/:database_name', require('./views/database'), function(){
       this.add('create collection', '/collection', 'createCollection');
     })
     .default('pulse')

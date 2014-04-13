@@ -4,7 +4,7 @@ var Backbone = require('backbone'),
     models = require('../models');
 
 var Log = Backbone.View.extend({
-  tpl: require('../templates/log.jade'),
+  tpl: require('./tpl/log.jade'),
   initialize: function(){
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);

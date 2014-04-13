@@ -10,12 +10,12 @@ var Backbone = require('backbone'),
 // - 1: highlight
 // - 2: info
 // - 3: warn
-var ACTIONS = require('../templates/security/privilege-actions.json');
+var ACTIONS = require('./tpl/security/privilege-actions.json');
 
 var detail = {
   templates: {
-    user: require('../templates/security/user.jade'),
-    role: require('../templates/security/role.jade')
+    user: require('./tpl/security/user.jade'),
+    role: require('./tpl/security/role.jade')
   },
   klass: {
     user: models.Security.User,
@@ -87,7 +87,7 @@ var Security = Backbone.View.extend({
   events: {
     'click .list-group a': 'markSelected'
   },
-  tpl: require('../templates/security.jade'),
+  tpl: require('./tpl/security.jade'),
   initialize: function(){
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);

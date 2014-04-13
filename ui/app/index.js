@@ -24,7 +24,6 @@ require('bootstrap/js/modal.js');
 var routes = require('./routes.js'),
   debug = require('debug')('mongoscope');
 
-
 require('../models')({
   error: function(deployments, err){
     window.jQuery('body').removeClass('loading');

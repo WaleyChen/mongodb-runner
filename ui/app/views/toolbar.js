@@ -4,7 +4,7 @@ var Backbone = require('Backbone'),
   debug = require('debug')('mg:scope:toolbar');
 
 var Toolbar = Backbone.View.extend({
-  tpl: require('../templates/toolbar.jade'),
+  tpl: require('./tpl/toolbar.jade'),
   initialize: function(){
     this.$el = $('#toolbar');
     this.el = this.$el.get(0);

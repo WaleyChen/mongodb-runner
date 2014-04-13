@@ -5,7 +5,7 @@ var Replication = Backbone.View.extend({
   models: {
     deployments: require('../models').deployments
   },
-  tpl: require('../templates/replication.jade')
+  tpl: require('./tpl/replication.jade')
 });
 
 module.exports = function(opts){

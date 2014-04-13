@@ -5,7 +5,7 @@ var Backbone = require('Backbone'),
   debug = require('debug')('mg:scope:pulse');
 
 var Pulse = Backbone.View.extend({
-  tpl: require('../templates/pulse.jade'),
+  tpl: require('./tpl/pulse.jade'),
   initialize: function(){
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);
