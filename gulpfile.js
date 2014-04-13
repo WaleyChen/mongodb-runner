@@ -7,11 +7,6 @@ var gulp = require('gulp'),
   source = require('vinyl-source-stream'),
   pkg = require('./package.json');
 
-var ui = {
-  src: __dirname + '/ui/app',
-  dest: __dirname + '/static'
-};
-
 gulp.task('dev', ['ui', 'server', 'watch']);
 gulp.task('ui', ['pages', 'assets', 'js', 'less', 'manifest']);
 
@@ -53,19 +48,18 @@ gulp.task('watch', function(){
 
   gulp.watch(['./lib/{*,**/*}.js'], ['server reload']);
 
-  gulp.watch([ui.src + '/{*,**/*}.js', ui.src + '/templates/{*,**/*}.jade'], ['js']);
+  gulp.watch(['ui/app/{*,**/*}.js', 'ui/templates/{*,**/*}.jade'], ['js']);
 
-  gulp.watch([ui.src + '/{*,less/*,less/**/*}.less'], ['less']);
+  gulp.watch(['ui/pages/*.less', 'ui/{*,less/*,less/**/*}.less'], ['less']);
 
-  gulp.watch([ui.src + '/pages/*.less'], ['pages less']);
-  gulp.watch([ui.src + '/pages/*.jade'], ['pages']);
+  gulp.watch(['ui/pages/*.jade'], ['pages']);
 
-  gulp.watch([ui.src + '/{img,fonts}/*'], ['assets']);
+  gulp.watch(['ui/{img,fonts}/*'], ['assets']);
 });
 
 gulp.task('js', function(){
   var notifier = new Notification({});
-  browserify({entries: [ui.src + '/index.js']})
+  browserify({entries: ['ui/app/index.js']})
     .transform(require('jadeify'))
     .bundle({debug: false})
     .on('error', function(err){
@@ -75,21 +69,22 @@ gulp.task('js', function(){
       console.error(title, err.annotated);
     })
     .pipe(source('index.js'))
-    .pipe(gulp.dest(ui.dest));
+    .pipe(gulp.dest('static/'));
 });
 
 gulp.task('assets', function(){
-  gulp.src([ui.src + '/{img,fonts}/*'])
-    .pipe(gulp.dest(ui.dest));
+  gulp.src(['ui/{img,fonts}/*'])
+    .pipe(gulp.dest('static/'));
 
-  gulp.src([ui.src + '/less/atom/{img,fonts}/*'])
-    .pipe(gulp.dest(ui.dest));
+  gulp.src(['ui/less/atom/{img,fonts}/*'])
+    .pipe(gulp.dest('static/'));
 });
 
-var lessPaths = [
-    ui.src + '/less',
-    ui.src + '/less/atom',
-    ui.src + '/less/atom/variables'
+gulp.task('less', function () {
+  var lessPaths = [
+    'ui/less',
+    'ui/less/atom',
+    'ui/less/atom/variables'
   ],
   notifier = new Notification({}),
   less = function(){
@@ -103,17 +98,11 @@ var lessPaths = [
     });
   };
 
-gulp.task('less', function () {
-  gulp.src(ui.src + '/less/index.less')
+  gulp.src('ui/pages/*.less')
     .pipe(less())
-    .pipe(gulp.dest(ui.dest + '/css'));
+    .pipe(gulp.dest('static/' + '/css'));
 });
 
-gulp.task('pages less', function(){
-  gulp.src(ui.src + '/pages/*.less')
-    .pipe(less())
-    .pipe(gulp.dest(ui.dest + '/css'));
-});
 gulp.task('pages', function(){
   var notifier = new Notification({}),
     jade = function(){
@@ -122,13 +111,13 @@ gulp.task('pages', function(){
         });
       };
 
-  gulp.src(ui.src + '/pages/*.jade')
+  gulp.src('ui/pages/*.jade')
     .pipe(jade())
-    .pipe(gulp.dest(ui.dest));
+    .pipe(gulp.dest('static/'));
 });
 
 gulp.task('manifest', function(){
-  gulp.src(ui.dest + '/**/*')
+  gulp.src('static/' + '/**/*')
     .pipe(manifest({version: pkg.version}))
     .pipe(gulp.dest(__dirname + '/static/sterno-manifest.json'));
 });
