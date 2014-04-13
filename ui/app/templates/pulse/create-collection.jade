@@ -3,7 +3,7 @@ h1 Create a Collection
 form.form
   .form-group
     input.form-control(style="background: transparent;",
-      placeholder='name', name='write.0.args.1')
+      placeholder='name', name='write.0.args.1', value='service_requests')
     input(type='hidden', value='mongodb://', name='write.0.args.0')
     input(type='hidden', value='mongo', name='write.0.name')
 
@@ -14,18 +14,18 @@ form.form
       option(value='file') file
 
     input.form-control(style="background: transparent;",
-      placeholder='', name="read.0.args.0")
+      placeholder='', name="read.0.args.0", value="https://secure.toronto.ca/webwizard/ws/requests.json?start_date=2012-02-01T00:00:00Z&end_date=2012-02-07T00:00:00Z&jurisdiction_id=toronto.ca")
   .form-group.transforms
-    .list-group
-      a.list-group-item(href='#') gzipped
-        input.pull-right(type='checkbox', name='transform.gzip')
-      a.list-group-item(href='#') json
-        input(placeholder='docs')
-        input.pull-right(type='checkbox', name='transform.json')
-      a.list-group-item(href='#') comma separated values
+    ul.list-group
+      //- li.list-group-item(href='#') gzipped
+      //-   input.pull-right(type='checkbox', name='transform.gunzip')
+      li.list-group-item(href='#') json
+        input(placeholder='docs', value='service_requests', name='transform.fromJSON.args.0')
+        input.pull-right(type='checkbox', name='transform.fromJSON')
+      li.list-group-item(href='#') comma separated values
         input.pull-right(type='checkbox', name='transform.csv')
-      a.list-group-item(href='#') tab separated values
+      li.list-group-item(href='#') tab separated values
         input.pull-right(type='checkbox', name='transform.tsv')
   button.btn.btn-primary(type='submit') Create
-  button.btn.btn-default Cancel
+  button.btn.btn-default.cancel Cancel
 

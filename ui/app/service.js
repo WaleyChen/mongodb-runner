@@ -110,6 +110,11 @@ Service.prototype.get = function(host, pathname, params, fn){
   return this.read('/' + host + pathname, params, fn);
 };
 
+Service.prototype.importer = function(host, dbName, collName, pipechain, fn){
+  return this.post('/' + host + '/' + dbName + '/' +
+      collName + '/import', {pipechain: JSON.stringify(pipechain)}, fn);
+};
+
 // An easier to use top.
 //
 // @param {Function} fn `(err, {Top})`
