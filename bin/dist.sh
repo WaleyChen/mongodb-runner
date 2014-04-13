@@ -5,8 +5,7 @@ source ./.dist-vars.sh;
 echo "--------------------------------"
 echo "1. Build ui"
 echo "--------------------------------"
-npm install;
-gulp ui;
+npm install && gulp ui;
 
 echo "--------------------------------"
 echo "2. Clean and install server deps"

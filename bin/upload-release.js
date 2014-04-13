@@ -42,9 +42,14 @@ function getReleases(repo, fn){
 }
 
 var tag = process.argv[2],
-  dest = process.argv[3];
+  dest = process.argv[3],
+  src = __dirname + '/../.lone/dist/mongoscope';
 
-upload('10gen/mongoscope', tag, __dirname + '/../.lone/dist/mongoscope', dest, function(err, res){
+console.log('Uploading dist to github for release ' + tag);
+console.log('- dest: ', dest);
+console.log('- src: ', src);
+
+upload('10gen/mongoscope', tag, src, dest, function(err, res){
   if(err) return console.log('error', err);
   console.log('uploaded', res);
 });
