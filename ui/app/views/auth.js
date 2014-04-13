@@ -31,6 +31,7 @@ var Auth = Backbone.View.extend({
     this.redirect = window.location.hash.replace('#', '').replace('authenticate', '') || 'pulse';
     this.history = new History().on('sync', this.historySync, this);
     this.history.fetch();
+    debug('auth redirect is', this.redirect);
   },
   historySync: function(){
     debug('historySync', this.history);

@@ -9,6 +9,7 @@ var gulp = require('gulp'),
 
 gulp.task('dev', ['ui', 'server', 'watch']);
 gulp.task('ui', ['pages', 'assets', 'js', 'less', 'manifest']);
+gulp.task('default', ['dev']);
 
 gulp.task('server', function(){app.start();});
 
@@ -65,7 +66,7 @@ gulp.task('js', function(){
     .on('error', function(err){
       var path = (err.annotated || err.message).replace(__dirname + '/', '').split('\n')[1],
         title = 'err: ' + path;
-      notifier.notify({title: title, message: err.annotated});
+      notifier.notify({title: title || 'js error', message: err.annotated || err.message});
       console.error('js error', err);
     })
     .pipe(source('index.js'))
@@ -100,7 +101,7 @@ gulp.task('less', function () {
 
   gulp.src('ui/pages/*.less')
     .pipe(less())
-    .pipe(gulp.dest('static/' + '/css'));
+    .pipe(gulp.dest('static/css'));
 });
 
 gulp.task('pages', function(){

@@ -1,6 +1,6 @@
 var $ = require('jquery'),
   _ = require('underscore'),
-  debug = require('debug')('mg:scope:service'),
+  debug = require('debug')('mongoscope:service'),
   socketio = require('socket.io-client'),
   srv;
 
@@ -102,6 +102,11 @@ Service.prototype.post = function(pathname, params, fn){
       success: function(data){
         fn(null, data);
       }
+    }).fail(function(xhr){
+      var err = new Error(xhr.responseText.replace('Error: ', ''));
+      err.status = xhr.status;
+      err.statusText = xhr.statusText;
+      fn(err);
     });
 };
 

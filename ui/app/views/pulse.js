@@ -15,7 +15,7 @@ var Pulse = Backbone.View.extend({
     this.databases = [];
   },
   enter: function(){
-    debug('pulse enterd');
+    debug('pulse enter');
     this.enterd = true;
     if(!this.instance.get('host')){
       this.instance.once('sync', this.render, this);
