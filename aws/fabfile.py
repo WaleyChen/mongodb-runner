@@ -1,4 +1,4 @@
-from fabric.api import env, get, put, sudo
+from fabric.api import env, get, put, sudo, task, cd, run, hosts
 from fabric.contrib.files import append, upload_template, exists
 
 env.username = 'ubuntu'
@@ -24,6 +24,7 @@ def has_ppa(name):
     filename = name.replace('.', '_').replace('-', '_').replace('/', '-')
     return filename in run('ls /etc/apt/sources.list.d/')
 
+@task
 def bootstrap():
     if not has_ppa('chris-lea/node.js'):
         sudo('apt-get install -y software-properties-common '
@@ -38,6 +39,8 @@ def bootstrap():
     sudo('apt-get update')
     sudo('DEBIAN_FRONTEND=noninteractive apt-get install -y {}'.format(
         ' '.join(env.packages)))
+
+    sudo('npm install -g node-gyp')
 
     put('./startup.sh', '/home/ubuntu/startup.sh', mode=0777)
     put('./etc/rc.local', '/etc/rc.local', mode=0777)
@@ -57,8 +60,8 @@ def bootstrap_ebs():
     sudo('mount -a')
     sudo('chown mongodb:mongodb /ebs/mongoscope/mongodb')
 
-
-def add(name, port, replset=None, auth=False):
+@task
+def add_config(name, port, replset=None, auth=False):
     ctx = {'name': name, 'port': port, 'replset': replset, 'auth': auth}
 
     upload_template('mongod-upstart.tpl', '/etc/init/mongodb{}'.format(name), ctx,
@@ -72,3 +75,12 @@ def add(name, port, replset=None, auth=False):
 
     sudo('chown -R mongodb:mongodb /ebs/mongoscope/mongodb')
     sudo('chown -R mongodb:mongodb /home/ubuntu/mongodb')
+
+@task
+@hosts('ubuntu@ec2-54-221-63-10.compute-1.amazonaws.com')
+def bake():
+    with cd('~/mongoscope'):
+        run('git pull --rebase')
+        run('npm run-script dist')
+        run('mv ./.lone/dist/mongoscope ./mongoscope-linux-64')
+        # todo: upload to github releases
