@@ -1,6 +1,6 @@
 # mongoscope
 
-![mongoscope-demo-v0.0.3](https://cloud.githubusercontent.com/assets/23074/2672671/b55006be-c0e9-11e3-958e-d1e15bc496f6.gif)
+![mongoscope-demo-v0.0.3](https://cloud.githubusercontent.com/assets/23074/2688434/2d1f3b5a-c29e-11e3-969a-367020b729b6.gif)
 
 
 ```
