@@ -9,14 +9,37 @@
 //   assets = JSON.parse(localStorage.getItem('mongoscope:assets') || '["/index.js", "/index.css"]');
 // sterno(origin, assets);
 
+require('debug').enable('*');
+
 // By default we'll use jquery to drive the DOM from backbone,
 // but we could easily switch to zepto instead.
 window.jQuery = require('backbone').$ = require('jquery');
 
+// Pull in any bootstrap pplugins
 require('bootstrap/js/tooltip.js');
 require('bootstrap/js/popover.js');
 require('bootstrap/js/dropdown.js');
 require('bootstrap/js/modal.js');
-require('debug').enable('*');
 
-module.exports = require('./controllers')({});
+var routes = require('./routes.js'),
+  debug = require('debug')('mongoscope');
+
+
+require('../models')({
+  error: function(deployments, err){
+    window.jQuery('body').removeClass('loading');
+    debug('models', deployments, err);
+    if(err.status === 401){
+      debug('got 401.  triggering auth modal');
+      return routes({auth: true});
+    }
+
+    debug('unexpected initialization error...');
+    throw err;
+  },
+  success: function(){
+    return routes({});
+  }
+});
+
+require('./toolbar')();

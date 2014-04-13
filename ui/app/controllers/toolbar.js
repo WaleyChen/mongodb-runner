@@ -3,7 +3,7 @@ var Backbone = require('Backbone'),
   models = require('../models'),
   debug = require('debug')('mg:scope:toolbar');
 
-module.exports = Backbone.View.extend({
+var Toolbar = Backbone.View.extend({
   tpl: require('../templates/toolbar.jade'),
   initialize: function(){
     this.$el = $('#toolbar');
@@ -30,3 +30,7 @@ module.exports = Backbone.View.extend({
     }
   }
 });
+
+module.exports = function(opts){
+  return new Toolbar(opts);
+};

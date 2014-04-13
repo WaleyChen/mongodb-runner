@@ -1,10 +1,12 @@
 var Backbone = require('backbone'),
   $ = Backbone.$,
-  mongodb = require('../lib/mongodb'),
+  mongodb = require('../mongodb'),
   service = require('../service')(),
   models = require('../models'),
-  sessionStore = require('../lib/sessionStore').backbone('auth'),
-  debug = require('debug')('mongoscope:auth');
+  sessionStore = require('../sessionStore').backbone('auth'),
+  debug = require('debug')('mongoscope:auth'),
+  instance = null;
+
 
 var Credentials = Backbone.Model.extend({
     sync: sessionStore.sync
@@ -14,10 +16,10 @@ var Credentials = Backbone.Model.extend({
     sync: sessionStore.sync
   });
 
-module.exports = Backbone.View.extend({
+var Auth = Backbone.View.extend({
   tpl: require('../templates/auth.jade'),
   events: {
-    // 'keydown #host': 'keydown',
+    'keydown #host': 'keydown',
     'click button': 'submit'
   },
   els: {
@@ -26,15 +28,15 @@ module.exports = Backbone.View.extend({
     message: '.message'
   },
   initialize: function(){
-    this.redirect = 'pulse';
+    this.redirect = window.location.hash.replace('#', '').replace('authenticate', '') || 'pulse';
     this.history = new History().on('sync', this.historySync, this);
     this.history.fetch();
   },
   historySync: function(){
     debug('historySync', this.history);
   },
-  activate: function(){
-    debug('auth activated');
+  enter: function(){
+    debug('auth enterd');
 
     var self = this;
     this.dirty = false;
@@ -79,6 +81,7 @@ module.exports = Backbone.View.extend({
           return false;
         }
       });
+    return this;
   },
   error: function(err){
     this.dirty = true;
@@ -151,7 +154,7 @@ module.exports = Backbone.View.extend({
     this.dirty = false;
     return this;
   },
-  deactivate: function(){
+  deenter: function(){
 
   },
   render: function(ctx){
@@ -170,3 +173,10 @@ module.exports = Backbone.View.extend({
     return this;
   }
 });
+
+module.exports = function(opts){
+  if(!instance){
+    instance = new Auth(opts);
+  }
+  return instance;
+};

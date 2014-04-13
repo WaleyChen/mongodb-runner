@@ -1,66 +1,108 @@
 var Backbone = require('backbone'),
-  _ = require('underscore'),
-  debug = require('debug')('mg:splint');
+  debug = require('debug')('mongoscope:routes'),
+  router,
+  handlers = {},
+  current = null;
 
-// Make the app from a list of `specs`.
-//
-// A `spec` is an array of:
-//
-// - route, controller
-// - route, name, controller
-// - route, name, controller, opts
-//
-// `opts`
-// - **index** {Boolean}, Should this be used as the default controller?
-//
-// @param {Array} ... The specs
-// @return {Backbone.Router}
-// @api public
-module.exports = function splint(){
-  var specs = Array.prototype.slice.call(arguments, 0),
-    router = new Backbone.Router(),
-    body = Backbone.$('body');
+module.exports = function(opts){
+  return create()
+    .add('authenticate', require('./controllers/auth'))
+    .add('pulse', require('./controllers/pulse'))
+    .add('log', require('./controllers/log'))
+    .add('top', require('./controllers/top'))
+    .add('security', require('./controllers/security'), function(){
+      this.add('user', 'users/:database/:username', 'userDetail');
+      this.add('role', 'roles/:database/:role', 'roleDetail');
+    })
+    .add('collection', 'collection/:database_name/:collection_name', require('./controllers/collection'), function(){
+      this.add('explore', '/explore/:skip', 'activateExplorer');
+    })
+    .add('database', 'database/:database_name', require('./controllers/database'), function(){
+      this.add('create collection', '/collection', 'createCollection');
+    })
+    .default('pulse')
+    .go(opts.auth ? 'authenticate' : '');
+};
 
-  router._current = null;
-  router._nameToHandler = {};
+function create(){
+  router = new Backbone.Router();
 
-  // Deactivate the previous controller
+  var body = Backbone.$('body');
+
   router.on('route', function(name){
-    debug('caught router event', name);
-    if(router._current){
-      debug('deactivating', router._current.name);
-      if(typeof router._current === 'function'){
-        router._current.call(router._current, 'deactivate');
+    if(current){
+      debug('deactivating', current.name);
+
+      if(typeof current === 'function'){
+        current.call(current, 'deactivate');
       }
       else {
         router._current.deactivate.apply(router._current);
       }
       body.removeClass(router._current.name);
     }
+
     debug('switching current to', name);
     router._current = router._nameToHandler[name];
     router._current.name = name;
     body.addClass(name);
   });
+  Backbone.history.start();
+  return module.exports;
+}
 
-  specs.map(function(spec){
-    var route = spec[0],
-      controller = spec[2],
-      name = spec[1],
-      opts = spec[3] || {},
-      handler = controller.activate ? controller.activate.bind(controller) : controller;
+function route(name, url, handler, context){
+  debug('register route', name, url, handler, context);
+  handlers[name] = {
+    handler: handler,
+    name: name,
+    context: context,
+    url: url
+  };
+  router.route(url, name, handler.bind(context));
+}
 
-    controller.router = router;
+module.exports.add = function(name, url, handler, addChild){
+  var args = Array.prototype.slice.call(arguments, 0), context;
 
-    router._nameToHandler[name] = controller;
-    router.route(route, name, handler);
+  if(args.length === 2){
+    name = url = args[0];
+    handler = args[1];
+  }
 
-    if(opts.index === true){
-      debug('index points to', name);
-      router.route('', 'index', handler);
-      router._nameToHandler.index = controller;
-    }
+  if(typeof handler === 'function'){
+    handler = handler.call(handler);
+    context = handler;
+    handler = handler.activate;
+  }
+
+  if(args.length === 3){
+    name = url = args[0];
+    handler = args[1];
+    addChild = args[2];
+  }
+
+  if(typeof addChild === 'function'){
+    var childContext = {
+      add: function(childName, childPath, methodName){
+        debug('add child to ' + name, childName, childPath, methodName);
+        route(name + ' ' + childName, url + childPath, handler[methodName].bind(context));
+        return childContext;
+      }
+    };
+    addChild.call(childContext);
+  }
+  return module.exports;
+};
+
+module.exports.go = function(fragment){
+  Backbone.history.navigate(fragment, {trigger: true});
+  return module.exports;
+};
+
+module.exports.default = function(fragment){
+  router.route('', 'index', function(){
+    module.exports.go(fragment);
   });
-  debug('router ready', router);
-  return router;
+  return module.exports;
 };

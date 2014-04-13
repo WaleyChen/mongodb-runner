@@ -48,8 +48,8 @@ var DetailView = Backbone.View.extend({
   },
   // Router telling us to render, in which case we need to have the
   // parent circle back to us when our containing dom is ready.
-  activate: function(db, _id){
-    debug('activate ' + this, db, _id);
+  enter: function(db, _id){
+    debug('enter ' + this, db, _id);
     if(this.type === 'user'){
       this.set({database: db, username: _id});
     }
@@ -60,13 +60,13 @@ var DetailView = Backbone.View.extend({
     this.fetch();
 
     // this.router.trigger('route', 'security');
-    this.parent.activate(this);
+    this.parent.enter(this);
   },
   toString: function(){
     return 'DetailView('+this.type+')';
   },
-  deactivate: function(){
-    this.parent.deactivate();
+  exit: function(){
+    this.parent.exit();
   },
   render: function(){
     this.$el = $('.details');
@@ -83,7 +83,7 @@ var DetailView = Backbone.View.extend({
   }
 });
 
-module.exports = Backbone.View.extend({
+var Security = Backbone.View.extend({
   events: {
     'click .list-group a': 'markSelected'
   },
@@ -108,11 +108,11 @@ module.exports = Backbone.View.extend({
     lg.find('a.selected').removeClass('selected');
     $(e.currentTarget).addClass('selected');
   },
-  activate: function(child){
+  enter: function(child){
     this.pending = child;
     this.security.fetch();
   },
-  deactivate: function(){
+  exit: function(){
     this.active = false;
   },
   render: function(){
@@ -136,3 +136,6 @@ module.exports = Backbone.View.extend({
   }
 });
 
+module.exports = function(opts){
+  return new Security(opts);
+};

@@ -2,7 +2,7 @@ var Backbone = require('backbone'),
   models = require('../models'),
   moment = require('moment');
 
-module.exports = Backbone.View.extend({
+var Top = Backbone.View.extend({
   tpl: require('../templates/top.jade'),
   initialize: function(){
     this.$el = Backbone.$('#mongoscope');
@@ -13,14 +13,14 @@ module.exports = Backbone.View.extend({
 
     this.direction = 'up';
   },
-  activate: function(){
+  enter: function(){
     this.top
-      .activate()
+      .enter()
       .on('sync', this.render, this);
   },
-  deactivate: function(){
+  exit: function(){
     this.top
-      .deactivate()
+      .exit()
       .off('sync', this.onTopData, this);
   },
   onTopData: function(){
@@ -56,3 +56,7 @@ module.exports = Backbone.View.extend({
     return this;
   }
 });
+
+module.exports = function(opts){
+  return new Top(opts);
+};

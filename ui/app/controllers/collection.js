@@ -1,16 +1,14 @@
 var Backbone = require('Backbone'),
   $ = Backbone.$,
-  _ = require('underscore'),
   models = require('../models'),
   debug = require('debug')('mg:scope:collection');
 
-module.exports = Backbone.View.extend({
+var Collection = Backbone.View.extend({
   tpl: require('../templates/collection.jade'),
   initialize: function(){
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);
 
-    // this.metric = 'write.count';
     this.metric = 'lock.count';
 
     this.collection = new models.Collection()
@@ -22,27 +20,15 @@ module.exports = Backbone.View.extend({
     this.explorer = new ExplorerView({
       collection: this.collection
     });
-
-    this.explorer.samples.on('sync',
-      this.explorerChanged, this);
   },
-  explorerChanged: function(){
-    // if(!this.explorer.activated) return false;
-    var uri = ['collection',
-      this.collection.get('database'),
-      this.collection.get('name'), 'explore',
-      this.explorer.samples.skip].join('/');
-
-    // Backbone.history.navigate(uri);
-  },
-  activate: function(database, name){
-    debug('activate', database, name);
+  enter: function(database, name){
+    debug('enter', database, name);
     this.collection.set({database: database, name: name});
     this.collection.fetch();
   },
-  activateExplorer: function(database, name, skip){
-    if(database === 'deactivate'){
-      return this.deactivate;
+  enterExplorer: function(database, name, skip){
+    if(database === 'exit'){
+      return this.exit;
     }
     debug('explore', database, name, skip);
     this.explorer.skip = skip;
@@ -58,7 +44,7 @@ module.exports = Backbone.View.extend({
     debug(this.metric, val);
     this.graph.inc(val);
   },
-  deactivate: function(){
+  exit: function(){
     this.$el.removeClass('exploring');
     this.top.unsubscribe();
   },
@@ -79,7 +65,7 @@ var ExplorerView = Backbone.View.extend({
   events: {
     'click .next:not(.disabled) a': 'next',
     'click .previous:not(.disabled) a': 'prev',
-    'click .activate': 'activate'
+    'click .enter': 'enter'
   },
   initialize: function(opts){
     this.active = false;
@@ -87,7 +73,7 @@ var ExplorerView = Backbone.View.extend({
       collection: opts.collection
     }).on('sync', this.render, this);
   },
-  activate: function(){
+  enter: function(){
     this.active = true;
     this.samples.fetch();
   },
@@ -124,3 +110,7 @@ var ExplorerView = Backbone.View.extend({
     return this;
   }
 });
+
+module.exports = function(opts){
+  return new Collection(opts);
+};

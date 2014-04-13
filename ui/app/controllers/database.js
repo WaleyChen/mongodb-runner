@@ -1,6 +1,5 @@
 var Backbone = require('Backbone'),
   $ = Backbone.$,
-  _ = require('underscore'),
   d3 = require('d3'),
   creek = require('../lib/viz/creek'),
   donut = require('../lib/viz/donut'),
@@ -14,17 +13,16 @@ var Database = Backbone.View.extend({
     this.summary = new Summary();
     this.database = this.summary.database.on('sync', this.render, this);
   },
-  activate: function(name){
-    debug('activate', name);
+  enter: function(name){
+    debug('enter', name);
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);
-    this.summary.activate(name);
-    // this.render();
+    this.summary.enter(name);
   },
-  deactivate: function(){
-    debug('deactivate');
-    this.summary.deactivate();
-    debug('deactivate complete');
+  exit: function(){
+    debug('exit');
+    this.summary.exit();
+    debug('exit complete');
     return this;
   },
   render: function(){
@@ -83,13 +81,13 @@ var Summary = Backbone.View.extend({
       this.$metric.text(this.graph.value);
     }
   },
-  activate: function(name){
+  enter: function(name){
     if(name){
       this.database.set({name: name});
     }
 
     this.top
-      .activate()
+      .enter()
       .on('sync', this.onTopData, this);
 
     this.database.fetch();
@@ -131,9 +129,9 @@ var Summary = Backbone.View.extend({
       title: ''
     });
   },
-  deactivate: function(){
+  exit: function(){
     this.top
-      // .deactivate()
+      // .exit()
       .off('sync', this.onTopData, this);
     // this.graph.pause();
     return this;
@@ -176,7 +174,7 @@ var Create = Backbone.View.extend({
     'submit form': 'submit',
     'click .cancel': 'cancel'
   },
-  activate: function(database_name){
+  enter: function(database_name){
     this.database_name = database_name;
     this.render();
   },
@@ -225,7 +223,7 @@ var Create = Backbone.View.extend({
     debug('pipechain is', pipechain);
     return false;
   },
-  deactivate: function(){},
+  exit: function(){},
   render: function(){
     debug('rendering create collection');
     this.$el = $('#mongoscope');

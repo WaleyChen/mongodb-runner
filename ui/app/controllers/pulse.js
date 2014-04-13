@@ -4,19 +4,19 @@ var Backbone = require('Backbone'),
   DatabasePulseView = require('./database').Summary,
   debug = require('debug')('mg:scope:pulse');
 
-module.exports = Backbone.View.extend({
+var Pulse = Backbone.View.extend({
   tpl: require('../templates/pulse.jade'),
   initialize: function(){
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);
-    this.activated = false;
+    this.enterd = false;
 
     this.instance = models.instance;
     this.databases = [];
   },
-  activate: function(){
-    debug('pulse activated');
-    this.activated = true;
+  enter: function(){
+    debug('pulse enterd');
+    this.enterd = true;
     if(!this.instance.get('host')){
       this.instance.once('sync', this.render, this);
       this.instance.fetch();
@@ -25,14 +25,14 @@ module.exports = Backbone.View.extend({
       this.render();
     }
   },
-  deactivate: function(){
+  exit: function(){
     if(this.databases.length === 0){
       return this;
     }
     this.databases.map(function(database){
-      database.deactivate();
+      database.exit();
     });
-    this.activated = false;
+    this.enterd = false;
   },
   render: function(){
     var self = this;
@@ -58,7 +58,7 @@ module.exports = Backbone.View.extend({
     }
 
     this.$el.find('.databases').append(this.databases.map(function(database){
-      return database.activate().render().el;
+      return database.enter().render().el;
     }));
 
     this.databases.map(function(database){
@@ -66,3 +66,7 @@ module.exports = Backbone.View.extend({
     });
   }
 });
+
+module.exports = function(opts){
+  return new Pulse(opts);
+};
