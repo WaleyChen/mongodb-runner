@@ -1,19 +1,43 @@
 from fabric.api import env, get, put, sudo
-from fabric.contrib.files import append, upload_template
+from fabric.contrib.files import append, upload_template, exists
 
 env.username = 'ubuntu'
 
+env.packages = [
+    'gcc',
+    'make',
+    'g++',
+    'git',
+    'xfsprogs',
+    'unzip',
+    'zip',
+    'imagemagick',
+    'libjpeg-dev',
+    'libpng-dev',
+    'libgif-dev',
+    'libpango1.0-dev',
+    'mongodb-10gen',
+    'nodejs'
+]
+
+def has_ppa(name):
+    filename = name.replace('.', '_').replace('-', '_').replace('/', '-')
+    return filename in run('ls /etc/apt/sources.list.d/')
+
 def bootstrap():
-    sudo('apt-get install -y software-properties-common python-software-properties')
-    sudo('apt-add-repository -y ppa:chris-lea/node.js')
+    if not has_ppa('chris-lea/node.js'):
+        sudo('apt-get install -y software-properties-common '
+            'python-software-properties')
+        sudo('apt-add-repository -y ppa:chris-lea/node.js')
 
-    sudo('apt-get install -y nodejs')
+    if not exists('/etc/apt/sources.list.d/mongodb.list', sudo=True):
+        sudo('apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10')
+        sudo('echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart '
+          'dist 10gen" | sudo tee /etc/apt/sources.list.d/mongodb.list')
 
-    sudo('apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10')
-    sudo('echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart '
-      'dist 10gen" | sudo tee /etc/apt/sources.list.d/mongodb.list')
     sudo('apt-get update')
-    sudo('apt-get install mongodb-10gen')
+    sudo('DEBIAN_FRONTEND=noninteractive apt-get install -y {}'.format(
+        ' '.join(env.packages)))
 
     put('./startup.sh', '/home/ubuntu/startup.sh', mode=0777)
     put('./etc/rc.local', '/etc/rc.local', mode=0777)
@@ -26,7 +50,7 @@ def bootstrap_ebs():
     sudo('apt-get install -y xfsprogs')
     sudo('mkdir -p /ebs/mongoscope/mongodb')
     sudo('mkfs.xfs /dev/xvdf')
-    fs_tab = '/dev/xvdf    /ebs/mongoscope   xfs defaults,nobootwait,noatime 0   0'
+    fs_tab = '/dev/xvdf /ebs/mongoscope xfs defaults,nobootwait,noatime 0   0'
 
     append('/etc/fstab', fs_tab, use_sudo=True)
 

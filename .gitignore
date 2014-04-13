@@ -2,6 +2,7 @@
 node_modules/
 .lone/
 npm-debug.log
+*.pyc
 
 static/css
 static/fonts
