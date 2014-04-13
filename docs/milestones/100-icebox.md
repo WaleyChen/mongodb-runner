@@ -2,6 +2,9 @@
 
 in no particular order.  feel free to add your own.
 
+- [ ] parallelCollectionScan -> export collection
+- [ ] initializeOrderedBulkOp -> import to collection
+
 ### auth
 
 - nagging funnel to turn on auth for your deployment

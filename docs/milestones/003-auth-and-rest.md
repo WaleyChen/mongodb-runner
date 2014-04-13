@@ -1,4 +1,4 @@
-## 0.3.0
+## 0.0.3
 
 > Apr 3nd - Apr 16
 
@@ -27,26 +27,8 @@
   - [x] stream `currentOp`
   - [x] aggregation
   - [x] profiling
-  - [ ] sharding
-    - [ ] see `shell/utils_sh.js` in server
-    - [ ] `getBalancerState()` - return true if enabled"
-    - [ ] `isBalancerRunning()` - return true if the balancer has work in progress on any mongos"
-    - [ ] `status()` - prints a general overview of the cluster
-  - [ ] more replication methods
-    - db.serverConfig.on('joined|left|reconnect')
-  - sse
-    - https://segment.io/blog/2014-04-03-server-sent-events-the-simplest-realtime-browser-spec/
-    - https://github.com/segmentio/sse
-    - http://www.html5rocks.com/en/tutorials/eventsource/basics/
-    - https://github.com/Yaffle/EventSource/
-  - [ ] parallelCollectionScan -> export collection
-  - [ ] initializeOrderedBulkOp -> import to collection
 
 ### UI
 
-- [ ] sign in form
-- [ ] client side auth controller
-- [ ] scoketio: time based tokens
-  - [ ] client side
-  - [ ] server side
-- [ ] redo bootloader
+- [x] sign in form
+- [x] client side auth controller
