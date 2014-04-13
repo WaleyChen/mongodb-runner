@@ -2,6 +2,13 @@
 //
 // @author Lucas Hrabovsky<lucas@mongodb.com>
 
+// @todo: This should use sterno to load updates.
+// var sterno = require('sterno'),
+//   origin = localStorage.getItem('mongoscope:origin') || 'http://10gen.github.io/mongoscope',
+//   // origin = localStorage.getItem('mongoscope:origin') || 'http://mongoscope.dev',
+//   assets = JSON.parse(localStorage.getItem('mongoscope:assets') || '["/index.js", "/index.css"]');
+// sterno(origin, assets);
+
 // By default we'll use jquery to drive the DOM from backbone,
 // but we could easily switch to zepto instead.
 window.jQuery = require('backbone').$ = require('jquery');
