@@ -228,19 +228,14 @@ Service.prototype.collection = function(host, db, name, fn){
 // Get a short lived auth token that will be automatically refreshed.
 // Tokens are 1:1 for deployments.  Want to access another deployment?
 // You'll need to get another token for it.
-Service.prototype.setCredentials = function(host, options, fn){
-  if(typeof options === 'function'){
-    fn = options;
-    options = {};
-  }
-
+Service.prototype.setCredentials = function(seed, fn){
   var self = this,
     // Refresh our token 15 seconds before it expires.
     expirationRedLine = 15 * 1000;
 
   function _bakeToken(done){
-    var data = _.extend({host: host}, {}, options);
-    debug('getting token for', host);
+    var data = {seed: seed};
+    debug('getting token for', seed);
     self.post('/token', data, function(err, data){
       if(err) return done(err);
 

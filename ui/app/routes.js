@@ -30,8 +30,10 @@ function create(){
   var body = Backbone.$('body');
 
   router.on('route', function(name){
-    if(current){
+    if(current && current.context.exit){
       debug('deactivating', current.name);
+      var exit = current.context.exit,
+        context = current.context;
       current.context.exit.apply(current.context);
       body.removeClass(current.name);
     }

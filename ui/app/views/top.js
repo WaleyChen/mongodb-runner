@@ -19,9 +19,7 @@ var Top = Backbone.View.extend({
       .on('sync', this.render, this);
   },
   exit: function(){
-    this.top
-      .exit()
-      .off('sync', this.onTopData, this);
+    this.top.exit().off('sync', this.onTopData, this);
   },
   onTopData: function(){
     var ctx = this.top.toJSON(), html;

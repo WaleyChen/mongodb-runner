@@ -232,7 +232,7 @@ var Top = module.exports.Top = Model.extend({
   initialize: function(){
     this.subscribers = 0;
   },
-  activate: function(){
+  enter: function(){
     if(this.subscribers === 0){
       debug('activating top stream');
       this.active = true;
@@ -242,7 +242,7 @@ var Top = module.exports.Top = Model.extend({
     this.subscribers++;
     return this;
   },
-  deactivate: function(){
+  exit: function(){
     this.subscribers--;
     if(this.subscribers === 0){
       debug('deactivating top stream');

@@ -17,7 +17,7 @@ exports = {
     debug('\n-------------------------------\nsetup');
 
     exports.post('/api/v1/token')
-      .send({host: 'localhost:27017'})
+      .send({seed: 'localhost:27017'})
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res){

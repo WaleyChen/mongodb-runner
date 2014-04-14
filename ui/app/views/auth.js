@@ -109,23 +109,21 @@ var Auth = Backbone.View.extend({
     Backbone.history.navigate(this.redirect, {trigger: true});
     return this;
   },
-  process: function(host, id){
+  process: function(url, id){
     try{
-      var data = mongodb.parse('mongodb://' + host),
-        options = data.auth || {},
-        server, hostnameport;
+      var data = mongodb.parse('mongodb://' + url),
+        server;
 
       if(data.servers.length === 0){
         throw new Error('Please specify at least one server');
       }
 
       server = data.servers[0];
-      hostnameport = server.host + ':' + server.port;
 
       debug('getting token for hostnameport');
 
       this.loading('requesting access');
-      service.setCredentials(hostnameport, options, function(err){
+      service.setCredentials('mongodb://' + url, function(err){
         if(err) return this.error(err);
 
         if(!id){
