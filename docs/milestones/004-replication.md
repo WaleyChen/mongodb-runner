@@ -4,9 +4,9 @@
 
 ### Punchlist
 
+- [x] linux binaries
 - [ ] sharding
 - [ ] more replication methods
-- [x] linux binaries
 - [ ] cursor stream consolidation
   - [ ] socket.io + token challenge
   - [ ] sse

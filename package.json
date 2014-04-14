@@ -62,7 +62,9 @@
     "event-stream": "^3.1.1",
     "JSONStream": "^0.8.0",
     "csv-streamify": "^1.0.0",
-    "body-parser": "^1.0.1"
+    "body-parser": "^1.0.1",
+    "bson": "^0.2.7",
+    "event-source-emitter": "0.0.2"
   },
   "devDependencies": {
     "gulp": "^3.5.6",
