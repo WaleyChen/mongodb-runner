@@ -6,7 +6,7 @@
 
 - [ ] sharding
 - [ ] more replication methods
-- [ ] linux binaries
+- [x] linux binaries
 - [ ] cursor stream consolidation
   - [ ] socket.io + token challenge
   - [ ] sse
