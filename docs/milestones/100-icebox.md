@@ -4,6 +4,7 @@ in no particular order.  feel free to add your own.
 
 - [ ] parallelCollectionScan -> export collection
 - [ ] initializeOrderedBulkOp -> import to collection
+- [ ] alert in UI when membership events go down `/api/v1/:host/replication/watch`
 
 ### auth
 

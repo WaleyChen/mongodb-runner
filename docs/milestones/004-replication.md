@@ -6,9 +6,7 @@
 
 - [x] linux binaries
 - [ ] sharding
-- [ ] more replication methods
-- [ ] cursor stream consolidation
-  - [ ] socket.io + token challenge
-  - [ ] sse
+- [x] more replication methods
+- [x] cursor stream consolidation
 - [ ] auth updates
 - [ ] can branch a connection to another instance in the deployment
