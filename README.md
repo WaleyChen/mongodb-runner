@@ -47,4 +47,14 @@ curl -X GET "http://localhost:29017/api/v1/localhost:27017/top?access_token=$TOK
 
 # Fun things happen though if we kick the server into server-sent events mode
 curl -X GET -H 'Accept: text/event-stream' "http://localhost:29017/api/v1/localhost:27017/top?access_token=$TOKEN";
+
+# nom nom all oplog events nom nom:
+curl -X GET -H 'Accept: text/event-stream' "http://localhost:29017/api/v1/localhost:27017/replication/oplog?access_token=$TOKEN";
+
+# filtered view of le' oplog:
+export FILTERS='[['collection', 'users'], ['email', 'mongodb.com$']]';
+curl -X GET -H 'Accept: text/event-stream' "http://localhost:29017/api/v1/localhost:27017/replication/oplog?access_token=$TOKEN&filters=$FILTERS";
+
+# Watch replica set events => reconnects, joins, leaves:
+curl -X GET -H 'Accept: text/event-stream' "http://localhost:29017/api/v1/localhost:27017/replication/watch?access_token=$TOKEN";
 ```
