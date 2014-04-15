@@ -14,7 +14,7 @@ include mixins/bytes
     .panel.padded
         ul.nav.nav-pills.nav-stacked
           li
-            a.create-collection(title='create collection', href='#databases/#{database.name}/collection') Collections
+            a.create-collection(title='create collection', href='#database/#{database.name}/collection') Collections
               span.glyphicon.glyphicon-plus-sign(style="padding-left: 10px; padding-top: 2px;")
 
           for collection_name in database.collection_names

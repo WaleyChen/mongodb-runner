@@ -104,9 +104,10 @@ var Auth = Backbone.View.extend({
     $('body').removeClass('authenticate');
 
 
-    debug('success!  redirecting to ', this.redirect);
-    models.instance.fetch();
-    Backbone.history.navigate(this.redirect, {trigger: true});
+    models.instance.fetch({success: function(){
+      debug('success!  redirecting to ', this.redirect);
+      Backbone.history.navigate(this.redirect, {trigger: true});
+    }.bind(this)});
     return this;
   },
   process: function(url, id){

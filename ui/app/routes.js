@@ -1,8 +1,26 @@
 var Backbone = require('backbone'),
-  debug = require('debug')('_mongoscope:routes'),
+  debug = require('debug')('mongoscope:routes'),
+  _ = require('underscore'),
   router,
   handlers = {},
   current = null;
+
+Backbone.history.loadUrl = function(fragment) {
+  debug('load url', fragment);
+  fragment = this.fragment = this.getFragment(fragment);
+  var res = _.any(this.handlers, function(handler) {
+    if (handler.route.test(fragment)) {
+      handler.callback(fragment);
+      return true;
+    }
+  });
+  if(!res) return notFound(fragment);
+  return res;
+};
+
+function notFound(fragment){
+  console.warn('No route found for', fragment);
+}
 
 module.exports = function(opts){
   return create()
@@ -18,9 +36,8 @@ module.exports = function(opts){
     .add('collection', 'collection/:database_name/:collection_name', require('./views/collection'), function(add){
       add('explore', '/explore/:skip', 'activateExplorer');
     })
-    .add('database', 'database/:database_name', require('./views/database'), function(add){
-      add('create-collection', '/collection', 'createCollection');
-    })
+    .add('createcollection', 'database/:database_name/collection', require('./views/database').createCollection, null)
+    .add('database', 'database/:database_name', require('./views/database'), null)
     .default('pulse')
     .go(opts.auth ? 'authenticate' : '');
 };
@@ -31,10 +48,9 @@ function create(){
   var body = Backbone.$('body');
 
   router.on('route', function(name){
+
     if(current && current.context.exit){
       debug('deactivating', current.name);
-      var exit = current.context.exit,
-        context = current.context;
       current.context.exit.apply(current.context);
       body.removeClass(current.name);
     }
@@ -57,6 +73,10 @@ function register(name, url, handler, context){
   debug('register route', handlers[name]);
   router.route(url, name, handler.bind(context));
 }
+
+module.exports.trigger = function(name){
+  return router.trigger(name);
+};
 
 module.exports.add = function(name, url, handler, addChild){
   var args = Array.prototype.slice.call(arguments, 0),

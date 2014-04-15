@@ -12,7 +12,6 @@ var Database = Backbone.View.extend({
   initialize: function(){
     this.summary = new Summary();
     this.database = this.summary.database.on('sync', this.render, this);
-    this.createCollection = new Create();
   },
   enter: function(name){
     debug('enter', name);
@@ -73,13 +72,11 @@ var Summary = Backbone.View.extend({
     }
   },
   onTopData: function(){
-    debug('got top data');
     if(!this.top.get('deltas')) return this;
 
     var k = this.database.get('name') + '.' + this.metric,
       delta = this.top.get('deltas')[k] || 0;
 
-    debug('delta for ', k, delta);
     this.graph.inc(delta);
     if(this.$metric){
       this.$metric.text(this.graph.value);
@@ -178,6 +175,10 @@ var Create = Backbone.View.extend({
     'submit form': 'submit',
     'click .cancel': 'cancel'
   },
+  initialize: function(){
+    this.$el = $('#mongoscope');
+    this.el = this.$el.get(0);
+  },
   enter: function(database_name){
     this.database_name = database_name;
     debug('rendering create form');
@@ -225,13 +226,16 @@ var Create = Backbone.View.extend({
       debug('importer response', arguments);
     });
 
+
     debug('pipechain is', pipechain);
+    Backbone.history.navigate('collection/' + this.database_name  + '/' + pipechain.write[0].args[1], {trigger: true});
     return false;
   },
   exit: function(){},
   render: function(){
     debug('rendering create collection');
     this.$el = $('#mongoscope');
+    this.el = this.$el.get(0);
     this.$el.html(this.tpl({
       'database_name': this.database_name
     }));
@@ -241,6 +245,10 @@ var Create = Backbone.View.extend({
 
 module.exports = function(){
   return new Database();
+};
+
+module.exports.createCollection = function(){
+  return new Create();
 };
 
 module.exports.Summary = Summary;

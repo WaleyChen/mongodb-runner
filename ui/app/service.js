@@ -1,6 +1,6 @@
 var $ = require('jquery'),
   _ = require('underscore'),
-  debug = require('debug')('mongoscope:service'),
+  debug = require('debug')('_mongoscope:service'),
   socketio = require('socket.io-client'),
   srv;
 
@@ -312,7 +312,6 @@ Backbone.sync = function(method, model, options){
 var mixins = {
   service: null,
   iohandler: function(data){
-    debug('iohandler', data);
     if (!this.set(data)) return false;
     this.trigger('sync', this, data, {});
   },
