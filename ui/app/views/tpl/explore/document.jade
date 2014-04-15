@@ -1,0 +1,8 @@
+.modal-content
+  h4 service_requests.#{sample._id}
+  - delete sample._id
+  p @todo: arrow keys/swipe to navigate
+  dl.dl-horizontal
+   - for value, key in sample
+    dt(style="margin-right: 20px;") #{key}
+    dd(style="display: block; clear: right;") #{value}

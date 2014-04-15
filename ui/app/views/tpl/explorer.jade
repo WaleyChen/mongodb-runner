@@ -19,9 +19,9 @@ if active
           td(colspan="#{schema.keys.length}", style="text-align: center;")
             | #{skip} - #{skip+samples.length}
       tbody
-      for doc in samples
-        tr
-        for key in schema.keys
+      each doc, i in samples
+        tr(data-index='#{i}')
+         - for key in schema.keys
           td #{doc[key]}
   .col-md-12
     .col-md-5

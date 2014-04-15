@@ -64,13 +64,21 @@ var ExplorerView = Backbone.View.extend({
   events: {
     'click .next:not(.disabled) a': 'next',
     'click .previous:not(.disabled) a': 'prev',
-    'click .activate': 'enter'
+    'click .activate': 'enter',
+    'dblclick tr': 'details'
   },
   initialize: function(opts){
     this.active = false;
     this.samples = new models.Sample({
       collection: opts.collection
     }).on('sync', this.render, this);
+  },
+  details: function(evt){
+    var index = evt.currentTarget.dataset.index;
+    return new DocumentView({
+      sample: this.samples.at(index)
+    }).enter();
+
   },
   enter: function(){
     this.active = true;
@@ -87,7 +95,6 @@ var ExplorerView = Backbone.View.extend({
   render: function(){
     this.$el = $('.explorer');
     this.el = this.$el.get(0);
-
     this.$el.html(this.tpl({
       limit: this.samples.limit,
       skip: this.samples.skip,
@@ -107,6 +114,27 @@ var ExplorerView = Backbone.View.extend({
     }
     this.delegateEvents(this.events);
     debug('delegate explorer events');
+    return this;
+  }
+});
+
+
+var DocumentView = Backbone.View.extend({
+  tpl: require('./tpl/explore/document.jade'),
+  initialize: function(opts){
+    this.sample = opts.sample;
+  },
+  enter: function(){
+    this.render();
+  },
+  render: function(){
+    this.$el = $('#modal').css({'margin-top': '40px', padding: '20px', background: '#fff', 'overflow-y': 'scroll'});
+    this.el = this.$el.get(0);
+
+    debug('sample', this.sample.toJSON());
+    this.$el.modal();
+    this.$el.html(this.tpl({sample: this.sample.toJSON()}));
+
     return this;
   }
 });
