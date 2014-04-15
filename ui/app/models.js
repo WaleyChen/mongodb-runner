@@ -237,7 +237,7 @@ var Top = module.exports.Top = Model.extend({
       debug('activating top stream');
       this.active = true;
       this.fetch();
-      this.subscribe();
+      // this.subscribe();
     }
     this.subscribers++;
     return this;
@@ -247,7 +247,7 @@ var Top = module.exports.Top = Model.extend({
     if(this.subscribers === 0){
       debug('deactivating top stream');
       this.active = false;
-      this.unsubscribe();
+      // this.unsubscribe();
     }
     return this;
   }
@@ -425,7 +425,7 @@ module.exports.Security = Backbone.Model.extend({
     })
   },
   service: function(){
-    return {name: 'security', args: [instance.get('service')]};
+    return {name: 'security', args: [instance.get('uri')]};
   },
   parse: function(data){
     data.roles = data.roles.filter(function(role){

@@ -7,7 +7,7 @@ h2 #{role.isBuiltin ? 'Builtin Role' : 'Custom Role'}: #{role.role}
     - hidden = {}
     .section
       .section-heading
-        h4.mono #{JSON.stringify(role.resource) || 'For any collection in any database'}
+        h4 #{JSON.stringify(role.resource) || 'For any collection in any database'}
       table
        each action in grant.actions
         +security_row(action, hidden)

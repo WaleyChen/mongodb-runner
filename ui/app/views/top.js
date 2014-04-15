@@ -5,8 +5,6 @@ var Backbone = require('backbone'),
 var Top = Backbone.View.extend({
   tpl: require('./tpl/top.jade'),
   initialize: function(){
-    this.$el = Backbone.$('#mongoscope');
-    this.el = this.$el.get(0);
     this.$tbody = null;
 
     this.top = models.top;
@@ -14,6 +12,8 @@ var Top = Backbone.View.extend({
     this.direction = 'up';
   },
   enter: function(){
+    this.$el = Backbone.$('#mongoscope');
+    this.el = this.$el.get(0);
     this.top
       .enter()
       .on('sync', this.render, this);

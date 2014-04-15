@@ -4,16 +4,15 @@ else
 
   .row.security
     .sidebar.col-md-3
-      .overlay.select-list
-        .list-group
-          li.list-divider Users
-          each user in users
-            a.list-item(href="#security/users/#{user.db}/#{user.user}")
-              | #{user.user} (#{user.db || 'ANY'})
-        .list-group
-          li.list-divider Roles
-          each role in roles
-            a.list-item(href="#security/roles/#{role.db}/#{role.role}")
-              | #{role.role} (#{role.db || 'ANY'})
+      .list-group
+        .list-divider Users
+        each user in users
+          a.list-group-item(href="#security/users/#{user.db}/#{user.user}")
+            | #{user.user} (#{user.db || 'ANY'})
+      .list-group
+        .list-divider Roles
+        each role in roles
+          a.list-group-item(href="#security/roles/#{role.db}/#{role.role}")
+            | #{role.role} (#{role.db || 'ANY'})
 
     .col-md-9.details

@@ -1,5 +1,5 @@
 var Backbone = require('backbone'),
-  debug = require('debug')('mongoscope:routes'),
+  debug = require('debug')('_mongoscope:routes'),
   router,
   handlers = {},
   current = null;
@@ -10,9 +10,10 @@ module.exports = function(opts){
     .add('pulse', require('./views/pulse'))
     .add('log', require('./views/log'))
     .add('top', require('./views/top'))
+    .add('replication', require('./views/replication'))
     .add('security', require('./views/security'), function(add){
-      add('user', 'users/:database/:username', 'userDetail');
-      add('role', 'roles/:database/:role', 'roleDetail');
+      add('user', '/users/:database/:username', 'userDetail');
+      add('role', '/roles/:database/:role', 'roleDetail');
     })
     .add('collection', 'collection/:database_name/:collection_name', require('./views/collection'), function(add){
       add('explore', '/explore/:skip', 'activateExplorer');

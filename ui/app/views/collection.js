@@ -6,9 +6,6 @@ var Backbone = require('backbone'),
 var Collection = Backbone.View.extend({
   tpl: require('./tpl/collection.jade'),
   initialize: function(){
-    this.$el = $('#mongoscope');
-    this.el = this.$el.get(0);
-
     this.metric = 'lock.count';
 
     this.collection = new models.Collection()
@@ -22,6 +19,8 @@ var Collection = Backbone.View.extend({
     });
   },
   enter: function(database, name){
+    this.$el = $('#mongoscope');
+    this.el = this.$el.get(0);
     debug('enter', database, name);
     this.collection.set({database: database, name: name});
     this.collection.fetch();
@@ -65,7 +64,7 @@ var ExplorerView = Backbone.View.extend({
   events: {
     'click .next:not(.disabled) a': 'next',
     'click .previous:not(.disabled) a': 'prev',
-    'click .enter': 'enter'
+    'click .activate': 'enter'
   },
   initialize: function(opts){
     this.active = false;
@@ -107,6 +106,7 @@ var ExplorerView = Backbone.View.extend({
       }
     }
     this.delegateEvents(this.events);
+    debug('delegate explorer events');
     return this;
   }
 });

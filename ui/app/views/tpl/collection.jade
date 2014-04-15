@@ -6,20 +6,17 @@ include mixins/cog
 - stats.index_size_per_document = (stats.index_size/stats.document_count);
 
 
-.row
-  .col-md-12
-    ul.list-group.list-group-horizontal
-      li.list-group-item localhost:27017
-      li.list-group-item
-        a(href="#database/#{collection.database}") #{collection.database}
-      li.list-group-item #{collection.name}
-      li.list-group-item
-        //- span.badge
-        //-   +bytes(stats.document_size_average)
-        span.badge #{collection.stats.document_count}
-        | Documents
-        span.badge
-          +bytes(collection.stats.document_size)
+.row(style="margin-bottom: 40px;")
+  .col-md-6
+    h1 #{collection.name}
+    h2: a(href="#database/#{collection.database}") #{collection.database}
+
+  .col-md-3
+    h3 Documents
+    ul.list-unstyled
+      li #{collection.stats.document_count}
+      li
+        +bytes(collection.stats.document_size)
 
       //- li.list-group-item
       //-   span.badge
@@ -33,16 +30,12 @@ include mixins/cog
       //- li.list-group-item
       //-   span.badge #{collection.stats.padding_factor}
       //-   | Padding Factor
-
-      li.list-group-item
-        span.badge #{collection.indexes.length}
-        | Indexes
-
-      //- each index in collection.indexes
-      //-   li.list-group-item
-      //-     span.badge
-      //-       +bytes(index.size)
-      //-     | #{index.name}
+  .col-md-3
+    h3 Indexes
+    ul.list-unstyled
+      each index in collection.indexes
+        li #{index.name}
+          +bytes(index.size)
 .row
   .col-md-12
     .explorer

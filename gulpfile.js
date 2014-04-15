@@ -49,7 +49,7 @@ gulp.task('watch', function(){
 
   gulp.watch(['./lib/{*,**/*}.js'], ['server reload']);
 
-  gulp.watch(['ui/app/{*,**/*}.js', 'ui/views/tpl/{*,**/*}.jade'], ['js']);
+  gulp.watch(['ui/app/{*,**/*}.js', 'ui/app/views/tpl/{*,**/*}.jade'], ['js']);
 
   gulp.watch(['ui/pages/*.less', 'ui/{*,less/*,less/**/*}.less'], ['less']);
 

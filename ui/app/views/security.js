@@ -59,7 +59,7 @@ var DetailView = Backbone.View.extend({
     debug('fetching and then waiting for parent');
     this.fetch();
 
-    this.router.trigger('route', 'security');
+    // this.parent.router.trigger('route', 'security');
     this.parent.enter(this);
   },
   toString: function(){
