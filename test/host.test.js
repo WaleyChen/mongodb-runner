@@ -29,29 +29,6 @@ describe('host', function(){
         done();
       });
   });
-
-  it('should return default profiling info', function(done){
-    get('/api/v1/localhost:27107/profiling')
-      .set('Authorization', 'Bearer ' + ctx.token)
-      .expect(200)
-      .end(function(err, res){
-        if(err) return done(err);
-        debug('profiling', res.body);
-        done();
-      });
-  });
-
-  it('should return profiling entries', function(done){
-    get('/api/v1/localhost:27107/profiling/entries')
-      .set('Authorization', 'Bearer ' + ctx.token)
-      .expect(200)
-      .end(function(err, res){
-        if(err) return done(err);
-
-        debug('profiling entries', res.body);
-        done();
-      });
-  });
   it('should return in-progress operations', function(done){
     get('/api/v1/localhost:27107/ops')
       .set('Authorization', 'Bearer ' + ctx.token)

@@ -58,9 +58,9 @@ describe('collection', function(){
       .query({explain: 1})
       .expect(200)
       .end(function(err, res){
-        if(err) return done(err);
-
         debug('explain', res.body);
+
+        if(err) return done(err);
         assert(res.body.cursor === 'BasicCursor');
         done();
       });

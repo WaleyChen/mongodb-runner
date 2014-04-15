@@ -5,8 +5,9 @@
 ### Punchlist
 
 - [x] linux binaries
-- [ ] sharding
 - [x] more replication methods
 - [x] cursor stream consolidation
+- [ ] set up a sharded deployment to test against
+- [ ] sharding
 - [ ] auth updates
 - [ ] can branch a connection to another instance in the deployment

@@ -59,7 +59,7 @@ var DetailView = Backbone.View.extend({
     debug('fetching and then waiting for parent');
     this.fetch();
 
-    // this.router.trigger('route', 'security');
+    this.router.trigger('route', 'security');
     this.parent.enter(this);
   },
   toString: function(){
@@ -109,6 +109,8 @@ var Security = Backbone.View.extend({
     $(e.currentTarget).addClass('selected');
   },
   enter: function(child){
+    this.$el = $('#mongoscope');
+    this.el = this.$el.get(0);
     this.pending = child;
     this.security.fetch();
   },

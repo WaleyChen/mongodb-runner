@@ -5,7 +5,7 @@
   "scripts": {
     "start": "NODE_ENV=development DEBUG=mongo* gulp dev",
     "dist": "./bin/dist.sh",
-    "test": "NODE_ENV=testing mocha"
+    "test": "mocha"
   },
   "author": "Lucas Hrabovsky <lucas@mongodb.com> (http://imlucas.com)",
   "homepage": "http://10gen.github.io/mongoscope/onesheet.html",
