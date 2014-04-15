@@ -1,20 +1,37 @@
 var gulp = require('gulp'),
   exec = require('child_process').exec,
-  app = require('./lib/index'),
   browserify = require('browserify'),
   manifest = require('gulp-sterno-manifest'),
   Notification = require('node-notifier'),
   source = require('vinyl-source-stream'),
-  pkg = require('./package.json');
+  pkg = require('./package.json'),
+  serverPid;
+
+var nodemon = require('nodemon');
 
 gulp.task('dev', ['ui', 'server', 'watch']);
 gulp.task('ui', ['pages', 'assets', 'js', 'less', 'manifest']);
 gulp.task('default', ['dev']);
 
-gulp.task('server', function(){app.start();});
+gulp.task('server', function(){
+  nodemon({
+    script: 'index.js'
+  });
+
+  nodemon.on('start', function (pid) {
+    serverPid = pid;
+    console.log('App has started', arguments);
+  }).on('quit', function () {
+    console.log('App has quit');
+  }).on('restart', function (files) {
+    console.log('App restarted due to: ', files);
+  });
+});
 
 // @todo: if there is an error, show notification
-gulp.task('server reload', function(){app.reload();});
+gulp.task('server reload', function(){
+  process.kill(serverPid, 'SIGUSR2');
+});
 
 gulp.task('watch', function(){
   var tty = require('tty');
@@ -39,7 +56,7 @@ gulp.task('watch', function(){
 
         case '\u0012': // Ctrl+R
           console.log('[ctrl + r detected - reloading]');
-          app.reload();
+          process.kill(serverPid, 'SIGUSR2');
           break;
       }
     });

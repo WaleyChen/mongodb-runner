@@ -8,12 +8,11 @@ var nconf = require('nconf'),
 debug('hello');
 debug('running from', src);
 
-var app = require(src),
-  deployment = require(src + '/deployment');
+require(src);
+
+var deployment = require(src + '/deployment');
 
 // @todo: positional args for seeds.
 deployment.discover(nconf.get('seed'), function(){
 
 });
-
-app.listen();

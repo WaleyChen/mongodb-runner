@@ -9,5 +9,5 @@
 - [x] cursor stream consolidation
 - [ ] set up a sharded deployment to test against
 - [ ] sharding
-- [ ] auth updates
+- [x] auth updates
 - [ ] can branch a connection to another instance in the deployment

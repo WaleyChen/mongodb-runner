@@ -280,7 +280,7 @@ Service.prototype.setCredentials = function(seed, fn){
         debug('socketio connected');
       })
       .on('challenge', function(socket){
-        socket.emit('challenge', {token: self.token});
+        socket.emit('authorization', 'Bearer ' + self.token);
       });
 
     debug('starting refresh loop');
@@ -312,6 +312,7 @@ Backbone.sync = function(method, model, options){
 var mixins = {
   service: null,
   iohandler: function(data){
+    debug('iohandler', data);
     if (!this.set(data)) return false;
     this.trigger('sync', this, data, {});
   },
@@ -326,7 +327,9 @@ var mixins = {
 
     srv.io
       .addListener(options.uri, this.iohandler.bind(this))
-      .emit(options.uri);
+      .emit(options.uri, {token: srv.token});
+
+    debug('subscribing', options.uri, {token: srv.token});
 
     this.trigger('subscribed', this, srv.io, options);
     return this;

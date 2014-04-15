@@ -227,7 +227,7 @@ var Top = module.exports.Top = Model.extend({
     return {name: 'top', args: instance.get('uri')};
   },
   uri: function(){
-    return '/top/' + instance.get('uri');
+    return '/top';
   },
   initialize: function(){
     this.subscribers = 0;
@@ -237,7 +237,7 @@ var Top = module.exports.Top = Model.extend({
       debug('activating top stream');
       this.active = true;
       this.fetch();
-      // this.subscribe();
+      this.subscribe();
     }
     this.subscribers++;
     return this;
@@ -247,7 +247,7 @@ var Top = module.exports.Top = Model.extend({
     if(this.subscribers === 0){
       debug('deactivating top stream');
       this.active = false;
-      // this.unsubscribe();
+      this.unsubscribe();
     }
     return this;
   }

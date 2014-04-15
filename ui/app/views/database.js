@@ -12,6 +12,7 @@ var Database = Backbone.View.extend({
   initialize: function(){
     this.summary = new Summary();
     this.database = this.summary.database.on('sync', this.render, this);
+    this.createCollection = new Create();
   },
   enter: function(name){
     debug('enter', name);
@@ -72,10 +73,13 @@ var Summary = Backbone.View.extend({
     }
   },
   onTopData: function(){
+    debug('got top data');
     if(!this.top.get('deltas')) return this;
-    var k = this.database.get('name') + '.' + this.metric,
-      delta = this.top.get('deltas')[k];
 
+    var k = this.database.get('name') + '.' + this.metric,
+      delta = this.top.get('deltas')[k] || 0;
+
+    debug('delta for ', k, delta);
     this.graph.inc(delta);
     if(this.$metric){
       this.$metric.text(this.graph.value);
@@ -131,9 +135,9 @@ var Summary = Backbone.View.extend({
   },
   exit: function(){
     this.top
-      // .exit()
+      .exit()
       .off('sync', this.onTopData, this);
-    // this.graph.pause();
+    this.graph.pause();
     return this;
   },
   draw: function(){
@@ -176,6 +180,7 @@ var Create = Backbone.View.extend({
   },
   enter: function(database_name){
     this.database_name = database_name;
+    debug('rendering create form');
     this.render();
   },
   cancel: function(){
@@ -236,10 +241,6 @@ var Create = Backbone.View.extend({
 
 module.exports = function(){
   return new Database();
-};
-
-module.exports.createCollection = function(){
-  return new Create();
 };
 
 module.exports.Summary = Summary;
