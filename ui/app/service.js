@@ -30,7 +30,11 @@ util.inherits(Service, EventEmitter);
 Service.prototype.connect = function(){
   if(this.connected) return this;
 
-  this.origin = 'http://' + this.hostname + ':' + this.port;
+  this.origin = 'http://' + this.hostname;
+  if(this.port){
+    this.origin = this.origin + ':' + this.port;
+  }
+
   this.io = socketio;
   this.connected = true;
   return this;

@@ -13,7 +13,7 @@ var service,
 module.exports = function(opts){
   module.exports.settings = settings = new Settings({
     host: window.location.hostname,
-    port: 29017
+    port: window.location.port
   });
 
   service = require('./service')(settings.get('host'), settings.get('port'));
