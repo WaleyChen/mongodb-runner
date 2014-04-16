@@ -20,6 +20,8 @@ env.packages = [
     'nodejs'
 ]
 
+# iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 29017
+
 def has_ppa(name):
     filename = name.replace('.', '_').replace('-', '_').replace('/', '-')
     return filename in run('ls /etc/apt/sources.list.d/')
