@@ -20,11 +20,6 @@ gulp.task('server', function(){
 
   nodemon.on('start', function (pid) {
     serverPid = pid;
-    console.log('App has started', arguments);
-  }).on('quit', function () {
-    console.log('App has quit');
-  }).on('restart', function (files) {
-    console.log('App restarted due to: ', files);
   });
 });
 
@@ -55,8 +50,7 @@ gulp.task('watch', function(){
           break;
 
         case '\u0012': // Ctrl+R
-          console.log('[ctrl + r detected - reloading]');
-          process.kill(serverPid, 'SIGUSR2');
+          gulp.start('server reload');
           break;
       }
     });
