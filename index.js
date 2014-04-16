@@ -5,7 +5,9 @@ var socketio = require('socket.io'),
 
 app.server = server;
 
-server.listen(nconf.get('port'), nconf.get('host'));
+server.listen(nconf.get('port'), nconf.get('host'), function(){
+  console.log('listening on ', nconf.get('host') + ':' + nconf.get('port'));
+});
 app.emit('io', socketio.listen(server));
 
 module.exports = server;
