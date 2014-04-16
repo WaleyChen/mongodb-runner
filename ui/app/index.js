@@ -21,13 +21,13 @@ require('bootstrap/js/popover.js');
 require('bootstrap/js/dropdown.js');
 require('bootstrap/js/modal.js');
 
-var routes = require('./routes.js'),
+var routes = require('./routes'),
   debug = require('debug')('mongoscope');
 
-require('./models.js')({
+require('./models')({
   error: function(deployments, err){
     window.jQuery('body').removeClass('loading');
-    debug('models', deployments, err);
+
     if(err.status === 401){
       debug('got 401.  triggering auth modal');
       return routes({auth: true});

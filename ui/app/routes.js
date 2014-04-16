@@ -1,6 +1,7 @@
 var Backbone = require('backbone'),
   debug = require('debug')('_mongoscope:routes'),
   _ = require('underscore'),
+  service = require('./service'),
   router,
   handlers = {},
   current = null;
@@ -23,6 +24,11 @@ function notFound(fragment){
 }
 
 module.exports = function(opts){
+  if(router){
+    console.warn('create called more than once');
+    return router;
+  }
+
   return create()
     .add('authenticate', require('./views/auth'))
     .add('pulse', require('./views/pulse'))
@@ -60,7 +66,60 @@ function create(){
     body.addClass(name);
   });
   Backbone.history.start();
+
+  watchService();
   return module.exports;
+}
+
+Backbone.flash = function(msg, cls){
+  var el = Backbone.$('<div class="message" style="display: none;"/>');
+  el.text(msg);
+  if(cls) el.addClass(cls);
+  Backbone.$('#status .flash').append(el);
+  el.fadeIn();
+
+  if(cls !== 'error'){ // Errors must be manually cleared.
+    el.hideTimeout = setTimeout(function(){
+      Backbone.flash.clear(msg);
+    }, 5000);
+  }
+
+  if(!Backbone.flash.messages[msg]){
+    Backbone.flash.messages[msg] = [];
+  }
+  Backbone.flash.messages[msg].push(el);
+};
+Backbone.flash.messages = {};
+
+Backbone.flash.clear = function(message){
+  var el = Backbone.flash.messages[message].shift();
+  el.fadeOut('slow', function(){
+    el.remove();
+    clearTimeout(el.hideTimeout);
+    delete el;
+  });
+};
+
+function watchService(){
+  var srv = service();
+  srv.on('error', function(err){
+    console.error('routes caught service error', err);
+    Backbone.flash(err.message, 'error');
+    if(err.status === 401){
+      return Backbone.history.navigate('authenticate', {trigger: true});
+    }
+  })
+  .on('disconnect', function(){
+    Backbone.flash('server disconnected', 'error');
+    console.error('server disconnected');
+  })
+  .on('reconnect', function(){
+    console.error('server reconnected');
+    Backbone.flash('server reconnected', 'success');
+    Backbone.flash.clear('server disconnected');
+
+    return Backbone.history.navigate('authenticate', {trigger: true});
+  });
 }
 
 function register(name, url, handler, context){

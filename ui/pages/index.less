@@ -416,6 +416,25 @@ body {margin: 0;}
   z-index: 1201;
   border-top: 1px solid @base-border-color;
   color: @text-color;
+  .flash {
+    font-size: 11px;
+    padding-top: 1px;
+    margin-left: @component-padding;
+
+    .message {
+      display: inline-block;
+      margin-right: 10px;
+      &.error{
+        color: @text-color-error;
+      }
+      &.success{
+        color: @text-color-success;
+      }
+      &.warning{
+        color: @text-color-warning;
+      }
+    }
+  }
 
   .logo {
     float: right;

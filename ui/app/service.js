@@ -1,6 +1,8 @@
 var $ = require('jquery'),
   _ = require('underscore'),
-  debug = require('debug')('_mongoscope:service'),
+  EventEmitter = require('events').EventEmitter,
+  util = require('util'),
+  debug = require('debug')('mongoscope:service'),
   socketio = require('socket.io-client'),
   srv;
 
@@ -23,6 +25,7 @@ function Service(hostname, port){
   this.connected = false;
   this.token = null;
 }
+util.inherits(Service, EventEmitter);
 
 Service.prototype.connect = function(){
   if(this.connected) return this;
@@ -70,12 +73,21 @@ Service.prototype.read = function(pathname, params, fn){
       }
       fn(null, data);
     }
-  }).fail(function(xhr){
-    var err = new Error(xhr.responseText.replace('Error: ', ''));
+  }).fail(this.fail(fn));
+};
+
+Service.prototype.fail = function(fn){
+  return function(xhr){
+    console.error('xhr fail', arguments);
+    var msg = xhr.responseText ? xhr.responseText.replace('Error: ', '') : 'unknown error',
+      err = new Error(msg);
+
     err.status = xhr.status;
     err.statusText = xhr.statusText;
     fn(err);
-  });
+
+    this.emit('error', err);
+  }.bind(this);
 };
 
 Service.prototype.post = function(pathname, params, fn){
@@ -102,12 +114,7 @@ Service.prototype.post = function(pathname, params, fn){
       success: function(data){
         fn(null, data);
       }
-    }).fail(function(xhr){
-      var err = new Error(xhr.responseText.replace('Error: ', ''));
-      err.status = xhr.status;
-      err.statusText = xhr.statusText;
-      fn(err);
-    });
+    }).fail(this.fail(fn));
 };
 
 Service.prototype.get = function(host, pathname, params, fn){
@@ -273,18 +280,29 @@ Service.prototype.setCredentials = function(seed, fn){
     debug('baked fresh token');
     self.token = res.token;
 
-    // Connect to socketio and be ready to respond to challenges
-    // with our tasty new token.
-    self.io = socketio.connect(this.origin)
-      .on('connected', function(){
-        debug('socketio connected');
-      })
-      .on('challenge', function(socket){
-        socket.emit('authorization', 'Bearer ' + self.token);
-      });
-
     debug('starting refresh loop');
     _scheduleRefresh(res);
+
+    // Connect to socketio and be ready to respond to challenges
+    // with our tasty new token.
+    if(!self.ioConnecting){
+      self.ioConnecting = true;
+      self.io = socketio.connect(this.origin)
+        .on('connected', function(){
+          debug('socketio connected', arguments);
+        })
+        .on('challenge', function(socket){
+          socket.emit('authorization', 'Bearer ' + self.token);
+        });
+
+      ['disconnect', 'error', 'reconnect'].map(function(n){
+        self.io.on(n, function(){
+          var args = Array.prototype.slice.call(arguments, 0);
+          args.unshift(n);
+          srv.emit.apply(srv, args);
+        });
+      });
+    }
 
     fn(null, res);
   });
@@ -316,8 +334,6 @@ var mixins = {
     this.trigger('sync', this, data, {});
   },
   subscribe: function(options){
-    if(!srv.io) return this;
-
     srv.connect();
 
     _.defaults(options || (options = {}), {
@@ -334,8 +350,6 @@ var mixins = {
     return this;
   },
   unsubscribe: function(options){
-    if(!srv.io) return this;
-
     srv.connect();
 
     _.defaults(options || (options = {}), {
