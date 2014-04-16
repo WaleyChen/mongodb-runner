@@ -222,21 +222,14 @@ module.exports.Sample = List.extend({
   }
 });
 
-var Top = module.exports.Top = Model.extend({
-  service: function(){
-    return {name: 'top', args: instance.get('uri')};
-  },
-  uri: function(){
-    return '/top';
-  },
+var ProducerMixin = {
   initialize: function(){
     this.subscribers = 0;
   },
   enter: function(){
     if(this.subscribers === 0){
-      debug('activating top stream');
+      debug('activating producer', this.uri);
       this.active = true;
-      this.fetch();
       this.subscribe();
     }
     this.subscribers++;
@@ -245,15 +238,25 @@ var Top = module.exports.Top = Model.extend({
   exit: function(){
     this.subscribers--;
     if(this.subscribers === 0){
-      debug('deactivating top stream');
+      debug('deactivating producer', this.uri);
       this.active = false;
       this.unsubscribe();
     }
     return this;
   }
+},
+ProducerList = List.extend(ProducerMixin),
+ProducerModel = Model.extend(ProducerMixin);
+
+
+var Top = module.exports.Top = ProducerModel.extend({
+  service: function(){
+    return {name: 'top', args: instance.get('uri')};
+  },
+  uri: '/top'
 });
 
-module.exports.Log = List.extend({
+module.exports.Log = ProducerList.extend({
   model: Backbone.Model.extend({
     defaults: {
       name: 'websrv',
@@ -264,9 +267,7 @@ module.exports.Log = List.extend({
   service: function(){
     return {name: 'log', args: [instance.get('uri')]};
   },
-  uri: function(){
-    return '/log/' + instance.get('uri');
-  }
+  uri: '/log'
 });
 
 

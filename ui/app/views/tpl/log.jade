@@ -1,11 +1,21 @@
+mixin render_line(line)
+  div(class!=attributes.class)
+    .name [#{line.name}]
+    .second #{moment(line.date).format('h:mm:ss.SSS')}
+    .message #{line.message}
+
+
+if !update
 .log
+
+
  - prevS = ''
  - prevM = ''
  - prevN = ''
 
  - for line in lines
   - classes = ['line', line.name]
-  - d = new Date(line.date)
+  - line.date = d = new Date(line.date)
   - currS = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds()
   - currM = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + '.' + d.getMilliseconds()
   - currN = line.name
@@ -22,8 +32,6 @@
   -   prevM = currM;
   -   classes.push('group-by-ms');
   - }
+  +render_line(line)(class=classes.join(' '))
 
-  div(class=classes.join(' '))
-    .name [#{line.name}]
-    .second #{moment(d).format('h:mm:ss.SSS')}
-    .message #{line.message}
+

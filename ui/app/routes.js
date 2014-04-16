@@ -1,5 +1,5 @@
 var Backbone = require('backbone'),
-  debug = require('debug')('mongoscope:routes'),
+  debug = require('debug')('_mongoscope:routes'),
   _ = require('underscore'),
   router,
   handlers = {},

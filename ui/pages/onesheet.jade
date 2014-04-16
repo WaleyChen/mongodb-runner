@@ -40,6 +40,307 @@ html(lang='en')
     link(rel='icon', href='img/favicon.ico', type='image/x-icon')
 
   body
+    .content
+      .jumbotron
+        .col-md-6.col-md-push-1.col-xl-4
+          img(src='https://cloud.githubusercontent.com/assets/23074/2688434/2d1f3b5a-c29e-11e3-969a-367020b729b6.gif')
+        .col-md-5.col-md-push-1.col-xl-4(style="margin-top: 100px;")
+          .inline-block.logo
+            svg.inline-block(viewBox="0, 0, 200, 200", version="1.1")
+              g
+                path(d="M 49.4269 122.2742 C 43.975 114.2084 92.4275 32 98.5704 32 C 104.7134 32 129.2851 43.7134 126.8279 48.9643 C 113.6716 77.0788 84.9312 135.4446 81.9845 134.9975 C 71.3367 133.3818 55.5699 131.3622 49.4269 122.2742 Z")
+                path(d="M 108.0216 39.6247 C 109.9814 36.9572 117.8735 27.66 117.8735 26.0994 C 117.8735 20.2504 112.7211 10.3777 120.4214 12.2273 C 128.1217 14.0769 141.4273 24.2498 135.5389 27.4866 C 129.6504 30.7235 126.9327 24.77 123.309 30.7813 C 119.6853 36.7925 116.7532 41.8195 116.5146 44.1332 C 116.1749 47.4278 107.512 40.3183 108.0216 39.6247 Z")
+                path(d="M 112 64.5 C 117.7454 62.7708 177.5 63.5 182.5 108.5 C 187.0829 149.7462 171.628 175.6394 168.5 182 C 166.9798 185.0911 68.0573 185.9565 65 182 C 48 160 64.5 174 62.5 169.5 C 60.5 165 45.5 172 41 163 C 32.8869 146.7738 24.8783 152.153 48 149 C 70 146 125 146 128 148 C 137.4217 154.2812 134.5 160.5 134.5 160.5 C 134.5 160.5 141.1787 162.9935 144.5 158.5 C 153 147 155.6667 133.8333 155.5 123.5 C 155.4022 117.434 156 95 144.5 91.5 C 132.0469 87.7099 96 89 95 92 C 94 95 107.7083 65.7917 112 64.5 Z")
+          .inline-block
+            h1 mongoscope
+          .clearfix
+            p A microscope to keep next to your MMS telescope
+          .clearfix
+            a.btn.btn-primary(href="https://github.com/10gen/mongoscope/releases/tag/v0.0.3")
+              span(class='icon icon-mark-github')
+              | Download v0.0.3
+
+      .onesheet: .row: .col-md-10.col-md-push-1.col-sm-12
+        +section('Security')
+          +article('Token Authentication')
+            :markdown
+              HTTP authentication is modelled on the
+              [Amazon Web Services Simple Token Service][sts]
+              using the [JSON Web Token][jwt] standard for token
+              generation and verification. All actors use dedicated
+              connections: `1 token = 1 connection to 1 kernel
+              instance`. There is no sharing or cherry-picking between
+              sessions applied by the REST server and there is no
+              `scope` tooling user. This provides clean audit trails
+              and high-level cleaving should a user's credentials
+              become compromised.
+
+              [sts]: http://docs.aws.amazon.com/STS/latest/APIReference/Welcome.html
+              [jwt]: http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html
+
+            +slide('Client Requests a Token', 1)
+                :markdown
+                  When the UI is loaded, the first thing it does is present an
+                  auth dialog for username and password.  When the form is
+                  submitted an XHR request is made to `/api/v1/token` which
+                  will attempt to connect to the seed host with those credentials.
+
+            +slide('Check Credentials with Kernel', 2)
+                :markdown
+                  If the seed host rejects those credentials, we just close
+                  the connection and return an error message to the client.
+
+                  The REST API provides no higher abstraction for ACL's.
+                  It merely acts as a passthrough to the kernel.
+
+            +slide('REST Server Generates Token', 3)
+                :markdown
+                  If the seed host accepts the credentials, we then generate
+                  a JSON Web Token with a pointer to the connection we just created.
+                  It's important to note, the credentials are not stored on the
+                  server at any time. Like STS, it is up to the client to request
+                  a new token for use when a token expires.
+
+                  By default, tokens expire after **60 minutes**. This is
+                  configurable via the `token:lifetime` option.
+
+                  When the token is generated, a reaper task is
+                  scheduled to nuke it's associated connection just after
+                  it is set to expire.
+
+                  The secret used to sign and verify tokens currently
+                  includes the process id of the REST server.  This
+                  provides a cheap method for recovering from a
+                  compromise as all tokens are invalidated if the REST
+                  server is restarted.
+
+            +slide('Client Includes the Token in Requests', 4)
+                :markdown
+                  All API routes, except for `/api/v1/token` require the token
+                  be send in the `Authorization` header:
+                    ```
+                    Authorization: Bearer {{token}}
+                    ```
+
+                  Routes which require authentication
+                  get the token from the header, verify it's contents,
+                  and select it's connection to the kernel to use for the
+                  request context via a middleware.
+
+
+            +slide('Request a New Token', 5)
+                :markdown
+                  The "token redline" is the timeframe 15 seconds before a
+                  token is scheduled to expire.  At this point, the client
+                  should resend the credentials to generate a new token.
+
+                  A concrete example on this process can be found in the
+                  [AWS SDK Credentials Class][aws-refresh].
+
+                  [aws-refresh]: https://github.com/aws/aws-sdk-js/blob/master/lib/credentials.js#L83
+
+          +article('Also on the radar')
+            dl
+              dt SSL
+              dd can add when someone asks
+              dt Two-Factor Authentication
+              dd can add when someone asks
+              dt Request Signing
+              dd can add when someone asks
+              dt Kerberos/LDAP
+              dd options could also be input from the authentication form
+              dt x509
+              dd so far down the line, but could build desktop apps to make it happen
+
+        +section('Architecture')
+          +article('Stack')
+            .row
+              .col-md-6
+                h4 REST
+                dl
+                  dt
+                    a(href="http://expressjs.com") expressjs
+                  dd HTTP
+                  dt
+                    a(href="http://socket.io") socket.io
+                  dd sockets
+
+              .col-md-6
+                h4 UI
+                dl
+                  dt
+                    a(href="http://backbonejs.org", target="_blank") backbone
+                  dd mvc
+                  dt
+                    a(href="http://browserify.org", target="_blank") browserify
+                  dd dependencies
+                  dt
+                    a(href="http://jade-lang.com", target="_blank") jade
+                  dd templating
+                  dt
+                    a(href="http://getbootstrap.com", target="_blank") bootstrap
+                  dd css + js
+                  dt
+                    a(href="http://lesscss.org", target="_blank") less
+                  dd css pre-processor
+                  dt
+                    a(href="http://d3js.org", target="_blank") d3
+                  dd data viz
+
+          +article('Process Model')
+            p Runs in a completely separate process than a kernel server
+              | and most likely on a different machine.
+
+        +section('Distribution')
+          :markdown
+            The current plan is to include a single binary with the
+            mongodb distribution. There are no pre-requisites or
+            platform limitations because the investment of the node.js
+            community (yes it should run [just fine on a RaspberryPi](https://gist.github.com/stolsma/3301813)). We
+            take advantage of the built-in, but not very well-known
+            capability of extending node.js with a single file.
+
+          script(src="https://gist.github.com/imlucas/9915985.js")
+
+          +article('Download a Binary')
+            p OSX binaries available on the&nbsp;
+              a(href="https://github.com/10gen/mongoscope/releases") releases page
+
+          .row
+            .col-md-6
+              +article('Running from Source')
+                script(src='https://gist.github.com/imlucas/10327125.js')
+            .col-md-6
+              +article('Build a Binary')
+                script(src='https://gist.github.com/imlucas/10327218.js')
+
+        section
+          h2: +anchor('Skunkworks / Intern Ideas')
+          article
+            .row
+              .col-md-5
+                ul.list-unstyled
+                  li
+                    h4 Try It
+                      +label('e\'rybody', 'success')
+                    :markdown
+                      `mongoscope` is still very very much a work in progress
+                      and having extra sets of eyes to say where things are
+                      truly horrible or even better, lend a hand to implement
+                      those fixes, would be extremely appreciated.
+
+                  li
+                    h4 Collection Sampling
+                      +label('kernel', 'default')
+                    p
+                      | If mongod had built-in resevoir sampling of documents
+                      | in a collection would allow observing sparseness,
+                      | outliers, hot corners, and a lot more.
+                  li
+                    h4 Query Linter
+                      +label('js', 'danger')
+                      +label('kernel', 'default')
+
+                    p Catch the dumb stuff while it's still in the editor,
+                      | not hanging with the global lock.
+                  li
+                    h4 Datasets
+                      +label('intern', 'info')
+                    :markdown
+                      Figuring out whether a feature is actually going to
+                      work/be useful would be dramatically easier with
+                      real datasets to use like [replicating wikipedia](http://blueqnx.github.io/wikinmongo/)
+                      or the npm registry.
+
+                  li
+                    h4 Emscripten
+                      +label('js', 'danger')
+                      +label('kernel', 'default')
+                    :markdown
+                      There is a lot of business logic in the server that
+                      would cut down on a lot of mistakes and bad information
+                      if it was portable: everything from the query language
+                      and planner to what `ActionSet`'s a built-in role
+                      has access to.
+
+              .col-md-5.col-md-push-2
+                ul.list-unstyled
+                  li
+                    h4 Structured Data from docs
+                      +label('intern', 'info')
+                    p
+                      | Parse the mongo docs from RST to JSON for things
+                      | like autocomplete for the webshell, help annotations
+                      | in the Security/Replication/Sharding UI's.  The initial
+                      | script hack is pretty trivial but working with the docs
+                      | team to make things highly reliable, as well as updating
+                      | existing docs will take some time.
+
+                  li
+                    h4 Visualization
+                      +label('js', 'danger')
+                      +label('dataviz', 'warning')
+                    p there are a lot of hard visualization problems with
+                      | sharding, replication, and security that would
+                      | be a great fit for summer research.
+                  li
+                    h4 Chrome/atom/Sublime Text
+                      +label('js', 'danger')
+                    P
+                      | Being able to interact with mongod over vanilla HTTP
+                      | means you can move mongo closer to users than the other
+                      | way around.  Things like a Chrome app to run queries
+                      | right from a github repo or keeping an eye on mongotop
+                      | while you're working on your python app would be extremely
+                      | useful.
+                  li
+                    h4 Phonegap
+                      +label('js', 'danger')
+                    p
+                      | who doesn't like looking at pretty charts or running
+                      | queries to get the latest signup counts from their
+                      | pocket?
+
+            .row
+              .col-md-12
+                h3 Contribute/Collaborate on Existing Projects
+                :markdown
+                  #### Visualization/Charting/Dashboards
+                  - [@CarlosCondor/chartFromMongo](https://github.com/CarlosCondor/chartFromMongo)
+
+                  #### Dataset Importers/Ingestion
+                  - [@blueqnx/wikinmongo](http://blueqnx.github.io/wikinmongo/)
+                  - [@kaniska/project-mongo-logviewer](https://github.com/kaniska/project-mongo-logviewer)
+
+                  #### Workshops
+                  - [mongodbschool.io](http://mongodbschool.io/)
+                  - [@sridharn/dataweek_2013](https://github.com/sridharn/dataweek_2013)
+                  - [@RyanMullins/Tutorial-LeafletMongoDB](https://github.com/RyanMullins/Tutorial-LeafletMongoDB)
+
+        +section('Simulation')
+          +article('wikipedia-edit-stream')
+            .row
+              .col-md-6
+                :markdown
+                  [@imlucas/wikipedia-edit-stream][edit-stream] is a little app
+                  to simulate action in the kernel you would see IRL.  Every
+                  wikipedia page edit is posted to an IRC channel.  This app
+                  listens for those incoming messages, transforms them into a
+                  document and then streams them into a kernel instance.
+                  [edit-stream]: https://github.com/imlucas/wikipedia-edit-stream
+
+              .col-md-6
+                script(src='https://gist.github.com/imlucas/10327583.js')
+
+        //- section
+        //-   h2 Funnel
+        //-   p
+        //-     | because of read-only milestone, show prompt with shell commands
+        //-     | for the user to run in terminal
+        //-   h3.mono open&nbsp;
+        //-     a(href="http://localhost:3000/funnel.html", target="_blank") http://localhost:3000/funnel.html
+        //- +section('gif demo')
+        //-   img(width="100%", src="https://camo.githubusercontent.com/5099ab10d6307273602b547ecbc7c208d8dd95e9/687474703a2f2f7265636f726469742e636f2f627171306e396a764d4e2e676966")
     #status
       span.logo.inline-block.pull-right(href="#")
         span.inline-block mongoscope
@@ -48,302 +349,3 @@ html(lang='en')
             path(d="M 49.4269 122.2742 C 43.975 114.2084 92.4275 32 98.5704 32 C 104.7134 32 129.2851 43.7134 126.8279 48.9643 C 113.6716 77.0788 84.9312 135.4446 81.9845 134.9975 C 71.3367 133.3818 55.5699 131.3622 49.4269 122.2742 Z")
             path(d="M 108.0216 39.6247 C 109.9814 36.9572 117.8735 27.66 117.8735 26.0994 C 117.8735 20.2504 112.7211 10.3777 120.4214 12.2273 C 128.1217 14.0769 141.4273 24.2498 135.5389 27.4866 C 129.6504 30.7235 126.9327 24.77 123.309 30.7813 C 119.6853 36.7925 116.7532 41.8195 116.5146 44.1332 C 116.1749 47.4278 107.512 40.3183 108.0216 39.6247 Z")
             path(d="M 112 64.5 C 117.7454 62.7708 177.5 63.5 182.5 108.5 C 187.0829 149.7462 171.628 175.6394 168.5 182 C 166.9798 185.0911 68.0573 185.9565 65 182 C 48 160 64.5 174 62.5 169.5 C 60.5 165 45.5 172 41 163 C 32.8869 146.7738 24.8783 152.153 48 149 C 70 146 125 146 128 148 C 137.4217 154.2812 134.5 160.5 134.5 160.5 C 134.5 160.5 141.1787 162.9935 144.5 158.5 C 153 147 155.6667 133.8333 155.5 123.5 C 155.4022 117.434 156 95 144.5 91.5 C 132.0469 87.7099 96 89 95 92 C 94 95 107.7083 65.7917 112 64.5 Z")
-
-    .jumbotron
-      .col-md-6.col-md-push-1
-        img(src='https://cloud.githubusercontent.com/assets/23074/2688434/2d1f3b5a-c29e-11e3-969a-367020b729b6.gif')
-      .col-md-5.col-md-push-1(style="margin-top: 100px;")
-        .inline-block.logo
-          svg.inline-block(viewBox="0, 0, 200, 200", version="1.1")
-            g
-              path(d="M 49.4269 122.2742 C 43.975 114.2084 92.4275 32 98.5704 32 C 104.7134 32 129.2851 43.7134 126.8279 48.9643 C 113.6716 77.0788 84.9312 135.4446 81.9845 134.9975 C 71.3367 133.3818 55.5699 131.3622 49.4269 122.2742 Z")
-              path(d="M 108.0216 39.6247 C 109.9814 36.9572 117.8735 27.66 117.8735 26.0994 C 117.8735 20.2504 112.7211 10.3777 120.4214 12.2273 C 128.1217 14.0769 141.4273 24.2498 135.5389 27.4866 C 129.6504 30.7235 126.9327 24.77 123.309 30.7813 C 119.6853 36.7925 116.7532 41.8195 116.5146 44.1332 C 116.1749 47.4278 107.512 40.3183 108.0216 39.6247 Z")
-              path(d="M 112 64.5 C 117.7454 62.7708 177.5 63.5 182.5 108.5 C 187.0829 149.7462 171.628 175.6394 168.5 182 C 166.9798 185.0911 68.0573 185.9565 65 182 C 48 160 64.5 174 62.5 169.5 C 60.5 165 45.5 172 41 163 C 32.8869 146.7738 24.8783 152.153 48 149 C 70 146 125 146 128 148 C 137.4217 154.2812 134.5 160.5 134.5 160.5 C 134.5 160.5 141.1787 162.9935 144.5 158.5 C 153 147 155.6667 133.8333 155.5 123.5 C 155.4022 117.434 156 95 144.5 91.5 C 132.0469 87.7099 96 89 95 92 C 94 95 107.7083 65.7917 112 64.5 Z")
-        .inline-block
-          h1 mongoscope
-        .clearfix
-          p A microscope to keep next to your MMS telescope
-        .clearfix
-          a.btn.btn-primary(href="https://github.com/10gen/mongoscope/releases/tag/v0.0.3")
-            span(class='icon icon-mark-github')
-            | Download v0.0.3
-
-    .onesheet: .row: .col-md-10.col-md-push-1.col-sm-12
-      +section('Security')
-        +article('Token Authentication')
-          :markdown
-            HTTP authentication is modelled on the
-            [Amazon Web Services Simple Token Service][sts]
-            using the [JSON Web Token][jwt] standard for token
-            generation and verification. All actors use dedicated
-            connections: `1 token = 1 connection to 1 kernel
-            instance`. There is no sharing or cherry-picking between
-            sessions applied by the REST server and there is no
-            `scope` tooling user. This provides clean audit trails
-            and high-level cleaving should a user's credentials
-            become compromised.
-
-            [sts]: http://docs.aws.amazon.com/STS/latest/APIReference/Welcome.html
-            [jwt]: http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html
-
-          +slide('Client Requests a Token', 1)
-              :markdown
-                When the UI is loaded, the first thing it does is present an
-                auth dialog for username and password.  When the form is
-                submitted an XHR request is made to `/api/v1/token` which
-                will attempt to connect to the seed host with those credentials.
-
-          +slide('Check Credentials with Kernel', 2)
-              :markdown
-                If the seed host rejects those credentials, we just close
-                the connection and return an error message to the client.
-
-                The REST API provides no higher abstraction for ACL's.
-                It merely acts as a passthrough to the kernel.
-
-          +slide('REST Server Generates Token', 3)
-              :markdown
-                If the seed host accepts the credentials, we then generate
-                a JSON Web Token with a pointer to the connection we just created.
-                It's important to note, the credentials are not stored on the
-                server at any time. Like STS, it is up to the client to request
-                a new token for use when a token expires.
-
-                By default, tokens expire after **60 minutes**. This is
-                configurable via the `token:lifetime` option.
-
-                When the token is generated, a reaper task is
-                scheduled to nuke it's associated connection just after
-                it is set to expire.
-
-                The secret used to sign and verify tokens currently
-                includes the process id of the REST server.  This
-                provides a cheap method for recovering from a
-                compromise as all tokens are invalidated if the REST
-                server is restarted.
-
-          +slide('Client Includes the Token in Requests', 4)
-              :markdown
-                All API routes, except for `/api/v1/token` require the token
-                be send in the `Authorization` header:
-                  ```
-                  Authorization: Bearer {{token}}
-                  ```
-
-                Routes which require authentication
-                get the token from the header, verify it's contents,
-                and select it's connection to the kernel to use for the
-                request context via a middleware.
-
-
-          +slide('Request a New Token', 5)
-              :markdown
-                The "token redline" is the timeframe 15 seconds before a
-                token is scheduled to expire.  At this point, the client
-                should resend the credentials to generate a new token.
-
-                A concrete example on this process can be found in the
-                [AWS SDK Credentials Class][aws-refresh].
-
-                [aws-refresh]: https://github.com/aws/aws-sdk-js/blob/master/lib/credentials.js#L83
-
-        +article('Also on the radar')
-          dl
-            dt Kerberos/LDAP/x509
-            dd options could also be input from the authentication form
-            dt SSL
-            dd ?
-            dt Two-Factor Authentication
-            dd ?
-            dt Request Signing
-            dd ?
-
-      +section('Architecture')
-        +article('Stack')
-          .row
-            .col-md-6
-              h4 REST
-              dl
-                dt
-                  a(href="http://expressjs.com") expressjs
-                dd HTTP
-                dt
-                  a(href="http://socket.io") socket.io
-                dd sockets
-
-            .col-md-6
-              h4 UI
-              dl
-                dt
-                  a(href="http://backbonejs.org", target="_blank") backbone
-                dd mvc
-                dt
-                  a(href="http://browserify.org", target="_blank") browserify
-                dd dependencies
-                dt
-                  a(href="http://jade-lang.com", target="_blank") jade
-                dd templating
-                dt
-                  a(href="http://getbootstrap.com", target="_blank") bootstrap
-                dd css + js
-                dt
-                  a(href="http://lesscss.org", target="_blank") less
-                dd css pre-processor
-                dt
-                  a(href="http://d3js.org", target="_blank") d3
-                dd data viz
-
-        +article('Process Model')
-          p Runs in a completely separate process than a kernel server
-            | and most likely on a different machine.
-
-      +section('Distribution')
-        :markdown
-          The current plan is to include a single binary with the
-          mongodb distribution. There are no pre-requisites or
-          platform limitations because the investment of the node.js
-          community (yes it should run [just fine on a RaspberryPi](https://gist.github.com/stolsma/3301813)). We
-          take advantage of the built-in, but not very well-known
-          capability of extending node.js with a single file.
-
-        script(src="https://gist.github.com/imlucas/9915985.js")
-
-        +article('Download a Binary')
-          p OSX binaries available on the&nbsp;
-            a(href="https://github.com/10gen/mongoscope/releases") releases page
-
-        .row
-          .col-md-6
-            +article('Running from Source')
-              script(src='https://gist.github.com/imlucas/10327125.js')
-          .col-md-6
-            +article('Build a Binary')
-              script(src='https://gist.github.com/imlucas/10327218.js')
-
-      section
-        h2: +anchor('Skunkworks / Intern Ideas')
-        article
-          .row
-            .col-md-5
-              ul.list-unstyled
-                li
-                  h4 Try It
-                    +label('e\'rybody', 'success')
-                  :markdown
-                    `mongoscope` is still very very much a work in progress
-                    and having extra sets of eyes to say where things are
-                    truly horrible or even better, lend a hand to implement
-                    those fixes, would be extremely appreciated.
-
-                li
-                  h4 Collection Sampling
-                    +label('kernel', 'default')
-                  p
-                    | If mongod had built-in resevoir sampling of documents
-                    | in a collection would allow observing sparseness,
-                    | outliers, hot corners, and a lot more.
-                li
-                  h4 Query Linter
-                    +label('js', 'danger')
-                    +label('kernel', 'default')
-
-                  p Catch the dumb stuff while it's still in the editor,
-                    | not hanging with the global lock.
-                li
-                  h4 Datasets
-                    +label('intern', 'info')
-                  :markdown
-                    Figuring out whether a feature is actually going to
-                    work/be useful would be dramatically easier with
-                    real datasets to use like [replicating wikipedia](http://blueqnx.github.io/wikinmongo/)
-                    or the npm registry.
-
-                li
-                  h4 Emscripten
-                    +label('js', 'danger')
-                    +label('kernel', 'default')
-                  :markdown
-                    There is a lot of business logic in the server that
-                    would cut down on a lot of mistakes and bad information
-                    if it was portable: everything from the query language
-                    and planner to what `ActionSet`'s a built-in role
-                    has access to.
-
-            .col-md-5.col-md-push-2
-              ul.list-unstyled
-                li
-                  h4 Structured Data from docs
-                    +label('intern', 'info')
-                  p
-                    | Parse the mongo docs from RST to JSON for things
-                    | like autocomplete for the webshell, help annotations
-                    | in the Security/Replication/Sharding UI's.  The initial
-                    | script hack is pretty trivial but working with the docs
-                    | team to make things highly reliable, as well as updating
-                    | existing docs will take some time.
-
-                li
-                  h4 Visualization
-                    +label('js', 'danger')
-                    +label('dataviz', 'warning')
-                  p there are a lot of hard visualization problems with
-                    | sharding, replication, and security that would
-                    | be a great fit for summer research.
-                li
-                  h4 Chrome/atom/Sublime Text
-                    +label('js', 'danger')
-                  P
-                    | Being able to interact with mongod over vanilla HTTP
-                    | means you can move mongo closer to users than the other
-                    | way around.  Things like a Chrome app to run queries
-                    | right from a github repo or keeping an eye on mongotop
-                    | while you're working on your python app would be extremely
-                    | useful.
-                li
-                  h4 Phonegap
-                    +label('js', 'danger')
-                  p
-                    | who doesn't like looking at pretty charts or running
-                    | queries to get the latest signup counts from their
-                    | pocket?
-
-          .row
-            .col-md-12
-              h3 Contribute/Collaborate on Existing Projects
-              :markdown
-                #### Visualization/Charting/Dashboards
-                - [@CarlosCondor/chartFromMongo](https://github.com/CarlosCondor/chartFromMongo)
-
-                #### Dataset Importers/Ingestion
-                - [@blueqnx/wikinmongo](http://blueqnx.github.io/wikinmongo/)
-                - [@kaniska/project-mongo-logviewer](https://github.com/kaniska/project-mongo-logviewer)
-
-                #### Workshops
-                - [mongodbschool.io](http://mongodbschool.io/)
-                - [@sridharn/dataweek_2013](https://github.com/sridharn/dataweek_2013)
-                - [@RyanMullins/Tutorial-LeafletMongoDB](https://github.com/RyanMullins/Tutorial-LeafletMongoDB)
-
-      +section('Simulation')
-        +article('wikipedia-edit-stream')
-          .row
-            .col-md-6
-              :markdown
-                [@imlucas/wikipedia-edit-stream][edit-stream] is a little app
-                to simulate action in the kernel you would see IRL.  Every
-                wikipedia page edit is posted to an IRC channel.  This app
-                listens for those incoming messages, transforms them into a
-                document and then streams them into a kernel instance.
-                [edit-stream]: https://github.com/imlucas/wikipedia-edit-stream
-
-            .col-md-6
-              script(src='https://gist.github.com/imlucas/10327583.js')
-
-      //- section
-      //-   h2 Funnel
-      //-   p
-      //-     | because of read-only milestone, show prompt with shell commands
-      //-     | for the user to run in terminal
-      //-   h3.mono open&nbsp;
-      //-     a(href="http://localhost:3000/funnel.html", target="_blank") http://localhost:3000/funnel.html
-      //- +section('gif demo')
-      //-   img(width="100%", src="https://camo.githubusercontent.com/5099ab10d6307273602b547ecbc7c208d8dd95e9/687474703a2f2f7265636f726469742e636f2f627171306e396a764d4e2e676966")

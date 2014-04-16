@@ -128,11 +128,10 @@ var DocumentView = Backbone.View.extend({
     this.render();
   },
   render: function(){
-    this.$el = $('#modal').css({'margin-top': '40px', padding: '20px', background: '#fff', 'overflow-y': 'scroll'});
+    this.$el = $('.detail');
     this.el = this.$el.get(0);
 
     debug('sample', this.sample.toJSON());
-    this.$el.modal();
     this.$el.html(this.tpl({sample: this.sample.toJSON()}));
 
     return this;
