@@ -436,5 +436,15 @@ module.exports.Security = Backbone.Model.extend({
   }
 });
 
+var Sharding = Model.extend({
+  service: function(){
+    return {name: 'sharding', args: [instance.get('uri')]};
+  }
+});
+
+module.exports.sharding = function(){
+  return new Sharding();
+};
+
 module.exports.Security.User = User;
 module.exports.Security.Role = Role;

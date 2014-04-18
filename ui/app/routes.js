@@ -34,6 +34,7 @@ module.exports = function(opts){
     .add('pulse', require('./views/pulse'))
     .add('log', require('./views/log'))
     .add('top', require('./views/top'))
+    .add('sharding', require('./views/sharding'))
     .add('replication', require('./views/replication'))
     .add('security', require('./views/security'), function(add){
       add('user', '/users/:database/:username', 'userDetail');

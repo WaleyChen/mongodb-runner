@@ -20,7 +20,8 @@ var Toolbar = Backbone.View.extend({
         {name: 'top', icon: 'magnet'},
         {name: 'log', icon: 'align-justify'},
         {name: 'security', icon: 'record'},
-        {name: 'replication', icon: 'send'}
+        {name: 'replication', icon: 'send'},
+        {name: 'sharding', icon: 'send'}
       ]
     }));
 

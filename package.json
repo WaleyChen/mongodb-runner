@@ -62,7 +62,8 @@
     "csv-streamify": "^1.0.0",
     "body-parser": "^1.0.1",
     "bson": "^0.2.7",
-    "event-source-emitter": "0.0.2"
+    "event-source-emitter": "0.0.2",
+    "async": "^0.7.0"
   },
   "devDependencies": {
     "gulp": "^3.5.6",

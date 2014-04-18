@@ -236,6 +236,10 @@ Service.prototype.collection = function(host, db, name, fn){
   this.get(host, '/' + db + '/' + name, {}, fn);
 };
 
+Service.prototype.sharding = function(host, fn){
+  this.get(host, '/sharding', {}, fn);
+};
+
 // Get a short lived auth token that will be automatically refreshed.
 // Tokens are 1:1 for deployments.  Want to access another deployment?
 // You'll need to get another token for it.
