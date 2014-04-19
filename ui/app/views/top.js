@@ -2,6 +2,11 @@ var Backbone = require('backbone'),
   models = require('../models'),
   moment = require('moment');
 
+var Metric = Backbone.Model.extend({}),
+  Metrics = Backbone.Collection.extend({
+    model: Metric
+  });
+
 var Top = Backbone.View.extend({
   tpl: require('./tpl/top.jade'),
   initialize: function(){
@@ -9,7 +14,11 @@ var Top = Backbone.View.extend({
 
     this.top = models.top;
 
-    this.direction = 'up';
+    this.metrics = new Metrics([
+      {label: '#ops', key: 'total.count', lock_key: 'lock.count'},
+      {label: '#read', key: 'read.count', lock_key: 'readlock.count'},
+      {label: '#write', key: 'write.count', lock_key: 'writelock.count'}
+    ]);
   },
   enter: function(){
     this.$el = Backbone.$('#mongoscope');
@@ -22,28 +31,19 @@ var Top = Backbone.View.extend({
     this.top.exit().off('sync', this.onTopData, this);
   },
   onTopData: function(){
-    var ctx = this.top.toJSON(), html;
+    var ctx = this.top.toJSON();
     ctx.update = true;
     ctx.moment = moment;
-
-    html = this.tpl(ctx);
-
-
-    if(this.direction === 'up'){
-      this.$tbody.prepend(html);
-    }
-    else{
-      this.$tbody.append(html);
-    }
+    ctx.selected_metrics = this.metrics.toJSON();
+    this.$tbody.html(this.tpl(ctx));
   },
   render: function(){
-    var ctx = this.top.toJSON(), html;
+    var ctx = this.top.toJSON();
     ctx.update = false;
     ctx.moment = moment;
+    ctx.selected_metrics = this.metrics.toJSON();
 
-    html = this.tpl(this.top.toJSON());
-
-    this.$el.html(html);
+    this.$el.html(this.tpl(ctx));
     this.$tbody = this.$el.find('.body');
 
     this.top

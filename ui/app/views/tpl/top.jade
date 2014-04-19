@@ -1,42 +1,24 @@
-mixin cells(namespaces)
-  each ns in namespaces
-    .ns-column
-      .column #{deltas[ns + '.total.count'] || 0}
-      //- .column #{deltas[ns + '.read.count'] || '-'}
-      .column #{deltas[ns + '.read.count'] || 0}
-      .column #{deltas[ns + '.write.count'] || 0}
-      .column #{deltas[ns + '.lock.count'] || 0}
-
-mixin row(namespaces)
-  .matrix-row
-    +cells(namespaces)
-    - d = new Date()
-    .date #{d.getHours()}:#{d.getMinutes()}:#{d.getSeconds()}
+mixin row(ns)
+  tr
+    td #{ns}
+    each metric in selected_metrics
+      - v = deltas[ns + '.' + metric.key] || 0
+      - lock = deltas[ns + '.' + metric.lock_key] || 0
+      - p = (v===0) ? 0 : (lock/v*100).toFixed(0)
+      - v === 0 || p === 0 ? '' : console.log(ns, metric.key, v, p);
+      td #{v} (#{p}%)
 
 if update === true
-  +row(namespaces)
+  for ns in namespaces
+    +row(ns)
 else
   .row
-    .col-md-8
-      .top-matrix
-        .header
-         - for ns in namespaces
-          .ns
-            .label #{ns}
-            .header-column
-              div
-                span &nbsp;
-            .header-column
-              div
-                span ops
-            .header-column
-              div
-                span read
-            .header-column
-              div
-                span write
-            .header-column
-              div
-                span locks
-        .body
-          +row(namespaces)
+    .col-md-6
+      table.table
+        thead
+          th &nbsp;
+          each metric in selected_metrics
+            th #{metric.label} (lock%)
+        tbody
+          each ns in namespaces
+            +row(ns)
