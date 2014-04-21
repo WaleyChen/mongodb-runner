@@ -14,7 +14,7 @@ module.exports = function(data, opts){
       key: opts.y || 'value'
     },
     shapes = {
-      line: d3.svg.line().interpolate("basis")
+      line: d3.svg.line().interpolate('step')
         .x(function(d){return x.scale(d[x.key]);})
          .y(function(d){return y.scale(d[y.key]);})
     },
@@ -30,12 +30,14 @@ module.exports = function(data, opts){
         chart.draw();
       },
       draw: function(){
+
         x.scale.domain(d3.extent(data, function(d){return d[x.key];}));
         y.scale.domain(d3.extent(data, function(d){return d[y.key];}));
 
         chart.line
           .datum(data)
           .attr('d', shapes.line);
+        if(data.length < 1) return;
 
         chart.circle
          .attr('cx', x.scale(data[0][x.key]))
@@ -44,12 +46,14 @@ module.exports = function(data, opts){
       }
     };
 
-  svg = (opts.selection || d3.select(opts.el || '.sparkline'))
+  svg = d3.select(opts.el || '.sparkline')
     .append('svg')
     .attr('width', width)
     .attr('height', height)
     .append('g')
       .attr('transform', 'translate(0, 2)');
+
+  console.log('create sparkline', data, svg);
 
   chart.line = svg.append('path').attr('class', 'line');
   chart.circle = svg.append('circle').attr('class', 'circle');

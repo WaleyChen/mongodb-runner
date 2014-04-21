@@ -1,6 +1,7 @@
 var Backbone = require('backbone'),
   models = require('../models'),
-  moment = require('moment');
+  matrix = require('../viz/matrix'),
+  sparkline = require('../viz/sparkline');
 
 var Metric = Backbone.Model.extend({}),
   Metrics = Backbone.Collection.extend({
@@ -10,47 +11,66 @@ var Metric = Backbone.Model.extend({}),
 var Top = Backbone.View.extend({
   tpl: require('./tpl/top.jade'),
   initialize: function(){
-    this.$tbody = null;
-
-    this.top = models.top;
-
     this.metrics = new Metrics([
       {label: '#ops', key: 'total.count', lock_key: 'lock.count'},
       {label: '#read', key: 'read.count', lock_key: 'readlock.count'},
       {label: '#write', key: 'write.count', lock_key: 'writelock.count'}
     ]);
+
+    this.sparks = {};
+    this.features = {sparkline: false};
   },
   enter: function(){
     this.$el = Backbone.$('#mongoscope');
     this.el = this.$el.get(0);
-    this.top
-      .enter()
-      .on('sync', this.render, this);
+
+    this.$el.html(this.tpl({}));
+
+    models.top.enter()
+      .on('sync', this.insert, this);
   },
   exit: function(){
-    this.top.exit().off('sync', this.onTopData, this);
+    models.top.exit().off('sync', this.update, this);
   },
-  onTopData: function(){
-    var ctx = this.top.toJSON();
-    ctx.update = true;
-    ctx.moment = moment;
-    ctx.selected_metrics = this.metrics.toJSON();
-    this.$tbody.html(this.tpl(ctx));
+  update: function(){
+    var self = this;
+
+    this.matrix.update(models.top.get('deltas'));
+
+    if(!this.features.sparkline) return this;
+
+    this.$el.find('.metric-value').each(function(){
+      var el = Backbone.$(this),
+        k = el.data('ns') + '.' + el.data('metric');
+
+      if(!self.sparks[k]){
+        var off = el.offset();
+        var spark = Backbone.$('<div class="sparkline" style="position: absolute; top: ' + (off.top - 35) + 'px;left: ' + (off.left + 50) + 'px; "id="sparkline-'+k+'"/>');
+        self.$el.append(spark);
+
+        self.sparks[k] = sparkline([{
+          date: Date.now(),
+          value: models.top.get('deltas')[k] || 0
+        }], {el: spark.get(0)});
+      }
+      else {
+        self.sparks[k].add({
+          date: Date.now(),
+          value: models.top.get('deltas')[k] || 0
+        });
+      }
+    });
   },
-  render: function(){
-    var ctx = this.top.toJSON();
-    ctx.update = false;
-    ctx.moment = moment;
-    ctx.selected_metrics = this.metrics.toJSON();
+  insert: function(){
+    this.$el.find('p').remove();
 
-    this.$el.html(this.tpl(ctx));
-    this.$tbody = this.$el.find('.body');
+    this.matrix = matrix(this.metrics.toJSON(),
+      models.top.get('namespaces'), models.top.get('deltas'));
 
-    this.top
-      .off('sync', this.render, this)
-      .on('sync', this.onTopData, this);
+    models.top.off('sync', this.insert, this)
+      .on('sync', this.update, this);
 
-    this.top.subscribe();
+    models.top.subscribe();
     return this;
   }
 });

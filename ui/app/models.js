@@ -22,8 +22,6 @@ module.exports = function(opts){
   deployments.fetch({error: opts.error, success: function(){
     debug('got deployments', deployments);
     opts.success.apply(this, arguments);
-
-    // @todo: handle startup run like binding top.
   }});
 };
 

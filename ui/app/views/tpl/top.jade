@@ -1,24 +1,6 @@
-mixin row(ns)
-  tr
-    td #{ns}
-    each metric in selected_metrics
-      - v = deltas[ns + '.' + metric.key] || 0
-      - lock = deltas[ns + '.' + metric.lock_key] || 0
-      - p = (v===0) ? 0 : (lock/v*100).toFixed(0)
-      - v === 0 || p === 0 ? '' : console.log(ns, metric.key, v, p);
-      td #{v} (#{p}%)
+.row
+  .col-md-8
+    p sampling...
+    .matrix
 
-if update === true
-  for ns in namespaces
-    +row(ns)
-else
-  .row
-    .col-md-6
-      table.table
-        thead
-          th &nbsp;
-          each metric in selected_metrics
-            th #{metric.label} (lock%)
-        tbody
-          each ns in namespaces
-            +row(ns)
+  .col-md-4

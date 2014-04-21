@@ -35,6 +35,32 @@
   }
 }
 
+.matrix {
+  th {
+    text-align: center;
+    border-left: 1px solid @table-border-color;
+  }
+  tr:first-child td{
+    border-top: 0;
+  }
+  td.metric-value {
+    text-align: center;
+    border-left: 1px solid @table-border-color;
+  }
+}
+
+.sparkline {
+  .line {
+    stroke: @series-color-1;
+    stroke-width: 0.5px;
+    fill: none;
+  }
+  .circle {
+    fill: @series-fill-1;
+    stroke: none;
+  }
+}
+
 // ### donut
 //
 // a d3 annulus chart.
