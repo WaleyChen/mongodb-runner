@@ -1,0 +1,94 @@
+include ../mixins/section
+include ../mixins/article
+include ../mixins/slide
+
++section('Security')
+  +article('Token Authentication')
+    :markdown
+      HTTP authentication is modelled on the
+      [Amazon Web Services Simple Token Service][sts]
+      using the [JSON Web Token][jwt] standard for token
+      generation and verification. All actors use dedicated
+      connections: `1 token = 1 connection to 1 kernel
+      instance`. There is no sharing or cherry-picking between
+      sessions applied by the REST server and there is no
+      `scope` tooling user. This provides clean audit trails
+      and high-level cleaving should a user's credentials
+      become compromised.
+
+      [sts]: http://docs.aws.amazon.com/STS/latest/APIReference/Welcome.html
+      [jwt]: http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html
+
+    +slide('Client Requests a Token', 1)
+        :markdown
+          When the UI is loaded, the first thing it does is present an
+          auth dialog for username and password.  When the form is
+          submitted an XHR request is made to `/api/v1/token` which
+          will attempt to connect to the seed host with those credentials.
+
+    +slide('Check Credentials with Kernel', 2)
+        :markdown
+          If the seed host rejects those credentials, we just close
+          the connection and return an error message to the client.
+
+          The REST API provides no higher abstraction for ACL's.
+          It merely acts as a passthrough to the kernel.
+
+    +slide('REST Server Generates Token', 3)
+        :markdown
+          If the seed host accepts the credentials, we then generate
+          a JSON Web Token with a pointer to the connection we just created.
+          It's important to note, the credentials are not stored on the
+          server at any time. Like STS, it is up to the client to request
+          a new token for use when a token expires.
+
+          By default, tokens expire after **60 minutes**. This is
+          configurable via the `token:lifetime` option.
+
+          When the token is generated, a reaper task is
+          scheduled to nuke it's associated connection just after
+          it is set to expire.
+
+          The secret used to sign and verify tokens currently
+          includes the process id of the REST server.  This
+          provides a cheap method for recovering from a
+          compromise as all tokens are invalidated if the REST
+          server is restarted.
+
+    +slide('Client Includes the Token in Requests', 4)
+        :markdown
+          All API routes, except for `/api/v1/token` require the token
+          be send in the `Authorization` header:
+            ```
+            Authorization: Bearer {{token}}
+            ```
+
+          Routes which require authentication
+          get the token from the header, verify it's contents,
+          and select it's connection to the kernel to use for the
+          request context via a middleware.
+
+
+    +slide('Request a New Token', 5)
+        :markdown
+          The "token redline" is the timeframe 15 seconds before a
+          token is scheduled to expire.  At this point, the client
+          should resend the credentials to generate a new token.
+
+          A concrete example on this process can be found in the
+          [AWS SDK Credentials Class][aws-refresh].
+
+          [aws-refresh]: https://github.com/aws/aws-sdk-js/blob/master/lib/credentials.js#L83
+
+  +article('Also on the radar')
+    dl
+      dt SSL
+      dd can add when someone asks
+      dt Two-Factor Authentication
+      dd can add when someone asks
+      dt Request Signing
+      dd can add when someone asks
+      dt Kerberos/LDAP
+      dd options could also be input from the authentication form
+      dt x509
+      dd so far down the line, but could build desktop apps to make it happen

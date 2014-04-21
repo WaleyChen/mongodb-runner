@@ -1,0 +1,41 @@
+include ../mixins/article
+include ../mixins/section
+
++section('Architecture')
+  +article('Stack')
+    .row
+      .col-md-6
+        h4 REST
+        dl
+          dt
+            a(href="http://expressjs.com") expressjs
+          dd HTTP
+          dt
+            a(href="http://socket.io") socket.io
+          dd sockets
+
+      .col-md-6
+        h4 UI
+        dl
+          dt
+            a(href="http://backbonejs.org", target="_blank") backbone
+          dd mvc
+          dt
+            a(href="http://browserify.org", target="_blank") browserify
+          dd dependencies
+          dt
+            a(href="http://jade-lang.com", target="_blank") jade
+          dd templating
+          dt
+            a(href="http://getbootstrap.com", target="_blank") bootstrap
+          dd css + js
+          dt
+            a(href="http://lesscss.org", target="_blank") less
+          dd css pre-processor
+          dt
+            a(href="http://d3js.org", target="_blank") d3
+          dd data viz
+
+  +article('Process Model')
+    p Runs in a completely separate process than a kernel server
+      | and most likely on a different machine.

@@ -1,0 +1,17 @@
+include ../mixins/section
+include ../mixins/article
+
++section('Simulation')
+  +article('wikipedia-edit-stream')
+    .row
+      .col-md-6
+        :markdown
+          [@imlucas/wikipedia-edit-stream][edit-stream] is a little app
+          to simulate action in the kernel you would see IRL.  Every
+          wikipedia page edit is posted to an IRC channel.  This app
+          listens for those incoming messages, transforms them into a
+          document and then streams them into a kernel instance.
+          [edit-stream]: https://github.com/imlucas/wikipedia-edit-stream
+
+      .col-md-6
+        script(src='https://gist.github.com/imlucas/10327583.js')

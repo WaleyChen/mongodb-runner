@@ -1,0 +1,7 @@
+include anchor
+
+mixin article(title)
+  - id = title.toLowerCase().replace(/[^\w]+/g, '-')
+  article
+    h3: +anchor(title)
+    block

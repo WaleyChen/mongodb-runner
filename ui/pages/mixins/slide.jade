@@ -1,0 +1,15 @@
+include anchor
+
+mixin slide(title, number)
+  .slide
+    .col-md-4
+      h4
+        +anchor(number + '. ' +title)(prefix='token-auth')
+      block
+
+    .col-md-8
+      a(href="img/token-based-auth.00#{number + 1}.png",
+        title="Open full version in a new window", target="_blank")
+        img(alt="#{title}", width="100%",
+          src="img/token-based-auth.00#{number + 1}.png")
+

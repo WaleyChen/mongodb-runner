@@ -1,0 +1,6 @@
+mixin anchor(text)
+  - id = (attributes.prefix ? attributes.prefix + '-' : '')
+  - id += text.toLowerCase().replace(/[^\w]+/g, '-')
+  a.anchor(name="#{id}", href="##{id}")
+    span.icon.icon-link
+  | #{text}
