@@ -36,6 +36,8 @@ module.exports = function(opts){
     .add('top', require('./views/top'))
     .add('sharding', require('./views/sharding'))
     .add('replication', require('./views/replication'))
+    .add('connect', require('./views/connect').create)
+    .add('connect/:deployment_id/:instance_id', require('./views/connect').switch)
     .add('security', require('./views/security'), function(add){
       add('user', '/users/:database/:username', 'userDetail');
       add('role', '/roles/:database/:role', 'roleDetail');

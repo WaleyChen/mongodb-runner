@@ -8,7 +8,7 @@ describe('database', function(){
   after(helpers.after);
 
   it('should return database details', function(done){
-    get('/api/v1/localhost:27107/test')
+    get('/api/v1/localhost:27017/test')
       .set('Authorization', 'Bearer ' + ctx.token)
       .expect(200)
       .end(function(err, res){
@@ -20,7 +20,7 @@ describe('database', function(){
   });
 
   it('should return default profiling info', function(done){
-    get('/api/v1/localhost:27107/test/profiling')
+    get('/api/v1/localhost:27017/test/profiling')
       .set('Authorization', 'Bearer ' + ctx.token)
       .expect(200)
       .end(function(err, res){
@@ -31,7 +31,7 @@ describe('database', function(){
   });
 
   it('should return profiling entries', function(done){
-    get('/api/v1/localhost:27107/test/profiling/entries')
+    get('/api/v1/localhost:27017/test/profiling/entries')
       .set('Authorization', 'Bearer ' + ctx.token)
       .expect(200)
       .end(function(err, res){

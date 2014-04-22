@@ -7,7 +7,7 @@ describe('host', function(){
   after(helpers.after);
 
   it('should get instance details', function(done){
-    get('/api/v1/localhost:27107')
+    get('/api/v1/localhost:27017')
       .set('Authorization', 'Bearer ' + ctx.token)
       .expect(200)
       .end(function(err, res){
@@ -19,7 +19,7 @@ describe('host', function(){
   });
 
   it('should get instance metrics', function(done){
-    get('/api/v1/localhost:27107/metrics')
+    get('/api/v1/localhost:27017/metrics')
       .set('Authorization', 'Bearer ' + ctx.token)
       .expect(200)
       .end(function(err, res){
@@ -30,7 +30,7 @@ describe('host', function(){
       });
   });
   it('should return in-progress operations', function(done){
-    get('/api/v1/localhost:27107/ops')
+    get('/api/v1/localhost:27017/ops')
       .set('Authorization', 'Bearer ' + ctx.token)
       .expect(200)
       .end(function(err, res){

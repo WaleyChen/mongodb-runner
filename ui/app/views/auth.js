@@ -4,7 +4,7 @@ var Backbone = require('backbone'),
   service = require('../service')(),
   models = require('../models'),
   sessionStore = require('../sessionStore').backbone('auth'),
-  debug = require('debug')('mongoscope:auth'),
+  debug = require('debug')('_mongoscope:auth'),
   instance = null;
 
 
@@ -27,10 +27,20 @@ var Auth = Backbone.View.extend({
     form: 'form',
     message: '.message'
   },
-  initialize: function(){
-    this.redirect = window.location.hash.replace('#', '').replace('authenticate', '') || 'pulse';
+  initialize: function(opts){
+    opts = opts || {};
+
+    this.redirect = opts.redirect || window.location.hash.replace('#', '').replace('authenticate', '') || 'pulse';
+
+    this.auto = {
+      connect: false,
+      reconnect: true
+    };
+
     this.history = new History().on('sync', this.historySync, this);
     this.history.fetch();
+
+
     debug('auth redirect is', this.redirect);
   },
   historySync: function(){
@@ -44,44 +54,13 @@ var Auth = Backbone.View.extend({
     $('#modal').modal({backdrop: 'static', keyboard: false});
     this.render({host: 'localhost:27017'});
 
-    if(this.history.length > 0){
+    if(this.history.length > 0 && this.auto.connect){
       var previous = this.history.at(0);
       debug('trying last used host', previous);
       this.$host.text(previous.get('host'));
       this.process(previous.get('host'), previous.get('id'));
     }
-
-    this.$host.focus().on('keydown', function(){
-        debug('keydown', event);
-        self.reset();
-        if(event.keyIdentifier === 'Enter'){
-          self.submit();
-          return false;
-        }
-        // @todo: more key code handlers:
-        //  - up/down -> cycle history
-        if(event.keyIdentifier === 'Up'){
-
-        }
-
-        if(event.keyIdentifier === 'Down'){
-
-        }
-        //  - esc -> clear
-        if(event.keyIdentifier === 'U+001B'){
-          self.$host.text('');
-          return false;
-        }
-        //  - keyIdentifier = CapsLock -> show warning
-        // only get these events when caps lock turned on, not off.
-        if(event.keyIdentifier === 'CapsLock'){
-          self.$message.text('CAPS LOCK').fadeIn();
-          self.$form.addClass('has-warning');
-          self.dirty = true;
-          setTimeout(self.reset.bind(self), 2000);
-          return false;
-        }
-      });
+    this.delegateInputEvents();
     return this;
   },
   error: function(err){
@@ -98,13 +77,12 @@ var Auth = Backbone.View.extend({
     if(this.redirect === 'authenticate'){
       this.redirect = 'pulse';
     }
-    // $('.modal-backdrop').fadeOut({duration: 1000});
 
     $('#modal').modal('hide');
     $('body').removeClass('authenticate');
 
 
-    models.instance.fetch({success: function(){
+    models.deployments.fetch({success: function(){
       debug('success!  redirecting to ', this.redirect);
       Backbone.history.navigate(this.redirect, {trigger: true});
     }.bind(this)});
@@ -154,9 +132,6 @@ var Auth = Backbone.View.extend({
     this.dirty = false;
     return this;
   },
-  deenter: function(){
-
-  },
   render: function(ctx){
     this.$el = $('#modal');
     this.$el.html(this.tpl(ctx));
@@ -171,6 +146,41 @@ var Auth = Backbone.View.extend({
       this['$' + name] = this.$el.find(this.els[name]);
     }.bind(this));
     return this;
+  },
+  delegateInputEvents: function(){
+    var self = this;
+
+    this.$host.focus().on('keydown', function(){
+      debug('keydown', event);
+      self.reset();
+      if(event.keyIdentifier === 'Enter'){
+        self.submit();
+        return false;
+      }
+      // @todo: more key code handlers:
+      //  - up/down -> cycle history
+      if(event.keyIdentifier === 'Up'){
+
+      }
+
+      if(event.keyIdentifier === 'Down'){
+
+      }
+      //  - esc -> clear
+      if(event.keyIdentifier === 'U+001B'){
+        self.$host.text('');
+        return false;
+      }
+      //  - keyIdentifier = CapsLock -> show warning
+      // only get these events when caps lock turned on, not off.
+      if(event.keyIdentifier === 'CapsLock'){
+        self.$message.text('CAPS LOCK').fadeIn();
+        self.$form.addClass('has-warning');
+        self.dirty = true;
+        setTimeout(self.reset.bind(self), 2000);
+        return false;
+      }
+    });
   }
 });
 
@@ -180,3 +190,6 @@ module.exports = function(opts){
   }
   return instance;
 };
+
+module.exports.ConnectModal = Auth;
+module.exports.History = History;

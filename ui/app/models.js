@@ -1,14 +1,23 @@
 var Backbone = require('backbone'),
   Model = require('./service').Model,
   List = require('./service').List,
-  debug = require('debug')('mg:scope:models');
+  debug = require('debug')('mongoscope:models');
 
 // singletons.
 var service,
   settings,
   deployments,
+  deployment,
   instance,
   topHolder;
+
+function ready(){
+  debug('deployments loaded', deployments.toJSON());
+  deployment = deployments.default() || deployments.at(0);
+  instance.set(deployment.get('instances').default().toJSON());
+
+  debug('instance now', instance);
+}
 
 module.exports = function(opts){
   module.exports.settings = settings = new Settings({
@@ -19,6 +28,8 @@ module.exports = function(opts){
   service = require('./service')(settings.get('host'), settings.get('port'));
 
   module.exports.deployments = deployments = new DeploymentList();
+  deployments.on('sync', ready);
+
   deployments.fetch({error: opts.error, success: function(){
     debug('got deployments', deployments);
     opts.success.apply(this, arguments);
@@ -57,6 +68,10 @@ var Settings = Backbone.Model.extend({
       this.models = models;
       this.deployment_id = opts.deployment_id;
     },
+    default: function(){
+      // @todo: persist last instance.
+      return this.at(0);
+    },
     model: Instance,
     service: function(){
       return {name: 'deployment', args: this.deployment_id};
@@ -72,22 +87,28 @@ var Settings = Backbone.Model.extend({
     }
   }),
   DeploymentList = List.extend({
+    default: function(){
+      // @todo: persist last used.
+      return this.at(0);
+    },
     model: Deployment,
     service: 'deployments',
     parse: function(data){
-      debug('parsing deployments');
+      debug('parsing deployments', data);
       var res = [];
-      Object.keys(data).map(function(_id){
+      data.map(function(dep){
         var deployment,
-          instances = new InstanceList([], {deployment_id: _id});
+          instances = new InstanceList([], {deployment_id: dep._id});
+        debug('deployment id', dep._id);
 
-        Object.keys(data[_id]).map(function(instance_id){
-          var skel = data[_id][instance_id];
-          skel.deployment_id = _id;
-          instances.add(new Instance(skel));
+        dep.instances.map(function(inst){
+          inst.deployment_id = dep._id;
+          instances.add(new Instance(inst));
         });
 
-        deployment = new Deployment({_id: _id, instances: instances});
+        dep.instances = instances;
+
+        deployment = new Deployment(dep);
         res.push(deployment);
       });
       return res;
@@ -99,7 +120,6 @@ module.exports.Database = Model.extend({
     return {name: 'database', args: [instance.get('uri'), this.get('name')]};
   },
   parse: function(data){
-    debug('parse database', data);
     if(data.collection_names.length > 0){
       var i = data.collection_names.indexOf('system.indexes');
       if(i > -1 ){

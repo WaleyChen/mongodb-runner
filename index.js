@@ -7,8 +7,8 @@ var socketio = require('socket.io'),
 app.server = server;
 
 debug('trying to get server to listen', nconf.get('listen'));
-server.listen(nconf.get('port'), nconf.get('host'), function(){
-  debug('listening on ', nconf.get('host') + ':' + nconf.get('port'), arguments);
+server.listen(nconf.get('port'), nconf.get('hostname'), function(){
+  debug('listening on ', nconf.get('hostname') + ':' + nconf.get('port'), arguments);
 });
 app.emit('io', socketio.listen(server));
 

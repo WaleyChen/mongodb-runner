@@ -1,7 +1,7 @@
 var Backbone = require('backbone'),
   $ = Backbone.$,
   models = require('../models'),
-  debug = require('debug')('mg:scope:toolbar');
+  debug = require('debug')('mongoscope:toolbar');
 
 var Toolbar = Backbone.View.extend({
   tpl: require('./tpl/toolbar.jade'),
@@ -9,26 +9,30 @@ var Toolbar = Backbone.View.extend({
     this.$el = $('#toolbar');
     this.el = this.$el.get(0);
 
-    this.instance = models.instance.on('sync', this.render, this);
+    models.deployments.on('sync', this.create, this);
+    // models.instance.on('sync', this.create, this);
   },
-  render: function(){
-    debug('rendering', this.instance.toJSON());
+  create: function(){
+    var deps = models.deployments.toJSON().map(function(dep){
+      dep.instances = dep.instances.toJSON();
+      return dep;
+    });
+
+    debug('deployments', deps);
+    debug('instance', models.instance.toJSON());
+
     this.$el.html(this.tpl({
-      instance: this.instance.toJSON(),
+      deployments: deps,
+      instance: models.instance.toJSON(),
       sections: [
         {name: 'pulse', 'icon': 'flash'},
         {name: 'top', icon: 'magnet'},
         {name: 'log', icon: 'align-justify'},
         {name: 'security', icon: 'record'},
         {name: 'replication', icon: 'send'},
-        {name: 'sharding', icon: 'send'}
+        {name: 'sharding', icon: 'th'}
       ]
     }));
-
-    if(this.instance.get('database_names').length === 0){
-      this.$el.find('.log').hide();
-      this.$el.find('.top').hide();
-    }
   }
 });
 

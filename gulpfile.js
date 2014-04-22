@@ -90,13 +90,16 @@ gulp.task('assets', function(){
 
   gulp.src(['ui/less/atom/{img,fonts}/*'])
     .pipe(gulp.dest('static/'));
+  gulp.src(['ui/less/fontawesome/{img,fonts}/*'])
+    .pipe(gulp.dest('static/'));
 });
 
 gulp.task('less', function () {
   var lessPaths = [
     'ui/less',
     'ui/less/atom',
-    'ui/less/atom/variables'
+    'ui/less/atom/variables',
+    'ui/less/fontawesome'
   ],
   notifier = new Notification({}),
   less = function(){

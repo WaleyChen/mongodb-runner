@@ -5,6 +5,7 @@ var supertest = require('supertest'),
   assert = require('assert'),
   app = require('../lib/'),
   deployment = require('../lib/deployment'),
+  store = require('../lib/store'),
   debug = require('debug')('mongoscope:test:helpers');
 
 exports = {
@@ -20,7 +21,7 @@ exports = {
 
     exports.post('/api/v1/token')
       .send({seed: 'mongodb://localhost:27017'})
-      .expect(200)
+      .expect(201)
       .expect('Content-Type', /json/)
       .end(function(err, res){
         if(err) return done(err);
@@ -34,7 +35,7 @@ exports = {
   beforeEach: function(){},
   after: function(done){
     debug('\n-------------------------------\nteardown');
-    deployment.store.clear(function(){
+    store.clear(function(){
       var names = Object.keys(exports.collections),
         pending = names.length;
 

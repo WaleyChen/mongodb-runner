@@ -8,10 +8,11 @@ describe('collection', function(){
   after(helpers.after);
 
   it('should not create collections automatically', function(done){
-    get('/api/v1/localhost:27107/test/scopes')
+    get('/api/v1/localhost:27017/test/scopes')
       .set('Authorization', 'Bearer ' + ctx.token)
       .expect(404)
-      .end(function(err){
+      .end(function(err, res){
+        debug('detail', res.text);
         if(err) return done(err);
         done();
       });
@@ -19,18 +20,18 @@ describe('collection', function(){
 
   it('should return collection details', function(done){
     helpers.createCollection('scopes', function(){
-      get('/api/v1/localhost:27107/test/scopes')
+      get('/api/v1/localhost:27017/test/scopes')
         .set('Authorization', 'Bearer ' + ctx.token)
         .expect(200)
         .end(function(err, res){
-          if(err) return done(err);
           debug('detail', res.body);
+          if(err) return done(err);
           done();
         });
     });
   });
   it('should be able to run find', function(done){
-    get('/api/v1/localhost:27107/test/scopes/find')
+    get('/api/v1/localhost:27017/test/scopes/find')
       .set('Authorization', 'Bearer ' + ctx.token)
       .expect(200)
       .end(function(err, res){
@@ -41,7 +42,7 @@ describe('collection', function(){
       });
   });
   it('should be able to run count', function(done){
-    get('/api/v1/localhost:27107/test/scopes/count')
+    get('/api/v1/localhost:27017/test/scopes/count')
       .set('Authorization', 'Bearer ' + ctx.token)
       .expect(200)
       .end(function(err, res){
@@ -53,7 +54,7 @@ describe('collection', function(){
       });
   });
   it('should be able to run find with explain', function(done){
-    get('/api/v1/localhost:27107/test/scopes/find')
+    get('/api/v1/localhost:27017/test/scopes/find')
       .set('Authorization', 'Bearer ' + ctx.token)
       .query({explain: 1})
       .expect(200)
@@ -66,7 +67,7 @@ describe('collection', function(){
       });
   });
   it('should be able to run aggregate', function(done){
-    get('/api/v1/localhost:27107/test/scopes/aggregate')
+    get('/api/v1/localhost:27017/test/scopes/aggregate')
       .set('Authorization', 'Bearer ' + ctx.token)
       .query({pipeline: JSON.stringify([{$group: {_id: '$_id'}}])})
       .expect(200)

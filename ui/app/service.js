@@ -2,7 +2,7 @@ var $ = require('jquery'),
   _ = require('underscore'),
   EventEmitter = require('events').EventEmitter,
   util = require('util'),
-  debug = require('debug')('mongoscope:service'),
+  debug = require('debug')('_mongoscope:service'),
   socketio = require('socket.io-client'),
   srv;
 
@@ -350,7 +350,7 @@ var mixins = {
 
     srv.io
       .addListener(options.uri, this.iohandler.bind(this))
-      .emit(options.uri, {token: srv.token});
+      .emit(options.uri, {token: srv.token, url: require('./models').instance.get('url')});
 
     debug('subscribing', options.uri, {token: srv.token});
 
