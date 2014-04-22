@@ -4,7 +4,7 @@ var Backbone = require('backbone'),
   service = require('../service')(),
   models = require('../models'),
   sessionStore = require('../sessionStore').backbone('auth'),
-  debug = require('debug')('_mongoscope:auth'),
+  debug = require('debug')('mongoscope:auth'),
   instance = null;
 
 
@@ -27,19 +27,15 @@ var Auth = Backbone.View.extend({
     form: 'form',
     message: '.message'
   },
+  autoConnect: true,
+
   initialize: function(opts){
     opts = opts || {};
 
     this.redirect = opts.redirect || window.location.hash.replace('#', '').replace('authenticate', '') || 'pulse';
 
-    this.auto = {
-      connect: false,
-      reconnect: true
-    };
-
     this.history = new History().on('sync', this.historySync, this);
     this.history.fetch();
-
 
     debug('auth redirect is', this.redirect);
   },
@@ -49,12 +45,14 @@ var Auth = Backbone.View.extend({
   enter: function(){
     debug('auth enterd');
 
-    var self = this;
+    this.$body = $('body');
+    this.$modal = $('#modal');
+
     this.dirty = false;
-    $('#modal').modal({backdrop: 'static', keyboard: false});
+    this.$modal.modal({backdrop: 'static', keyboard: false});
     this.render({host: 'localhost:27017'});
 
-    if(this.history.length > 0 && this.auto.connect){
+    if(this.history.length > 0 && this.autoConnect){
       var previous = this.history.at(0);
       debug('trying last used host', previous);
       this.$host.text(previous.get('host'));
@@ -68,19 +66,21 @@ var Auth = Backbone.View.extend({
     console.error('err', err);
     this.$message.text(err.message).fadeIn();
     this.$form.addClass('has-error');
+    this.trigger('error');
   },
   loading: function(msg){
     debug('loading', msg);
     return this;
   },
   success: function(){
-    if(this.redirect === 'authenticate'){
+    if(this.redirect === 'authenticate' || this.redirect === 'connect'){
       this.redirect = 'pulse';
     }
 
-    $('#modal').modal('hide');
-    $('body').removeClass('authenticate');
+    this.$modal.modal('hide');
+    this.$body.removeClass('authenticate');
 
+    this.trigger('success');
 
     models.deployments.fetch({success: function(){
       debug('success!  redirecting to ', this.redirect);

@@ -2,9 +2,10 @@ var Backbone = require('backbone'),
   debug = require('debug')('_mongoscope:routes'),
   _ = require('underscore'),
   service = require('./service'),
-  router,
+  flash = require('./flash'),
+  router, body,
   handlers = {},
-  current = null;
+  current = {};
 
 Backbone.history.loadUrl = function(fragment) {
   debug('load url', fragment);
@@ -53,20 +54,16 @@ module.exports = function(opts){
 
 function create(){
   router = new Backbone.Router();
-
-  var body = Backbone.$('body');
+  body = Backbone.$('body');
 
   router.on('route', function(name){
-
-    if(current && current.context.exit){
+    debug('switching to', name);
+    if(current.name && current.context.exit){
       debug('deactivating', current.name);
       current.context.exit.apply(current.context);
-      body.removeClass(current.name);
     }
-
-    debug('switching current to', name);
+    body.removeClass(current.name).addClass(name);
     current = handlers[name];
-    body.addClass(name);
   });
   Backbone.history.start();
 
@@ -74,53 +71,19 @@ function create(){
   return module.exports;
 }
 
-Backbone.flash = function(msg, cls){
-  var el = Backbone.$('<div class="message" style="display: none;"/>');
-  el.text(msg);
-  if(cls) el.addClass(cls);
-  Backbone.$('#status .flash').append(el);
-  el.fadeIn();
-
-  if(cls !== 'error'){ // Errors must be manually cleared.
-    el.hideTimeout = setTimeout(function(){
-      Backbone.flash.clear(msg);
-    }, 5000);
-  }
-
-  if(!Backbone.flash.messages[msg]){
-    Backbone.flash.messages[msg] = [];
-  }
-  Backbone.flash.messages[msg].push(el);
-};
-Backbone.flash.messages = {};
-
-Backbone.flash.clear = function(message){
-  var el = Backbone.flash.messages[message].shift();
-  el.fadeOut('slow', function(){
-    el.remove();
-    clearTimeout(el.hideTimeout);
-    delete el;
-  });
-};
-
 function watchService(){
   var srv = service();
   srv.on('error', function(err){
-    console.error('routes caught service error', err);
-    Backbone.flash(err.message, 'error');
+    flash.error(err.message);
     if(err.status === 401){
       return Backbone.history.navigate('authenticate', {trigger: true});
     }
   })
   .on('disconnect', function(){
-    Backbone.flash('server disconnected', 'error');
-    console.error('server disconnected');
+    flash.error('server disconnected');
   })
   .on('reconnect', function(){
-    console.error('server reconnected');
-    Backbone.flash('server reconnected', 'success');
-    Backbone.flash.clear('server disconnected');
-
+    flash.success('server reconnected').clear('server disconnected');
     return Backbone.history.navigate('authenticate', {trigger: true});
   });
 }
@@ -135,10 +98,6 @@ function register(name, url, handler, context){
   debug('register route', handlers[name]);
   router.route(url, name, handler.bind(context));
 }
-
-module.exports.trigger = function(name){
-  return router.trigger(name);
-};
 
 module.exports.add = function(name, url, handler, addChild){
   var args = Array.prototype.slice.call(arguments, 0),

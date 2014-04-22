@@ -22,22 +22,23 @@ mixin stat(name)
           +stat('document_count')
         .stat-label docs
       .col-xs-3
-        .metric-value -
+        .metric-value
+          i.fa.fa-magnet.fa-spin(style='font-size: initial;')
         .metric-label
           a.inline-block(data-toggle="dropdown", href="#", data-target="#dropdown-#{cid}")
-            span.metric-name #{metric}
-          .dropdown(id='dropdown-#{cid}')
-            ul.dropdown-menu
-              li.active
-                a #{metric}
-              li
-                a(href='#') read.time
-              li
-                a(href='#') read.count
-              li
-                a(href='#') write.time
-              li
-                a(href='#') write.count
+            span.metric-name #{metric.label}
+          //- .dropdown(id='dropdown-#{cid}')
+          //-   ul.dropdown-menu
+          //-     li.active
+          //-       a #{metric}
+          //-     li
+          //-       a(href='#') read.time
+          //-     li
+          //-       a(href='#') read.count
+          //-     li
+          //-       a(href='#') write.time
+          //-     li
+          //-       a(href='#') write.count
 
 
   .col-md-8

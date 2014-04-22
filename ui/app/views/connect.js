@@ -6,12 +6,21 @@ var Backbone = require('backbone'),
 
 
 var Create = ConnectModal.extend({
+  autoConnect: false
 });
 
 module.exports.switch = function(){
-  return new Create();
+  var view = new Create();
+  view.on('success', function(){
+    view.$body.removeClass('connect');
+  });
+  return view;
 };
 
 module.exports.create = function(){
-  return new Create();
+  var view = new Create();
+  view.on('success', function(){
+    view.$body.removeClass('connect');
+  });
+  return view;
 };
