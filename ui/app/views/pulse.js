@@ -2,7 +2,7 @@ var Backbone = require('backbone'),
   $ = Backbone.$,
   models = require('../models'),
   DatabasePulseView = require('./database').Summary,
-  debug = require('debug')('mongoscope:pulse');
+  debug = require('debug')('_mongoscope:pulse');
 
 var Pulse = Backbone.View.extend({
   tpl: require('./tpl/pulse.jade'),

@@ -46,6 +46,8 @@ var Auth = Backbone.View.extend({
     this.$modal.modal({backdrop: 'static', keyboard: false});
     this.render({url: (instance && instance.get('url')) || 'mongodb://localhost:27017'});
 
+    if(instance) this.process(instance.get('url'));
+
     if(this.history.length > 0 && this.autoConnect && !instance) this.resume();
     this.delegateInputEvents();
     return this;

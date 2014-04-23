@@ -23,6 +23,7 @@ module.exports = function(opts){
 
   module.exports.deployments = deployments = new DeploymentList();
   deployment = new Deployment();
+  deployment.container = true;
 
   deployments.fetch({error: opts.error, success: function(){
     debug('got deployments', deployments);
@@ -109,6 +110,7 @@ module.exports.switchTo = function(deploymentId, instanceId, fn){
 Object.defineProperty(module.exports, 'instance', {get: function(){
   if(!instance){
     instance = new Instance({});
+    instance.container = true;
   }
   return instance;
 }});
@@ -157,6 +159,8 @@ var Settings = Backbone.Model.extend({
         self.instances.deployment_id = newId;
       });
       this.on('change:instances', function(model, fresh){
+        if(fresh === undefined) return;
+
         debug('resetting instances', fresh);
         self.instances.reset(fresh);
 
@@ -166,6 +170,10 @@ var Settings = Backbone.Model.extend({
       return {name: 'deployment', args: this.get('_id')};
     },
     getInstance: function(id){
+      if(this.instances.length === 0 && this.get('instances').length > 0){
+        this.instances.reset(this.get('instances'), {silent: true});
+        delete this.attributes.instances;
+      }
       return this.instances.get(id);
     },
     getSeedInstance: function(){
