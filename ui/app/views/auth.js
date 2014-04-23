@@ -36,6 +36,8 @@ var Auth = Backbone.View.extend({
     this.$body = $('body');
     this.$modal = $('#modal');
 
+    debug('showing auth', deploymentId, instanceId);
+
     var dep, instance;
     if(deploymentId && (dep = models.deployments.get(deploymentId))){
       instance = dep.getInstance(instanceId) || dep.getSeedInstance();
@@ -73,6 +75,8 @@ var Auth = Backbone.View.extend({
     this.$body.removeClass('authenticate');
 
     this.trigger('success');
+    this.undelegateEvents();
+    this.undelegateInputEvents();
 
     debug('success!  redirecting to ', this.redirect);
     Backbone.history.navigate(this.redirect, {trigger: true});
@@ -153,6 +157,9 @@ var Auth = Backbone.View.extend({
         return false;
       }
     });
+  },
+  undelegateInputEvents: function(){
+    this.$host.off('keydown');
   }
 });
 

@@ -15,6 +15,11 @@ var Pulse = Backbone.View.extend({
   enter: function(){
     debug('pulse enter');
     this.enterd = true;
+    var self = this;
+
+    models.instance.on('change:_id', function(){
+      self.$el.find('.databases').remove();
+    });
     if(!models.instance.id){
       debug('instance not set yet');
       models.instance.on('sync', this.render, this);

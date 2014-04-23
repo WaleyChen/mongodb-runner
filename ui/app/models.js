@@ -31,23 +31,32 @@ module.exports = function(opts){
 };
 
 function loadInstance(fn){
-  instance.once('sync', function(){
-    debug('got instance sync!', arguments);
-    fn();
+  instance.fetch({
+    error: function(err){
+      debug('got instance error!!', arguments);
+      fn(err);
+    },
+    success: function(){
+      debug('got instance sync!', arguments);
+      fn();
+    }
   });
-  instance.once('error', function(err){
-    debug('got instance error!!', arguments);
-    fn(err);
-  });
-  instance.fetch();
 }
 
 module.exports.switchTo = function(deploymentId, instanceId, fn){
-  var dep, ins;
+  var dep, ins, url = deploymentId;
 
   if(typeof instanceId === 'function'){
     fn = instanceId;
     instanceId = null;
+  }
+
+  if(deploymentId.indexOf('mongodb://') === 0){
+    deploymentId = deploymentId.replace('mongodb://', '');
+  }
+
+  if(url.indexOf('mongodb://') === -1){
+    url = 'mongodb://' + url;
   }
 
   dep = deployments.length > 0 && deployments.get(deploymentId);
@@ -55,21 +64,25 @@ module.exports.switchTo = function(deploymentId, instanceId, fn){
   if(!dep){
       // This is our initial connection
     debug('initial connection to', deploymentId);
-    return service.setCredentials(deploymentId, function(){
-      debug('set creds to', deploymentId);
+    return service.setCredentials(url, function(){
+      debug('switched token to', url);
 
       debug('refreshing deployments list');
-      deployments.fetch();
-      deployments.once('sync', function(){
+      deployments.fetch({success: function(){
         debug('got deployments', deployments);
-        deployment.set(_.clone(deployments.at(0).attributes));
+
+        if(deployment) deployment.clear();
+        if(instance) instance.clear();
+
+        deployment.set(_.clone(deployments.get(deploymentId).attributes));
         debug('switched to deployment', deployment);
 
-        instance.set(_.clone(deployment.getSeedInstance()).attributes);
+        instance.set(_.clone(deployment.getSeedInstance().attributes));
+        instance.id = deployment.getSeedInstance().get('_id');
         debug('switched to instance', instance);
 
         loadInstance(fn);
-      });
+      }});
     });
   }
 
@@ -77,11 +90,14 @@ module.exports.switchTo = function(deploymentId, instanceId, fn){
   // by url.
   ins = dep && (instanceId ? dep.getInstance(instanceId) : dep.getSeedInstance());
 
+  if(deployment) deployment.clear();
+  if(instance) instance.clear();
+  deployment.set(_.clone(dep.attributes));
+  instance.set(_.clone(ins.attributes));
 
-  deployment.set(_.clone(dep).attributes);
-  instance.set(_.clone(ins).attributes);
   debug('switched to deployment', deployment);
   debug('switched to instance', instance);
+
 
   debug('setting creds for other dep');
   service.setCredentials(instance.get('url'), function(){
@@ -120,10 +136,6 @@ var Settings = Backbone.Model.extend({
     initialize: function(models, opts){
       this.models = models;
       this.deployment_id = opts.deployment_id;
-    },
-    default: function(){
-      // @todo: persist last instance.
-      return this.at(0);
     },
     model: Instance,
     service: function(){
@@ -169,12 +181,9 @@ var Settings = Backbone.Model.extend({
     model: Deployment,
     service: 'deployments',
     parse: function(data){
-      debug('parsing deployments', data);
       var res = [];
       data.map(function(dep){
         var instances = new InstanceList([], {deployment_id: dep._id});
-        debug('deployment id', dep._id);
-
         dep.instances.map(function(inst){
           inst.deployment_id = dep._id;
           instances.add(new Instance(inst));

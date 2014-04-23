@@ -10,14 +10,13 @@ var Toolbar = Backbone.View.extend({
     this.el = this.$el.get(0);
 
     models.deployments.on('sync', this.create, this);
-    models.instance.on('sync', this.update, this);
+    models.instance.on('change', this.update, this);
   },
   create: function(){
+
+    debug('deployments sync!');
+
     var deps = models.deployments.toJSON();
-
-    debug('deployments', deps);
-    debug('instance', models.instance.toJSON());
-
     this.$el.html(this.tpl({
       deployments: deps,
       instance: models.instance.toJSON(),
@@ -33,7 +32,19 @@ var Toolbar = Backbone.View.extend({
   },
   update: function(){
     debug('instance sync');
-    this.create();
+    var deps = models.deployments.toJSON();
+    this.$el.html(this.tpl({
+      deployments: deps,
+      instance: models.instance.toJSON(),
+      sections: [
+        {name: 'pulse', 'icon': 'flash'},
+        {name: 'top', icon: 'magnet'},
+        {name: 'log', icon: 'align-justify'},
+        {name: 'security', icon: 'record'},
+        {name: 'replication', icon: 'send'},
+        {name: 'sharding', icon: 'th'}
+      ]
+    }));
   }
 });
 

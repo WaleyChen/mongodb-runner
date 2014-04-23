@@ -322,6 +322,8 @@ var Backbone = require('backbone'),
 Backbone.sync = function(method, model, options){
   var service = _.result(this, 'service'), args;
 
+  debug('sync', service);
+
   if(_.isString(service)) service = {name: service, args: []};
 
   args = service.args || [];
