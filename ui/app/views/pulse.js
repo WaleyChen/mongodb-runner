@@ -2,26 +2,20 @@ var Backbone = require('backbone'),
   $ = Backbone.$,
   models = require('../models'),
   DatabasePulseView = require('./database').Summary,
-  debug = require('debug')('_mongoscope:pulse');
+  debug = require('debug')('mongoscope:pulse');
 
 var Pulse = Backbone.View.extend({
   tpl: require('./tpl/pulse.jade'),
   initialize: function(){
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);
-    this.enterd = false;
     this.databases = [];
   },
   enter: function(){
     debug('pulse enter');
-    this.enterd = true;
-    var self = this;
+    models.instance.on('change:_id', this.switchedInstance, this);
 
-    models.instance.on('change:_id', function(){
-      self.$el.find('.databases').remove();
-    });
-    if(!models.instance.id){
-      debug('instance not set yet');
+    if(!Array.isArray(models.instance.get('database_names'))){
       models.instance.on('sync', this.render, this);
     }
     else {
@@ -29,13 +23,20 @@ var Pulse = Backbone.View.extend({
     }
   },
   exit: function(){
+    models.instance.off('sync', this.render, this)
+      .off('change:_id', this.switchedInstance, this);
+
+    this.$el.find('.databases').remove();
+
     if(this.databases.length === 0){
       return this;
     }
     this.databases.map(function(database){
       database.exit();
     });
-    this.enterd = false;
+  },
+  switchedInstance: function(){
+
   },
   render: function(){
     var self = this;
