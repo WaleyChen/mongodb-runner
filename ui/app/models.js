@@ -329,6 +329,7 @@ module.exports.Sample = List.extend({
   }
 });
 
+
 var ProducerMixin = {
   initialize: function(){
     this.subscribers = 0;

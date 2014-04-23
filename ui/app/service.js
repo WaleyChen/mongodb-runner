@@ -340,18 +340,30 @@ var mixins = {
     if (!this.set(data)) return false;
     this.trigger('sync', this, data, {});
   },
+  switchedInstance: function(model){
+    debug('instance changed.  moving subscription.', model.get('url'));
+    this.unsubscribe();
+    this.subscribe();
+  },
   subscribe: function(options){
     srv.connect();
+    var instance = require('./models').instance, payload;
+
+    this._instance_url = instance.get('url');
+
+    instance.once('change:_id', this.switchedInstance, this);
 
     _.defaults(options || (options = {}), {
       uri: _.result(this, 'uri')
     });
 
+    payload = {token: srv.token, url: this._instance_url};
+
     srv.io
       .addListener(options.uri, this.iohandler.bind(this))
-      .emit(options.uri, {token: srv.token, url: require('./models').instance.get('url')});
+      .emit(options.uri, payload);
 
-    debug('subscribing', options.uri, {token: srv.token});
+    debug('subscribing', options.uri, payload);
 
     this.trigger('subscribed', this, srv.io, options);
     return this;
@@ -366,7 +378,7 @@ var mixins = {
     debug('$unsub ' + options.uri);
     srv.io
       .removeAllListeners(options.uri)
-      .emit(_.result(this, 'uri') + '/unsubscribe');
+      .emit(_.result(this, 'uri') + '/unsubscribe', {url: this._instance_url});
 
     this.trigger('unsubscribed', this, srv.io, options);
     return this;
