@@ -1,4 +1,5 @@
 var Backbone = require('backbone'),
+  _ = require('underscore'),
   Model = require('./service').Model,
   List = require('./service').List,
   debug = require('debug')('mongoscope:models');
@@ -11,13 +12,6 @@ var service,
   instance,
   topHolder;
 
-function ready(){
-  debug('deployments loaded', deployments.toJSON());
-  deployment = deployments.default() || deployments.at(0);
-  instance.set(deployment.get('instances').default().toJSON());
-
-  debug('instance now', instance);
-}
 
 module.exports = function(opts){
   module.exports.settings = settings = new Settings({
@@ -28,12 +22,72 @@ module.exports = function(opts){
   service = require('./service')(settings.get('host'), settings.get('port'));
 
   module.exports.deployments = deployments = new DeploymentList();
-  deployments.on('sync', ready);
+  deployment = new Deployment();
 
   deployments.fetch({error: opts.error, success: function(){
     debug('got deployments', deployments);
     opts.success.apply(this, arguments);
   }});
+};
+
+function loadInstance(fn){
+  instance.once('sync', function(){
+    debug('got instance sync!', arguments);
+    fn();
+  });
+  instance.once('error', function(err){
+    debug('got instance error!!', arguments);
+    fn(err);
+  });
+  instance.fetch();
+}
+
+module.exports.switchTo = function(deploymentId, instanceId, fn){
+  var dep, ins;
+
+  if(typeof instanceId === 'function'){
+    fn = instanceId;
+    instanceId = null;
+  }
+
+  dep = deployments.length > 0 && deployments.get(deploymentId);
+
+  if(!dep){
+      // This is our initial connection
+    debug('initial connection to', deploymentId);
+    return service.setCredentials(deploymentId, function(){
+      debug('set creds to', deploymentId);
+
+      debug('refreshing deployments list');
+      deployments.fetch();
+      deployments.once('sync', function(){
+        debug('got deployments', deployments);
+        deployment.set(_.clone(deployments.at(0).attributes));
+        debug('switched to deployment', deployment);
+
+        instance.set(_.clone(deployment.getSeedInstance()).attributes);
+        debug('switched to instance', instance);
+
+        loadInstance(fn);
+      });
+    });
+  }
+
+  // @todo: needs to be find the deployment by searching instances
+  // by url.
+  ins = dep && (instanceId ? dep.getInstance(instanceId) : dep.getSeedInstance());
+
+
+  deployment.set(_.clone(dep).attributes);
+  instance.set(_.clone(ins).attributes);
+  debug('switched to deployment', deployment);
+  debug('switched to instance', instance);
+
+  debug('setting creds for other dep');
+  service.setCredentials(instance.get('url'), function(){
+    debug('set creds to', instance.get('url'), arguments);
+    loadInstance(fn);
+  });
 };
 
 Object.defineProperty(module.exports, 'instance', {get: function(){
@@ -55,12 +109,11 @@ var Settings = Backbone.Model.extend({
   }),
   Instance = Model.extend({
     defaults: {
-      uri: 'localhost:27017',
-      type: 'standalone',
-      deployment_id: 'localhost:27017'
+      database_names: [],
     },
+    idAttribute: '_id',
     service: function(){
-      return {name: 'instance', args: this.get('uri')};
+      return {name: 'instance', args: this.id};
     }
   }),
   InstanceList = List.extend({
@@ -80,11 +133,33 @@ var Settings = Backbone.Model.extend({
   Deployment = Model.extend({
     defaults: {
       _id: 'localhost:27017',
-      instances: new InstanceList([], {deployment_id: 'localhost:27017'})
+      instances: []
+    },
+    idAttribute: '_id',
+    initialize: function(){
+      this.instances = new InstanceList([], {});
+
+      var self = this;
+      this.on('change:_id', function(model, newId){
+        debug('updating instances deployment id', newId);
+        self.instances.deployment_id = newId;
+      });
+      this.on('change:instances', function(model, fresh){
+        debug('resetting instances', fresh);
+        self.instances.reset(fresh);
+
+      });
     },
     service: function(){
       return {name: 'deployment', args: this.get('_id')};
+    },
+    getInstance: function(id){
+      return this.instances.get(id);
+    },
+    getSeedInstance: function(){
+      return this.instances.at(0);
     }
+
   }),
   DeploymentList = List.extend({
     default: function(){
@@ -97,8 +172,7 @@ var Settings = Backbone.Model.extend({
       debug('parsing deployments', data);
       var res = [];
       data.map(function(dep){
-        var deployment,
-          instances = new InstanceList([], {deployment_id: dep._id});
+        var instances = new InstanceList([], {deployment_id: dep._id});
         debug('deployment id', dep._id);
 
         dep.instances.map(function(inst){
@@ -106,10 +180,8 @@ var Settings = Backbone.Model.extend({
           instances.add(new Instance(inst));
         });
 
-        dep.instances = instances;
-
-        deployment = new Deployment(dep);
-        res.push(deployment);
+        dep.instances = instances.toJSON();
+        res.push(dep);
       });
       return res;
     }
@@ -117,7 +189,7 @@ var Settings = Backbone.Model.extend({
 
 module.exports.Database = Model.extend({
   service: function(){
-    return {name: 'database', args: [instance.get('uri'), this.get('name')]};
+    return {name: 'database', args: [instance.id, this.get('name')]};
   },
   parse: function(data){
     if(data.collection_names.length > 0){
@@ -177,11 +249,11 @@ module.exports.Collection = Model.extend({
     }
   },
   service: function(){
-    return {name: 'collection', args: [instance.get('uri'),
+    return {name: 'collection', args: [instance.id,
       this.get('database'), this.get('name')]};
   },
   uri: function(){
-    return this.get('database') + '/' + this.get('name') + '/' + instance.get('uri');
+    return this.get('database') + '/' + this.get('name') + '/' + instance.id;
   }
 });
 
@@ -219,11 +291,11 @@ module.exports.Sample = List.extend({
     this.fetch({reset: true});
   },
   service: function(){
-    return {name: 'find', args: [instance.get('uri'), this.database, this.name,
+    return {name: 'find', args: [instance.id, this.database, this.name,
       {skip: this.skip, limit: this.limit}]};
   },
   uri: function(){
-    return this.database + '/' + this.name + '/sample/' + instance.get('uri');
+    return this.database + '/' + this.name + '/sample/' + instance.id;
   },
   parse: function(res){
     // @todo: just temporary
@@ -269,7 +341,7 @@ ProducerModel = Model.extend(ProducerMixin);
 
 var Top = module.exports.Top = ProducerModel.extend({
   service: function(){
-    return {name: 'top', args: instance.get('uri')};
+    return {name: 'top', args: instance.id};
   },
   uri: '/top'
 });
@@ -283,7 +355,7 @@ module.exports.Log = ProducerList.extend({
     }
   }),
   service: function(){
-    return {name: 'log', args: [instance.get('uri')]};
+    return {name: 'log', args: [instance.id]};
   },
   uri: '/log'
 });
@@ -351,7 +423,7 @@ var Role = Backbone.Model.extend({
     ]
   },
   service: function(){
-    return {name: 'securityRoles', args: [instance.get('uri'), this.get('db'), this.get('role')]};
+    return {name: 'securityRoles', args: [instance.id, this.get('db'), this.get('role')]};
   },
   parse: function(data){
     var privs = [];
@@ -395,7 +467,7 @@ var User = Backbone.Model.extend({
     database: 'admin'
   },
   service: function(){
-    return {name: 'securityUsers', args: [instance.get('uri'), this.get('database'), this.get('username')]};
+    return {name: 'securityUsers', args: [instance.id, this.get('database'), this.get('username')]};
   },
   parse: function(data){
     data.inheritedPrivileges.sort(function(a, b){
@@ -444,7 +516,7 @@ module.exports.Security = Backbone.Model.extend({
     })
   },
   service: function(){
-    return {name: 'security', args: [instance.get('uri')]};
+    return {name: 'security', args: [instance.id]};
   },
   parse: function(data){
     data.roles = data.roles.filter(function(role){
@@ -456,7 +528,7 @@ module.exports.Security = Backbone.Model.extend({
 
 var Sharding = Model.extend({
   service: function(){
-    return {name: 'sharding', args: [instance.get('uri')]};
+    return {name: 'sharding', args: [instance.id]};
   }
 });
 

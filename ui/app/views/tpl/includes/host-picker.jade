@@ -1,15 +1,21 @@
 include ../mixins/bytes
 
+- current_instance = instance
+
 #host-picker.dropdown.pull-right
   ul.dropdown-menu
     each deployment in deployments || []
-      li
-        a.disabled.text-subtle #{deployment.name}
+      - deployment.host = deployment.name.replace('mongodb://', '').replace(/\:(\d+)/, '')
+      li.dropdown-group
+        .dropdown-group-label
+          | #{deployment.host}
+
         ul
-        each instance in deployment.instances || []
-          li
+         - each instance in deployment.instances || []
+          li(class=current_instance._id === instance._id ? 'active' : '')
             a(href='#connect/#{deployment._id}/#{instance._id}')
               | #{instance.name}
+              .secondary #{instance.type}
       li.divider
     li
       a(title='connect to another deployment', href='#connect')

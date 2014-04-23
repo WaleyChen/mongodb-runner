@@ -5,6 +5,6 @@
     .message
     .input
       .mask mongodb://
-      #host(contenteditable='true') localhost:27017
+      #host(contenteditable='true') #{url.replace('mongodb://', '')}
     button.btn.btn-primary.btn-lg(type="submit") connect
 

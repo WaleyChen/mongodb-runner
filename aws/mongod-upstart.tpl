@@ -4,3 +4,6 @@ version "1.0"
 script
     start-stop-daemon --start --quiet --chuid mongodb --exec  /usr/bin/mongod -- --config /home/ubuntu/mongodb/{{name}}.conf
 end script
+
+start on startup
+stop on shutdown

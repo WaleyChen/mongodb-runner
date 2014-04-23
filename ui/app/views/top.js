@@ -13,12 +13,13 @@ var Top = Backbone.View.extend({
   initialize: function(){
     this.metrics = new Metrics([
       {label: '#ops', key: 'total.count', lock_key: 'lock.count'},
+      {label: '#commands', key: 'commands.count'},
       {label: '#read', key: 'read.count', lock_key: 'readlock.count'},
       {label: '#write', key: 'write.count', lock_key: 'writelock.count'}
     ]);
 
     this.sparks = {};
-    this.features = {sparkline: false};
+    this.features = {sparkline: true};
   },
   enter: function(){
     this.$el = Backbone.$('#mongoscope');

@@ -38,7 +38,7 @@ module.exports = function(opts){
     .add('sharding', require('./views/sharding'))
     .add('replication', require('./views/replication'))
     .add('connect', require('./views/connect').create)
-    .add('connect/:deployment_id/:instance_id', require('./views/connect').switch)
+    .add('switch', 'connect/:deployment_id/:instance_id', require('./views/connect').switch, null)
     .add('security', require('./views/security'), function(add){
       add('user', '/users/:database/:username', 'userDetail');
       add('role', '/roles/:database/:role', 'roleDetail');
@@ -63,7 +63,7 @@ function create(){
       current.context.exit.apply(current.context);
     }
     body.removeClass(current.name).addClass(name);
-    current = handlers[name];
+    current = handlers[name] || {};
   });
   Backbone.history.start();
 

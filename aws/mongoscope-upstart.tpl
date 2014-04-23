@@ -14,6 +14,9 @@ env SERVICE_HOME=/home/ubuntu/mongoscope
 respawn
 respawn limit 10 5
 
+start on startup
+stop on shutdown
+
 pre-start script
     chdir $SERVICE_HOME
     exec /usr/bin/npm install --production
@@ -25,3 +28,4 @@ script
     exec /home/ubuntu/mongoscope/bin/mongoscope.js >> /home/ubuntu/mongoscope/upstart.log 2>&1
     emit mongoscope_running
 end script
+

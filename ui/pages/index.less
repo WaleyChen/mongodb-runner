@@ -165,15 +165,6 @@ body {margin: 0;}
 .grid.thirds > * {width: 33.333%;}
 .grid.quarters > * {width: 25%;}
 
-.loading, .connect {
-  #toolbar {
-    display: none;
-  }
-  #mongoscope {
-    margin-top: 0;
-  }
-}
-
 #toolbar {
   .tool-panel;
   .clearfix;
@@ -302,7 +293,6 @@ body {margin: 0;}
       }
     }
     a {
-      height: 39px;
       .btn-label {
         padding-top: 6px;
         @media (max-width: @screen-sm) {
@@ -329,6 +319,56 @@ body {margin: 0;}
       .active {
         a {
           text-shadow: none;
+        }
+      }
+
+      .dropdown-group {
+        &-label {
+          padding: 3px 20px;
+          font-size: 80%;
+        }
+        ul {
+          list-style: none;
+          margin: 0;
+          padding-left: 0px;
+          // Links within the dropdown menu
+          > li > a {
+            display: block;
+            padding: 3px 10px 3px;
+            clear: both;
+            font-weight: normal;
+            line-height: @line-height-base;
+            color: @dropdown-link-color;
+            white-space: nowrap; // prevent links from randomly breaking onto new lines
+
+            &:hover,
+            &:focus {
+              text-decoration: none;
+              color: @dropdown-link-hover-color;
+              background-color: @dropdown-link-hover-bg;
+            }
+
+            .secondary {
+              opacity: 0.3;
+              font-size: 80%;
+              padding-left: 4px;
+              display: inline-block;
+            }
+          }
+          .active > a {
+              &,
+              &:hover,
+              &:focus {
+                color: @dropdown-link-active-color;
+                text-decoration: none;
+                outline: 0;
+                background-color: @dropdown-link-active-bg;
+
+                .secondary {
+                  opacity: 0.7;
+                }
+              }
+            }
         }
       }
     }
@@ -605,7 +645,20 @@ body {margin: 0;}
   display: none;
 }
 
-.authenticate, .connect {
+.loading {
+  #toolbar {
+    display: none;
+  }
+  #mongoscope {
+    margin-top: 0;
+  }
+}
+
+
+.authenticate, .connect, .switch {
+  #toolbar {
+    display: none;
+  }
   #mongoscope {
     display: none;
   }

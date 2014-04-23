@@ -11,12 +11,13 @@ var Log = Backbone.View.extend({
     this.el = this.$el.get(0);
 
     this.log = new models.Log()
-      .on('sync', this.render, this);
+      .on('sync', this.update, this);
   },
   enter: function(){
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);
-
+    this.log.fetch();
+    this.render();
     this.log.enter();
   },
   exit: function(){},
@@ -39,8 +40,6 @@ var Log = Backbone.View.extend({
       update: false
     }));
     this.el.scrollByLines(this.log.length);
-    this.log.off('sync', this.render)
-      .on('sync', this.update, this);
   }
 });
 

@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "processes": [{
+      "name": "quickstart",
+      "processType": "mongod",
+      "version": "2.6.0",
+      "args2_6": {
+          "storage" : {
+              "dbPath": "/home/ubuntu/.mongodb/data-quickstart"
+          },
+          "net" : {
+              "port": 3017,
+              "bind_ip": "127.0.0.1"
+          }
+      }
+  }],
+  "auth": {
+    "usersWanted" : [
+      {
+        "db" : "admin",
+        "user" : "root",
+        "roles" : [ "root" ],
+        "initPwd" : "nyrR8oncvjpFrneq"
+      },
+      {
+        "db" : "admin",
+        "user" : "ubuntu",
+        "roles" : [ "dbOwner" ],
+        "initPwd" : "8WrrNeQpisoUPr0W"
+      }
+    ]
+  },
+  "options": {
+      "downloadBase": "/home/ubuntu/.mongodb/mms/.versions"
+  },
+  "systemLog" : {
+    "destination" : "file",
+    "path": "/home/ubuntu/.mongodb/quickstart.log"
+  },
+  "mongoDbVersions": [
+    {
+      "name" : "2.6.0",
+      "builds" : [
+          {
+            "platform" : "osx",
+            "url": "http://fastdl.mongodb.org/osx/mongodb-osx-x86_64-2.6.0-rc2.tgz",
+            "gitVersion" : "d44539de6758237c8b6eaa57a59988fa5b6ef9ac",
+            "bits" : 64
+          },
+          {
+            "platform" : "linux",
+            "url": "http://fastdl.mongodb.org/osx/mongodb-linux-x86_64-2.6.0.tgz",
+            "gitVersion" : "1c1c76aeca21c5983dc178920f5052c298db616c",
+            "bits" : 64
+          }
+      ]
+  }]
+}

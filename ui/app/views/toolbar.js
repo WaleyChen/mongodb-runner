@@ -10,13 +10,10 @@ var Toolbar = Backbone.View.extend({
     this.el = this.$el.get(0);
 
     models.deployments.on('sync', this.create, this);
-    // models.instance.on('sync', this.create, this);
+    models.instance.on('sync', this.update, this);
   },
   create: function(){
-    var deps = models.deployments.toJSON().map(function(dep){
-      dep.instances = dep.instances.toJSON();
-      return dep;
-    });
+    var deps = models.deployments.toJSON();
 
     debug('deployments', deps);
     debug('instance', models.instance.toJSON());
@@ -33,6 +30,10 @@ var Toolbar = Backbone.View.extend({
         {name: 'sharding', icon: 'th'}
       ]
     }));
+  },
+  update: function(){
+    debug('instance sync');
+    this.create();
   }
 });
 

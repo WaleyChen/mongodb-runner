@@ -1,7 +1,5 @@
 var Backbone = require('backbone'),
   $ = Backbone.$,
-  mongodb = require('../mongodb'),
-  service = require('../service')(),
   models = require('../models'),
   sessionStore = require('../sessionStore').backbone('auth'),
   debug = require('debug')('mongoscope:auth'),
@@ -29,41 +27,35 @@ var Auth = Backbone.View.extend({
   },
   autoConnect: true,
 
-  initialize: function(opts){
-    opts = opts || {};
-
-    this.redirect = opts.redirect || window.location.hash.replace('#', '').replace('authenticate', '') || 'pulse';
-
-    this.history = new History().on('sync', this.historySync, this);
+  initialize: function(){
+    this.redirect = window.location.hash.replace('#', '') || 'pulse';
+    this.history = new History();
     this.history.fetch();
-
-    debug('auth redirect is', this.redirect);
   },
-  historySync: function(){
-    debug('historySync', this.history);
-  },
-  enter: function(){
-    debug('auth enterd');
-
+  enter: function(deploymentId, instanceId){
     this.$body = $('body');
     this.$modal = $('#modal');
 
+    var dep, instance;
+    if(deploymentId && (dep = models.deployments.get(deploymentId))){
+      instance = dep.getInstance(instanceId) || dep.getSeedInstance();
+    }
     this.dirty = false;
     this.$modal.modal({backdrop: 'static', keyboard: false});
-    this.render({host: 'localhost:27017'});
+    this.render({url: (instance && instance.get('url')) || 'mongodb://localhost:27017'});
 
-    if(this.history.length > 0 && this.autoConnect){
-      var previous = this.history.at(0);
-      debug('trying last used host', previous);
-      this.$host.text(previous.get('host'));
-      this.process(previous.get('host'), previous.get('id'));
-    }
+    if(this.history.length > 0 && this.autoConnect && !instance) this.resume();
     this.delegateInputEvents();
     return this;
   },
+  resume: function(){
+    var previous = this.history.at(0);
+    debug('trying last used host', previous);
+    this.$host.text(previous.get('host'));
+    this.process(previous.get('host'), previous.get('id'));
+  },
   error: function(err){
     this.dirty = true;
-    console.error('err', err);
     this.$message.text(err.message).fadeIn();
     this.$form.addClass('has-error');
     this.trigger('error');
@@ -73,7 +65,7 @@ var Auth = Backbone.View.extend({
     return this;
   },
   success: function(){
-    if(this.redirect === 'authenticate' || this.redirect === 'connect'){
+    if(this.redirect === 'authenticate' || this.redirect.indexOf('connect') === 0){
       this.redirect = 'pulse';
     }
 
@@ -82,41 +74,22 @@ var Auth = Backbone.View.extend({
 
     this.trigger('success');
 
-    models.deployments.fetch({success: function(){
-      debug('success!  redirecting to ', this.redirect);
-      Backbone.history.navigate(this.redirect, {trigger: true});
-    }.bind(this)});
+    debug('success!  redirecting to ', this.redirect);
+    Backbone.history.navigate(this.redirect, {trigger: true});
     return this;
   },
   process: function(url, id){
-    try{
-      var data = mongodb.parse('mongodb://' + url),
-        server;
+    if(url.indexOf('mongodb://') === -1) url = 'mongodb://' + url;
 
-      if(data.servers.length === 0){
-        throw new Error('Please specify at least one server');
-      }
+    // if(url === models.instance.get('url')) return this.success();
 
-      server = data.servers[0];
+    models.switchTo(url, function(err){
+      if(err) return this.error(err);
+      if(id) return this.success();
 
-      debug('getting token for hostnameport');
-
-      this.loading('requesting access');
-      service.setCredentials('mongodb://' + url, function(err){
-        if(err) return this.error(err);
-
-        if(!id){
-          new Credentials({
-            host: this.$host.text()
-          }).save();
-        }
-
-        return this.success();
-      }.bind(this));
-    }
-    catch(err){
-      this.error(err);
-    }
+      // new Credentials({url: url}).save();
+      this.success();
+    }.bind(this));
   },
   submit: function(){
     this.reset();
@@ -151,7 +124,6 @@ var Auth = Backbone.View.extend({
     var self = this;
 
     this.$host.focus().on('keydown', function(){
-      debug('keydown', event);
       self.reset();
       if(event.keyIdentifier === 'Enter'){
         self.submit();

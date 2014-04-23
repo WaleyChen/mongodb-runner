@@ -5,6 +5,7 @@ var Backbone = require('backbone'),
   donut = require('../viz/donut'),
   models = require('../models'),
   service = require('../service'),
+  nf = require('../nf'),
   debug = require('debug')('mg:scope:database');
 
 var Database = Backbone.View.extend({
@@ -50,7 +51,7 @@ var Summary = Backbone.View.extend({
       .on('sync', this.update, this);
 
     this.top = models.top;
-    this.metric = 'lock.count';
+    this.metric = {key: 'lock.count', label: '#locks'};
     this.$metric = null;
 
     this.graph = creek('#graph-' +  this.database.cid);
@@ -66,7 +67,7 @@ var Summary = Backbone.View.extend({
     this.graph.inc(val);
     if(metricEl){
       setTimeout(function(){
-        metricEl.text(val);
+        metricEl.text(nf(val, 0));
       }, 400);
 
     }
@@ -74,12 +75,12 @@ var Summary = Backbone.View.extend({
   onTopData: function(){
     if(!this.top.get('deltas')) return this;
 
-    var k = this.database.get('name') + '.' + this.metric,
+    var k = this.database.get('name') + '.' + this.metric.key,
       delta = this.top.get('deltas')[k] || 0;
 
     this.graph.inc(delta);
     if(this.$metric){
-      this.$metric.text(this.graph.value);
+      this.$metric.text(nf(this.graph.value, 0));
     }
   },
   enter: function(name){
@@ -101,7 +102,7 @@ var Summary = Backbone.View.extend({
       var el = $(this),
         label = el.siblings('.stat-label'),
         text = label.text(),
-        val = provider[el.data('stat')];
+        val = nf(provider[el.data('stat')]);
       el.html(val);
 
       if(val === 1){

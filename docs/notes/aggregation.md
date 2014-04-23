@@ -3,6 +3,10 @@
 Just some things to help me reason about how aggregation works, little code
 that helped along the way which might end up as a fun SkunkWork project.
 
+Why can aggregation have a fluent companion like so:
+
+http://bl.ocks.org/shancarter/raw/4748131/
+
 ## [user analysis](http://docs.mongodb.org/master/tutorial/aggregation-with-user-preference-data/)
 
 given a users collection

@@ -2,7 +2,7 @@ var $ = require('jquery'),
   _ = require('underscore'),
   EventEmitter = require('events').EventEmitter,
   util = require('util'),
-  debug = require('debug')('_mongoscope:service'),
+  debug = require('debug')('mongoscope:service'),
   socketio = require('socket.io-client'),
   srv;
 

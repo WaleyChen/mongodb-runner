@@ -3,8 +3,9 @@
 
 - stats = database.stats || {}
 
+include ../mixins/nf
 mixin stat(name)
-  | #{stats[name] || '-'}
+  +nf(stats[name] || 0)
 
 .col-md-12
   .col-md-4
@@ -24,9 +25,10 @@ mixin stat(name)
       .col-xs-3
         .metric-value
           i.fa.fa-magnet.fa-spin(style='font-size: initial;')
-        .metric-label
-          a.inline-block(data-toggle="dropdown", href="#", data-target="#dropdown-#{cid}")
-            span.metric-name #{metric.label}
+        .metric-label #{metric.label}
+
+          //- a.inline-block(data-toggle="dropdown", href="#", data-target="#dropdown-#{cid}")
+          //-   span.metric-name #{metric.label}
           //- .dropdown(id='dropdown-#{cid}')
           //-   ul.dropdown-menu
           //-     li.active

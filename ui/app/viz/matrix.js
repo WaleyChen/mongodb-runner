@@ -46,7 +46,7 @@ module.exports = function(metrics, namespaces, data, opts){
       .data(function(d, i){return matrix[i];});
 
     tds.text(function(d){
-       return d.key ? (d.value || 0) : d;
+       return d.key ? ('') : d;
     });
     tds.exit().remove();
     tr.exit().remove();
