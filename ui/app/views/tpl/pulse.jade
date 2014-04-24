@@ -1,4 +1,9 @@
 if instance.database_names.length === 0
   include funnel/01-create-database
+else if instance.type === 'router'
+  ul
+   - for name in instance.database_names
+    li
+      a(href="#/database/#{name}") #{name}
 else
   .databases

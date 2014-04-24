@@ -26,9 +26,15 @@ var Auth = Backbone.View.extend({
     message: '.message'
   },
   autoConnect: true,
-
+  jump: false,
+  url: 'mongodb://localhost:27017',
   initialize: function(){
     this.redirect = window.location.hash.replace('#', '') || 'pulse';
+    if(this.redirect.indexOf('connect/') === 0){
+      this.url = this.redirect.replace('connect/', '');
+      this.url = 'mongodb://' + this.url;
+      this.jump = true;
+    }
     this.history = new History();
     this.history.cursor = 0;
     this.history.fetch();
@@ -45,11 +51,17 @@ var Auth = Backbone.View.extend({
     }
     this.dirty = false;
     this.$modal.modal({backdrop: 'static', keyboard: false});
-    this.render({url: (instance && instance.get('url')) || 'mongodb://localhost:27017'});
+    this.render({url: (instance && instance.get('url')) || this.url});
 
-    if(instance) this.process(instance.get('url'));
-
-    if(this.history.length > 0 && this.autoConnect && !instance) this.resume();
+    if(this.jump){
+      this.process(this.url);
+    }
+    else if(instance){
+      this.process(instance.get('url'));
+    }
+    else if(this.history.length > 0 && this.autoConnect && !instance){
+      this.resume();
+    }
     this.delegateInputEvents();
     return this;
   },
@@ -158,7 +170,6 @@ var Auth = Backbone.View.extend({
       if(event.keyIdentifier === 'Down'){
         if(self.history.length === 0) return debug('no history');
         if(self.history.cursor === self.history.length){
-          debugger;
           return;
         }
 

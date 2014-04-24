@@ -40,10 +40,6 @@ var Pulse = Backbone.View.extend({
   },
   render: function(){
     var self = this;
-    debug('got render', models.instance.toJSON());
-    if(models.instance.get('type') === 'router'){
-      return this.$el.html('<p>@todo: pulse view for a router.</p>');
-    }
 
     clearTimeout(this.poller);
     if(models.instance.get('database_names').length === 0){
@@ -59,7 +55,7 @@ var Pulse = Backbone.View.extend({
 
     this.$el.html(this.tpl({instance: models.instance.toJSON()}));
 
-    if(this.databases.length === 0){
+    if(this.databases.length === 0 && this.$el.find('.databases').length > 0){
       debug('creating database views');
       this.databases = models.instance.get('database_names').map(function(name){
         return new DatabasePulseView({name: name});
