@@ -41,6 +41,9 @@ var Pulse = Backbone.View.extend({
   render: function(){
     var self = this;
     debug('got render', models.instance.toJSON());
+    if(models.instance.get('type') === 'router'){
+      return this.$el.html('<p>@todo: pulse view for a router.</p>');
+    }
 
     clearTimeout(this.poller);
     if(models.instance.get('database_names').length === 0){
