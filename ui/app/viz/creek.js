@@ -157,7 +157,7 @@ Creek.prototype.draw = function(){
   };
 
   this.paused = false;
-  // return this.tick();
+  return this.tick();
 };
 
 Creek.prototype.pause = function(i){

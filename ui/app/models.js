@@ -76,6 +76,8 @@ module.exports.switchTo = function(deploymentId, instanceId, fn){
         if(instance) instance.clear();
 
         deployment.set(_.clone(deployments.get(deploymentId).attributes));
+        deployment.instances.reset(deployment.get('instances'), {silent: true});
+
         debug('switched to deployment', deployment);
 
         instance.set(_.clone(deployment.getSeedInstance().attributes));
@@ -177,6 +179,7 @@ var Settings = Backbone.Model.extend({
       return this.instances.get(id);
     },
     getSeedInstance: function(){
+      // return this.getInstance(this.get('seed').replace('mongodb://', ''));
       return this.instances.at(0);
     }
 

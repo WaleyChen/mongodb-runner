@@ -22,6 +22,7 @@
     "d3": "^3.4.3",
     "lodash": "^2.4.1",
     "numeral": "^1.5.3",
-    "bootstrap": "git://github.com/twbs/bootstrap"
+    "bootstrap": "git://github.com/twbs/bootstrap",
+    "mousetrap": "0.0.1"
   }
 }

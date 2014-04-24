@@ -27,8 +27,7 @@ var Top = Backbone.View.extend({
 
     this.$el.html(this.tpl({}));
 
-    models.top.enter()
-      .on('sync', this.insert, this);
+    models.top.fetch({success: this.insert.bind(this)});
   },
   exit: function(){
     models.top.exit().off('sync', this.update, this);

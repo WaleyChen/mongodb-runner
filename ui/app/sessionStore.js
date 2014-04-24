@@ -118,17 +118,21 @@ var sesh = {
       var pending = length,
         docs = [];
 
-      for(var i=0; i < length; i++){
+      for(var i=0; i <length; i++){
         store.key(i, function(err, id){
           if(err) return fn(err);
 
           store.get(id, function(err, doc){
-            debug('get ' + id, err, doc);
+            console.log('get ' + id, err, doc);
             if(err) return fn(err);
 
             docs.push(doc);
             pending--;
-            if(pending === 0) return fn(null, docs);
+
+            if(pending === 0){
+              console.log('returning', docs);
+              return fn(null, docs);
+            }
           });
         });
       }

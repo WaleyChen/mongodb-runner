@@ -30,6 +30,7 @@ var Auth = Backbone.View.extend({
   initialize: function(){
     this.redirect = window.location.hash.replace('#', '') || 'pulse';
     this.history = new History();
+    this.history.cursor = 0;
     this.history.fetch();
   },
   enter: function(deploymentId, instanceId){
@@ -54,9 +55,9 @@ var Auth = Backbone.View.extend({
   },
   resume: function(){
     var previous = this.history.at(0);
-    debug('trying last used host', previous);
-    this.$host.text(previous.get('host'));
-    this.process(previous.get('host'), previous.get('id'));
+    debug('trying last used', previous);
+    this.$host.text(previous.get('url'));
+    this.process(previous.get('url'), previous.get('id'));
   },
   error: function(err){
     this.dirty = true;
@@ -87,13 +88,14 @@ var Auth = Backbone.View.extend({
   process: function(url, id){
     if(url.indexOf('mongodb://') === -1) url = 'mongodb://' + url;
 
-    // if(url === models.instance.get('url')) return this.success();
-
     models.switchTo(url, function(err){
       if(err) return this.error(err);
       if(id) return this.success();
 
-      // new Credentials({url: url}).save();
+      var creds = new Credentials({url: url, id: url.replace('mongodb://', '')});
+      creds.save();
+      this.history.add(creds);
+
       this.success();
     }.bind(this));
   },
@@ -131,6 +133,7 @@ var Auth = Backbone.View.extend({
 
     this.$host.focus().on('keydown', function(){
       self.reset();
+      debug('keydown', event.keyIdentifier);
       if(event.keyIdentifier === 'Enter'){
         self.submit();
         return false;
@@ -138,11 +141,30 @@ var Auth = Backbone.View.extend({
       // @todo: more key code handlers:
       //  - up/down -> cycle history
       if(event.keyIdentifier === 'Up'){
+        if(self.history.length === 0) return;
+
+        if(self.history.cursor > 0){
+          self.history.cursor--;
+        }
+        self.$host.text(self.history.at(self.history.cursor).get('url').replace('mongodb://', ''));
+        return false;
+      }
+
+      // tab -> toggle text selection betwen hostname and port
+      if(event.keyIdentifier === 'Tab'){
 
       }
 
       if(event.keyIdentifier === 'Down'){
+        if(self.history.length === 0) return debug('no history');
+        if(self.history.cursor === self.history.length){
+          debugger;
+          return;
+        }
 
+        self.$host.text(self.history.at(self.history.cursor).get('url').replace('mongodb://', ''));
+        self.history.cursor++;
+        return false;
       }
       //  - esc -> clear
       if(event.keyIdentifier === 'U+001B'){

@@ -42,3 +42,5 @@ require('./models')({
 });
 
 require('./views/toolbar')();
+
+require('./keybindings');
