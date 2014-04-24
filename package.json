@@ -3,7 +3,7 @@
   "description": "Wouldn't it be great if monogo just had this stuff builtin instead of rolling it yourself?",
   "version": "0.0.3",
   "scripts": {
-    "start": "NODE_ENV=development DEBUG=mongo* gulp dev",
+    "start": "NODE_ENV=development DEBUG=mon* gulp dev",
     "dist": "./bin/dist.sh",
     "test": "mocha"
   },
