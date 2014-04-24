@@ -51,7 +51,7 @@ var Summary = Backbone.View.extend({
       .on('sync', this.update, this);
 
     this.top = models.top;
-    this.metric = {key: 'lock.count', label: '#locks'};
+    this.metric = {key: 'total.count', label: '#ops'};
     this.$metric = null;
 
     this.graph = creek('#graph-' +  this.database.cid);
