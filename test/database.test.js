@@ -1,6 +1,5 @@
 var helpers = require('./helpers'),
   get = helpers.get, ctx = helpers.ctx,
-  assert = require('assert'),
   debug = require('debug')('mongoscope:test:database');
 
 describe('database', function(){
