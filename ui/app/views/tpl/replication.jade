@@ -1,33 +1,41 @@
-if instance.replicaset
+include mixins/bytes
+
+if replication
   .row(style="margin-top: 20px;")
     .col-md-9
-      - self = instance.replicaset.instance
-      h1 #{instance.replicaset._id}
+      - self = replication.instance
+      h1 #{replication._id}
 
-      ol.list-group
-        li.two-lines
-          //- if self.isPrimary
-          //-   .status P
-          //- else if self.isSecondary
-          //-   .status S
-          //- else if self.isArbiter
-          //-   .status A
-          .primary-line #{self.name}
+      ul.list-group
+        li.list-group-item
+          .primary-line #{replication.primary.name}
 
-        for member in instance.replicaset.secondaries
-          li.list-item
-            //- .status S
+         - for member in replication.secondaries
+          li.list-group-item
             .primary-line #{member.name}
             .secondary-line #{member.state}
-            .secondary-line replication Lag #{member.lag_replication}ms
+            .secondary-line replication lag #{member.lag_replication}ms
+            .secondary-line operational lag #{member.lag_operational}ms
+
+         - for member in replication.arbiters
+          li.list-group-item
+            span.inline-block-tight #{member.name}
+            span.inline-block-tight.text-subtle A
+            p Operational Lag #{member.lag_operational}ms
 
     .col-md-3
-      ul.list-group
-       - for member in instance.replicaset.arbiters
-        li.list-item
-          span.inline-block-tight #{member.name}
-          span.inline-block-tight.text-subtle A
-          p Operational Lag #{member.lag_operational}ms
+      h2 oplog
+      ul
+        li opcount: #{replication.oplog.count}
+        li window: #{moment(replication.oplog.window[0]).from(replication.oplog.window[1], true)}
+        li collection size
+          +bytes(replication.options.size)
+        li head:
+          pre
+            code #{JSON.stringify(replication.oplog.head)}
+        li tail:
+          pre
+            code #{JSON.stringify(replication.oplog.tail)}
 
 else
   .row

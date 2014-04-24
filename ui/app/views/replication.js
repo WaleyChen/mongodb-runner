@@ -1,24 +1,26 @@
 // @todo: redo all of this...
 var Backbone = require('backbone'),
+  moment = require('moment'),
   debug = require('debug')('mongoscope:replication');
 
 var Replication = Backbone.View.extend({
   tpl: require('./tpl/replication.jade'),
   initialize: function(){
-    this.instance = require('../models').instance;
+    this.replication = require('../models').replication();
   },
   enter: function(){
     debug('enter');
     this.$el = Backbone.$('#mongoscope');
     this.el = this.$el.get(0);
-    this.render();
+    this.replication.once('sync', this.insert, this);
+    this.replication.fetch();
   },
   exit: function(){
 
   },
-  render: function(){
-    debug('rendering');
-    this.$el.html(this.tpl({instance: this.instance.toJSON()}));
+  insert: function(){
+    this.$el.html(this.tpl({moment: moment,
+      replication: this.replication.toJSON()}));
   }
 });
 

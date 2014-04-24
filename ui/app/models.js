@@ -553,8 +553,28 @@ var Sharding = Model.extend({
   }
 });
 
+var Replication = Model.extend({
+  service: function(){
+    return {name: 'replication', args: [instance.id]};
+  }
+});
+
+var Oplog = Model.extend({
+  service: function(){
+    return {name: 'oplog', args: [instance.id]};
+  }
+});
+
 module.exports.sharding = function(){
   return new Sharding();
+};
+
+module.exports.replication = function(){
+  return new Replication();
+};
+
+module.exports.oplog = function(){
+  return new Oplog();
 };
 
 module.exports.Security.User = User;
