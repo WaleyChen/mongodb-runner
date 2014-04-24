@@ -7,23 +7,23 @@
 
 routers:
 
-- [mongos --port 30999 --configdb localhost:29000](http://localhost:29017/#connect/localhost:30999)
+- [mongodb://localhost:30999?config=localhost:29000](http://localhost:29017/#connect/localhost:30999)
 
 shard 1:
 
-- [mongod --port 31102 --replSet clusterco-rs0 --dbpath /data/db/clusterco-rs0-2](http://localhost:29017/#connect/localhost:31102)
-- [mongod --port 31101 --replSet clusterco-rs0 --dbpath /data/db/clusterco-rs0-1](http://localhost:29017/#connect/localhost:31101)
-- [mongod --port 31100 --replSet clusterco-rs0 --dbpath /data/db/clusterco-rs0-0](http://localhost:29017/#connect/localhost:31100)
+- [mongodb://localhost:31102?rs=clusterco-rs0](http://localhost:29017/#connect/localhost:31102)
+- [mongodb://localhost:31101?rs=clusterco-rs0](http://localhost:29017/#connect/localhost:31101)
+- [mongodb://localhost:31100?rs=clusterco-rs0](http://localhost:29017/#connect/localhost:31100)
 
 shard 2:
 
-- [mongod --port 31200 --replSet clusterco-rs1 --dbpath /data/db/clusterco-rs1-0](http://localhost:29017/#connect/localhost:31200)
-- [mongod --port 31202 --replSet clusterco-rs1 --dbpath /data/db/clusterco-rs1-2](http://localhost:29017/#connect/localhost:31202)
-- [mongod --port 31201 --replSet clusterco-rs1 --dbpath /data/db/clusterco-rs1-1](http://localhost:29017/#connect/localhost:31201)
+- [mongodb://localhost:31200?rs=clusterco-rs1](http://localhost:29017/#connect/localhost:31200)
+- [mongodb://localhost:31202?rs=clusterco-rs1](http://localhost:29017/#connect/localhost:31202)
+- [mongodb://localhost:31201?rs=clusterco-rs1](http://localhost:29017/#connect/localhost:31201)
 
 config server:
 
-- [mongod --port 29000 --dbpath /data/db/clusterco-config0 --configsvr](http://localhost:29017/#connect/localhost:29000)
+- [mongodb://localhost:29000?type=config](http://localhost:29017/#connect/localhost:29000)
 
 shelljs to start and setup:
 
