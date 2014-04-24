@@ -21,10 +21,9 @@ var Toolbar = Backbone.View.extend({
       deployments: deps,
       instance: models.instance.toJSON(),
       sections: [
-        {name: 'pulse', 'icon': 'flash'},
+        {name: 'pulse', icon: 'flash'},
         {name: 'top', icon: 'magnet'},
         {name: 'log', icon: 'align-justify'},
-        {name: 'security', icon: 'record'},
         {name: 'replication', icon: 'send'},
         {name: 'sharding', icon: 'th'}
       ]
@@ -37,10 +36,9 @@ var Toolbar = Backbone.View.extend({
       deployments: deps,
       instance: models.instance.toJSON(),
       sections: [
-        {name: 'pulse', 'icon': 'flash'},
+        {name: 'pulse', icon: 'flash'},
         {name: 'top', icon: 'magnet'},
         {name: 'log', icon: 'align-justify'},
-        {name: 'security', icon: 'record'},
         {name: 'replication', icon: 'send'},
         {name: 'sharding', icon: 'th'}
       ]
