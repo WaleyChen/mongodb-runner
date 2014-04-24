@@ -1,25 +1,39 @@
-var Backbone = require('backbone'),
-  ConnectModal = require('./auth').ConnectModal,
-  models = require('../models'),
-  srv = require('../service'),
-  debug = require('debug')('mongoscope:connect');
-
-//@todo: Switch view -> Just a hook from URL to service config.
-
+var ConnectModal = require('./auth').ConnectModal;
 
 var Create = ConnectModal.extend({
-  autoConnect: false
+  autoConnect: false,
+  closeable: true
 });
 
-module.exports.switch = function(){
-  var view = new Create();
+var view;
+
+function getView(){
+  if(view) return view;
+  view = new Create()
+    .on('enter', function(){
+      view.$body.addClass('connect');
+    })
+    .on('exit', function(){
+      view.$body.removeClass('connect');
+    });
   return view;
+}
+
+module.exports.switch = function(){
+  return getView();
 };
 
 module.exports.create = function(){
-  var view = new Create();
-  view.on('success', function(){
-    view.$body.removeClass('connect');
-  });
+  return getView();
+};
+
+module.exports.toggle = function(){
+  if(view.visible){
+    view.exit();
+  }
+  else {
+    view.enter();
+  }
   return view;
 };
+

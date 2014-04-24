@@ -1,8 +1,9 @@
 var mousetrap = require('mousetrap'),
-  Backbone = require('Backbone');
+  Backbone = require('Backbone'),
+  Connect = require('./views/connect');
 
 mousetrap.bind('command+shift+p', function(){
-  Backbone.history.navigate('connect', {trigger: true});
+  Connect.toggle();
   return false;
 });
 

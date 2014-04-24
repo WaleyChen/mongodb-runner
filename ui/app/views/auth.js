@@ -27,6 +27,8 @@ var Auth = Backbone.View.extend({
   },
   autoConnect: true,
   jump: false,
+  visible: false,
+  closeable: false,
   url: 'mongodb://localhost:27017',
   initialize: function(){
     this.redirect = window.location.hash.replace('#', '') || 'pulse';
@@ -63,8 +65,11 @@ var Auth = Backbone.View.extend({
       this.resume();
     }
     this.delegateInputEvents();
+    this.visible = true;
+    this.trigger('enter');
     return this;
   },
+
   resume: function(){
     var previous = this.history.at(0);
     debug('trying last used', previous);
@@ -77,6 +82,14 @@ var Auth = Backbone.View.extend({
     this.$form.addClass('has-error');
     this.trigger('error');
   },
+  exit: function(){
+    this.$modal.modal('hide');
+    this.$body.removeClass('authenticate');
+    this.undelegateEvents();
+    this.undelegateInputEvents();
+    this.visible = false;
+    this.trigger('exit');
+  },
   loading: function(msg){
     debug('loading', msg);
     return this;
@@ -85,14 +98,7 @@ var Auth = Backbone.View.extend({
     if(this.redirect === 'authenticate' || this.redirect.indexOf('connect') === 0){
       this.redirect = 'pulse';
     }
-
-    this.$modal.modal('hide');
-    this.$body.removeClass('authenticate');
-
-    this.trigger('success');
-    this.undelegateEvents();
-    this.undelegateInputEvents();
-
+    this.exit();
     debug('success!  redirecting to ', this.redirect);
     Backbone.history.navigate(this.redirect, {trigger: true});
     return this;
@@ -179,6 +185,7 @@ var Auth = Backbone.View.extend({
       }
       //  - esc -> clear
       if(event.keyIdentifier === 'U+001B'){
+        if(self.closeable) return self.exit();
         self.$host.text('');
         return false;
       }
@@ -191,6 +198,7 @@ var Auth = Backbone.View.extend({
         setTimeout(self.reset.bind(self), 2000);
         return false;
       }
+      return true;
     });
   },
   undelegateInputEvents: function(){
