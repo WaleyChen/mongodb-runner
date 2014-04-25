@@ -10,4 +10,3 @@
 - [x] set up a sharded deployment to test against
 - [x] sharding
 - [x] auth updates
-- [ ] can branch a connection to another instance in the deployment
