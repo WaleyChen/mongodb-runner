@@ -4,60 +4,30 @@ var gulp = require('gulp'),
   manifest = require('gulp-sterno-manifest'),
   Notification = require('node-notifier'),
   source = require('vinyl-source-stream'),
+  keepup = require('keepup'),
   pkg = require('./package.json'),
-  serverPid;
-
-var nodemon = require('nodemon');
+  server,
+  notifier = new Notification({});
 
 gulp.task('dev', ['ui', 'server', 'watch']);
 gulp.task('ui', ['pages', 'assets', 'js', 'less', 'manifest']);
 gulp.task('default', ['dev']);
 
 gulp.task('server', function(){
-  nodemon({
-    script: 'index.js'
-  });
-
-  nodemon.on('start', function (pid) {
-    serverPid = pid;
+  server = keepup('node index.js').on('crash', function(data){
+    notifier.notify({title: 'server crashed', message: data.captured});
+    console.error(data.captured);
+  }).on('reload', function(){
+    console.log('reloading server');
   });
 });
 
-// @todo: if there is an error, show notification
 gulp.task('server reload', function(){
-  process.kill(serverPid, 'SIGUSR2');
+  notifier.notify({title: 'reloading server'});
+  server.reload();
 });
 
 gulp.task('watch', function(){
-  var tty = require('tty');
-
-  function raw (mode) {
-    if (typeof process.stdin.setRawMode === 'function') {
-      process.stdin.setRawMode(mode);
-    } else {
-      tty.setRawMode(mode);
-    }
-  }
-
-  if (tty.isatty(0)) {
-    process.stdin.resume();
-    raw(true);
-    process.stdin.on('data', function (b) {
-      var key = b.toString('utf8');
-      switch (key) {
-        case '\u0003': // Ctrl+C
-          process.exit();
-          break;
-
-        case '\u0012': // Ctrl+R
-          gulp.start('server reload');
-          break;
-      }
-    });
-    console.log('[ctrl+c to quit]');
-    console.log('[ctrl+r to reload]');
-  }
-
   gulp.watch(['./lib/{*,**/*}.js'], ['server reload']);
 
   gulp.watch(['ui/app/{*,**/*}.js', 'ui/app/views/tpl/{*,**/*}.jade'], ['js']);
@@ -70,7 +40,6 @@ gulp.task('watch', function(){
 });
 
 gulp.task('js', function(){
-  var notifier = new Notification({});
   browserify({entries: ['./ui/app/index.js']})
     .transform(require('jadeify'))
     .bundle({debug: false})
@@ -101,7 +70,6 @@ gulp.task('less', function () {
     'ui/less/atom/variables',
     'ui/less/fontawesome'
   ],
-  notifier = new Notification({}),
   less = function(){
     return require('gulp-less')({paths: lessPaths}).on('error', function(err){
       var filename = err.fileName.replace(__dirname + '/', ''),
@@ -119,8 +87,7 @@ gulp.task('less', function () {
 });
 
 gulp.task('pages', function(){
-  var notifier = new Notification({}),
-    jade = function(){
+  var jade = function(){
         return require('gulp-jade')({pretty: false}).on('error', function(err){
           notifier.notify({title: 'jade error', message: err.message});
           console.error('jade error', err);

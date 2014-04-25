@@ -7,6 +7,10 @@ Why can aggregation have a fluent companion like so:
 
 http://bl.ocks.org/shancarter/raw/4748131/
 
+Nice pipeline builder!
+
+http://gulpfiction.divshot.io/
+
 ## [user analysis](http://docs.mongodb.org/master/tutorial/aggregation-with-user-preference-data/)
 
 given a users collection

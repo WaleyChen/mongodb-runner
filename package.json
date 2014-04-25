@@ -87,7 +87,6 @@
     "vinyl-source-stream": "^0.1.1",
     "gulp-livereload": "^1.2.0",
     "browserify": "^3.39.0",
-    "node-notifier": "^2.0.4",
-    "nodemon": "^1.0.17"
+    "node-notifier": "^2.0.4"
   }
 }
