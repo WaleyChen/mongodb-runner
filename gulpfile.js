@@ -14,6 +14,11 @@ gulp.task('ui', ['pages', 'assets', 'js', 'less', 'manifest']);
 gulp.task('default', ['dev']);
 
 gulp.task('server', function(){
+  if(server){
+    notifier.notify({title: 'reloading server'});
+    return server.reload();
+  }
+
   server = keepup('node index.js').on('crash', function(data){
     notifier.notify({title: 'server crashed', message: data.captured});
     console.error(data.captured);
@@ -22,13 +27,8 @@ gulp.task('server', function(){
   });
 });
 
-gulp.task('server reload', function(){
-  notifier.notify({title: 'reloading server'});
-  server.reload();
-});
-
 gulp.task('watch', function(){
-  gulp.watch(['./lib/{*,**/*}.js'], ['server reload']);
+  gulp.watch(['./lib/{*,**/*}.js'], ['server']);
 
   gulp.watch(['ui/app/{*,**/*}.js', 'ui/app/views/tpl/{*,**/*}.jade'], ['js']);
 
