@@ -101,3 +101,17 @@ beacause there will be a lot of demoing...
 - Use the shell as a tutorial/wizard-mode?
 - "Install mongodb" -> click here to launch mongoscope shell in fullscreen
   mode
+
+
+Explore a collection as a 3d grid like http://mrdoob.github.io/three.js/examples/css3d_periodictable.html
+
+
+Nudge the user with out of the box templates for schema design, eg
+"here is a good user model, activity stream, etc go nuts!"
+
+Probabalistic counters -> feature request from professor barrentine
+
+like the influx db story.  shouldn’t have to set anything else up if you
+have mongo and scope installed to have your own stupidly basic time-series
+dashboard.
+

@@ -11,6 +11,8 @@ Nice pipeline builder!
 
 http://gulpfiction.divshot.io/
 
+Aggregation pipelines same as node streams connected with pipe()! Group ops by read/write/transform
+
 ## [user analysis](http://docs.mongodb.org/master/tutorial/aggregation-with-user-preference-data/)
 
 given a users collection
