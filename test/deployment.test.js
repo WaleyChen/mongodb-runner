@@ -28,7 +28,6 @@ describe('deployment', function(){
     it('should discover all instances from a primary', function(done){
       Deployment.create('mongodb://localhost:31200', function(err, d){
         if(err) return done(err);
-        console.log(d);
 
         assert.equal(d.maybe_sharded, true);
         assert.equal(d.sharding, undefined);
@@ -36,5 +35,7 @@ describe('deployment', function(){
       });
     });
     it('should discover all instances from a secondary');
+    it('should not create more than one deployment');
+    it('should upgrade an existing replicaset deployment to a cluster');
   });
 });

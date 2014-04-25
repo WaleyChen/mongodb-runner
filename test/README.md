@@ -7,23 +7,23 @@
 
 routers:
 
-- [mongodb://localhost:30999?config=localhost:29000](http://localhost:29017/#connect/localhost:30999)
+- [mongodb://localhost:30999](http://localhost:29017/#connect/localhost:30999)
 
 shard 1:
 
-- [mongodb://localhost:31102?rs=clusterco-rs0](http://localhost:29017/#connect/localhost:31102)
-- [mongodb://localhost:31101?rs=clusterco-rs0](http://localhost:29017/#connect/localhost:31101)
-- [mongodb://localhost:31100?rs=clusterco-rs0](http://localhost:29017/#connect/localhost:31100)
+- [mongodb://localhost:31102](http://localhost:29017/#connect/localhost:31102)
+- [mongodb://localhost:31101](http://localhost:29017/#connect/localhost:31101)
+- [mongodb://localhost:31100](http://localhost:29017/#connect/localhost:31100)
 
 shard 2:
 
-- [mongodb://localhost:31200?rs=clusterco-rs1](http://localhost:29017/#connect/localhost:31200)
-- [mongodb://localhost:31202?rs=clusterco-rs1](http://localhost:29017/#connect/localhost:31202)
-- [mongodb://localhost:31201?rs=clusterco-rs1](http://localhost:29017/#connect/localhost:31201)
+- [mongodb://localhost:31200](http://localhost:29017/#connect/localhost:31200)
+- [mongodb://localhost:31202](http://localhost:29017/#connect/localhost:31202)
+- [mongodb://localhost:31201](http://localhost:29017/#connect/localhost:31201)
 
 config server:
 
-- [mongodb://localhost:29000?type=config](http://localhost:29017/#connect/localhost:29000)
+- [mongodb://localhost:29000](http://localhost:29017/#connect/localhost:29000)
 
 shelljs to start and setup:
 
