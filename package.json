@@ -5,7 +5,10 @@
   "scripts": {
     "start": "NODE_ENV=development DEBUG=mon* gulp dev",
     "dist": "./bin/dist.sh",
-    "test": "mocha"
+    "test": "mocha",
+    "mongo-cluster": "cat ./test/shell/start-cluster.js | mongo",
+    "mongo-replicaset": "mongo ./test/shell/start-replicaset.js",
+    "mongo": "mongod --port 27017 --dbpath /data/db/standalone"
   },
   "author": "Lucas Hrabovsky <lucas@mongodb.com> (http://imlucas.com)",
   "homepage": "http://10gen.github.io/mongoscope/onesheet.html",
