@@ -114,7 +114,6 @@ Ping this to see if the http server is up.
 
 |              function             | scope'd |
 | --------------------------------- | ------- |
-| `collection.dataSize`             | yes     |
 | `collection.find(...).count`      | yes     |
 | `collection.find(...).limit`      | yes     |
 | `collection.find(...).skip`       | yes     |
@@ -149,6 +148,7 @@ Ping this to see if the http server is up.
 | `rs.status`                       | yes     |
 | `sh.status`                       | yes     |
 | `collection.getShardDistribution` | ?       |
+| `collection.dataSize`             | missing |
 | `collection.distinct`             | missing |
 | `collection.find(...).sort`       | missing |
 | `collection.getPlanCache`         | missing |
