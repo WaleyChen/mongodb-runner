@@ -4,36 +4,28 @@
 
 ## Deliverables
 
-- server
-  - [ ] complete, web-friendly read-only rest api
-  - [ ] cr-based authentication
-- ui
-  - [ ] deployments
-    - [ ] connect to deployment
-    - [ ] view deployment details and topology (replication and sharding status
-    - [ ] easily view details for any instance
-    - [ ] connect to another deployment
-  - [ ] instances
-    - [ ] view host and build details
-    - [ ] view log
-    - [ ] view top
-    - [ ] view databases w/ high-level stats
-    - [ ] view collections w/ high-level stats
-- project
-  - [ ] deployment setup
-  - [ ] ground-work for qa and documentation
+- [ ] server: complete, web-friendly read-only rest api
+- [ ] server: cr-based authentication
+- [ ] ui: deployments: connect to deployment
+- [ ] ui: deployments: view details (replication and sharding status
+- [ ] ui: deployments: easily view details for any instance
+- [ ] ui: deployments: connect to another deployment
+- [ ] ui: instance: view host and build details
+- [ ] ui: instance: view log
+- [ ] ui: instance: view top
+- [ ] ui: instance: view databases w/ high-level stats
+- [ ] ui: instance: view collections w/ high-level stats
+- [ ] project: deployment setup
+- [ ] project: ground-work for qa and documentation
 
 ## Punchlist
-- server
-  - [ ] dns disambiguation
-  - [ ] connecting automatically figures out the right deployment you want
-    instead of creating a new one
-  - [ ] connect to rs that is actually a cluster -> connect to cluster -> merges
-    the two deployments
-  - [ ] url vs. id vs. name cleanup
-  - [ ] when a replicaset membership event happens, update the deployment
-  - [ ] add tests to make sure if you try to connect to a config
-    instance the world does not end
+- [ ] server: dns disambiguation
+- [ ] server: connecting automatically figures out the right deployment you want instead of creating a new one
+- [ ] server: connect to rs that is actually a cluster -> connect to cluster -> merges the two deployments
+- [ ] server: url vs. id vs. name cleanup
+- [ ] server: when a replicaset membership event happens, update the deployment
+- [ ] server: add tests to make sure if you try to connect to a config
+  instance the world does not end
 - ui
   - [ ] dumb down ui even further
   - [ ] starting view for cluster
@@ -52,41 +44,41 @@
 
 #### `/api/v1/:instance`
 
-|     |         URI          |                 MongoDB Commands                 | Stream | Notes |
-| --- | -------------------- | ------------------------------------------------ | ------ | ----- |
-| [x] | `/`                  | `listDatabases` + `db.hostInfo` + `db.buildInfo` |        |       |
-| [x] | `/metrics`           | `db.serverStatus`                                |        |       |
-| [x] | `/ops`               | `db.currentOp`                                   | [x]    |       |
-| [x] | `/log`               | `getLog`                                         | [x]    |       |
-| [x] | `/top`               | `top`                                            | [x]    |       |
-| [x] | `/replication`       | `rs.printReplicationInfo` + `rs.conf`            |        |       |
-| [x] | `/replication/oplog` | `oplog.rs.find`                                  | [x]    |       |
-| [x] | `/replication/watch` | no equivalent                                    | [x]    |       |
+|     |         URI          |                 MongoDB Commands                 | Stream | Tested  |
+| :-: | -------------------- | ------------------------------------------------ | :----: | :-----: |
+|  ✔︎ | `/`                  | `listDatabases` + `db.hostInfo` + `db.buildInfo`  |        | ⧠       |
+|  ✔︎ | `/metrics`           | `db.serverStatus`                                 |        | ⧠       |
+|  ✔︎ | `/ops`               | `db.currentOp`                                    |   ✔︎    | ⧠       |
+|  ✔︎ | `/log`               | `getLog`                                          |   ✔︎    | ⧠       |
+|  ✔︎ | `/top`               | `top`                                             |   ✔︎    | ⧠       |
+|  ✔︎ | `/replication`       | `rs.printReplicationInfo` + `rs.conf`             |        | ⧠       |
+|  ✔︎ | `/replication/oplog` | `oplog.rs.find`                                   |   ✔︎    | ⧠       |
+|  ✔︎ | `/replication/watch` | no equivalent                                     |   ✔︎    | ⧠       |
 
 #### `/api/v1/:instance/:database_name`
 
-|     |     URI     |           MongoDB Commands           | Stream | Notes |
-| --- | ----------- | ------------------------------------ | ------ | ----- |
-| [x] | `/`         | `db.stats` + `db.getCollectionNames` |        |       |
-| [x] | `profiling` | `db.getProfilingStatus`              | [x]    |       |
+|     |     URI     |           MongoDB Commands           | Stream |
+| :-: | ----------- | ------------------------------------ | :----: |
+| ✔︎ | `/`         | `db.stats` + `db.getCollectionNames` |        |
+| ✔︎ | `profiling` | `db.getProfilingStatus`              | ✔︎      |
 
 #### `/api/v1/:instance/:database_name/:collection_name`
 
 |     |   URI    |                          MongoDB Commands                         | Stream |                         Notes                          |
-| --- | -------- | ----------------------------------------------------------------- | ------ | ------------------------------------------------------ |
-| [x] | `/`      | `collection.stats` + `collection.getIndexes` + `collection.*Size` |        |                                                        |
-| [x] | `/count` | `.find(:where).count()`                                           | [ ]    | :explain supported                                     |
-| [x] | `/find`  | `.find(:where).limit(:limit).skip(:skip)`                         | [x]    | :explain supported. Only Stream for capped collections |
+| --- | -------- | ----------------------------------------------------------------- | :----: | ------------------------------------------------------ |
+| ✔︎ | `/`      | `collection.stats` + `collection.getIndexes` + `collection.*Size`   |        |                                                        |
+| ✔︎ | `/count` | `.find(:where).count()`                                             |        | :explain supported                                     |
+| ✔︎ | `/find`  | `.find(:where).limit(:limit).skip(:skip)`                           | ✔︎      | :explain supported. Only Stream for capped collections |
 
 #### `/api/v1/:instance/security`
 
-|     |                URI                |        MongoDB Commands       | Stream | Notes |
-| --- | --------------------------------- | ----------------------------- | ------ | ----- |
-| [ ] | `/`                               | `db.getUsers` + `db.getRoles` |        |       |
-| [ ] | `/users`                          | `db.getUsers`                 |        |       |
-| [x] | `/users/:database_name/:username` | `db.getUser`                  |        |       |
-| [ ] | `/roles`                          | `db.getRoles`                 |        |       |
-| [x] | `/roles/:database_name/:role`     | `db.getRole`                  |        |       |
+|     |                URI                |        MongoDB Commands       |
+| :-: | --------------------------------- | ----------------------------- |
+| ⧠ | `/`                               | `db.getUsers` + `db.getRoles` |
+| ⧠ | `/users`                          | `db.getUsers`                 |
+| ✔︎ | `/users/:database_name/:username` | `db.getUser`                  |
+| ⧠ | `/roles`                          | `db.getRoles`                 |
+| ✔︎ | `/roles/:database_name/:role`     | `db.getRole`                  |
 
 > incompletes just needs to always be scoped to `:database_name`
 
