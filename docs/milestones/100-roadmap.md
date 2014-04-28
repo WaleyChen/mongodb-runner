@@ -4,8 +4,8 @@
 
 ## Deliverables
 
+- [x] server: cr-based authentication
 - [ ] server: complete, web-friendly read-only rest api
-- [ ] server: cr-based authentication
 - [ ] ui: deployments: connect to deployment
 - [ ] ui: deployments: view details (replication and sharding status
 - [ ] ui: deployments: easily view details for any instance
@@ -19,10 +19,11 @@
 - [ ] project: ground-work for qa and documentation
 
 ## Punchlist
+
+- [x] server: url vs. id vs. name cleanup
 - [ ] server: dns disambiguation
 - [ ] server: connecting automatically figures out the right deployment you want instead of creating a new one
 - [ ] server: connect to rs that is actually a cluster -> connect to cluster -> merges the two deployments
-- [ ] server: url vs. id vs. name cleanup
 - [ ] server: when a replicaset membership event happens, update the deployment
 - [ ] server: add tests to make sure if you try to connect to a config
   instance the world does not end

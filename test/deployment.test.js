@@ -15,6 +15,8 @@ describe('deployment', function(){
     it('should discover all instances given a router', function(done){
       Deployment.create('mongodb://localhost:30999', function(err, d){
         if(err) return done(err);
+
+        console.log(d);
         assert.equal(d._id, '25jf');
         assert.equal(d.seed, 'mongodb://localhost:30999');
         assert.equal(d.name, 'localhost:30999');

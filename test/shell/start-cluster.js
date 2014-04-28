@@ -14,4 +14,4 @@ var opts = {},
 
 st = new ShardingTest(sharding);
 st.s.getDB(dbName).adminCommand({enableSharding: dbName});
-st.s.getDB(dbName).adminCommand({shardCollection: dbName+'.'+collName, key: { x: 1 }});
+st.s.getDB(dbName).adminCommand({shardCollection: dbName+'.'+collName, key: {_id: 1 }});
