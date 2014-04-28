@@ -140,16 +140,16 @@ Ping this to see if the http server is up.
 | `rs.printSlaveReplicationInfo`    | yes     |
 | `rs.status`                       | yes     |
 | `sh.status`                       | yes     |
-| `collection.getShardDistribution` | ?       |
-| `collection.dataSize`             | missing |
-| `collection.distinct`             | missing |
-| `collection.find(...).sort`       | missing |
-| `collection.getPlanCache`         | missing |
-| `collection.getWriteConcern`      | missing |
-| `collection.group`                | missing |
-| `sh.getBalancerState`             | missing |
-| `sh.isBalancerRunning`            | missing |
-| `db.getWriteConcern`              | missing |
+| `collection.getShardDistribution` | yes     |
+| `collection.distinct`             | yes     |
+| `collection.find(...).sort`       | yes     |
+| `planCache.listQueryShapes`       | yes     |
+| `planCache.getPlansByQuery`       | yes     |
+| `sh.getBalancerState`             | yes     |
+| `sh.isBalancerRunning`            | yes     |
+| `db.getWriteConcern`              | 2.0.0   |
+| `collection.dataSize`             | 2.0.0   |
+| `collection.getWriteConcern`      | 2.0.0   |
 
 
 ### Write
@@ -167,6 +167,7 @@ Ping this to see if the http server is up.
 | `collection.getSplitKeysForChunks` | 2.0.0   |
 | `collection.insert`                | 2.0.0   |
 | `collection.mapReduce`             | 2.0.0   |
+| `collection.group`                 | 2.0.0   |
 | `collection.reIndex`               | 2.0.0   |
 | `collection.remove`                | 2.0.0   |
 | `collection.renameCollection`      | 2.0.0   |
