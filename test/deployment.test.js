@@ -1,6 +1,6 @@
 var Deployment = require('../lib/deployment'),
   assert = require('assert'),
-  hostname = require('os').hostname();
+  hostname = require('os').hostname().toLowerCase();
 
 describe('deployment', function(){
   describe('standalone', function(){

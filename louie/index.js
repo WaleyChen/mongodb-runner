@@ -198,3 +198,14 @@ Client.prototype.count = function(db, coll, where, fn){
       fn(null, res.body);
     });
 };
+
+Client.prototype.sharding = function(fn){
+  request.get(this.url('/sharding'))
+    .set('Accept', 'application/json')
+    .set('Authorization', 'Bearer ' + this.token.toString())
+    .end(function(err, res){
+      if(err) return fn(err);
+
+      fn(null, res.body);
+    });
+};
