@@ -1,5 +1,6 @@
 var Deployment = require('../lib/deployment'),
-  assert = require('assert');
+  assert = require('assert'),
+  hostname = require('os').hostname();
 
 describe('deployment', function(){
   describe('standalone', function(){
@@ -16,11 +17,9 @@ describe('deployment', function(){
       Deployment.create('mongodb://localhost:30999', function(err, d){
         if(err) return done(err);
 
-        console.log(d);
-        assert.equal(d._id, '25jf');
-        assert.equal(d.seed, 'mongodb://localhost:30999');
-        assert.equal(d.name, 'localhost:30999');
-        assert.equal(d.getInstance({name: 'localhost:30999'}).type, 'router');
+        assert.equal(d.seed, 'mongodb://'+hostname+':30999');
+        assert.equal(d.name, hostname+':30999');
+        assert.equal(d.getInstance({name: hostname + ':30999'}).type, 'router');
 
         assert(d.sharding);
         assert.equal(d.instances.length, 7);
