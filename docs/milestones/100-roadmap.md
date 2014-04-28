@@ -101,7 +101,7 @@ List deployments.
 Ping this to see if the http server is up.
 
 
-## Shell vs mongoscope
+## "Can I xxxx with mongoscope?"
 
 ### Read
 
