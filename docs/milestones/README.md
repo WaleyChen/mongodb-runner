@@ -10,6 +10,13 @@
 - shapes server features of the following release
 - highest priority server work -> be used to build the biggest user features
 
+
+## tldr
+
+1. get the model, auth and deployment right
+2. hit the features checklist
+3. components that make you forget you're using a database
+
 ## short-term
 
 ### 0.1.0: deployment
@@ -31,7 +38,7 @@ server init + read api parity
 - ui autoupdate
 
 
-## pick and choose
+## menu
 
 ### 0.x.0: metrics
 
@@ -136,3 +143,10 @@ server init + read api parity
 
 - stale lock cleanup
 - chunk distribution analysis
+
+### completed
+
+- [0.0.4 - replication](./milestones/004-replication.md)
+- [0.0.3 - auth](./milestones/003-mvp.md)
+- [0.0.1 - mvp](./milestones/001-mvp.md)
+- [0.0.0 - sketch](./milestones/000-sketch.md)
