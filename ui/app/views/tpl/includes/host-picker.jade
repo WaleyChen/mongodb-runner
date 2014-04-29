@@ -4,8 +4,8 @@ include ../mixins/bytes
   ul.dropdown-menu
     each deployment in all
       li.dropdown-group
-        .dropdown-group-label
-          | #{deployment.id}
+        if deployment.type != 'standalone'
+          .dropdown-group-label #{deployment.id}
 
         ul
          - each instance in deployment.instances
