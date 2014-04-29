@@ -5,7 +5,7 @@
 ## Deliverables
 
 - [x] server: cr-based authentication
-- [ ] server: complete, web-friendly read-only rest api
+- [x] server: complete, web-friendly read-only rest api
 - [ ] ui: deployments: connect to deployment
 - [ ] ui: deployments: view details (replication and sharding status
 - [ ] ui: deployments: easily view details for any instance
@@ -21,12 +21,10 @@
 ## Punchlist
 
 - [x] server: url vs. id vs. name cleanup
-- [ ] server: dns disambiguation
+- [x] server: dns disambiguation
 - [ ] server: connecting automatically figures out the right deployment you want instead of creating a new one
 - [ ] server: connect to rs that is actually a cluster -> connect to cluster -> merges the two deployments
 - [ ] server: when a replicaset membership event happens, update the deployment
-- [ ] server: add tests to make sure if you try to connect to a config
-  instance the world does not end
 - ui
   - [ ] dumb down ui even further
   - [ ] starting view for cluster
@@ -45,16 +43,16 @@
 
 #### `/api/v1/:instance`
 
-|     |         URI          |                 MongoDB Commands                 | Stream | Tested  |
-| :-: | -------------------- | ------------------------------------------------ | :----: | :-----: |
-|  ✔︎ | `/`                  | `listDatabases` + `db.hostInfo` + `db.buildInfo`  |        | ⧠       |
-|  ✔︎ | `/metrics`           | `db.serverStatus`                                 |        | ⧠       |
-|  ✔︎ | `/ops`               | `db.currentOp`                                    |   ✔︎    | ⧠       |
-|  ✔︎ | `/log`               | `getLog`                                          |   ✔︎    | ⧠       |
-|  ✔︎ | `/top`               | `top`                                             |   ✔︎    | ⧠       |
-|  ✔︎ | `/replication`       | `rs.printReplicationInfo` + `rs.conf`             |        | ⧠       |
-|  ✔︎ | `/replication/oplog` | `oplog.rs.find`                                   |   ✔︎    | ⧠       |
-|  ✔︎ | `/replication/watch` | no equivalent                                     |   ✔︎    | ⧠       |
+|     |         URI          |                 MongoDB Commands                 | Stream |
+| :-: | -------------------- | ------------------------------------------------ | :----: |
+|  ✔︎ | `/`                  | `listDatabases` + `db.hostInfo` + `db.buildInfo`  |        |
+|  ✔︎ | `/metrics`           | `db.serverStatus`                                 |        |
+|  ✔︎ | `/ops`               | `db.currentOp`                                    |   ✔︎    |
+|  ✔︎ | `/log`               | `getLog`                                          |   ✔︎    |
+|  ✔︎ | `/top`               | `top`                                             |   ✔︎    |
+|  ✔︎ | `/replication`       | `rs.printReplicationInfo` + `rs.conf`             |        |
+|  ✔︎ | `/replication/oplog` | `oplog.rs.find`                                   |   ✔︎    |
+|  ✔︎ | `/replication/watch` | no equivalent                                     |   ✔︎    |
 
 #### `/api/v1/:instance/:database_name`
 
