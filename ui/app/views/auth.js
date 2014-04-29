@@ -29,12 +29,11 @@ var Auth = Backbone.View.extend({
   jump: false,
   visible: false,
   closeable: false,
-  url: 'mongodb://localhost:27017',
+  url: 'localhost:27017',
   initialize: function(){
     this.redirect = window.location.hash.replace('#', '') || 'pulse';
     if(this.redirect.indexOf('connect/') === 0){
       this.url = this.redirect.replace('connect/', '');
-      this.url = 'mongodb://' + this.url;
       this.jump = true;
     }
     this.history = new History();
@@ -53,13 +52,13 @@ var Auth = Backbone.View.extend({
     }
     this.dirty = false;
     this.$modal.modal({backdrop: 'static', keyboard: false});
-    this.render({url: (instance && instance.get('url')) || this.url});
+    this.render({url: (instance && instance.id) || this.url});
 
     if(this.jump){
       this.process(this.url);
     }
     else if(instance){
-      this.process(instance.get('url'));
+      this.process(instance.id);
     }
     else if(this.history.length > 0 && this.autoConnect && !instance){
       this.resume();
@@ -73,8 +72,8 @@ var Auth = Backbone.View.extend({
   resume: function(){
     var previous = this.history.at(0);
     debug('trying last used', previous);
-    this.$host.text(previous.get('url'));
-    this.process(previous.get('url'), previous.get('id'));
+    this.$host.text(previous.get('instance_id'));
+    this.process(previous.get('instance_id'), previous.get('id'));
   },
   error: function(err){
     this.dirty = true;
@@ -103,14 +102,15 @@ var Auth = Backbone.View.extend({
     Backbone.history.navigate(this.redirect, {trigger: true});
     return this;
   },
-  process: function(url, id){
-    if(url.indexOf('mongodb://') === -1) url = 'mongodb://' + url;
-
-    models.switchTo(url, function(err){
+  process: function(instance_id, id){
+    models.switchTo(instance_id, function(err, res){
       if(err) return this.error(err);
+
+      instance_id = res.instance.id;
+
       if(id) return this.success();
 
-      var creds = new Credentials({url: url, id: url.replace('mongodb://', '')});
+      var creds = new Credentials({instance_id: instance_id, id: instance_id});
       creds.save();
       this.history.add(creds);
 
@@ -164,7 +164,7 @@ var Auth = Backbone.View.extend({
         if(self.history.cursor > 0){
           self.history.cursor--;
         }
-        self.$host.text(self.history.at(self.history.cursor).get('url').replace('mongodb://', ''));
+        self.$host.text(self.history.at(self.history.cursor).get('instance_id'));
         return false;
       }
 
@@ -179,7 +179,7 @@ var Auth = Backbone.View.extend({
           return;
         }
 
-        self.$host.text(self.history.at(self.history.cursor).get('url').replace('mongodb://', ''));
+        self.$host.text(self.history.at(self.history.cursor).get('instance_id'));
         self.history.cursor++;
         return false;
       }

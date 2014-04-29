@@ -5,15 +5,14 @@ include ../mixins/bytes
 #host-picker.dropdown.pull-right
   ul.dropdown-menu
     each deployment in deployments || []
-      - deployment.host = deployment.name.replace('mongodb://', '').replace(/\:(\d+)/, '')
       li.dropdown-group
         .dropdown-group-label
-          | #{deployment.host}
+          | #{deployment.name}
 
         ul
          - each instance in deployment.instances || []
           li(class=current_instance._id === instance._id ? 'active' : '')
-            a(href='#connect/#{deployment._id}/#{instance._id}')
+            a(href='#connect/#{deployment.id}/#{instance.id}')
               | #{instance.name}
               .secondary #{instance.type}
       li.divider

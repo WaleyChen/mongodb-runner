@@ -15,11 +15,11 @@ var service,
 
 module.exports = function(opts){
   module.exports.settings = settings = new Settings({
-    host: window.location.hostname,
+    scope: window.location.hostname,
     port: window.location.port
   });
 
-  service = require('./service')(settings.get('host'), settings.get('port'));
+  service = require('./service')(settings.get('scope'), settings.get('port'));
 
   module.exports.deployments = deployments = new DeploymentList();
   deployment = new Deployment();
@@ -52,14 +52,6 @@ module.exports.switchTo = function(deploymentId, instanceId, fn){
     instanceId = null;
   }
 
-  if(deploymentId.indexOf('mongodb://') === 0){
-    deploymentId = deploymentId.replace('mongodb://', '');
-  }
-
-  if(url.indexOf('mongodb://') === -1){
-    url = 'mongodb://' + url;
-  }
-
   dep = deployments.length > 0 && deployments.get(deploymentId);
 
   if(!dep){
@@ -71,6 +63,9 @@ module.exports.switchTo = function(deploymentId, instanceId, fn){
       debug('refreshing deployments list');
       deployments.fetch({success: function(){
         debug('got deployments', deployments);
+        if(!deployments.get(deploymentId)){
+          return fn(new Error('Unknown deployment `'+deploymentId+'`'));
+        }
 
         if(deployment) deployment.clear();
         if(instance) instance.clear();
@@ -81,7 +76,6 @@ module.exports.switchTo = function(deploymentId, instanceId, fn){
         debug('switched to deployment', deployment);
 
         instance.set(_.clone(deployment.getSeedInstance().attributes));
-        instance.id = deployment.getSeedInstance().get('_id');
         debug('switched to instance', instance);
 
         loadInstance(fn);
