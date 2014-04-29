@@ -10,8 +10,25 @@ var service,
   deployments,
   deployment,
   instance,
-  topHolder;
+  topHolder,
+  context;
 
+
+function getContext(){
+  if(!context){
+    instance = new Instance();
+    instance.container = true;
+
+    deployment = new Deployment();
+    deployment.container = true;
+
+    deployments = new DeploymentList();
+    deployments.container = true;
+
+    context = new Context();
+  }
+  return context;
+}
 
 module.exports = function(opts){
   module.exports.settings = settings = new Settings({
@@ -20,11 +37,7 @@ module.exports = function(opts){
   });
 
   service = require('./service')(settings.get('scope'), settings.get('port'));
-
-  module.exports.deployments = deployments = new DeploymentList();
-  deployment = new Deployment();
-  deployment.container = true;
-
+  getContext();
   deployments.fetch({error: opts.error, success: function(){
     debug('got deployments', deployments);
     opts.success.apply(this, arguments);
@@ -39,12 +52,14 @@ function loadInstance(fn){
     },
     success: function(){
       debug('got instance sync!', arguments);
-      fn();
+      fn(null, {instance: instance, deployment: deployment});
+      debug('setting context', deployment, instance);
+      context.set({instance_id: instance.id, deployment_id: deployment.id});
     }
   });
 }
 
-module.exports.switchTo = function(deploymentId, instanceId, fn){
+module.exports.connect = function(deploymentId, instanceId, fn){
   var dep, ins, url = deploymentId;
 
   if(typeof instanceId === 'function'){
@@ -57,8 +72,13 @@ module.exports.switchTo = function(deploymentId, instanceId, fn){
   if(!dep){
       // This is our initial connection
     debug('initial connection to', deploymentId);
-    return service.setCredentials(url, function(){
-      debug('switched token to', url);
+    return service.setCredentials(url, function(err, res){
+      if(err) return fn(err);
+
+      // The server will handle all of the dns disambiguation and cleanup for
+      // us so now we can overload to give the views back cannonical values.
+      deploymentId = res.deployment_id;
+      instanceId = res.instance_id;
 
       debug('refreshing deployments list');
       deployments.fetch({success: function(){
@@ -72,11 +92,7 @@ module.exports.switchTo = function(deploymentId, instanceId, fn){
 
         deployment.set(_.clone(deployments.get(deploymentId).attributes));
         deployment.instances.reset(deployment.get('instances'), {silent: true});
-
-        debug('switched to deployment', deployment);
-
         instance.set(_.clone(deployment.getSeedInstance().attributes));
-        debug('switched to instance', instance);
 
         loadInstance(fn);
       }});
@@ -103,22 +119,43 @@ module.exports.switchTo = function(deploymentId, instanceId, fn){
   });
 };
 
+Object.defineProperty(module.exports, 'context', {get: function(){
+  return getContext();
+}});
+
 Object.defineProperty(module.exports, 'instance', {get: function(){
   if(!instance){
-    instance = new Instance({});
-    instance.container = true;
+    getContext();
   }
   return instance;
 }});
 
+Object.defineProperty(module.exports, 'deployment', {get: function(){
+  if(!deployment){
+    getContext();
+  }
+  return deployment;
+}});
+
+Object.defineProperty(module.exports, 'deployments', {get: function(){
+  if(!deployments){
+    getContext();
+  }
+  return deployments;
+}});
+
 Object.defineProperty(module.exports, 'top', {get: function(){
   if(!topHolder){
+    getContext();
     topHolder = new Top({});
   }
   return topHolder;
 }});
 
 var Settings = Backbone.Model.extend({
+    defaults: {}
+  }),
+  Context = Backbone.Model.extend({
     defaults: {}
   }),
   Instance = Model.extend({
@@ -128,6 +165,9 @@ var Settings = Backbone.Model.extend({
     idAttribute: '_id',
     service: function(){
       return {name: 'instance', args: this.id};
+    },
+    synced: function(){
+      return Array.isArray(this.get('database_names'));
     }
   }),
   InstanceList = List.extend({
@@ -175,8 +215,20 @@ var Settings = Backbone.Model.extend({
     getSeedInstance: function(){
       // return this.getInstance(this.get('seed').replace('mongodb://', ''));
       return this.instances.at(0);
+    },
+    toJSON: function(){
+      var attrs = this.__data__();
+      if(this.sharding){
+        attrs.type = 'cluster';
+      }
+      else if(attrs.instances.filter(function(i){return i.rs;}).length > 0){
+        attrs.type = 'replicaset';
+      }
+      else {
+        attrs.type = 'standalone';
+      }
+      return attrs;
     }
-
   }),
   DeploymentList = List.extend({
     default: function(){
@@ -335,7 +387,7 @@ var ProducerMixin = {
     if(this.subscribers === 0){
       debug('activating producer', this.uri);
       this.active = true;
-      this.subscribe();
+      // this.subscribe();
     }
     this.subscribers++;
     return this;
@@ -345,7 +397,7 @@ var ProducerMixin = {
     if(this.subscribers === 0){
       debug('deactivating producer', this.uri);
       this.active = false;
-      this.unsubscribe();
+      // this.unsubscribe();
     }
     return this;
   }

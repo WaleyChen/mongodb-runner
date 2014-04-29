@@ -331,6 +331,19 @@ Backbone.sync = function(method, model, options){
 };
 
 var mixins = {
+  __data__: function(){
+    if(this.models){
+      return this.models.map(function(model){
+        return model.toJSON();
+      });
+    }
+    var attrs = _.clone(this.attributes);
+    attrs.id = this.id;
+    return attrs;
+  },
+  toJSON: function(){
+    return this.__data__();
+  },
   service: null,
   subscription: null,
   iohandler: function(data){

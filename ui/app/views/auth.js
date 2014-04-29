@@ -31,7 +31,7 @@ var Auth = Backbone.View.extend({
   closeable: false,
   url: 'localhost:27017',
   initialize: function(){
-    this.redirect = window.location.hash.replace('#', '') || 'pulse';
+    this.redirect = window.location.hash.replace('#', '') || 'home';
     if(this.redirect.indexOf('connect/') === 0){
       this.url = this.redirect.replace('connect/', '');
       this.jump = true;
@@ -95,7 +95,7 @@ var Auth = Backbone.View.extend({
   },
   success: function(){
     if(this.redirect === 'authenticate' || this.redirect.indexOf('connect') === 0){
-      this.redirect = 'pulse';
+      this.redirect = 'home';
     }
     this.exit();
     debug('success!  redirecting to ', this.redirect);
@@ -103,7 +103,7 @@ var Auth = Backbone.View.extend({
     return this;
   },
   process: function(instance_id, id){
-    models.switchTo(instance_id, function(err, res){
+    models.connect(instance_id, function(err, res){
       if(err) return this.error(err);
 
       instance_id = res.instance.id;

@@ -1,5 +1,3 @@
-var models = require('./models');
-
-models.instance.on('change', function(){
-  document.title = 'scope://' + models.instance.get('name');
+require('./models').context.on('change', function(ctx){
+  document.title = 'scope://' + ctx.get('instance_id');
 });

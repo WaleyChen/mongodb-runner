@@ -9,40 +9,23 @@ var Toolbar = Backbone.View.extend({
     this.$el = $('#toolbar');
     this.el = this.$el.get(0);
 
-    models.deployments.on('sync', this.create, this);
-    models.instance.on('change', this.update, this);
+    models.context.on('change', this.change, this);
   },
-  create: function(){
-
-    debug('deployments sync!');
-
-    var deps = models.deployments.toJSON();
+  draw: function(){
     this.$el.html(this.tpl({
-      deployments: deps,
-      instance: models.instance.toJSON(),
+      all: models.deployments.toJSON(),
+      context: models.context.toJSON(),
       sections: [
-        {name: 'pulse', icon: 'flash'},
+        {name: 'home', icon: 'home'},
         {name: 'top', icon: 'magnet'},
-        {name: 'log', icon: 'align-justify'},
-        {name: 'replication', icon: 'send'},
-        {name: 'sharding', icon: 'th'}
+        {name: 'log', icon: 'align-justify'}
       ]
     }));
+    return this;
   },
-  update: function(){
-    debug('instance sync');
-    var deps = models.deployments.toJSON();
-    this.$el.html(this.tpl({
-      deployments: deps,
-      instance: models.instance.toJSON(),
-      sections: [
-        {name: 'pulse', icon: 'flash'},
-        {name: 'top', icon: 'magnet'},
-        {name: 'log', icon: 'align-justify'},
-        {name: 'replication', icon: 'send'},
-        {name: 'sharding', icon: 'th'}
-      ]
-    }));
+  change: function(){
+    debug('context changed');
+    return this.draw();
   }
 });
 

@@ -1,55 +1,23 @@
 include ../mixins/bytes
 
-- current_instance = instance
-
 #host-picker.dropdown.pull-right
   ul.dropdown-menu
-    each deployment in deployments || []
+    each deployment in all
       li.dropdown-group
         .dropdown-group-label
-          | #{deployment.name}
+          | #{deployment.id}
 
         ul
-         - each instance in deployment.instances || []
-          li(class=current_instance._id === instance._id ? 'active' : '')
+         - each instance in deployment.instances
+          li(class=context.instance_id === instance.id ? 'active' : '')
             a(href='#connect/#{deployment.id}/#{instance.id}')
-              | #{instance.name}
+              | #{instance.id}
               .secondary #{instance.type}
       li.divider
     li
       a(title='connect to another deployment', href='#connect')
-        //- i.fa.fa-plus-square-o
         | Connect to Deployment&hellip;
-    //- li
-    //-   .host-info.panel.padded
-    //-     .block
-    //-       .inline-block
-    //-         h4.text-subtle #{host.hostname}
-    //-     .block
-    //-       .inline-block #{build.version} #{build.commit.substr(0, 8)}
-    //-     .block
-    //-       .inline-block.label(class="#{host.cpu_bits === 64 ? 'text-subtle' : 'text-warning'}") #{host.cpu_bits}bit
-    //-       .label(class="#{build.debug === false ? 'text-subtle' : 'text-warning'}")
-    //-         | debug #{build.debug ? 'on' : 'off'}
-    //-       .label(class="#{build.javascript_engine === 'V8' ? 'text-subtle' : 'text-warning'}")
-    //-         | #{build.javascript_engine}
-    //-       .label(class="#{build.allocator === 'tcmalloc' ? 'text-subtle' : 'text-warning'}")
-    //-         | #{build.allocator}
-    //-       .label.text-subtle boost #{build.boost_version}
-    //-       .label(class="#{build.openssl_version ? 'text-subtle' : 'text-warning'}")
-    //-         | openssl #{build.openssl_version || 'N/A'}
-
-    //-     hr
-    //-     .block
-    //-       .inline-block #{host.os}
-    //-       .inline-block
-    //-         +bytes(host.memory_bits)
-    //-       .inline-block #{host.cpu_cores_physical} Cores
-    //-     .block
-    //-       div.inline-block #{host.cpu_string}
-    //-       div.inline-block #{host.system_time}
-    //-         span.glyphicon.glyphicon-time(style="font-size: 80%; left: 4px;")
 
   a.btn.inline-block(data-toggle="dropdown", data-target="#host-picker")
-    .inline-block-tight.btn-label #{instance.name}
+    .inline-block-tight.btn-label #{context.instance_id}
     b.caret

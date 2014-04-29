@@ -32,7 +32,7 @@ module.exports = function(opts){
 
   return create()
     .add('authenticate', require('./views/auth'))
-    .add('pulse', require('./views/pulse'))
+    .add('home', require('./views/home'))
     .add('log', require('./views/log'))
     .add('top', require('./views/top'))
     .add('sharding', require('./views/sharding'))
@@ -48,7 +48,7 @@ module.exports = function(opts){
     })
     .add('createcollection', 'database/:database_name/collection', require('./views/database').createCollection, null)
     .add('database', 'database/:database_name', require('./views/database'), null)
-    .default('pulse')
+    .default('home')
     .go(opts.auth ? 'authenticate' : '');
 };
 

@@ -1,0 +1,22 @@
+include mixins/bytes
+
+h1 #{instance.id}
+h2 #{deployment.id}
+h3 #{deployment.type}
+
+- build = instance.build
+- host = instance.host
+h4 #{build.version} #{build.commit.substr(0, 8)}
+
+p #{host.cpu_bits}bit
+p debug #{build.debug ? 'on' : 'off'}
+p #{build.javascript_engine}
+p #{build.allocator}
+p boost #{build.boost_version}
+p openssl #{build.openssl_version || 'N/A'}
+p #{host.os}
+p: +bytes(host.memory_bits)
+p #{host.cpu_cores_physical} Cores
+p #{host.cpu_string}
+p #{host.system_time}
+  span.glyphicon.glyphicon-time(style="font-size: 80%; left: 4px;")
