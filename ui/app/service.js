@@ -6,21 +6,21 @@ var $ = require('jquery'),
   socketio = require('socket.io-client'),
   srv;
 
-module.exports = function(hostname, port){
+module.exports = function(scope, port){
   if(!srv){
-    debug('init', hostname, port);
-    srv = new Service(hostname, port).connect();
+    debug('init', scope, port);
+    srv = new Service(scope, port).connect();
   }
   return srv;
 };
 
 // Wrap the MongoDB REST API in a pretty interface.
 //
-// @param {String} Hostname of the instance
+// @param {String} scope where scope is running.
 // @param {Number} port mongorest is listening on.
 // @api public
-function Service(hostname, port){
-  this.hostname = hostname;
+function Service(scope, port){
+  this.scope = scope;
   this.port = port;
   this.connected = false;
   this.token = null;
@@ -30,7 +30,7 @@ util.inherits(Service, EventEmitter);
 Service.prototype.connect = function(){
   if(this.connected) return this;
 
-  this.origin = 'http://' + this.hostname;
+  this.origin = 'http://' + this.scope;
   if(this.port){
     this.origin = this.origin + ':' + this.port;
   }
@@ -121,45 +121,33 @@ Service.prototype.post = function(pathname, params, fn){
     }).fail(this.fail(fn));
 };
 
-Service.prototype.get = function(host, pathname, params, fn){
-  if(!host || host.indexOf(':') === -1) return fn(new Error('Must specify host'));
-  return this.read('/' + host + pathname, params, fn);
+Service.prototype.get = function(instance_id, pathname, params, fn){
+  if(!instance_id || instance_id.indexOf(':') === -1) return fn(new Error('Must specify instance_id'));
+  return this.read('/' + instance_id + pathname, params, fn);
 };
 
-Service.prototype.importer = function(host, dbName, collName, pipechain, fn){
-  return this.post('/' + host + '/' + dbName + '/' +
+Service.prototype.importer = function(instance_id, dbName, collName, pipechain, fn){
+  return this.post('/' + instance_id + '/' + dbName + '/' +
       collName + '/import', {pipechain: JSON.stringify(pipechain)}, fn);
 };
 
-// An easier to use top.
-//
-// @param {Function} fn `(err, {Top})`
-// @api public
-Service.prototype.top = function(host, fn){
-  this.get(host, '/top', {}, fn);
+Service.prototype.top = function(instance_id, fn){
+  this.get(instance_id, '/top', {}, fn);
 };
 
-// Instance level metadata:
-//
-// - build
-// - host
-// - database_names
-//
-// @param {Function} fn `(err, data)`
-// @api public
-Service.prototype.instance = function(host, fn){
-  this.get(host, '', {}, fn);
+Service.prototype.instance = function(instance_id, fn){
+  this.get(instance_id, '', {}, fn);
 };
 
 Service.prototype.deployments = function(fn){
   this.read('/', fn);
 };
 
-Service.prototype.security = function(host, fn){
-  this.get(host, '/security', {}, fn);
+Service.prototype.security = function(instance_id, fn){
+  this.get(instance_id, '/security', {}, fn);
 };
 
-Service.prototype.securityUsers = function(host, db, username, fn){
+Service.prototype.securityUsers = function(instance_id, db, username, fn){
   if(typeof db === 'function'){
     fn = username;
     username = null;
@@ -172,10 +160,10 @@ Service.prototype.securityUsers = function(host, db, username, fn){
   }
   var pathname = (db ? '/' + db + (username ? '/' + username : '') : '');
 
-  this.get(host, '/security/users' + pathname, {}, fn);
+  this.get(instance_id, '/security/users' + pathname, {}, fn);
 };
 
-Service.prototype.securityRoles = function(host, db, role, fn){
+Service.prototype.securityRoles = function(instance_id, db, role, fn){
   if(typeof db === 'function'){
     fn = db;
     role = null;
@@ -188,14 +176,14 @@ Service.prototype.securityRoles = function(host, db, role, fn){
   }
 
   var pathname = (db ? '/' + db + (role ? '/' + role : '') : '');
-  this.get(host, '/security/roles' + pathname, {}, fn);
+  this.get(instance_id, '/security/roles' + pathname, {}, fn);
 };
 // Get a list of log `line` objects.
 //
 // @param {String, default:global} optional log name to restrict to (default: global).
 // @param {Function} fn `(err, [line])`
 // @api public
-Service.prototype.log = function(host, name, fn){
+Service.prototype.log = function(instance_id, name, fn){
   var pathname;
   if(typeof name === 'function'){
     fn = name;
@@ -204,7 +192,7 @@ Service.prototype.log = function(host, name, fn){
   else {
     pathname = '/log/' + name;
   }
-  this.get(host, pathname, {}, fn);
+  this.get(instance_id, pathname, {}, fn);
 };
 
 
@@ -213,8 +201,8 @@ Service.prototype.log = function(host, name, fn){
 // @param {String} db A database name
 // @param {Function} fn `fn(err, database)`
 // @api public
-Service.prototype.database = function(host, name, fn){
-  this.get(host, '/' + name, {}, fn);
+Service.prototype.database = function(instance_id, name, fn){
+  this.get(instance_id, '/' + name, {}, fn);
 };
 
 // @param {String} db database name
@@ -222,8 +210,8 @@ Service.prototype.database = function(host, name, fn){
 // @param {String, default:{}} [spec] query spec to use
 // @param {Function} fn `(err, docs)`
 // @api private
-Service.prototype.find = function(host, db, name, spec, fn){
-  this.get(host, '/' + db + '/' + name + '/find', spec, fn);
+Service.prototype.find = function(instance_id, db, name, spec, fn){
+  this.get(instance_id, '/' + db + '/' + name + '/find', spec, fn);
 };
 
 // Get all collection metadata.
@@ -232,20 +220,20 @@ Service.prototype.find = function(host, db, name, spec, fn){
 // @param {String} name A collection name
 // @param {Function} fn `fn(err, data)`
 // @api public
-Service.prototype.collection = function(host, db, name, fn){
-  this.get(host, '/' + db + '/' + name, {}, fn);
+Service.prototype.collection = function(instance_id, db, name, fn){
+  this.get(instance_id, '/' + db + '/' + name, {}, fn);
 };
 
-Service.prototype.sharding = function(host, fn){
-  this.get(host, '/sharding', {}, fn);
+Service.prototype.sharding = function(instance_id, fn){
+  this.get(instance_id, '/sharding', {}, fn);
 };
 
-Service.prototype.replication = function(host, fn){
-  this.get(host, '/replication', {}, fn);
+Service.prototype.replication = function(instance_id, fn){
+  this.get(instance_id, '/replication', {}, fn);
 };
 
-Service.prototype.oplog = function(host, fn){
-  this.get(host, '/replication/oplog', {}, fn);
+Service.prototype.oplog = function(instance_id, fn){
+  this.get(instance_id, '/replication/oplog', {}, fn);
 };
 
 // Get a short lived auth token that will be automatically refreshed.
@@ -344,36 +332,32 @@ Backbone.sync = function(method, model, options){
 
 var mixins = {
   service: null,
+  subscription: null,
   iohandler: function(data){
     if (!this.set(data)) return false;
     this.trigger('sync', this, data, {});
   },
-  switchedInstance: function(model){
-    debug('instance changed.  moving subscription.', model.get('url'));
+  switchedInstance: function(){
+    debug('instance changed.  moving subscription.');
     this.unsubscribe();
     this.subscribe();
   },
   subscribe: function(options){
     srv.connect();
     var instance = require('./models').instance, payload;
-
-    this._instance_url = instance.get('url');
-
     instance.once('change:_id', this.switchedInstance, this);
 
     _.defaults(options || (options = {}), {
       uri: _.result(this, 'uri')
     });
 
-    payload = {token: srv.token, url: this._instance_url};
+    this.subscription = {token: srv.token, instance_id: instance.id};
 
     srv.io
       .addListener(options.uri, this.iohandler.bind(this))
       .emit(options.uri, payload);
 
-    debug('subscribing', options.uri, payload);
-
-    this.trigger('subscribed', this, srv.io, options);
+    debug('subscribing', options.uri, this.subscription);
     return this;
   },
   unsubscribe: function(options){
@@ -386,9 +370,9 @@ var mixins = {
     debug('$unsub ' + options.uri);
     srv.io
       .removeAllListeners(options.uri)
-      .emit(_.result(this, 'uri') + '/unsubscribe', {url: this._instance_url});
+      .emit(_.result(this, 'uri') + '/unsubscribe', this.subscription);
+    this.subscription = null;
 
-    this.trigger('unsubscribed', this, srv.io, options);
     return this;
   }
 };
