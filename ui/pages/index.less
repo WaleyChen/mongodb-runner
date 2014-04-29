@@ -1,5 +1,5 @@
 @import "bootstrap/index";
-@import "atom/index";
+
 @import "fontawesome/index";
 @import "mongoscope/index";
 
@@ -11,8 +11,8 @@
 @background-color-selected: #6ba442;
 
 // @import "themes/atom-dark";
-@import "themes/soda-dark";
-// @import "themes/soda-light";
+// @import "themes/soda-dark";
+@import "themes/soda-light";
 // @import "themes/atom-light";
 
 @font-size: 14px;
@@ -93,11 +93,6 @@
 //   }
 // }
 
-blockquote {
-  .panel;
-  .tool-panel;
-}
-
 dl{
   padding-bottom: @component-padding;
 }
@@ -123,8 +118,6 @@ dd {
 }
 
 article {
-  .panel;
-  .padded;
   .clearfix;
   margin-top: @component-padding;
   h2 {}
@@ -166,7 +159,6 @@ body {margin: 0;}
 .grid.quarters > * {width: 25%;}
 
 #toolbar {
-  .tool-panel;
   .clearfix;
   position: fixed;
   top: 0;
@@ -207,7 +199,7 @@ body {margin: 0;}
 
     .icon {
       .glyphicon();
-      .inline-block-tight();
+      display: inline-block;
       font-size: 18px;
       vertical-align: middle;
       padding-left: 6px;
@@ -216,7 +208,7 @@ body {margin: 0;}
       }
     }
     .btn-label {
-      .inline-block-tight();
+      display: inline-block;
       padding-top: 5px;
     }
   }
@@ -450,8 +442,6 @@ body {margin: 0;}
 
 
 #status {
-  .tool-panel;
-  .panel-bottom;
   position: fixed;
   bottom: 0;
   height: 20px;
@@ -520,7 +510,7 @@ body {margin: 0;}
 
 // ## app container
 #mongoscope {
-  .workspace;
+  // .workspace;
   .container-fluid;
   // display: block;
   border-color: @pane-item-border-color;
@@ -582,7 +572,6 @@ body {margin: 0;}
           font-size: 13px;
         }
         .list-divider {
-          .text(subtle);
           font-size: 80%;
           cursor: initial;
           background-color: @tool-panel-background-color;
@@ -595,7 +584,6 @@ body {margin: 0;}
   .btn {
     .btn-icon {
       padding-right: @component-padding;
-      .text-subtle;
     }
   }
 

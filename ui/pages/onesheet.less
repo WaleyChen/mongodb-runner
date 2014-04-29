@@ -37,8 +37,6 @@
 
   .jumbotron {
     .container-fluid;
-    .panel;
-    .inset-panel;
     padding-bottom: 40px;
     box-shadow: 0px -10px 4px 10px #ccc;
     background: transparent;
@@ -104,7 +102,7 @@
     ul {
       .list-unstyled;
       li {
-        .inline-block;
+        display: inline-block;
       }
     }
   }
@@ -194,10 +192,6 @@
         pre > code {
           font-family: @font-family-monospace;
           display: block;
-          .panel;
-          .inset-panel;
-          .bordered;
-          .padded;
           margin-bottom: (@font-size * 1.8);
         }
       }
