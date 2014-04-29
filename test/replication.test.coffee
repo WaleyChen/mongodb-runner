@@ -39,5 +39,6 @@ describe 'When connecting to a shard in a cluster deployment', ->
       .set 'Authorization', "Bearer #{ctx.token}"
       .expect(200)
       .end (err, res) ->
+        debug 'replication', res.text
         return done(err) if err
         done()
