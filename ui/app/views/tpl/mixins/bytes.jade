@@ -3,4 +3,4 @@ mixin bytes(num)
   - var unit = ['B', 'kB', 'MB', 'GB', 'TB', 'PB'][exponent];
   - var inUnits = (num / Math.pow(1024, exponent)).toFixed(0) * 1;
   - var res = (num < 0 ? '-' : '') + inUnits + ' ' + unit;
-  | &nbsp;#{res}
+  | #{res}

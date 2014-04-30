@@ -1,8 +1,10 @@
 
 include includes/host-picker
 
-.btn-group.inline-block
-  - for section in sections
-    a(class="btn #{section.name}", href='##{section.name}')
-      span(class='icon glyphicon-#{section.icon}')
-      div.btn-label #{section.name}
+.col-md-2.col-sm-3
+  ul.nav.nav-pills.nav-stacked
+   - for section in sections
+    li
+      a(href='##{section.name}')
+        i(class='fa fa-#{section.icon}')
+        | #{section.name}

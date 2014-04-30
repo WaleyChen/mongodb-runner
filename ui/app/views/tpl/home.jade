@@ -3,23 +3,37 @@ include mixins/bytes
 mixin instance_detail()
   - build = instance.build
   - host = instance.host
-  h4 #{build.version} #{build.commit.substr(0, 8)}
+  .col-md-6
+    dl.dl-horizontal
+      dt Operating System
+      dd #{host.os}
+      dt RAM
+      dd: +bytes(host.memory_bits)
+      dt CPU Cores
+      dd #{host.cpu_cores_physical}
+      dt CPU Details
+      dd #{host.cpu_string}
+      dt System Clock
+      dd #{host.system_time}
 
-  p #{host.cpu_bits}bit
-  p debug #{build.debug ? 'on' : 'off'}
-  p #{build.javascript_engine}
-  p #{build.allocator}
-  p boost #{build.boost_version}
-  p openssl #{build.openssl_version || 'N/A'}
-  p #{host.os}
-  p: +bytes(host.memory_bits)
-  p #{host.cpu_cores_physical} Cores
-  p #{host.cpu_string}
-  p #{host.system_time}
-    span.glyphicon.glyphicon-time(style="font-size: 80%; left: 4px;")
+  .col-md-6
+    dl.dl-horizontal
+      dt MongoDB
+      dd #{build.version}
+      dt Architecture
+      dd #{host.cpu_bits}bit
+      dt Debugging
+      dd #{build.debug ? 'on' : 'off'}
+      dt JavaScript
+      dd #{build.javascript_engine}
+      dt Allocator
+      dd #{build.allocator}
 
 if deployment.type === 'standalone'
-  h1 #{instance.id}
+  //- ol.breadcrumb
+  //-   li.active #{instance.id}
+
+  h1.page-header #{instance.id}
   +instance_detail()
 else
   h1 #{instance.id}
