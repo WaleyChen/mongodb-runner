@@ -62,9 +62,18 @@ function loadInstance(fn){
 module.exports.connect = function(deploymentId, instanceId, fn){
   var dep, ins, url = deploymentId;
 
+  debug('connect to', deploymentId, instanceId, fn);
+
   if(typeof instanceId === 'function'){
     fn = instanceId;
     instanceId = null;
+  }
+  else {
+
+  }
+
+  if(deploymentId.indexOf('/') > -1){
+    return fn(new Error('Bad deployment id `'+deploymentId+'`'));
   }
 
   dep = deployments.length > 0 && deployments.get(deploymentId);
@@ -101,20 +110,15 @@ module.exports.connect = function(deploymentId, instanceId, fn){
 
   // @todo: needs to be find the deployment by searching instances
   // by url.
+  if(dep.instances.length === 0 && dep.get('instances').length > 0){
+    dep.instances.reset(dep.get('instances'), {silent: true});
+    delete dep.attributes.instances;
+  }
   ins = dep && (instanceId ? dep.getInstance(instanceId) : dep.getSeedInstance());
-
-  if(deployment) deployment.clear();
-  if(instance) instance.clear();
   deployment.set(_.clone(dep.attributes));
   instance.set(_.clone(ins.attributes));
-
-  debug('switched to deployment', deployment);
-  debug('switched to instance', instance);
-
-
-  debug('setting creds for other dep');
-  service.setCredentials(instance.get('url'), function(){
-    debug('set creds to', instance.get('url'), arguments);
+  service.setCredentials(instance.get('id'), function(){
+    debug('set creds to', instance.get('id'), arguments);
     loadInstance(fn);
   });
 };
@@ -155,8 +159,14 @@ Object.defineProperty(module.exports, 'top', {get: function(){
 var Settings = Backbone.Model.extend({
     defaults: {}
   }),
-  Context = Backbone.Model.extend({
-    defaults: {}
+  Context = Model.extend({
+    defaults: {},
+    toJSON: function(){
+      var attrs = this.__data__();
+      attrs.instance = this.attributes.instance.toJSON();
+      attrs.deployment = this.attributes.deployment.toJSON();
+      return attrs;
+    }
   }),
   Instance = Model.extend({
     defaults: {
@@ -206,26 +216,46 @@ var Settings = Backbone.Model.extend({
       return {name: 'deployment', args: this.get('_id')};
     },
     getInstance: function(id){
-      if(this.instances.length === 0 && this.get('instances').length > 0){
-        this.instances.reset(this.get('instances'), {silent: true});
-        delete this.attributes.instances;
-      }
+      // if(this.instances.length === 0 && this.get('instances').length > 0){
+      //   this.instances.reset(this.get('instances'), {silent: true});
+      //   delete this.attributes.instances;
+      // }
       return this.instances.get(id);
     },
     getSeedInstance: function(){
-      // return this.getInstance(this.get('seed').replace('mongodb://', ''));
-      return this.instances.at(0);
+      return this.getInstance(this.get('seed').replace('mongodb://', ''));
+    },
+    getType: function(){
+      if(this.get('sharding')){
+        return 'cluster';
+      }
+
+      if(this.instances.filter(function(i){return i.rs;}).length > 0){
+        return 'replicaset';
+      }
+
+      return 'standalone';
     },
     toJSON: function(){
+      console.log('deployment.toJSON', this);
       var attrs = this.__data__();
-      if(this.sharding){
-        attrs.type = 'cluster';
-      }
-      else if(attrs.instances.filter(function(i){return i.rs;}).length > 0){
-        attrs.type = 'replicaset';
-      }
-      else {
-        attrs.type = 'standalone';
+      attrs.instances = this.instances.toJSON();
+      attrs.type = this.getType();
+      if(attrs.sharding){
+        attrs.routers = attrs.instances.filter(function(i){
+          return i.type === 'router';
+        });
+        attrs.shards = {};
+
+        var prev;
+        attrs.instances.map(function(i){
+          if(i.type) return;
+          if(prev !== i.shard){
+            attrs.shards[i.shard] = {name: i.shard, instances: []};
+            prev = i.shard;
+          }
+          attrs.shards[i.shard].instances.push(i);
+        });
       }
       return attrs;
     }

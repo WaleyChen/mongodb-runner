@@ -13,26 +13,29 @@ var Home = Backbone.View.extend({
   },
   enter: function(){
     models.context.on('change', this.change, this);
-
-    if(!models.instance.synced()){
-      models.instance.on('sync', this.render, this);
+    if(models.context.has('instance')){
+      this.render();
     }
     else {
-      this.render();
+      debug('waiting for context to get an instance');
     }
   },
   exit: function(){
-    models.instance.off('sync', this.render, this)
-      .off('change:_id', this.change, this);
+    models.context.off('change', this.change, this);
     return this;
   },
-  change: function(){},
+  change: function(){
+    debug('change', arguments);
+    this.render();
+  },
   render: function(){
     var self = this;
-    srv().metrics(models.instance.id, function(err, metrics){
+    console.log('deployment', models.deployment.toJSON());
+    console.log('instance', models.instance.toJSON());
+    console.log('context', models.context.toJSON());
+
+    srv().metrics(models.context.instance_id, function(err, metrics){
       self.$el.html(self.tpl({
-        instance: models.instance.toJSON(),
-        deployment: models.deployment.toJSON(),
         context: models.context.toJSON(),
         all: models.deployments.toJSON(),
         metrics: metrics

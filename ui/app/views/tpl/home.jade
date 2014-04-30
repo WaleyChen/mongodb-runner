@@ -1,74 +1,85 @@
 include mixins/bytes
 
+- instance = context.instance
+- deployment = context.deployment
+
+mixin panel(title)
+  .panel.panel-default
+    .panel-heading: h3.panel-title #{title}
+    .panel-body
+      block
+
 mixin instance_detail()
   - build = instance.build
   - host = instance.host
-  .col-md-6
-    .panel.panel-default
-      .panel-heading: h3.panel-title Instance Details
-      .panel-body
-        dl.dl-horizontal
-          dt MongoDB
-          dd #{build.version}
-          dt Operating System
-          dd #{host.os}
-          dt RAM
-          dd: +bytes(host.memory_bits)
-          dt Architecture
-          dd #{host.cpu_bits}bit
-          dt Cores
-          dd #{host.cpu_cores_physical}
-          dt Details
-          dd #{host.cpu_string}
-          dt System Clock
-          dd #{host.system_time}
+
+  +panel('System')
+    dl.dl-horizontal
+      if deployment.type !== 'standalone'
+        dt Connected To
+        dd #{instance.id}
+      dt MongoDB
+      dd #{build.version}
+      dt Operating System
+      dd #{host.os}
+      dt RAM
+      dd: +bytes(host.memory_bits)
+      dt Architecture
+      dd #{host.cpu_bits}bit
+      dt Cores
+      dd #{host.cpu_cores_physical}
+      dt Details
+      dd #{host.cpu_string}
+      dt System Clock
+      dd #{host.system_time}
 
 if deployment.type === 'standalone'
-  //- ol.breadcrumb
-  //-   li.active #{instance.id}
-
   h1.page-header #{instance.id}
   .row
     .col-md-6
-      .panel.panel-default
-        .panel-heading: h3.panel-title Databases
-        .panel-body
-          ul.list-group
-            each db in instance.database_names
-              li.list-group-item
-                span.badge -
-                a(href="#database/#{db}") #{db}
-    +instance_detail()
-  .row
-    .col-md-3
-      .panel.panel-default
-        .panel-heading: h3.panel-title Index Hits
-        .panel-body
-          h4 #{(metrics.indexes.hits_count/metrics.indexes.accesses_count * 100).toFixed(0)}%
-    .col-md-3
-      .panel.panel-default
-        .panel-heading: h3.panel-title Index Misses
-        .panel-body
-          h4 #{(metrics.indexes.misses_count/metrics.indexes.accesses_count * 100).toFixed(0)}%
-    .col-md-3
-      .panel.panel-default
-        .panel-heading: h3.panel-title Connections
-        .panel-body
-          h4 #{metrics.network.connections_count}
-    .col-md-3
-      .panel.panel-default
-        .panel-heading: h3.panel-title Connections
-        .panel-body
-          h4 #{metrics.network.connections_count}
+      +panel('Databases')
+        .list-group
+          each db in instance.database_names
+            a.list-group-item(href="#database/#{db}") #{db}
+
+    .col-md-6
+      +instance_detail()
+
   .row
     .col-md-12
-      .panel.panel-default
-        .panel-heading: h3.panel-title Log
-        .panel-body
+      +panel('Log')
 
 else
-  h1 #{instance.id}
-  h2 #{deployment.id}
-  h3 #{deployment.type}
+  h1.page-header #{deployment.name}
+    p.lead #{instance.name}
 
-  +instance_detail()
+  .row
+    .col-md-6
+      +panel('Databases')
+        .list-group
+          each db in instance.database_names
+            a.list-group-item(href="#database/#{db}") #{db}
+    .col-md-6
+      +instance_detail()
+
+if deployment.shards
+  each shard in deployment.shards
+    .row
+      +panel('Shard: ' + shard.name)
+        .col-md-6
+          .list-group
+          each inst in shard.instances
+            a.list-group-item(href="#") #{inst.name}
+        .col-md-6
+          .shard-summary(data-shard='#{shard.name}')
+            p DONUT
+
+if deployment.routers
+  .row
+    +panel('Routers')
+      .col-md-6
+        .list-group
+        each inst in deployment.routers
+          a.list-group-item(href="#") #{inst.name}
+      .col-md-6
+        .router-summary

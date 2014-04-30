@@ -33,7 +33,7 @@ var Auth = Backbone.View.extend({
   initialize: function(){
     this.redirect = window.location.hash.replace('#', '') || 'home';
     if(this.redirect.indexOf('connect/') === 0){
-      this.url = this.redirect.replace('connect/', '');
+      this.url = this.redirect.split('/').pop();
       this.jump = true;
     }
     this.history = new History();

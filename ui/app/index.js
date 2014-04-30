@@ -9,7 +9,7 @@
 //   assets = JSON.parse(localStorage.getItem('mongoscope:assets') || '["/index.js", "/index.css"]');
 // sterno(origin, assets);
 
-require('debug').enable('m*');
+require('debug').enable('m*,store*');
 
 // By default we'll use jquery to drive the DOM from backbone,
 // but we could easily switch to zepto instead.

@@ -19,7 +19,11 @@ function getView(){
   return view;
 }
 
-module.exports.switch = function(){
+module.exports.deployment = function(){
+  return getView();
+};
+
+module.exports.instance = function(){
   return getView();
 };
 
