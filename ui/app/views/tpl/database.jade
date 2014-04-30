@@ -6,25 +6,31 @@ include mixins/bytes
 - stats.extent_size = stats.storage_size / stats.extent_count
 //- - host.disk_used = host.disk_total - host.disk_free
 
+ol.breadcrumb
+  //- unless context.deployment.type === 'standalone'
+  //-   li: a(href='#home') #{context.deployment.id}
+
+  li
+    a(href='#home') #{context.instance.id}
+  li database: #{database.name}
+
 .row: .col-md-12: .databases
   .summary
 
 .row
-  .col-md-2
-    .panel.padded
-        ul.nav.nav-pills.nav-stacked
-          li
-            a.create-collection(title='create collection', href='#database/#{database.name}/collection') Collections
-              span.glyphicon.glyphicon-plus-sign(style="padding-left: 10px; padding-top: 2px;")
-
+  .col-md-4
+    .panel.panel-default
+      .panel-heading: h3.panel-title Collections
+      .panel-body
+        .list-group
           for collection_name in database.collection_names
-            li
-              a(href='#collection/#{database.name}/#{collection_name}')
-                span #{collection_name}
+            a.list-group-item(href='#collection/#{database.name}/#{collection_name}') #{collection_name}
 
   .col-md-4
-    .panel.padded
-      .donut
+    .panel.panel-default
+      .panel-heading: h3.panel-title Storage
+      .panel-body
+        .donut
 
 
   .col-md-4

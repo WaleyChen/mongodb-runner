@@ -1,25 +1,21 @@
 var Backbone = require('backbone'),
-  $ = Backbone.$,
   models = require('../models'),
   debug = require('debug')('mongoscope:toolbar');
 
 var Toolbar = Backbone.View.extend({
-  tpl: require('./tpl/toolbar.jade'),
+  tpl: require('./tpl/sidebar.jade'),
+  el: '#sidebar',
+  events: {
+    'click a': 'click'
+  },
   initialize: function(){
-    this.$el = $('#toolbar');
-    this.el = this.$el.get(0);
-
     models.context.on('change', this.change, this);
   },
   draw: function(){
+    debug('drawing to', this.$el);
     this.$el.html(this.tpl({
       all: models.deployments.toJSON(),
       context: models.context.toJSON(),
-      sections: [
-        {name: 'home', icon: 'home'},
-        {name: 'top', icon: 'magnet'},
-        {name: 'log', icon: 'align-justify'}
-      ]
     }));
     return this;
   },

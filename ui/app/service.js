@@ -195,31 +195,14 @@ Service.prototype.log = function(instance_id, name, fn){
   this.get(instance_id, pathname, {}, fn);
 };
 
-
-// Get metadata for a database.
-//
-// @param {String} db A database name
-// @param {Function} fn `fn(err, database)`
-// @api public
 Service.prototype.database = function(instance_id, name, fn){
   this.get(instance_id, '/' + name, {}, fn);
 };
 
-// @param {String} db database name
-// @param {String} name collection name
-// @param {String, default:{}} [spec] query spec to use
-// @param {Function} fn `(err, docs)`
-// @api private
 Service.prototype.find = function(instance_id, db, name, spec, fn){
   this.get(instance_id, '/' + db + '/' + name + '/find', spec, fn);
 };
 
-// Get all collection metadata.
-//
-// @param {String} db A database name
-// @param {String} name A collection name
-// @param {Function} fn `fn(err, data)`
-// @api public
 Service.prototype.collection = function(instance_id, db, name, fn){
   this.get(instance_id, '/' + db + '/' + name, {}, fn);
 };
@@ -234,6 +217,10 @@ Service.prototype.replication = function(instance_id, fn){
 
 Service.prototype.oplog = function(instance_id, fn){
   this.get(instance_id, '/replication/oplog', {}, fn);
+};
+
+Service.prototype.metrics = function(instance_id, fn){
+  this.get(instance_id, '/metrics', {}, fn);
 };
 
 // Get a short lived auth token that will be automatically refreshed.

@@ -28,18 +28,43 @@ if deployment.type === 'standalone'
   //-   li.active #{instance.id}
 
   h1.page-header #{instance.id}
-  +instance_detail()
-
-  .col-md-6
-    .panel.panel-default
-      .panel-heading: h3.panel-title Databases
-      .panel-body
-        ul.list-group
-          each db in instance.database_names
-            li.list-group-item
-              span.badge -
-              a(href="#") #{db}
-
+  .row
+    .col-md-6
+      .panel.panel-default
+        .panel-heading: h3.panel-title Databases
+        .panel-body
+          ul.list-group
+            each db in instance.database_names
+              li.list-group-item
+                span.badge -
+                a(href="#database/#{db}") #{db}
+    +instance_detail()
+  .row
+    .col-md-3
+      .panel.panel-default
+        .panel-heading: h3.panel-title Index Hits
+        .panel-body
+          h4 #{(metrics.indexes.hits_count/metrics.indexes.accesses_count * 100).toFixed(0)}%
+    .col-md-3
+      .panel.panel-default
+        .panel-heading: h3.panel-title Index Misses
+        .panel-body
+          h4 #{(metrics.indexes.misses_count/metrics.indexes.accesses_count * 100).toFixed(0)}%
+    .col-md-3
+      .panel.panel-default
+        .panel-heading: h3.panel-title Connections
+        .panel-body
+          h4 #{metrics.network.connections_count}
+    .col-md-3
+      .panel.panel-default
+        .panel-heading: h3.panel-title Connections
+        .panel-body
+          h4 #{metrics.network.connections_count}
+  .row
+    .col-md-12
+      .panel.panel-default
+        .panel-heading: h3.panel-title Log
+        .panel-body
 
 else
   h1 #{instance.id}

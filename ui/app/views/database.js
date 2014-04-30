@@ -33,6 +33,7 @@ var Database = Backbone.View.extend({
 
     this.$el.html(this.tpl({
       'database': this.database.toJSON(),
+      context: models.context.toJSON(),
       'host': models.instance.toJSON().host,
     })).find('.summary').html(this.summary.render().el);
     this.summary.draw();

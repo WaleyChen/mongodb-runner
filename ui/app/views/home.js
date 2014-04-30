@@ -1,6 +1,7 @@
 var Backbone = require('backbone'),
   $ = Backbone.$,
   models = require('../models'),
+  srv = require('../service'),
   debug = require('debug')('mongoscope:home');
 
 var Home = Backbone.View.extend({
@@ -27,12 +28,16 @@ var Home = Backbone.View.extend({
   },
   change: function(){},
   render: function(){
-    this.$el.html(this.tpl({
-      instance: models.instance.toJSON(),
-      deployment: models.deployment.toJSON(),
-      context: models.context.toJSON(),
-      all: models.deployments.toJSON()
-    }));
+    var self = this;
+    srv().metrics(models.instance.id, function(err, metrics){
+      self.$el.html(self.tpl({
+        instance: models.instance.toJSON(),
+        deployment: models.deployment.toJSON(),
+        context: models.context.toJSON(),
+        all: models.deployments.toJSON(),
+        metrics: metrics
+      }));
+    });
   }
 });
 

@@ -1,0 +1,23 @@
+ul.nav.nav-pills.nav-stacked.nav-sidebar
+  li
+    a(href="#connect")
+      i.fa.fa-plus.fa-fw
+      | &nbsp;Connect&hellip;
+  li.divider
+  each deployment in all
+    - kls = context.deployment_id===deployment.id ? 'active' : ''
+    if deployment.type === 'standalone'
+      li(class='#{kls}')
+        a(href="#connect/#{context.deployment_id}") #{context.deployment_id}
+    else
+      li(class='#{kls}') #{context.deployment_id}
+        ul
+          each instance in deployment.instances
+            - kls = context.instance_id===instance.id ? 'active' : ''
+            li(class='#{kls}')
+              a(href="#connect/#{deployment.id}/#{instance.id}") #{instance.id}
+
+
+
+
+

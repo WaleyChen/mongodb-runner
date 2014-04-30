@@ -54,7 +54,7 @@ function loadInstance(fn){
       debug('got instance sync!', arguments);
       fn(null, {instance: instance, deployment: deployment});
       debug('setting context', deployment, instance);
-      context.set({instance_id: instance.id, deployment_id: deployment.id});
+      context.set({instance_id: instance.id, deployment_id: deployment.id, instance: instance, deployment: deployment});
     }
   });
 }
