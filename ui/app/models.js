@@ -25,6 +25,8 @@ function getContext(){
     deployments = new DeploymentList();
     deployments.container = true;
 
+    topHolder = new Top({});
+
     context = new Context();
   }
   return context;
@@ -44,23 +46,18 @@ module.exports = function(opts){
   }});
 };
 
-function loadInstance(fn){
-  instance.fetch({
-    error: function(err){
-      debug('got instance error!!', arguments);
-      fn(err);
-    },
-    success: function(){
-      debug('got instance sync!', arguments);
-      fn(null, {instance: instance, deployment: deployment});
-      debug('setting context', deployment, instance);
-      context.set({instance_id: instance.id, deployment_id: deployment.id, instance: instance, deployment: deployment});
-    }
-  });
+function loadInstance(deploymentId, instanceId, fn){
+  var i = deployments.getInstance(instanceId);
+  if(!i) return fn(new Error('Could not find instance `'+instanceId+'`'));
+  i.fetch({error: fn, success: function(){
+    debug('got instance sync!', arguments);
+    context.switch(deploymentId, instanceId);
+    fn(null, {instance: instance, deployment: deployment});
+  }});
 }
 
 module.exports.connect = function(deploymentId, instanceId, fn){
-  var dep, ins, url = deploymentId;
+  var deployment, instance;
 
   debug('connect to', deploymentId, instanceId, fn);
 
@@ -68,58 +65,30 @@ module.exports.connect = function(deploymentId, instanceId, fn){
     fn = instanceId;
     instanceId = null;
   }
-  else {
 
-  }
+  if(deploymentId.indexOf('/') > -1) return fn(new Error('Bad deployment id `'+deploymentId+'`'));
 
-  if(deploymentId.indexOf('/') > -1){
-    return fn(new Error('Bad deployment id `'+deploymentId+'`'));
-  }
+  deployment = deployments.length > 0 && deployments.get(deploymentId);
 
-  dep = deployments.length > 0 && deployments.get(deploymentId);
-
-  if(!dep){
+  if(!deployment){
       // This is our initial connection
     debug('initial connection to', deploymentId);
-    return service.setCredentials(url, function(err, res){
+    return service.setCredentials(deploymentId, function(err, res){
       if(err) return fn(err);
-
-      // The server will handle all of the dns disambiguation and cleanup for
-      // us so now we can overload to give the views back cannonical values.
-      deploymentId = res.deployment_id;
-      instanceId = res.instance_id;
-
-      debug('refreshing deployments list');
       deployments.fetch({success: function(){
-        debug('got deployments', deployments);
-        if(!deployments.get(deploymentId)){
-          return fn(new Error('Unknown deployment `'+deploymentId+'`'));
-        }
-
-        if(deployment) deployment.clear();
-        if(instance) instance.clear();
-
-        deployment.set(_.clone(deployments.get(deploymentId).attributes));
-        deployment.instances.reset(deployment.get('instances'), {silent: true});
-        instance.set(_.clone(deployment.getSeedInstance().attributes));
-
-        loadInstance(fn);
+        loadInstance(res.deployment_id, res.instance_id, fn);
       }});
     });
   }
 
-  // @todo: needs to be find the deployment by searching instances
-  // by url.
-  if(dep.instances.length === 0 && dep.get('instances').length > 0){
-    dep.instances.reset(dep.get('instances'), {silent: true});
-    delete dep.attributes.instances;
-  }
-  ins = dep && (instanceId ? dep.getInstance(instanceId) : dep.getSeedInstance());
-  deployment.set(_.clone(dep.attributes));
-  instance.set(_.clone(ins.attributes));
-  service.setCredentials(instance.get('id'), function(){
-    debug('set creds to', instance.get('id'), arguments);
-    loadInstance(fn);
+  // @todo: deployment id might be an instance id, so search all instances
+  // in all deployments for the one we probably want.
+  instance = deployment.getSeedInstance(instanceId);
+
+  // @todo: check we're requesting an actual context change
+  service.setCredentials(instance.id, function(err, res){
+    if(err) return fn(err);
+    loadInstance(res.deployment_id, res.instance_id, fn);
   });
 };
 
@@ -151,7 +120,6 @@ Object.defineProperty(module.exports, 'deployments', {get: function(){
 Object.defineProperty(module.exports, 'top', {get: function(){
   if(!topHolder){
     getContext();
-    topHolder = new Top({});
   }
   return topHolder;
 }});
@@ -161,27 +129,46 @@ var Settings = Backbone.Model.extend({
   }),
   Context = Model.extend({
     defaults: {},
+    deployment: null,
+    instance: null,
+    switch: function(deploymentId, instanceId){
+      var sets = {};
+
+      if(deploymentId !== this.get('deployment_id')){
+        sets.deployment_id = deploymentId;
+        var src = deployments.get(deploymentId),
+          clone = _.clone(src.attributes);
+
+        clone.instances = src.instances.toJSON();
+
+        debug('cloning deployment from', clone);
+        deployment.set(clone);
+        this.deployment = deployment;
+      }
+
+      if(instanceId !== this.get('instance_id')){
+        sets.instance_id = instanceId;
+        instance.set(_.clone(deployment.getSeedInstance(instanceId).attributes));
+        this.instance = instance;
+      }
+      this.set(sets);
+      return this;
+    },
     toJSON: function(){
       var attrs = this.__data__();
-      attrs.instance = this.attributes.instance.toJSON();
-      attrs.deployment = this.attributes.deployment.toJSON();
+      attrs.instance = this.instance.toJSON();
+      attrs.deployment = this.deployment.toJSON();
       return attrs;
     }
   }),
   Instance = Model.extend({
-    defaults: {
-      database_names: [],
-    },
-    idAttribute: '_id',
     service: function(){
       return {name: 'instance', args: this.id};
-    },
-    synced: function(){
-      return Array.isArray(this.get('database_names'));
     }
   }),
   InstanceList = List.extend({
     initialize: function(models, opts){
+      opts = opts || {};
       this.models = models;
       this.deployment_id = opts.deployment_id;
     },
@@ -191,94 +178,100 @@ var Settings = Backbone.Model.extend({
     }
   }),
   Deployment = Model.extend({
-    defaults: {
-      _id: 'localhost:27017',
-      instances: []
-    },
-    idAttribute: '_id',
-    initialize: function(){
-      this.instances = new InstanceList([], {});
-
-      var self = this;
-      this.on('change:_id', function(model, newId){
-        debug('updating instances deployment id', newId);
-        self.instances.deployment_id = newId;
-      });
-      this.on('change:instances', function(model, fresh){
-        if(fresh === undefined) return;
-
-        debug('resetting instances', fresh);
-        self.instances.reset(fresh);
-
-      });
+    setters: {
+      instances: function(items){
+        debug('instances setter called', this.instances, items);
+        if(!this.instances){
+          debug('creating new collection', items, this.id);
+          this.instances = new InstanceList([], {deployment_id: this.id});
+          this.instances.reset(items, {silent: true});
+        }
+        else {
+          debug('resetting collection', items);
+          this.instances.reset(items);
+        }
+      }
     },
     service: function(){
-      return {name: 'deployment', args: this.get('_id')};
+      return {name: 'deployment', args: this.id};
     },
     getInstance: function(id){
-      // if(this.instances.length === 0 && this.get('instances').length > 0){
-      //   this.instances.reset(this.get('instances'), {silent: true});
-      //   delete this.attributes.instances;
-      // }
       return this.instances.get(id);
     },
-    getSeedInstance: function(){
-      return this.getInstance(this.get('seed').replace('mongodb://', ''));
+    getSeedInstance: function(id){
+      return this.getInstance(id) || this.getInstance(this.get('seed'));
     },
     getType: function(){
-      if(this.get('sharding')){
-        return 'cluster';
-      }
-
-      if(this.instances.filter(function(i){return i.rs;}).length > 0){
-        return 'replicaset';
-      }
-
+      if(this.getSharding()) return 'cluster';
+      if(this.getReplicaSet()) return 'replicaset';
       return 'standalone';
     },
+
+    // @todo: possible to move this out stuff and getType out to a polymorphic?
+    getReplicaSet: function(){
+      var rs = this.instances.filter(function(i){return i.rs;});
+      if(rs.length === 0){
+        return undefined;
+      }
+      return rs[0];
+    },
+    // @todo: rest api should return replication details by default.
+    getReplication: function(){
+      return {};
+    },
+    getPrimary: function(){
+      return this.instances.findWhere({state: 'primary'});
+    },
+    getArbiters: function(){
+      return this.instances.where({state: 'arbiter'});
+    },
+    getSecondaries: function(){
+      return this.instances.where({state: 'secondary'});
+    },
+
+    // @todo: rest api should return shard details by default.
+    getSharding: function(){
+      return this.get('sharding');
+    },
+    getShards: function(){
+      return this.instances.where({type: undefined}).groupBy('shard');
+    },
+    getRouters: function(){
+      return this.instances.where({type: 'router'});
+    },
     toJSON: function(){
-      console.log('deployment.toJSON', this);
       var attrs = this.__data__();
       attrs.instances = this.instances.toJSON();
       attrs.type = this.getType();
-      if(attrs.sharding){
-        attrs.routers = attrs.instances.filter(function(i){
-          return i.type === 'router';
-        });
-        attrs.shards = {};
-
-        var prev;
-        attrs.instances.map(function(i){
-          if(i.type) return;
-          if(prev !== i.shard){
-            attrs.shards[i.shard] = {name: i.shard, instances: []};
-            prev = i.shard;
-          }
-          attrs.shards[i.shard].instances.push(i);
-        });
+      if(attrs.type === 'cluster'){
+        attrs.routers = this.getRouters();
+        attrs.shards = this.getShards();
+      }
+      else if(attrs.type === 'replicaset'){
+        attrs.arbiters = this.getArbiters();
+        attrs.primary = this.getPrimary();
+        attrs.secondaries = this.getSecondaries();
+        attrs.replication = this.getReplication();
       }
       return attrs;
     }
   }),
   DeploymentList = List.extend({
-    default: function(){
-      // @todo: persist last used.
-      return this.at(0);
-    },
+    // @todo: persist last used
+    default: function(){return this.at(0);},
     model: Deployment,
     service: 'deployments',
-    parse: function(data){
-      var res = [];
-      data.map(function(dep){
-        var instances = new InstanceList([], {deployment_id: dep._id});
-        dep.instances.map(function(inst){
-          inst.deployment_id = dep._id;
-          instances.add(new Instance(inst));
-        });
-
-        dep.instances = instances.toJSON();
-        res.push(dep);
+    getInstance: function(id){
+      debug('searching for instance', id);
+      var res = null;
+      this.models.map(function(d){
+        if(!res){
+          debug('searching', d.instances);
+          res = d.instances.findWhere({_id: id});
+          debug('result', d.id, res);
+        }
       });
+      debug('returning', res);
       return res;
     }
   });
