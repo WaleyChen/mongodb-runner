@@ -76,7 +76,7 @@
   "devDependencies": {
     "gulp": "^3.5.6",
     "gulp-jade": "^0.4.2",
-    "lone": "imlucas/lone",
+    "lone": "^0.1.1",
     "mocha": "^1.17.1",
     "gulp-util": "^2.2.14",
     "supertest": "^0.10.0",
