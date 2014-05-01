@@ -296,69 +296,18 @@ module.exports.Database = Model.extend({
     }
     data.stats.collection_count = data.collection_names.length;
     return data;
-  },
-  defaults: {
-    // name: 'mongomin',
-    // collection_names: ['fixture', 'system.indexes'],
-    // stats: {
-    //   object_count: 5,
-    //   object_size: 304,
-    //   storage_size: 24576,
-    //   index_count: 1,
-    //   index_size: 8176,
-    //   extent_count: 3,
-    //   extent_freelist_count: 0,
-    //   extent_freelist_size: 0,
-    //   file_size: 67108864,
-    //   ns_size: 16777216
-    // }
   }
 });
 
 module.exports.Collection = Model.extend({
-  defaults: {
-    name: 'fixture',
-    database: 'mongomin',
-    ns: 'fixture.mongomin',
-    indexes: [
-      {
-        v: 1,
-        key: {
-          _id: 1
-        },
-        name: '_id_',
-        ns: 'mongomin.fixture',
-        size: 8176
-      }
-    ],
-    stats: {
-      document_count: 1,
-      document_size: 48,
-      storage_size: 8192,
-      index_count: 1,
-      index_size: 8176,
-      padding_factor: 1,
-      extent_count: 1,
-      extent_last_size: 8192,
-      flags_user: 1,
-      flags_system: 1
-    }
-  },
   service: function(){
     return {name: 'collection', args: [instance.id,
       this.get('database'), this.get('name')]};
-  },
-  uri: function(){
-    return this.get('database') + '/' + this.get('name') + '/' + instance.id;
   }
 });
 
 module.exports.Sample = List.extend({
-  model: Backbone.Model.extend({
-    defaults: {
-      _id: 1
-    }
-  }),
+  model: Backbone.Model.extend({}),
   initialize: function(opts){
     this.database = null;
     this.name = null;
@@ -444,81 +393,16 @@ var Top = module.exports.Top = ProducerModel.extend({
 });
 
 module.exports.Log = ProducerList.extend({
-  model: Backbone.Model.extend({
-    defaults: {
-      name: 'websrv',
-      message: 'listening for connections',
-      date: new Date()
-    }
-  }),
+  model: Backbone.Model.extend({}),
   service: function(){
     return {name: 'log', args: [instance.id]};
   },
   uri: '/log'
 });
 
-
-// Action Model-ish, cuz all are not created equal.
-//
-// level:
-// - 0: hidden
-// - 1: highlight
-// - 2: info
-// - 3: warn
 var ACTIONS = require('./views/tpl/security/privilege-actions.json');
 
 var Role = Backbone.Model.extend({
-  defaults: {
-    role : 'readAnyDatabase',
-    db : 'admin',
-    isBuiltin : true,
-    roles : [ ],
-    inheritedRoles : [ ],
-    privileges : [
-      {
-        resource: {db : '', collection : ''},
-        actions: ['collStats','dbHash','dbStats','find','killCursors','planCacheRead']
-      },
-      {
-        resource: {cluster : true},
-        actions: ['listDatabases']
-      },
-      {
-        resource: { db : '',  collection : 'system.indexes'},
-        actions: ['collStats', 'dbHash', 'dbStats', 'find', 'killCursors', 'planCacheRead']
-      },
-      {
-        resource: {db : '',  collection : 'system.js'},
-        actions: ['collStats','dbHash','dbStats','find','killCursors','planCacheRead']
-      },
-      {
-        resource: {db : '',collection : 'system.namespaces'},
-        actions: ['collStats','dbHash','dbStats','find','killCursors','planCacheRead']
-      }
-    ],
-    inheritedPrivileges : [
-      {
-        resource: {db : '',collection : ''},
-        actions: ['collStats', 'dbHash', 'dbStats', 'find', 'killCursors', 'planCacheRead']
-      },
-      {
-        resource: {cluster : true},
-        actions: ['listDatabases']
-      },
-      {
-        resource: {db : '', collection : 'system.indexes'},
-        actions: ['collStats','dbHash','dbStats','find','killCursors','planCacheRead']
-      },
-      {
-        resource: {db : '',collection : 'system.js'},
-        actions: [ 'collStats', 'dbHash', 'dbStats', 'find', 'killCursors', 'planCacheRead']
-      },
-      {
-        resource: {db : '', collection : 'system.namespaces'},
-        actions: ['collStats','dbHash','dbStats','find','killCursors','planCacheRead']
-      }
-    ]
-  },
   service: function(){
     return {name: 'securityRoles', args: [instance.id, this.get('db'), this.get('role')]};
   },
@@ -532,17 +416,6 @@ var Role = Backbone.Model.extend({
 
     data.grants = [];
     privs.map(function(grant){
-      // skips
-      // if(['local', 'config'].indexOf(grant.resource.db) > -1){
-      //   debug('skip special db grant', grant.resource);
-      //   return false;
-      // }
-
-      // if(['system.profile', 'system.indexes', 'system.js', 'system.namespaces'].indexOf(grant.resource.collection) > -1){
-      //   debug('skip special collection grant', grant.resource);
-      //   return false;
-      // }
-
       var g = {
         resource: grant.resource,
         actions: {}
@@ -559,10 +432,6 @@ var Role = Backbone.Model.extend({
 });
 
 var User = Backbone.Model.extend({
-  defaults: {
-    username: 'scopey',
-    database: 'admin'
-  },
   service: function(){
     return {name: 'securityUsers', args: [instance.id, this.get('database'), this.get('username')]};
   },

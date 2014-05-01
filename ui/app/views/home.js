@@ -13,7 +13,7 @@ var Home = Backbone.View.extend({
   },
   enter: function(){
     models.context.on('change', this.change, this);
-    if(models.context.has('instance')){
+    if(models.context.instance){
       this.render();
     }
     else {
@@ -30,10 +30,6 @@ var Home = Backbone.View.extend({
   },
   render: function(){
     var self = this;
-    console.log('deployment', models.deployment.toJSON());
-    console.log('instance', models.instance.toJSON());
-    console.log('context', models.context.toJSON());
-
     srv().metrics(models.context.instance_id, function(err, metrics){
       self.$el.html(self.tpl({
         context: models.context.toJSON(),

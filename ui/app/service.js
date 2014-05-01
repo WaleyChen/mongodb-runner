@@ -14,11 +14,6 @@ module.exports = function(scope, port){
   return srv;
 };
 
-// Wrap the MongoDB REST API in a pretty interface.
-//
-// @param {String} scope where scope is running.
-// @param {Number} port mongorest is listening on.
-// @api public
 function Service(scope, port){
   this.scope = scope;
   this.port = port;
@@ -40,12 +35,6 @@ Service.prototype.connect = function(){
   return this;
 };
 
-// Get parsed JSON from `pathname` and call `fn(err, data)` when complete.
-//
-// @param {String} pathname
-// @param {Object} [params] optional query params
-// @param {Function} fn
-// @api private
 Service.prototype.read = function(pathname, params, fn){
   if(typeof params === 'function'){
     fn = params;
@@ -178,11 +167,7 @@ Service.prototype.securityRoles = function(instance_id, db, role, fn){
   var pathname = (db ? '/' + db + (role ? '/' + role : '') : '');
   this.get(instance_id, '/security/roles' + pathname, {}, fn);
 };
-// Get a list of log `line` objects.
-//
-// @param {String, default:global} optional log name to restrict to (default: global).
-// @param {Function} fn `(err, [line])`
-// @api public
+
 Service.prototype.log = function(instance_id, name, fn){
   var pathname;
   if(typeof name === 'function'){
@@ -223,13 +208,8 @@ Service.prototype.metrics = function(instance_id, fn){
   this.get(instance_id, '/metrics', {}, fn);
 };
 
-// Get a short lived auth token that will be automatically refreshed.
-// Tokens are 1:1 for deployments.  Want to access another deployment?
-// You'll need to get another token for it.
 Service.prototype.setCredentials = function(seed, fn){
-  var self = this,
-    // Refresh our token 15 seconds before it expires.
-    expirationRedLine = 15 * 1000;
+  var self = this, expirationRedLine = 15 * 1000;
 
   function _bakeToken(done){
     var data = {seed: seed};
