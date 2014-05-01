@@ -390,9 +390,7 @@ module.exports.Model = Backbone.Model.extend({
 
     // For each `set` attribute, update or delete the current value.
     for (attr in attrs){
-      debug('has setter for ' + attr, (this.setters && this.setters.hasOwnProperty(attr)));
       if(this.setters && this.setters.hasOwnProperty(attr)){
-        debug('calling', this.setters[attr]);
         this.setters[attr].apply(this, [attrs[attr]]);
       }
       else{

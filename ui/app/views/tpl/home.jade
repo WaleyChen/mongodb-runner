@@ -60,74 +60,72 @@ else
     .col-md-6
       +instance_detail()
 
-if deployment.shards
-  each shard_name, instances in deployment.shards
+  if deployment.type === 'cluster'
+      .row
+        +panel('Routers')
+          .col-md-6
+            .list-group
+            each inst in deployment.routers
+              a.list-group-item(href="#") #{inst.name}
+          .col-md-6
+            .router-summary
+              //- @todo: balancer info?
+
+    each shard in deployment.shards
+      .row
+        +panel('Shard: ' + shard.name)
+          .col-md-6
+            .list-group: each instance in shard.instances
+              a.list-group-item(href="#") #{instance.name}
+
+          .col-md-6
+            .shard-summary(data-shard='#{shard.name}')
+              //- @todo: DONUT of distribution? chunk details?
+
+  if deployment.type === 'replicaset'
+    if deployment.maybe_sharded
+      .warning
+        p
+          | you may not be getting the full picture here.  it seems you've connected
+          | directly to a shard but not through a router.  please yadaya to
+          | make sure you're seeing the full deatils.
+
+    - oplog = deployment.replication.oplog
     .row
-      +panel('Shard: ' + shard_name)
-        .col-md-6
-          .list-group: each instance in instances
-            a.list-group-item(href="#") #{inst.name}
+      .col-md-4: +panel('Primary')
+        h2 #{replication.primary.name}
 
-        .col-md-6
-          .shard-summary(data-shard='#{shard.name}')
-            p DONUT
-            p chunks?
+      .col-md-4: +panel('Secondaries')
+        ul.list-group: each instance in deployment.secondaries
+          li.list-group-item
+            .primary-line #{member.name}
+            .label.label-default #{member.state}
+            .secondary-line replication lag #{member.lag_replication}ms
+            .secondary-line operational lag #{member.lag_operational}ms
 
-if deployment.routers
-  .row
-    +panel('Routers')
-      .col-md-6
-        .list-group
-        each inst in deployment.routers
-          a.list-group-item(href="#") #{inst.name}
-      .col-md-6
-        .router-summary
-          p balancer info?  balance now?
+      .col-md-4: +panel('Arbiters')
+        .list-group: each instance in deployment.arbiters
+          a.list-group-item(href="#connect/#{deployment.id}/#{instance.id}") #{instance.name}
+    .row
+      .col-md-4: +panel('Oplog')
+        ul.list-group
+          li.list-group-item
+            span.badge #{oplog.count}
+            | Operations
+          li.list-group-item
+            span.badge #{moment(oplog.window[0]).from(oplog.window[1], true)}
+            | Window
+          li.list-group-item
+            span.badge: +bytes(deployment.replication.options.size)
+            | Size
 
-if deployment.type === 'replicaset'
-  if deployment.maybe_sharded
-    .warning
-      p
-        | you may not be getting the full picture here.  it seems you've connected
-        | directly to a shard but not through a router.  please yadaya to
-        | make sure you're seeing the full deatils.
+      .col-md-4: +panel('Window')
+        h4 #{moment(oplog.window[0]).from(oplog.window[1], true)}
+        h5 Newest
+        pre: code #{JSON.stringify(replication.oplog.tail)}
 
-  - oplog = deployment.replication.oplog
-  .row
-    .col-md-4: +panel('Primary')
-      h2 #{replication.primary.name}
+        h5 Oldest
+        pre: code #{JSON.stringify(replication.oplog.head)}
 
-    .col-md-4: +panel('Secondaries')
-      ul.list-group: each instance in deployment.secondaries
-        li.list-group-item
-          .primary-line #{member.name}
-          .label.label-default #{member.state}
-          .secondary-line replication lag #{member.lag_replication}ms
-          .secondary-line operational lag #{member.lag_operational}ms
-
-    .col-md-4: +panel('Arbiters')
-      .list-group: each instance in deployment.arbiters
-        a.list-group-item(href="#connect/#{deployment.id}/#{instance.id}") #{instance.name}
-  .row
-    .col-md-4: +panel('Oplog')
-      ul.list-group
-        li.list-group-item
-          span.badge #{oplog.count}
-          | Operations
-        li.list-group-item
-          span.badge #{moment(oplog.window[0]).from(oplog.window[1], true)}
-          | Window
-        li.list-group-item
-          span.badge: +bytes(deployment.replication.options.size)
-          | Size
-
-    .col-md-4: +panel('Window')
-      h4 #{moment(oplog.window[0]).from(oplog.window[1], true)}
-      h5 Newest
-      pre: code #{JSON.stringify(replication.oplog.tail)}
-
-      h5 Oldest
-      pre: code #{JSON.stringify(replication.oplog.head)}
-
-    .col-md-4: +panel('Live')
-      p @todo: stream in from /oplog
+      .col-md-4: +panel('Live')
+        p @todo: stream in from /oplog

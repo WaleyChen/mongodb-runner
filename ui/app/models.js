@@ -4,31 +4,20 @@ var Backbone = require('backbone'),
   List = require('./service').List,
   debug = require('debug')('mongoscope:models');
 
-// singletons.
-var service,
-  settings,
-  deployments,
-  deployment,
-  instance,
-  topHolder,
-  context;
-
+// containers
+var service, settings, deployments, deployment, instance, topHolder, context;
 
 function getContext(){
-  if(!context){
-    instance = new Instance();
-    instance.container = true;
+  if(context) return context;
+  // create the various container models that views will attach to.
+  // under the hood, we can then copy into these containers from the
+  // main `deployments` store.
+  instance = new Instance();
+  deployment = new Deployment();
+  deployments = new DeploymentList();
+  topHolder = new Top({});
 
-    deployment = new Deployment();
-    deployment.container = true;
-
-    deployments = new DeploymentList();
-    deployments.container = true;
-
-    topHolder = new Top({});
-
-    context = new Context();
-  }
+  context = new Context();
   return context;
 }
 
@@ -45,16 +34,6 @@ module.exports = function(opts){
     opts.success.apply(this, arguments);
   }});
 };
-
-function loadInstance(deploymentId, instanceId, fn){
-  var i = deployments.getInstance(instanceId);
-  if(!i) return fn(new Error('Could not find instance `'+instanceId+'`'));
-  i.fetch({error: fn, success: function(){
-    debug('got instance sync!', arguments);
-    context.switch(deploymentId, instanceId);
-    fn(null, {instance: instance, deployment: deployment});
-  }});
-}
 
 module.exports.connect = function(deploymentId, instanceId, fn){
   var deployment, instance;
@@ -92,37 +71,15 @@ module.exports.connect = function(deploymentId, instanceId, fn){
   });
 };
 
-Object.defineProperty(module.exports, 'context', {get: function(){
-  return getContext();
-}});
-
-Object.defineProperty(module.exports, 'instance', {get: function(){
-  if(!instance){
-    getContext();
-  }
-  return instance;
-}});
-
-Object.defineProperty(module.exports, 'deployment', {get: function(){
-  if(!deployment){
-    getContext();
-  }
-  return deployment;
-}});
-
-Object.defineProperty(module.exports, 'deployments', {get: function(){
-  if(!deployments){
-    getContext();
-  }
-  return deployments;
-}});
-
-Object.defineProperty(module.exports, 'top', {get: function(){
-  if(!topHolder){
-    getContext();
-  }
-  return topHolder;
-}});
+function loadInstance(deploymentId, instanceId, fn){
+  var i = deployments.getInstance(instanceId);
+  if(!i) return fn(new Error('Could not find instance `'+instanceId+'`'));
+  i.fetch({error: fn, success: function(){
+    debug('got instance sync!', arguments);
+    context.switch(deploymentId, instanceId);
+    fn(null, {instance: instance, deployment: deployment});
+  }});
+}
 
 var Settings = Backbone.Model.extend({
     defaults: {}
@@ -141,7 +98,14 @@ var Settings = Backbone.Model.extend({
 
         clone.instances = src.instances.toJSON();
 
+        // @todo: need a cleanup that does this for everything.  unset: true
+        // when calling `set` just seems to break everything...
+        if(!src.attributes.sharding){
+          src.attributes.sharding = null;
+        }
+
         debug('cloning deployment from', clone);
+
         deployment.set(clone);
         this.deployment = deployment;
       }
@@ -160,6 +124,24 @@ var Settings = Backbone.Model.extend({
       attrs.deployment = this.deployment.toJSON();
       return attrs;
     }
+  }),
+  Shard = Model.extend({
+    setters: {
+      instances: function(items){
+        if(!this.instances){
+          this.instances = new InstanceList([]);
+        }
+        this.instances.reset(items);
+      }
+    },
+    toJSON: function(){
+      var attrs = this.__data__();
+      attrs.instances = this.instances.toJSON();
+      return attrs;
+    }
+  }),
+  ShardList = List.extend({
+    model: Shard
   }),
   Instance = Model.extend({
     service: function(){
@@ -180,17 +162,17 @@ var Settings = Backbone.Model.extend({
   Deployment = Model.extend({
     setters: {
       instances: function(items){
-        debug('instances setter called', this.instances, items);
         if(!this.instances){
-          debug('creating new collection', items, this.id);
-          this.instances = new InstanceList([], {deployment_id: this.id});
-          this.instances.reset(items, {silent: true});
+          this.instances = new InstanceList([], {deployment_id: this.id})
+            .on('reset', this.instancesChanged, this);
         }
-        else {
-          debug('resetting collection', items);
-          this.instances.reset(items);
-        }
+        this.instances.reset(items);
       }
+    },
+    instancesChanged: function(){
+      debug('instances reset', arguments);
+      this.set({'replicaset': this.instances.chain().pluck('rs').first().value()});
+      debug('replicaset now at', this.get('replicaset'));
     },
     service: function(){
       return {name: 'deployment', args: this.id};
@@ -202,12 +184,12 @@ var Settings = Backbone.Model.extend({
       return this.getInstance(id) || this.getInstance(this.get('seed'));
     },
     getType: function(){
-      if(this.getSharding()) return 'cluster';
-      if(this.getReplicaSet()) return 'replicaset';
+      if(this.has('sharding')) return 'cluster';
+      if(this.has('replicaset')) return 'replicaset';
       return 'standalone';
     },
 
-    // @todo: possible to move this out stuff and getType out to a polymorphic?
+    // @todo: possible to move this out and getType out to a polymorphic?
     getReplicaSet: function(){
       var rs = this.instances.filter(function(i){return i.rs;});
       if(rs.length === 0){
@@ -215,44 +197,61 @@ var Settings = Backbone.Model.extend({
       }
       return rs[0];
     },
-    // @todo: rest api should return replication details by default.
-    getReplication: function(){
+    // @todo: get details from service.
+    getReplicationDetails: function(){
       return {};
     },
+    // @returns {Instance}
     getPrimary: function(){
       return this.instances.findWhere({state: 'primary'});
     },
+    // @returns {InstanceList}
     getArbiters: function(){
-      return this.instances.where({state: 'arbiter'});
+      return new InstanceList(this.instances.where({state: 'arbiter'}));
     },
+    // @returns {InstanceList}
     getSecondaries: function(){
-      return this.instances.where({state: 'secondary'});
+      return new InstanceList(this.instances.where({state: 'secondary'}));
     },
 
-    // @todo: rest api should return shard details by default.
-    getSharding: function(){
-      return this.get('sharding');
+    // @todo: get details from service.
+    getShardingDetails: function(){
+      return {};
     },
+    // @returns {ShardList}
     getShards: function(){
-      return this.instances.where({type: undefined}).groupBy('shard');
+      return new ShardList(this.instances.chain()
+        .filter(function(i){
+          return i.has('shard');
+        })
+        .groupBy(function(i){
+          return i.get('shard');
+        })
+        .map(function(instances, name){
+          return new Shard({name: name, instances: instances});
+        })
+        .value());
     },
+    // @returns {InstanceList}
     getRouters: function(){
-      return this.instances.where({type: 'router'});
+      return new InstanceList(this.instances.where({type: 'router'}));
     },
+    // @returns {Object}
     toJSON: function(){
       var attrs = this.__data__();
       attrs.instances = this.instances.toJSON();
       attrs.type = this.getType();
       if(attrs.type === 'cluster'){
-        attrs.routers = this.getRouters();
-        attrs.shards = this.getShards();
+        attrs.routers = this.getRouters().toJSON();
+        attrs.shards = this.getShards().toJSON();
       }
       else if(attrs.type === 'replicaset'){
-        attrs.arbiters = this.getArbiters();
-        attrs.primary = this.getPrimary();
-        attrs.secondaries = this.getSecondaries();
-        attrs.replication = this.getReplication();
+        attrs.arbiters = this.getArbiters().toJSON();
+        attrs.primary = this.getPrimary().toJSON();
+        attrs.secondaries = this.getSecondaries().toJSON();
+        attrs.replication = this.getReplication().toJSON();
       }
+      debug('deployment toJSON', attrs);
       return attrs;
     }
   }),
@@ -517,3 +516,29 @@ module.exports.oplog = function(){
 
 module.exports.Security.User = User;
 module.exports.Security.Role = Role;
+
+
+// Initialization triggers. Allows views to be totally oblivious of any explicit
+// initialization.
+// @todo: these should just be limited to `context`.
+Object.defineProperty(module.exports, 'context', {get: function(){
+  return getContext();
+}});
+
+Object.defineProperty(module.exports, 'instance', {get: function(){
+  return getContext().instance;
+}});
+
+Object.defineProperty(module.exports, 'deployment', {get: function(){
+  return getContext().deployment;
+}});
+
+Object.defineProperty(module.exports, 'deployments', {get: function(){
+  if(!deployments) getContext();
+  return deployments;
+}});
+
+Object.defineProperty(module.exports, 'top', {get: function(){
+  if(!topHolder) getContext();
+  return topHolder;
+}});

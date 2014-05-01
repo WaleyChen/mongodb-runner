@@ -42,7 +42,6 @@ var Auth = Backbone.View.extend({
   },
   enter: function(deploymentId, instanceId){
     this.$body = $('body');
-    this.$modal = $('#modal');
 
     debug('showing auth', deploymentId, instanceId);
 
@@ -51,8 +50,6 @@ var Auth = Backbone.View.extend({
       instance = dep.getInstance(instanceId) || dep.getSeedInstance();
     }
     this.dirty = false;
-    this.$modal.modal({backdrop: 'static', keyboard: false});
-    this.render({url: (instance && instance.id) || this.url});
 
     debug('switch?', dep, instance);
     if(dep){
@@ -66,6 +63,7 @@ var Auth = Backbone.View.extend({
     else if(this.jump){
       debug('jump to', this.url);
       this.process(this.url);
+      this.jump = false;
     }
     else if(this.history.length > 0 && this.autoConnect && !instance){
       debug('resuming last connection');
@@ -73,31 +71,41 @@ var Auth = Backbone.View.extend({
     }
     else {
       debug('expecting input');
+      this.show();
     }
-    this.delegateInputEvents();
-    this.visible = true;
     this.trigger('enter');
     return this;
   },
+  show: function(){
+    if(this.$modal) return this;
 
+    this.$modal = $('#modal');
+    this.$modal.modal({backdrop: 'static', keyboard: false});
+    this.render({url: (instance && instance.id) || this.url});
+    this.delegateInputEvents();
+    this.visible = true;
+  },
   resume: function(){
     var previous = this.history.at(0);
     debug('trying last used', previous);
-    this.$host.text(previous.get('instance_id'));
     this.process(previous.get('instance_id'), previous.get('id'));
   },
   error: function(err){
+    this.show();
     this.dirty = true;
     this.$message.text(err.message).fadeIn();
     this.$form.addClass('has-error');
     this.trigger('error');
   },
   exit: function(){
-    this.$modal.modal('hide');
     this.$body.removeClass('authenticate');
-    this.undelegateEvents();
-    this.undelegateInputEvents();
-    this.visible = false;
+
+    if(this.visible){
+      this.$modal.modal('hide');
+      this.undelegateEvents();
+      this.undelegateInputEvents();
+      this.visible = false;
+    }
     this.trigger('exit');
   },
   loading: function(msg){
