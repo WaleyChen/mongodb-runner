@@ -46,6 +46,7 @@ if deployment.type === 'standalone'
   .row
     .col-md-12
       +panel('Log')
+        .log-container
 
 else
   h1.page-header #{deployment.name}

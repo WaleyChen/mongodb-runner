@@ -2,19 +2,22 @@ var Backbone = require('backbone'),
   $ = Backbone.$,
   models = require('../models'),
   srv = require('../service'),
-  debug = require('debug')('mongoscope:home');
+  debug = require('debug')('mongoscope:home'),
+  log = require('./log');
 
 var Home = Backbone.View.extend({
   tpl: require('./tpl/home.jade'),
   initialize: function(){
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);
+    this.log = log();
     this.databases = [];
   },
   enter: function(){
     models.context.on('change', this.change, this);
     if(models.context.instance){
       this.render();
+      this.log.enter();
     }
     else {
       debug('waiting for context to get an instance');
@@ -22,6 +25,7 @@ var Home = Backbone.View.extend({
   },
   exit: function(){
     models.context.off('change', this.change, this);
+    this.log.exit();
     return this;
   },
   change: function(){

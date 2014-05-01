@@ -7,14 +7,11 @@ var Backbone = require('backbone'),
 var Log = Backbone.View.extend({
   tpl: require('./tpl/log.jade'),
   initialize: function(){
-    this.$el = $('#mongoscope');
-    this.el = this.$el.get(0);
-
     this.log = new models.Log()
       .on('sync', this.update, this);
   },
   enter: function(){
-    this.$el = $('#mongoscope');
+    this.$el = $('.log-container');
     this.el = this.$el.get(0);
     this.log.fetch();
     this.render();
