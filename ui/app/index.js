@@ -41,7 +41,7 @@ require('./models')({
   }
 });
 
-require('./views/toolbar')();
+require('./views/sidebar')();
 
 require('./keybindings');
 require('./title');
