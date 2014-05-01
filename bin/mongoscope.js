@@ -12,10 +12,3 @@ debug('hello');
 debug('running from', src);
 
 require(src);
-
-var deployment = require(__dirname + '/../lib/deployment');
-
-// @todo: positional args for seeds.
-deployment.discover(nconf.get('seed'), function(){
-
-});
