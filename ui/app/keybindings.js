@@ -1,5 +1,5 @@
 var mousetrap = require('mousetrap'),
-  Backbone = require('Backbone'),
+  Backbone = require('backbone'),
   Connect = require('./views/connect');
 
 mousetrap.bind('command+shift+p', function(){

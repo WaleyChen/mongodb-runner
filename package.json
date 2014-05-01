@@ -6,6 +6,7 @@
     "start": "NODE_ENV=development DEBUG=* gulp dev",
     "dist": "./bin/dist.sh",
     "test": "mocha",
+    "up": "git pull --rebase && npm install && cd ui && npm install && cd ../ && NODE_ENV=production ./node_modules/.bin/gulp ui;",
     "mongo-cluster": "cat ./test/shell/start-cluster.js | mongo",
     "mongo-replicaset": "mongo ./test/shell/start-replicaset.js",
     "mongo": "mongod --port 27017 --dbpath /data/db/standalone"
