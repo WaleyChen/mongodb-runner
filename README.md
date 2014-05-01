@@ -37,22 +37,70 @@ npm run-script dist
 ## curl party
 
 ```
-# assuming you dont have auth on and are running mongod
-export TOKEN=`curl -H 'Accept: text/plain' -s http://localhost:29017/api/v1/token -D "seed=localhost:27017"`;
+# assumptions: auth=false and mongod and scope running on localhost on the default ports
+# Let's just ping the api and see what it does
+curl -X GET http://localhost:29017/api/v1/;
 
-# top can respond to a normal REST style GET
-curl -X GET -H 'Authorization: Bearer $TOKEN' "http://localhost:29017/api/v1/localhost:27017/top";
+export TOKEN=`curl -H "Accept: text/plain" -s http://localhost:29017/api/v1/token -d "seed=localhost:27017"`;
+echo "Here is an auth token.  It's valid for about an hour: $TOKEN";
 
-# Fun things happen though if we kick the server into server-sent events mode
-curl -X GET -H 'Accept: text/event-stream' -H 'Authorization: Bearer $TOKEN' "http://localhost:29017/api/v1/localhost:27017/top";
+# Lot's of things in MongoDB can be consumed in all sorts of different ways,
+# and scope wants to make it as easy as possible for you to do anything.
+#
+# As you saw above with token generation, scope is highly responsive
+# to content negotiation.  In most cases, and judging by your 'I ♥ JSON' t-shirt',
+# you'll want to use json:
 
-# nom nom all oplog events nom nom:
-curl -X GET -H 'Accept: text/event-stream' -H 'Authorization: Bearer $TOKEN' "http://localhost:29017/api/v1/localhost:27017/replication/oplog";
+curl -H "Authorization: Bearer $TOKEN" -H 'Accept: application/json' http://localhost:29017/api/v1/;
 
-# filtered view of le' oplog:
-export FILTERS='[['collection', 'users'], ['email', 'mongodb.com$']]';
-curl -X GET -H 'Accept: text/event-stream' -H 'Authorization: Bearer $TOKEN' "http://localhost:29017/api/v1/localhost:27017/replication/oplog?filters=$FILTERS";
+# And you should get some output along the lines of:
+# [
+#   {
+#     "_id": "lucass-macbook-air.local:27017",
+#     "seed": "lucass-macbook-air.local:27017",
+#     "instances": [
+#       {
+#         "_id": "lucass-macbook-air.local:27017"
+#       }
+#     ]
+#   }
+# ]
+#
+# @todo: intro to deployments and instances?
+#
+# Content negotiation allows much more than that though.  Let's take top
+# for example. Top can respond to a normal REST style read:
+curl -H "Authorization: Bearer $TOKEN" -H 'Accept: application/json' http://localhost:29017/api/v1/localhost:27017/top;
 
-# Watch replica set events => reconnects, joins, leaves:
-curl -X GET -H 'Accept: text/event-stream' -H 'Authorization: Bearer $TOKEN' "http://localhost:29017/api/v1/localhost:27017/replication/watch";
+# That's ... OK but top is really powerful and best consumed over time.
+# What if we could just make one request that will keep sending us up to
+# the second updates about what is actually happening on the instance?
+# Turns out, the smart folks of the internet already have a protocol for that
+# called "Server-Sent Events":
+curl -X GET -H "Accept: text/event-stream" -H "Authorization: Bearer $TOKEN" "http://localhost:29017/api/v1/localhost:27017/top";
+
+# Pretty nice, eh?  If your instance isn't doing anything, notice how you're
+# still connected but not getting any updates.  Go ahead and run some queries
+# on your instance and watch your terminal dance.  Hit ctrl+c to continue.
+#
+#
+# YOU can do this for just about any of the scope api calls.  Say we want to
+# nom nom all oplog events nom nom, a blow by blow of all writes to a replica set
+# if you're not familiar with the jargon.
+#
+# @todo: there is a ticket to actually wire this up to sse.  sorry :(
+curl -X GET -H "Accept: text/event-stream" -H "Authorization: Bearer $TOKEN" "http://localhost:29017/api/v1/localhost:27017/replication/oplog";
+
+# That's cool but what if you wanted to write a little script that made your
+# terminal BELL every time someone with a mongodb email address created an
+# signed up for your app?
+#
+# BOOM.  scope supports filtering your view of le' oplog!
+export FILTERS='[["collection", "users"], ["email", "mongodb.com$"]]';
+curl -X GET -H "Accept: text/event-stream" -H "Authorization: Bearer $TOKEN" "http://localhost:29017/api/v1/localhost:27017/replication/oplog?filters=$FILTERS";
+
+# Wouldn't it be event better if now that you have your terminal BELL script,
+# you could get notified when instances in your replica set get the blues?
+# You can watch for replication events like reconnects, joins, and leaves:
+curl -X GET -H "Accept: text/event-stream" -H "Authorization: Bearer $TOKEN" "http://localhost:29017/api/v1/localhost:27017/replication/watch";
 ```
