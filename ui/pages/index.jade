@@ -6,7 +6,7 @@ html(lang='en')
     link(rel='icon', href='img/favicon.ico', type='image/x-icon')
   body.loading
 
-    nav.navbar
+    nav.navbar.navbar-inverse.navbar-fixed-top
       .container-fluid
         .navbar-header
           a.navbar-brand(href="#") mongoscope
@@ -20,11 +20,11 @@ html(lang='en')
           .nav.navbar-nav.navbar-right
             .flash
 
-    .container-fluid
-      .row
+    .container-fluid(style="height: 100%;")
+      .row(style='height: 100%; overflow-y: scroll;')
         #sidebar.col-md-2.col-sm-3
 
-        #mongoscope.col-md-10.col-sm-9
+        #mongoscope.col-md-10.col-sm-9.col-md-push-2
 
     #modal.modal.modal-dialog
 
