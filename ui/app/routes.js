@@ -35,8 +35,6 @@ module.exports = function(opts){
     .add('home', require('./views/home'))
     .add('log', require('./views/log'))
     .add('top', require('./views/top'))
-    .add('sharding', require('./views/sharding'))
-    .add('replication', require('./views/replication'))
     .add('connect', require('./views/connect').create)
     .add('switch_instance', 'connect/:deployment_id/:instance_id', require('./views/connect').instance, null)
     .add('switch_deployment', 'connect/:deployment_id', require('./views/connect').deployment, null)
