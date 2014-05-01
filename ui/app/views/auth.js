@@ -54,14 +54,25 @@ var Auth = Backbone.View.extend({
     this.$modal.modal({backdrop: 'static', keyboard: false});
     this.render({url: (instance && instance.id) || this.url});
 
-    if(this.jump){
-      this.process(this.url);
+    debug('switch?', dep, instance);
+    if(dep){
+      debug('dep is', dep);
+      this.process(dep.id);
     }
     else if(instance){
+      debug('instance is', instance);
       this.process(instance.id);
     }
+    else if(this.jump){
+      debug('jump to', this.url);
+      this.process(this.url);
+    }
     else if(this.history.length > 0 && this.autoConnect && !instance){
+      debug('resuming last connection');
       this.resume();
+    }
+    else {
+      debug('expecting input');
     }
     this.delegateInputEvents();
     this.visible = true;
