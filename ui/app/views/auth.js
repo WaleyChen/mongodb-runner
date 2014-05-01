@@ -43,6 +43,11 @@ var Auth = Backbone.View.extend({
   enter: function(deploymentId, instanceId){
     this.$body = $('body');
 
+    this.redirect = window.location.hash.replace('#', '') || 'home';
+    if(this.redirect === 'connect'){
+      this.redirect = 'home';
+    }
+
     debug('showing auth', deploymentId, instanceId);
 
     var dep, instance;
@@ -77,8 +82,6 @@ var Auth = Backbone.View.extend({
     return this;
   },
   show: function(){
-    if(this.$modal) return this;
-
     this.$modal = $('#modal');
     this.$modal.modal({backdrop: 'static', keyboard: false});
     this.render({url: (instance && instance.id) || this.url});
@@ -117,7 +120,6 @@ var Auth = Backbone.View.extend({
       this.redirect = 'home';
     }
     this.exit();
-    debug('success!  redirecting to ', this.redirect);
     Backbone.history.navigate(this.redirect, {trigger: true});
     return this;
   },
@@ -135,6 +137,9 @@ var Auth = Backbone.View.extend({
 
       this.success();
     }.bind(this));
+  },
+  cancel: function(){
+    return this.success();
   },
   submit: function(){
     this.reset();
@@ -204,7 +209,7 @@ var Auth = Backbone.View.extend({
       }
       //  - esc -> clear
       if(event.keyIdentifier === 'U+001B'){
-        if(self.closeable) return self.exit();
+        if(self.closeable) return self.cancel();
         self.$host.text('');
         return false;
       }

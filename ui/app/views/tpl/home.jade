@@ -49,7 +49,7 @@ if deployment.type === 'standalone'
 
 else
   h1.page-header #{deployment.name}
-    p.lead #{instance.name}
+    p.lead via #{instance.id}
 
   .row
     .col-md-6
@@ -61,7 +61,7 @@ else
       +instance_detail()
 
   if deployment.type === 'cluster'
-      .row
+      .row: .col-md-12
         +panel('Routers')
           .col-md-6
             .list-group
@@ -72,7 +72,7 @@ else
               //- @todo: balancer info?
 
     each shard in deployment.shards
-      .row
+      .row: .col-md-12
         +panel('Shard: ' + shard.name)
           .col-md-6
             .list-group: each instance in shard.instances
