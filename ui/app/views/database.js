@@ -9,7 +9,7 @@ var Backbone = require('backbone'),
   debug = require('debug')('mg:scope:database');
 
 var Database = Backbone.View.extend({
-  tpl: require('./tpl/database.jade'),
+  tpl: require('./tpl/database/index.jade'),
   initialize: function(){
     this.summary = new Summary();
     this.database = this.summary.database.on('sync', this.render, this);
@@ -46,7 +46,7 @@ var Summary = Backbone.View.extend({
   },
   tagName: 'div',
   className: 'row',
-  tpl: require('./tpl/pulse/database.jade'),
+  tpl: require('./tpl/database/summary.jade'),
   initialize: function(opts){
     this.database = new models.Database(opts)
       .on('sync', this.update, this);
@@ -172,7 +172,7 @@ var Summary = Backbone.View.extend({
 });
 
 var Create = Backbone.View.extend({
-  tpl: require('./tpl/pulse/create-collection.jade'),
+  tpl: require('./tpl/collection/create.jade'),
   events: {
     'submit form': 'submit',
     'click .cancel': 'cancel'

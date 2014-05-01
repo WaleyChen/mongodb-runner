@@ -3,13 +3,6 @@ var Backbone = require('backbone'),
   models = require('../models'),
   debug = require('debug')('mongoscope:security');
 
-// Action Model-ish, cuz all are not created equal.
-//
-// level:
-// - 0: hidden
-// - 1: highlight
-// - 2: info
-// - 3: warn
 var ACTIONS = require('./tpl/security/privilege-actions.json');
 
 var detail = {
@@ -87,7 +80,7 @@ var Security = Backbone.View.extend({
   events: {
     'click .list-group a': 'markSelected'
   },
-  tpl: require('./tpl/security.jade'),
+  tpl: require('./tpl/security/index.jade'),
   initialize: function(){
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);

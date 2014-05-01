@@ -4,7 +4,7 @@ var Backbone = require('backbone'),
   debug = require('debug')('mg:scope:collection');
 
 var Collection = Backbone.View.extend({
-  tpl: require('./tpl/collection.jade'),
+  tpl: require('./tpl/collection/index.jade'),
   initialize: function(){
     this.metric = 'lock.count';
 
@@ -60,7 +60,7 @@ var Collection = Backbone.View.extend({
 
 
 var ExplorerView = Backbone.View.extend({
-  tpl: require('./tpl/explorer.jade'),
+  tpl: require('./tpl/collection/explorer.jade'),
   events: {
     'click .next:not(.disabled) a': 'next',
     'click .previous:not(.disabled) a': 'prev',
@@ -120,7 +120,7 @@ var ExplorerView = Backbone.View.extend({
 
 
 var DocumentView = Backbone.View.extend({
-  tpl: require('./tpl/explore/document.jade'),
+  tpl: require('./tpl/document.jade'),
   initialize: function(opts){
     this.sample = opts.sample;
   },
