@@ -25,7 +25,9 @@ var Top = Backbone.View.extend({
     this.$el = Backbone.$('#mongoscope');
     this.el = this.$el.get(0);
 
-    this.$el.html(this.tpl({}));
+    this.$el.html(this.tpl({
+      context: models.context
+    }));
 
     models.top.fetch({success: this.insert.bind(this)});
   },
