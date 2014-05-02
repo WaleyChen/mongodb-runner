@@ -2,6 +2,8 @@
 
 in no particular order.  feel free to add your own.
 
+Generate better fixtures with http://www.json-generator.com/
+
 ### `#shell`
   - read only shell
   - mine docs for autocomplete http://docs.mongodb.org/master/reference/command/

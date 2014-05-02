@@ -121,5 +121,123 @@ body {
       > div { line-height: 1.4; }
     }
   }
-
 }
+.variables {
+  .text-color {
+    color: @text-color;
+  }
+  .text-color-subtle {
+    color: @text-color-subtle;
+  }
+  .text-color-info {color: @text-color-info;}
+  .text-color-success {color: @text-color-success;}
+  .text-color-warning {color: @text-color-warning;}
+  .text-color-error {color: @text-color-error;}
+  .text-color-highlight {
+    color: @text-color-highlight;
+  }
+  .text-color-selected {
+    color: @text-color-selected;
+  }
+  .text-color-ignored {
+    color: @text-color-ignored;
+  }
+  .text-color-added {
+    color: @text-color-added;
+  }
+  .text-color-renamed {
+    color: @text-color-renamed;
+  }
+  .text-color-modified {
+    color: @text-color-modified;
+  }
+  .text-color-removed {
+    color: @text-color-removed;
+  }
+
+  .background-color-info {
+    background-color: @background-color-info;
+  }
+  .background-color-success {
+    background-color: @background-color-success;
+  }
+  .background-color-warning {
+    background-color: @background-color-warning;
+  }
+  .background-color-error {
+    background-color: @background-color-error;
+  }
+  .background-color-highlight {
+    background-color: @background-color-highlight;
+  }
+  .background-color-selected {
+    background-color: @background-color-selected;
+  }
+  .app-background-color {
+    background-color: @app-background-color;
+  }
+  .ui-site-color-1 {
+    background-color: @ui-site-color-1;
+  }
+  .ui-site-color-2 {
+    background-color: @ui-site-color-2;
+  }
+  .ui-site-color-3 {
+    background-color: @ui-site-color-3;
+  }
+  .ui-site-color-4 {
+    background-color: @ui-site-color-4;
+  }
+  .ui-site-color-5 {
+    background-color: @ui-site-color-5;
+  }
+
+  .container-base { background-color: @base-background-color; border: 1px solid @base-border-color;}
+  .container-input { background-color: @input-background-color; border: 1px solid @input-border-color;}
+  .container-overlay { background-color: @overlay-background-color; border: 1px solid @overlay-border-color;}
+  .container-overlay { background-color: @overlay-background-color; border: 1px solid @overlay-border-color;}
+  .container-tree-view { background-color: @tree-view-background-color; border: 1px solid @tree-view-border-color;}
+  .container-tool-panel { background-color: @tool-panel-background-color; border: 1px solid @tool-panel-border-color;}
+  .container-inset-panel { background-color: @inset-panel-background-color; border: 1px solid @inset-panel-border-color;}
+  .container-panel-heading { background-color: @panel-heading-background-color; border: 1px solid @panel-heading-border-color;}
+  .container-pane-item { background-color: @pane-item-background-color; border: 1px solid @pane-item-border-color;}
+  .container-tab-bar { background-color: @tab-bar-background-color; border: 1px solid @tab-bar-border-color;}
+  .container-tree-view { background-color: @tree-view-background-color; border: 1px solid @tree-view-border-color;}
+
+  .font-default {font-family: @font-family;}
+  .font-serif {font-family: @font-family-serif;}
+  .font-monospace {font-family: @font-family-monospace;}
+
+  .block {
+    display: block;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    padding: @component-padding;
+    text-align: right;
+  }
+
+  .container {
+    .block;
+    margin-bottom: @component-padding/2;
+  }
+}
+
+// @button-background-color: @base-background-color;
+// @button-background-color-hover: lighten(@button-background-color, 5%);
+// @button-background-color-selected: #888;
+// @button-border-color: rgba(0, 0, 0, 0.15);
+
+// @tab-background-color: #e8e8e8;
+// @tab-background-color-active: #f0f0f0;
+// @tab-border-color: lighten(@base-border-color, 10%);
+
+// Sizes
+// @font-size: 13px;
+// @disclosure-arrow-size: 12px;
+// @component-padding: 10px;
+// @component-icon-padding: 5px;
+// @component-icon-size: 16px;
+// @component-line-height: 25px;
+// @component-border-radius: 2px;
+// @tab-height: 26px;

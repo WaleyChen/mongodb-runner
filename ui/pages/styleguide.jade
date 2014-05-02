@@ -9,6 +9,62 @@ html(lang='en')
       section.bordered(data-name='styleguide')
         h1 Styleguide
 
+      section(data-name='variables').variables
+        h2 variables
+
+        h3 fonts
+        ul.list-unstyled.list-inline
+          li.font-default @font-family
+          li.font-serif @font-family-serif
+          li.font-monospace @font-family-monospace
+
+        h3 text colors
+
+        ul.list-unstyled.list-inline
+          li.text-color @text-color
+          li.text-color-subtle @text-color
+
+        ul.list-unstyled.list-inline
+          li.text-color-info @text-color-info
+          li.text-color-success @text-color-success
+          li.text-color-warning @text-color-warning
+          li.text-color-error @text-color-error
+
+        ul.list-unstyled.list-inline
+          li.text-color-ignored @text-color-ignored
+          li.text-color-added @text-color-added
+          li.text-color-renamed @text-color-renamed
+          li.text-color-modified @text-color-modified
+          li.text-color-removed @text-color-removed
+
+        h3 fills
+
+        .block.background-color-info @background-color-info
+        .block.background-color-success @background-color-success
+        .block.background-color-warning @background-color-warning
+        .block.background-color-error @background-color-error
+        .block.background-color-highlight @background-color-highlight
+        .block.background-color-selected @background-color-selected
+        .block.app-background-color @app-background-color
+        .block.ui-site-color-1 @ui-site-color-1
+        .block.ui-site-color-2 @ui-site-color-2
+        .block.ui-site-color-3 @ui-site-color-3
+        .block.ui-site-color-4 @ui-site-color-4
+        .block.ui-site-color-5 @ui-site-color-5
+
+        h3 containers
+        .container.container-base @base
+        .container.container-input @input
+        .container.container-overlay @overlay
+        .container.container-overlay @overlay
+        .container.container-tree-view @tree-view
+        .container.container-tool-panel @tool-panel
+        .container.container-inset-panel @inset-panel
+        .container.container-panel-heading @panel-heading
+        .container.container-pane-item @pane-item
+        .container.container-tab-bar @tab-bar
+        .container.container-tree-view @tree-view
+
       section.bordered(data-name='text')
         h2 Text
 
