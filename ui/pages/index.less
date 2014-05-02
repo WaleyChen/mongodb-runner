@@ -18,11 +18,9 @@
 
 @font-size: 13px;
 
-.navbar {
-  border-bottom: 1px solid @base-border-color;
-  background-color: @inset-panel-background-color;
+.navbar-header {
+  float: none;
 }
-
 .navbar-brand {
   color: fadeout(@text-color, 30%);
   font-size: 90%;
@@ -206,13 +204,12 @@ body {
 .grid.quarters > * {width: 25%;}
 
 .nav-sidebar {
-  margin-right: -15px;
   margin-bottom: 20px;
-  margin-left: -15px;
+  border-top: 1px solid fadeout(@base-border-color, 80%);
 }
 .nav-sidebar > li > a {
-  padding-right: 20px;
-  padding-left: 20px;
+  padding-right: 0px;
+  padding-left: 10px;
 }
 .nav-sidebar > .active > a {
   // color: #fff;
@@ -341,16 +338,18 @@ html, body {height: 100%;}
 // ## app container
 #mongoscope {
   height: 100%;
-  margin-top: @navbar-height;
   padding-top: @component-padding;
 }
 
 #sidebar {
-  margin-top: @navbar-height;
+  background-color: @base-background-color;
   padding-top: @component-padding;
   border-right: 1px solid fadeout(@base-border-color, 20%);
   position: fixed;
   height: 100%;
+  padding-top: 0;
+  padding-left: 0px;
+  padding-right: 0;
 }
 .panel{
   .panel-heading {
