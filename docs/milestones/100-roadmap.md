@@ -24,16 +24,19 @@
 - [x] server: dns disambiguation
 - [ ] server: connecting automatically figures out the right deployment you want instead of creating a new one
 - [ ] server: connect to rs that is actually a cluster -> connect to cluster -> merges the two deployments
-- [ ] server: when a replicaset membership event happens, update the deployment
 - ui
   - [ ] dumb down ui even further
   - [ ] starting view for cluster
   - [ ] starting view for replica set
   - [ ] starting view for standalone
-  - [ ] bug: instance list stomped when switching in ui
+  - [x] bug: instance list stomped when switching in ui
 - project
-  - [ ] jira
+  - [x] jira
   - [ ] roadmap
   - [ ] setup mci project
   - [ ] automated build deploy for windows, nix, and osx
 
+
+## Stretch
+
+- [ ] server: when a replicaset membership event happens, update the deployment

@@ -143,6 +143,9 @@ server init + read api parity
 
 - stale lock cleanup
 - chunk distribution analysis
+- parse logs of a mongos to watch chunk migrations
+- more maybe_shard heuristics: arbiters usually only in replset
+
 
 ### completed
 
