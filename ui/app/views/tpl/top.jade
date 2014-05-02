@@ -1,8 +1,8 @@
 ol.breadcrumb
   unless context.deployment.type === 'standalone'
-    li: a(href='#home') #{context.deployment.name}
-  li: a(href='#home') #{context.instance.name}
-  li Top
+    li: a(href='#home') #{context.deployment.id}
+  li: a(href='#home') #{context.instance.id}
+  li top
 
 .row
   .col-md-12

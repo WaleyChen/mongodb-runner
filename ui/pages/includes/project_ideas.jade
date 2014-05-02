@@ -2,12 +2,9 @@ include ../mixins/label
 include ../mixins/article
 include ../mixins/section
 
-
-
 +section('Skunkworks / Intern Ideas')
-  article
-    .row
-      .col-md-5
+  .col-md-12: article
+      .col-md-6
         ul.list-unstyled
           li
             h4 Try It
@@ -84,7 +81,7 @@ include ../mixins/section
               and planner to what `ActionSet`'s a built-in role
               has access to.
 
-      .col-md-5.col-md-push-2
+      .col-md-6
         ul.list-unstyled
           li
             h4 Structured Data from docs
@@ -122,7 +119,6 @@ include ../mixins/section
               | queries to get the latest signup counts from their
               | pocket?
 
-    .row
       .col-md-12
         h3 Contribute/Collaborate on Existing Projects
         :markdown

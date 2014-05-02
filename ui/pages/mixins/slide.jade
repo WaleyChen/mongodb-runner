@@ -1,7 +1,7 @@
 include anchor
 
 mixin slide(title, number)
-  .slide
+  .slide.row
     .col-md-4
       h4
         +anchor(number + '. ' +title)(prefix='token-auth')

@@ -2,7 +2,9 @@ doctype html
 html(lang='en')
   head
     title styleguide
+    link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400,400italic,600')
     link(rel='stylesheet', href='css/styleguide.css')
+
     link(rel='icon', href='img/favicon.ico', type='image/x-icon')
   body.workspace.panes.pane.item-views.active
     .styleguide.padded.pane-item
@@ -231,13 +233,13 @@ html(lang='en')
         .panel.panel-default
           .list-group
             a.list-group-item(href='#')
-              h4.list-group-item-heading .list-group-item-heading
+              .list-group-item-heading .list-group-item-heading
               small.list-group-item-text .list-group-item-text
             a.list-group-item.active(href='#')
-              h4.list-group-item-heading .select-list in atom
+              .list-group-item-heading .select-list in atom
               small.list-group-item-text .list-group-item-(heading|text) is the same as .primary and .secondary
             a.list-group-item.list-group-item-warning(href='#')
-              h4.list-group-item-heading Do not use ul.list-group!
+              .list-group-item-heading Do not use ul.list-group!
               small.list-group-item-text It's half-assed and doesn't do what you expect.
 
         h3 filterable and groupable
@@ -249,58 +251,70 @@ html(lang='en')
               .icon.fa-search
               input
             .list-group-body
-              .list-group-label: h3 shard0000
+              .list-group-label shard0000
               a.list-group-item(href="#")
-                h4.list-group-item-heading localhost:31000
+                .pull-left: i.fa.fa-angle-right.fa-fw
+                .list-group-item-heading localhost:31000
               a.list-group-item(href="#")
-                h4.list-group-item-heading localhost:31001
+                .pull-left: i.fa.fa-angle-right.fa-fw
+                .list-group-item-heading localhost:31001
               a.list-group-item(href="#")
-                h4.list-group-item-heading localhost:31002
+                .pull-left: i.fa.fa-angle-right.fa-fw
+                .list-group-item-heading localhost:31002
               a.list-group-item(href="#")
-                h4.list-group-item-heading localhost:31003
-              .list-group-label: h3 shard0001
+                .pull-left: i.fa.fa-angle-right.fa-fw
+                .list-group-item-heading localhost:31003
+              .list-group-label shard0001
               a.list-group-item(href="#")
-                h4.list-group-item-heading localhost:32000
+                .pull-left: i.fa.fa-angle-right.fa-fw
+                .list-group-item-heading localhost:32000
               a.list-group-item(href="#")
-                h4.list-group-item-heading localhost:32001
+                .pull-left: i.fa.fa-angle-right.fa-fw
+                .list-group-item-heading localhost:32001
               a.list-group-item(href="#")
-                h4.list-group-item-heading localhost:32002
+                .pull-left: i.fa.fa-angle-right.fa-fw
+                .list-group-item-heading localhost:32002
               a.list-group-item(href="#")
-                h4.list-group-item-heading localhost:32003
-              .list-group-label: h3 shard0002
+                .pull-left: i.fa.fa-angle-right.fa-fw
+                .list-group-item-heading localhost:32003
+              .list-group-label shard0002
               a.list-group-item(href="#")
-                h4.list-group-item-heading localhost:33000
+                .pull-left: i.fa.fa-angle-right.fa-fw
+                .list-group-item-heading localhost:33000
               a.list-group-item(href="#")
-                h4.list-group-item-heading localhost:33001
+                .pull-left: i.fa.fa-angle-right.fa-fw
+                .list-group-item-heading localhost:33001
               a.list-group-item(href="#")
-                h4.list-group-item-heading localhost:33002
+                .pull-left: i.fa.fa-angle-right.fa-fw
+                .list-group-item-heading localhost:33002
               a.list-group-item(href="#")
-                h4.list-group-item-heading localhost:33003
+                .pull-left: i.fa.fa-angle-right.fa-fw
+                .list-group-item-heading localhost:33003
 
         h3 icons
         .panel.panel-default
           .list-group
             a.list-group-item(href='#')
               .pull-right: i.fa.fa-circle-o.fa-fw.fa-2x(style='padding-top: 10px;')
-              h4.list-group-item-heading
+              .list-group-item-heading
                 | Icons
               small.list-group-item-text
                 | .pull-right: i.fa.fa-circle-o.fa-fw.fa-2x(style='padding-top: 10px;')
             a.list-group-item(href='#')
               .pull-right: i.fa.fa-angle-double-right.fa-fw.fa-2x(style='padding-top: 10px;')
-              h4.list-group-item-heading
+              .list-group-item-heading
                 | Disclosure
               small.list-group-item-text
                 | .pull-right: i.fa.fa-angle-double-right.fa-fw.fa-2x(style='padding-top: 10px;')
             a.list-group-item(href='#')
-              h4.list-group-item-heading
+              .list-group-item-heading
                 i.fa.fa-plus.fa-fw
                 | As item status
               i.fa.fa-fw.h4
               small.list-group-item-text
                 | i.fa.fa-fw.h4 after h4 for spacing
             a.list-group-item(href='#')
-              h4.list-group-item-heading
+              .list-group-item-heading
                 i.fa.fa-star.fa-fw
                 | As item status
               i.fa.fa-fw.h4

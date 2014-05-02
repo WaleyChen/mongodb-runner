@@ -1,5 +1,8 @@
 include anchor
 mixin section(title)
   section
-    h2: +anchor(title)
-    block
+    .row
+      .col-md-12
+        h2: +anchor(title)
+    .row
+      block

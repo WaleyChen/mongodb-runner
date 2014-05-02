@@ -9,6 +9,7 @@ var Log = Backbone.View.extend({
   initialize: function(){
     this.log = new models.Log()
       .on('sync', this.update, this);
+    this.orientation = 'natural';
   },
   enter: function(){
     this.$el = $('.log-container');
@@ -26,7 +27,13 @@ var Log = Backbone.View.extend({
       update: true
     })).hide();
 
-    this.$el.append(updates);
+    if(this.orientation === 'natural'){
+      this.$el.prepend(updates);
+    }
+    else {
+      this.$el.append(updates);
+    }
+
     updates.fadeIn();
     if(!this.el.scrollByLines){
       return this;
@@ -34,9 +41,15 @@ var Log = Backbone.View.extend({
     this.el.scrollByLines(this.log.length);
   },
   render: function(){
+    var lines = this.log.toJSON();
+    if(this.orientation === 'natural'){
+      lines.reverse();
+    }
+
     this.$el.html(this.tpl({
       moment: moment,
-      lines: this.log.toJSON(),
+      lines: lines,
+      orientation: this.orientation,
       update: false
     }));
     if(!this.el.scrollByLines){

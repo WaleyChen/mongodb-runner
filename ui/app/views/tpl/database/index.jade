@@ -8,14 +8,16 @@ include ../mixins/bytes
 
 ol.breadcrumb
   unless context.deployment.type === 'standalone'
-    li: a(href='#home') #{context.deployment.name}
+    li: a(href='#home') #{context.deployment.id}
   li
-    a(href='#home') #{context.instance.name}
+    a(href='#home') #{context.instance.id}
   li database: #{database.name}
 
 .panel.panel-default
   .panel-body
     .databases: .summary
+
+hr
 
 .row
   .col-md-4
@@ -23,14 +25,17 @@ ol.breadcrumb
       .panel-heading: .panel-title Collections
       .list-group
         for collection_name in database.collection_names
-          a.list-group-item(href='#collection/#{database.name}/#{collection_name}') #{collection_name}
+          a.list-group-item(href='#collection/#{database.name}/#{collection_name}')
+            .pull-left: i.fa.fa-angle-right.fa-fw
+            .list-group-item-heading #{collection_name}
 
   .col-md-4
     .panel.panel-default
-      .panel-heading: h3.panel-title Storage
+      .panel-heading: .panel-title Storage
       .panel-body
         .donut
 
 
-  .col-md-4
+
+
 

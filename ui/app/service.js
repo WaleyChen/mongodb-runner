@@ -310,18 +310,19 @@ var mixins = {
   },
   subscribe: function(options){
     srv.connect();
-    var instance = require('./models').instance, payload;
-    instance.once('change:_id', this.switchedInstance, this);
+    var context = require('./models').context;
+
+    context.once('change', this.switchedInstance, this);
 
     _.defaults(options || (options = {}), {
       uri: _.result(this, 'uri')
     });
 
-    this.subscription = {token: srv.token, instance_id: instance.id};
+    this.subscription = {token: srv.token, instance_id: context.instance.id};
 
     srv.io
       .addListener(options.uri, this.iohandler.bind(this))
-      .emit(options.uri, payload);
+      .emit(options.uri, this.subscription);
 
     debug('subscribing', options.uri, this.subscription);
     return this;

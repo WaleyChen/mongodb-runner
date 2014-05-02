@@ -1,5 +1,6 @@
-.col-md-12(style='padding-left: 60px;')
-  h2: a(href='#database/#{database.name}') #{database.name}
+.row
+  .col-md-12
+    h1.page-header #{database.name}
 
 - stats = database.stats || {}
 
@@ -7,42 +8,43 @@ include ../mixins/nf
 mixin stat(name)
   +nf(stats[name] || 0)
 
-.col-md-12
-  .col-md-4
-    .stats.clearfix
-      .col-xs-3
-        .stat-value(data-stat="collection_count")
-          +stat('collection_count')
-        .stat-label collections
-      .col-xs-3
-        .stat-value(data-stat="index_count")
-          +stat('index_count')
-        .stat-label indexes
-      .col-xs-3
-        .stat-value(data-stat="document_count")
-          +stat('document_count')
-        .stat-label docs
-      .col-xs-3
-        .metric-value
-          i.fa.fa-magnet.fa-spin(style='font-size: initial;')
-        .metric-label #{metric.label}
+.row
+  .col-md-12
+    .col-md-4
+      .stats.clearfix
+        .col-xs-3
+          .stat-value(data-stat="collection_count")
+            +stat('collection_count')
+          .stat-label collections
+        .col-xs-3
+          .stat-value(data-stat="index_count")
+            +stat('index_count')
+          .stat-label indexes
+        .col-xs-3
+          .stat-value(data-stat="document_count")
+            +stat('document_count')
+          .stat-label docs
+        .col-xs-3
+          .metric-value
+            i.fa.fa-magnet.fa-spin(style='font-size: initial;')
+          .metric-label #{metric.label}
 
-          //- a.inline-block(data-toggle="dropdown", href="#", data-target="#dropdown-#{cid}")
-          //-   span.metric-name #{metric.label}
-          //- .dropdown(id='dropdown-#{cid}')
-          //-   ul.dropdown-menu
-          //-     li.active
-          //-       a #{metric}
-          //-     li
-          //-       a(href='#') read.time
-          //-     li
-          //-       a(href='#') read.count
-          //-     li
-          //-       a(href='#') write.time
-          //-     li
-          //-       a(href='#') write.count
+            //- a.inline-block(data-toggle="dropdown", href="#", data-target="#dropdown-#{cid}")
+            //-   span.metric-name #{metric.label}
+            //- .dropdown(id='dropdown-#{cid}')
+            //-   ul.dropdown-menu
+            //-     li.active
+            //-       a #{metric}
+            //-     li
+            //-       a(href='#') read.time
+            //-     li
+            //-       a(href='#') read.count
+            //-     li
+            //-       a(href='#') write.time
+            //-     li
+            //-       a(href='#') write.count
 
 
-  .col-md-8
-    .graph(id='graph-#{cid}')
+    .col-md-8
+      .graph(id='graph-#{cid}')
 

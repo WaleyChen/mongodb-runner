@@ -358,7 +358,7 @@ var ProducerMixin = {
     if(this.subscribers === 0){
       debug('activating producer', this.uri);
       this.active = true;
-      // this.subscribe();
+      this.subscribe();
     }
     this.subscribers++;
     return this;
@@ -368,7 +368,7 @@ var ProducerMixin = {
     if(this.subscribers === 0){
       debug('deactivating producer', this.uri);
       this.active = false;
-      // this.unsubscribe();
+      this.unsubscribe();
     }
     return this;
   }

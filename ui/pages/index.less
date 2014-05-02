@@ -14,6 +14,7 @@
 // @import "themes/atom-dark";
 // @import "themes/soda-dark";
 @import "themes/soda-light";
+@import "themes/no-borders";
 // @import "themes/atom-light";
 
 @font-size: 13px;
@@ -23,7 +24,7 @@
 }
 .navbar-brand {
   color: fadeout(@text-color, 30%);
-  font-size: 90%;
+  .small;
 }
 
 .subtle {
@@ -32,10 +33,10 @@
 
 .list-group-label {
   .list-group-item;
-  color: @text-color-subtle;
-  margin-top: @line-height-computed*1.5;
-  border: 0;
-  border-bottom: 1px solid @base-border-color;
+  .panel-title;
+  .subtle;
+  padding-bottom: 0;
+  padding-top: @line-height-computed*1.5;
 }
 
 .list-group-header {
@@ -64,8 +65,8 @@
   overflow-y: scroll;
 }
 .list-group-body > *:first-child {
-  margin-top: 0;
-  padding-top: 0;
+  // margin-top: 0;
+  // padding-top: 0;
 }
 .navbar-brand:hover {
   color: @text-color;
@@ -208,8 +209,13 @@ body {
   border-top: 1px solid fadeout(@base-border-color, 80%);
 }
 .nav-sidebar > li > a {
-  padding-right: 0px;
+  padding-right: 10px;
   padding-left: 10px;
+  text-transform: lowercase;
+  .small;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .nav-sidebar > .active > a {
   // color: #fff;
@@ -218,21 +224,6 @@ body {
 
 .databases {
   color: @text-color;
-  margin-top: @component-padding * 2;
-
-  .row {
-    margin-top: @component-padding * 2;
-  }
-  a {
-    color: @background-color-selected;
-  }
-  h2 {
-    // .mono;
-    color: @background-color-selected;
-    border-bottom: 1px solid @background-color-highlight;
-    padding-bottom: 15px;
-  }
-
   .graph {}
 
   .stats {
@@ -338,7 +329,6 @@ html, body {height: 100%;}
 // ## app container
 #mongoscope {
   height: 100%;
-  padding-top: @component-padding;
 }
 
 #sidebar {

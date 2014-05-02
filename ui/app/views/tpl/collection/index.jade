@@ -1,5 +1,6 @@
 include ../mixins/bytes
 include ../mixins/cog
+include ../mixins/nf
 
 - stats = collection.stats;
 - stats.document_size_average = (stats.document_size/stats.document_count);
@@ -7,40 +8,27 @@ include ../mixins/cog
 
 ol.breadcrumb
   unless context.deployment.type === 'standalone'
-    li: a(href='#home') #{context.deployment.name}
-  li: a(href='#home') #{context.instance.name}
+    li: a(href='#home') #{context.deployment.id}
+  li: a(href='#home') #{context.instance.id}
   li: a(href='#database/#{collection.database}') #{collection.database}
   li #{collection.name}
 
 .row
-  .col-md-6
-    h1 #{collection.database}.#{collection.name}
+  .col-md-12
+    h1.page-header #{collection.database}.#{collection.name}
+      ul.list-unstyled.list-inline.lead
+        li
+          +nf(collection.stats.document_count)
+        li
+          +bytes(collection.stats.document_size)
+        li.subtle.small documents
 
-  .col-md-3
-    h3 Documents
-    ul.list-unstyled
-      li #{collection.stats.document_count}
-      li
-        +bytes(collection.stats.document_size)
-
-      //- li.list-group-item
-      //-   span.badge
-      //-     +bytes(collection.stats.extent_last_size)
-      //-   | Last Extent
-
-      //- li.list-group-item
-      //-   span.badge #{collection.stats.extent_count}
-      //-   | Extents
-
-      //- li.list-group-item
-      //-   span.badge #{collection.stats.padding_factor}
-      //-   | Padding Factor
-  .col-md-3
-    h3 Indexes
-    ul.list-unstyled
-      each index in collection.indexes
-        li #{index.name}
-          +bytes(index.size)
+  //- .col-md-3
+  //-   h3 Indexes
+  //-   ul.list-unstyled
+  //-     each index in collection.indexes
+  //-       li #{index.name}
+  //-         +bytes(index.size)
 .row
   .col-md-12
     .explorer
