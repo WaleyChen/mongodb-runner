@@ -158,7 +158,7 @@ var Auth = Backbone.View.extend({
   render: function(ctx){
     this.$el = $('#modal');
     this.$el.html(this.tpl(ctx));
-    this.$el.animate({'margin-top': '20%'});
+    this.$el.css({'margin-top': '20%'});
 
     this.findElements();
     this.delegateEvents();

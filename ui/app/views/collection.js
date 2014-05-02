@@ -52,7 +52,8 @@ var Collection = Backbone.View.extend({
 
     this.$el.html(this.tpl({
       'metric': this.metric,
-      'collection': this.collection.toJSON()
+      'collection': this.collection.toJSON(),
+      context: models.context.toJSON()
     }));
     this.explorer.render();
   }

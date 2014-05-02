@@ -28,6 +28,9 @@ var Log = Backbone.View.extend({
 
     this.$el.append(updates);
     updates.fadeIn();
+    if(!this.el.scrollByLines){
+      return this;
+    }
     this.el.scrollByLines(this.log.length);
   },
   render: function(){
@@ -36,6 +39,9 @@ var Log = Backbone.View.extend({
       lines: this.log.toJSON(),
       update: false
     }));
+    if(!this.el.scrollByLines){
+      return this;
+    }
     this.el.scrollByLines(this.log.length);
   }
 });

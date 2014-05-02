@@ -5,11 +5,16 @@ include ../mixins/cog
 - stats.document_size_average = (stats.document_size/stats.document_count);
 - stats.index_size_per_document = (stats.index_size/stats.document_count);
 
+ol.breadcrumb
+  unless context.deployment.type === 'standalone'
+    li: a(href='#home') #{context.deployment.name}
+  li: a(href='#home') #{context.instance.name}
+  li: a(href='#database/#{collection.database}') #{collection.database}
+  li #{collection.name}
 
-.row(style="margin-bottom: 40px;")
+.row
   .col-md-6
-    h1 #{collection.name}
-    h2: a(href="#database/#{collection.database}") #{collection.database}
+    h1 #{collection.database}.#{collection.name}
 
   .col-md-3
     h3 Documents

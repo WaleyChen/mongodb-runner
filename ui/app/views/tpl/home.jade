@@ -5,9 +5,20 @@ include mixins/bytes
 
 mixin panel(title)
   .panel.panel-default
-    .panel-heading: h3.panel-title #{title}
+    .panel-heading: .panel-title #{title}
     .panel-body
       block
+
+mixin navpanel(title)
+  .panel.panel-default
+    .panel-heading: .panel-title #{title}
+    .list-group
+      block
+
+mixin splitpanel(title)
+  .panel.panel-default
+    .panel-heading: .panel-title #{title}
+    block
 
 mixin instance_detail()
   - build = instance.build
@@ -32,14 +43,18 @@ mixin instance_detail()
       dt System Clock
       dd #{host.system_time}
 
+ol.breadcrumb
+  unless context.deployment.type === 'standalone'
+    li: a(href='#home') #{context.deployment.name}
+  li #{context.instance.id}
+
 if deployment.type === 'standalone'
   h1.page-header #{instance.id}
   .row
     .col-md-6
-      +panel('Databases')
-        .list-group
-          each db in instance.database_names
-            a.list-group-item(href="#database/#{db}") #{db}
+      +navpanel('Databases')
+        each db in instance.database_names
+          a.list-group-item(href="#database/#{db}") #{db}
 
     .col-md-6
       +instance_detail()
@@ -50,38 +65,34 @@ if deployment.type === 'standalone'
 
 else
   h1.page-header #{deployment.name}
-    p.lead via #{instance.id}
+      p.lead via #{instance.id}
 
-  .row
-    .col-md-6
-      +panel('Databases')
-        .list-group
+    .row
+      .col-md-6
+        +navpanel('Databases')
           each db in instance.database_names
             a.list-group-item(href="#database/#{db}") #{db}
-    .col-md-6
-      +instance_detail()
+      .col-md-6
+        +instance_detail()
 
   if deployment.type === 'cluster'
-      .row: .col-md-12
-        +panel('Routers')
-          .col-md-6
-            .list-group
-            each inst in deployment.routers
-              a.list-group-item(href="#") #{inst.name}
-          .col-md-6
-            .router-summary
-              //- @todo: balancer info?
+    .row
+      .col-md-6
+        +splitpanel('Routers')
+          .list-group
+          each instance in deployment.routers
+            a.list-group-item(href="#connect/#{deployment.id}/#{instance.id}") #{instance.name}
 
     each shard in deployment.shards
-      .row: .col-md-12
-        +panel('Shard: ' + shard.name)
-          .col-md-6
+      .row
+        .col-md-6
+          +splitpanel('Shard: ' + shard.name)
             .list-group: each instance in shard.instances
-              a.list-group-item(href="#") #{instance.name}
-
-          .col-md-6
-            .shard-summary(data-shard='#{shard.name}')
-              //- @todo: DONUT of distribution? chunk details?
+              a.list-group-item(href="#connect/#{deployment.id}/#{instance.id}") #{instance.name}
+    .row
+      .col-md-12
+        +panel('Log')
+          .log-container
 
   if deployment.type === 'replicaset'
     if deployment.maybe_sharded
