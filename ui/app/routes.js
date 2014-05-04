@@ -32,7 +32,7 @@ module.exports = function(opts){
 
   return create()
     .add('authenticate', require('./views/auth'))
-    .add('home', require('./views/home'))
+    .add('mongodb', 'mongodb/:instance_id', require('./views/home'), null)
     .add('log', require('./views/log'))
     .add('top', require('./views/top'))
     .add('connect', require('./views/connect').create)
@@ -42,12 +42,12 @@ module.exports = function(opts){
       add('user', '/users/:database/:username', 'userDetail');
       add('role', '/roles/:database/:role', 'roleDetail');
     })
-    .add('collection', 'collection/:database_name/:collection_name', require('./views/collection'), function(add){
+    .add('collection', '/collection/:database_name/:collection_name', require('./views/collection'), function(add){
       add('explore', '/explore/:skip', 'activateExplorer');
     })
     .add('createcollection', 'database/:database_name/collection', require('./views/database').createCollection, null)
     .add('database', 'database/:database_name', require('./views/database'), null)
-    .default('home')
+    .default('authenticate')
     .go(opts.auth ? 'authenticate' : '');
 };
 

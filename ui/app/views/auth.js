@@ -31,10 +31,9 @@ var Auth = Backbone.View.extend({
   closeable: false,
   url: 'localhost:27017',
   initialize: function(){
-    this.redirect = window.location.hash.replace('#', '') || 'home';
-    if(this.redirect.indexOf('connect/') === 0){
-      this.url = this.redirect.split('/').pop();
-      this.jump = true;
+    console.log(window.location.hash);
+    if(window.location.hash.indexOf('#mongodb/') === 0){
+      this.url = window.location.hash.replace('#mongodb/', '');
     }
     this.history = new History();
     this.history.cursor = 0;
@@ -42,21 +41,11 @@ var Auth = Backbone.View.extend({
   },
   enter: function(deploymentId, instanceId){
     this.$body = $('body');
-
-    this.redirect = window.location.hash.replace('#', '') || 'home';
-    if(this.redirect === 'connect'){
-      this.redirect = 'home';
-    }
-
-    debug('showing auth', deploymentId, instanceId);
-
     var dep, instance;
     if(deploymentId && (dep = models.deployments.get(deploymentId))){
       instance = dep.getInstance(instanceId) || dep.getSeedInstance();
     }
     this.dirty = false;
-
-    debug('switch?', dep, instance);
     if(dep){
       debug('dep is', dep);
       this.process(dep.id);
@@ -115,12 +104,9 @@ var Auth = Backbone.View.extend({
     debug('loading', msg);
     return this;
   },
-  success: function(){
-    if(this.redirect === 'authenticate' || this.redirect.indexOf('connect') === 0){
-      this.redirect = 'home';
-    }
+  success: function(instance_id){
     this.exit();
-    Backbone.history.navigate(this.redirect, {trigger: true});
+    Backbone.history.navigate('mongodb/' + instance_id, {trigger: true});
     return this;
   },
   process: function(instance_id, id){
@@ -129,13 +115,13 @@ var Auth = Backbone.View.extend({
 
       instance_id = res.instance.id;
 
-      if(id) return this.success();
+      if(id) return this.success(instance_id);
 
       var creds = new Credentials({instance_id: instance_id, id: instance_id});
       creds.save();
       this.history.add(creds);
 
-      this.success();
+      this.success(instance_id);
     }.bind(this));
   },
   cancel: function(){
