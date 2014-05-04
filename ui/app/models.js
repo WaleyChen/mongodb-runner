@@ -236,6 +236,10 @@ var Settings = Backbone.Model.extend({
     getRouters: function(){
       return new InstanceList(this.instances.where({type: 'router'}));
     },
+    // @returns {InstanceList}
+    getConfigs: function(){
+      return new InstanceList(this.instances.where({type: 'config'}));
+    },
     // @returns {Object}
     toJSON: function(){
       var attrs = this.__data__();
@@ -244,6 +248,7 @@ var Settings = Backbone.Model.extend({
       if(attrs.type === 'cluster'){
         attrs.routers = this.getRouters().toJSON();
         attrs.shards = this.getShards().toJSON();
+        attrs.configs = this.getConfigs().toJSON();
       }
       else if(attrs.type === 'replicaset'){
         attrs.arbiters = this.getArbiters().toJSON();

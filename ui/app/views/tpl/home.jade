@@ -111,6 +111,11 @@ else
                 a.list-group-item(href="#connect/#{deployment.id}/#{instance.id}")
                   .pull-left: i.fa.fa-angle-right.fa-fw
                   .list-group-item-heading #{instance.name}
+              .list-group-label configs
+              each instance in deployment.configs
+                a.list-group-item(href="#connect/#{deployment.id}/#{instance.id}")
+                  .pull-left: i.fa.fa-angle-right.fa-fw
+                  .list-group-item-heading #{instance.name}
               each shard in deployment.shards
                 .list-group-label shard #{shard.name}
                 each instance in shard.instances
