@@ -175,7 +175,6 @@ var Auth = Backbone.View.extend({
 
     this.$host.focus().on('keydown', function(){
       self.reset();
-      debug('keydown', event.keyIdentifier);
       if(event.keyIdentifier === 'Enter'){
         self.submit();
         return false;
@@ -198,7 +197,7 @@ var Auth = Backbone.View.extend({
       }
 
       if(event.keyIdentifier === 'Down'){
-        if(self.history.length === 0) return debug('no history');
+        if(self.history.length === 0) return;
         if(self.history.cursor === self.history.length){
           return;
         }

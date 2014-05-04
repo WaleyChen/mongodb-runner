@@ -356,7 +356,6 @@ module.exports.Model = Backbone.Model.extend({
     return this.__data__();
   },
   set: function(key, val, options){
-    debug('set', key, val, options);
     var attr, attrs, unset, changes, silent, changing, prev, current;
     if (key === null) return this;
 
