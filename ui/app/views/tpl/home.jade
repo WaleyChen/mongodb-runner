@@ -65,7 +65,7 @@ ol.breadcrumb
   li #{context.instance.id}
 
 if deployment.type === 'standalone'
-  h1.page-header #{instance.id}
+  h1.page-header #{instance.name}
   .row
     .col-md-6
       +navpanel('Databases')
@@ -83,7 +83,7 @@ if deployment.type === 'standalone'
 
 else
   h1.page-header #{deployment.name}
-      p.lead.subtle via #{instance.id} #{instance.type ? '(' +instance.type+ ')' : ''}
+      p.lead.subtle via #{instance.name}
 
     .row
       .col-md-6
