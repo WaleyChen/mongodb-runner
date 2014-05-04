@@ -20,7 +20,6 @@ var Log = Backbone.View.extend({
   },
   exit: function(){},
   update: function(){
-    debug('got a log update', arguments);
     var updates = Backbone.$(this.tpl({
       moment: moment,
       lines: this.log.toJSON(),

@@ -64,6 +64,7 @@ module.exports.connect = function(deploymentId, instanceId, fn){
   // in all deployments for the one we probably want.
   instance = deployment.getSeedInstance(instanceId);
 
+  if(!instance) return fn(new Error('For deployment `'+deployment.id+'`, no instance `'+instanceId+'` or seed'));
   // @todo: check we're requesting an actual context change
   service.setCredentials(instance.id, function(err, res){
     if(err) return fn(err);
@@ -112,8 +113,23 @@ var Settings = Backbone.Model.extend({
 
       if(instanceId !== this.get('instance_id')){
         sets.instance_id = instanceId;
-        instance.set(_.clone(deployment.getSeedInstance(instanceId).attributes));
+        var incoming = _.clone(deployment.getSeedInstance(instanceId).attributes);
+        if(!incoming.database_names){
+          incoming.database_names = [];
+        }
+
+        ['rs', 'type', 'state', 'shard'].map(function(k){
+          if(!incoming[k]){
+            incoming[k] = undefined;
+          }
+        });
+
+        debug('setting instance to', incoming);
+        instance.set(incoming);
         this.instance = instance;
+      }
+      else {
+        debug('instance id unchanged');
       }
       this.set(sets);
       return this;
@@ -169,9 +185,11 @@ var Settings = Backbone.Model.extend({
         this.instances.reset(items);
       }
     },
-    instancesChanged: function(){
-      debug('instances reset', arguments);
-      this.set({'replicaset': this.instances.chain().pluck('rs').first().value()});
+    instancesChanged: function(instances){
+
+
+      debug('instances reset', _.chain(instances.toJSON()).pluck('rs').compact().first().value());
+      this.set({'replicaset': _.chain(instances.toJSON()).pluck('rs').compact().first().value()});
       debug('replicaset now at', this.get('replicaset'));
     },
     service: function(){
@@ -254,9 +272,9 @@ var Settings = Backbone.Model.extend({
         attrs.arbiters = this.getArbiters().toJSON();
         attrs.primary = this.getPrimary().toJSON();
         attrs.secondaries = this.getSecondaries().toJSON();
-        attrs.replication = this.getReplication().toJSON();
+        // attrs.replication = this.getReplication().toJSON();
+        attrs.replication = {};
       }
-      debug('deployment toJSON', attrs);
       return attrs;
     }
   }),
