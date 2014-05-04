@@ -80,10 +80,6 @@ if deployment.type === 'standalone'
 
     .col-md-6
       +instance_detail()
-  hr
-  .row
-    .col-md-12
-      +log_panel()
 
 else
   h1.page-header #{deployment.name}
@@ -126,12 +122,10 @@ else
                   a.list-group-item(href="#connect/#{deployment.id}/#{instance.id}")
                     .pull-left: i.fa.fa-angle-right.fa-fw
                     .list-group-item-heading #{instance.name}
-    hr
-    .row
-      .col-md-12
-        +log_panel()
 
   if deployment.type === 'replicaset'
+    hr
+
     if deployment.maybe_sharded
       .warning
         p
@@ -141,44 +135,18 @@ else
 
     - oplog = deployment.replication.oplog || {}
     .row
-      .col-md-4: +panel('Primary')
-        h2 #{deployment.primary.name}
-        if deployment.primary.id === context.instance_id
-          .label.label-success currently connected
+      .col-md-6
+        +panel('Replication')
+          .replication
 
-      .col-md-4: +panel('Secondaries')
-        ul.list-group: each instance in deployment.secondaries
-          li.list-group-item
-            .list-group-item-heading #{instance.name}
-            if instance.id === context.instance_id
-              .label.label-success currently connected
+      .col-md-6
+        +panel('Instances')
+          .instances
 
-            .secondary-line replication lag #{instance.lag_replication}ms
-            .secondary-line operational lag #{instance.lag_operational}ms
+      //- .col-md-4: +panel('Live')
+      //-   p @todo: stream in from /oplog
 
-      .col-md-4: +panel('Arbiters')
-        .list-group: each instance in deployment.arbiters
-          a.list-group-item(href="#connect/#{deployment.id}/#{instance.id}") #{instance.name}
-    .row
-      .col-md-4: +panel('Oplog')
-        //- ul.list-group
-        //-   li.list-group-item
-        //-     span.badge #{oplog.count}
-        //-     | Operations
-        //-   li.list-group-item
-        //-     span.badge #{moment(oplog.window[0]).from(oplog.window[1], true)}
-        //-     | Window
-        //-   li.list-group-item
-        //-     span.badge: +bytes(deployment.replication.options.size)
-        //-     | Size
-
-      .col-md-4: +panel('Window')
-        //- h4 #{moment(oplog.window[0]).from(oplog.window[1], true)}
-        //- h5 Newest
-        //- pre: code #{JSON.stringify(replication.oplog.tail)}
-
-        //- h5 Oldest
-        //- pre: code #{JSON.stringify(replication.oplog.head)}
-
-      .col-md-4: +panel('Live')
-        p @todo: stream in from /oplog
+hr
+.row
+  .col-md-12
+    +log_panel()

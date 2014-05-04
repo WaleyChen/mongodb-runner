@@ -1,9 +1,9 @@
 var Backbone = require('backbone'),
   $ = Backbone.$,
   models = require('../models'),
-  srv = require('../service'),
   debug = require('debug')('mongoscope:home'),
-  log = require('./log');
+  log = require('./log'),
+  replication = require('./replication');
 
 var Home = Backbone.View.extend({
   tpl: require('./tpl/home.jade'),
@@ -11,7 +11,8 @@ var Home = Backbone.View.extend({
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);
     this.log = log();
-    this.databases = [];
+    this.replication = replication();
+    this.instances = replication.instances();
   },
   enter: function(){
     models.context.on('change', this.change, this);
@@ -26,6 +27,10 @@ var Home = Backbone.View.extend({
   exit: function(){
     models.context.off('change', this.change, this);
     this.log.exit();
+
+    this.replication.exit();
+    this.instances.exit();
+
     return this;
   },
   change: function(){
@@ -34,13 +39,15 @@ var Home = Backbone.View.extend({
   },
   render: function(){
     var self = this;
-    srv().metrics(models.context.instance_id, function(err, metrics){
-      self.$el.html(self.tpl({
-        context: models.context.toJSON(),
-        all: models.deployments.toJSON(),
-        metrics: metrics
-      }));
-    });
+    self.$el.html(self.tpl({
+      context: models.context.toJSON(),
+      all: models.deployments.toJSON()
+    }));
+
+    if(models.context.deployment.getType() !== 'standalone'){
+      this.replication.enter();
+      this.instances.enter();
+    }
   }
 });
 

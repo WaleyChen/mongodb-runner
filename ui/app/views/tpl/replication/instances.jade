@@ -1,0 +1,17 @@
+.list-group
+  .list-group-body
+    .list-group-label Primary
+    .list-group-item
+      .list-group-item-heading #{replication.primary.name}
+      if replication.primary.id === context.instance_id
+        .label.label-success currently connected
+
+    .list-group-label Secondaries
+
+    each instance in replication.secondaries
+      .list-group-item
+        .list-group-item-heading #{instance.name}
+        if instance.id === context.instance_id
+          .label.label-success currently connected
+        .list-group-item-text lag: replication #{instance.lag_replication}ms /
+          | operational #{instance.lag_operational}ms

@@ -1,0 +1,23 @@
+include ../mixins/bytes
+
+ul.list-group
+  li.list-group-item
+    | Replica Set Name: #{replication._id}
+
+  li.list-group-item
+    span.badge #{replication.oplog.count}
+    | Operations
+  li.list-group-item
+    span.badge #{moment(replication.oplog.window[0]).from(replication.oplog.window[1], true)}
+    | Window
+  li.list-group-item
+    span.badge: +bytes(replication.options.size)
+    | Size
+
+  li.list-group-item
+    .list-group-item-heading Newest
+    .list-group-item-text: pre: code #{JSON.stringify(replication.oplog.tail)}
+
+  li.list-group-item
+    .list-group-item-heading Oldest
+    .list-group-item-text: pre: code #{JSON.stringify(replication.oplog.head)}
