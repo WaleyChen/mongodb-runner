@@ -2,7 +2,7 @@ var $ = require('jquery'),
   _ = require('underscore'),
   EventEmitter = require('events').EventEmitter,
   util = require('util'),
-  debug = require('debug')('mongoscope:service'),
+  debug = require('debug')('_mongoscope:service'),
   socketio = require('socket.io-client'),
   srv;
 
@@ -324,7 +324,6 @@ var mixins = {
       .addListener(options.uri, this.iohandler.bind(this))
       .emit(options.uri, this.subscription);
 
-    debug('subscribing', options.uri, this.subscription);
     return this;
   },
   unsubscribe: function(options){
@@ -334,7 +333,6 @@ var mixins = {
       uri: _.result(this, 'uri')
     });
 
-    debug('$unsub ' + options.uri);
     srv.io
       .removeAllListeners(options.uri)
       .emit(_.result(this, 'uri') + '/unsubscribe', this.subscription);

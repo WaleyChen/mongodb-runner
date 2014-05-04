@@ -76,7 +76,6 @@ function loadInstance(deploymentId, instanceId, fn){
   var i = deployments.getInstance(instanceId);
   if(!i) return fn(new Error('Could not find instance `'+instanceId+'`'));
   i.fetch({error: fn, success: function(){
-    debug('got instance sync!', arguments);
     context.switch(deploymentId, instanceId);
     fn(null, {instance: instance, deployment: deployment});
   }});
@@ -186,11 +185,7 @@ var Settings = Backbone.Model.extend({
       }
     },
     instancesChanged: function(instances){
-
-
-      debug('instances reset', _.chain(instances.toJSON()).pluck('rs').compact().first().value());
       this.set({'replicaset': _.chain(instances.toJSON()).pluck('rs').compact().first().value()});
-      debug('replicaset now at', this.get('replicaset'));
     },
     service: function(){
       return {name: 'deployment', args: this.id};
@@ -284,16 +279,12 @@ var Settings = Backbone.Model.extend({
     model: Deployment,
     service: 'deployments',
     getInstance: function(id){
-      debug('searching for instance', id);
       var res = null;
       this.models.map(function(d){
         if(!res){
-          debug('searching', d.instances);
           res = d.instances.findWhere({_id: id});
-          debug('result', d.id, res);
         }
       });
-      debug('returning', res);
       return res;
     }
   });
@@ -379,7 +370,6 @@ var ProducerMixin = {
   },
   enter: function(){
     if(this.subscribers === 0){
-      debug('activating producer', this.uri);
       this.active = true;
       this.subscribe();
     }
@@ -389,7 +379,6 @@ var ProducerMixin = {
   exit: function(){
     this.subscribers--;
     if(this.subscribers === 0){
-      debug('deactivating producer', this.uri);
       this.active = false;
       this.unsubscribe();
     }

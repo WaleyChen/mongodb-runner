@@ -1,6 +1,6 @@
 var Backbone = require('backbone'),
   models = require('../models'),
-  debug = require('debug')('mongoscope:toolbar');
+  debug = require('debug')('mongoscope:sidebar');
 
 var Toolbar = Backbone.View.extend({
   tpl: require('./tpl/sidebar.jade'),
@@ -12,7 +12,6 @@ var Toolbar = Backbone.View.extend({
     models.context.on('change', this.change, this);
   },
   draw: function(){
-    debug('drawing to', this.$el);
     this.$el.html(this.tpl({
       all: models.deployments.toJSON(),
       context: models.context.toJSON(),
@@ -20,7 +19,6 @@ var Toolbar = Backbone.View.extend({
     return this;
   },
   change: function(){
-    debug('context changed');
     return this.draw();
   }
 });

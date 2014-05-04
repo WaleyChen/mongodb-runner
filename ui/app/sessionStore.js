@@ -123,14 +123,12 @@ var sesh = {
           if(err) return fn(err);
 
           store.get(id, function(err, doc){
-            console.log('get ' + id, err, doc);
             if(err) return fn(err);
 
             docs.push(doc);
             pending--;
 
             if(pending === 0){
-              console.log('returning', docs);
               return fn(null, docs);
             }
           });
