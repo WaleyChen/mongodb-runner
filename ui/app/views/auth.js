@@ -46,11 +46,8 @@ var Auth = Backbone.View.extend({
       instance = dep.getInstance(instanceId) || dep.getSeedInstance();
     }
     this.dirty = false;
-    if(dep){
-      debug('dep is', dep);
-      this.process(dep.id);
-    }
-    else if(instance){
+
+    if(instance){
       debug('instance is', instance);
       this.process(instance.id);
     }
