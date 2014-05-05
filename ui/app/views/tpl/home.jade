@@ -68,6 +68,33 @@ ol.breadcrumb
     li: a(href='#home') #{context.deployment.name}
   li #{context.instance.id}
 
+if deployment.maybe_sharded && deployment.type !== 'cluster'
+  .alert.alert-warning
+    .row
+      .col-md-3
+        p.lead
+          i.fa.fa-exclamation-triangle.fa-fw(style="padding-right: 10px")
+          | Check yourself!
+        p
+          a.btn.btn-default(href='#connect', style='color: #FFF;') Connect to a router
+
+      .col-md-4
+        p &nbsp;
+        p It seems you've connected directly to a shard but not through a router.
+        p You may not be getting the full picture of your deployment!
+
+      .col-md-4.col-md-push-1
+        h4 Help
+        ul
+          li.strong
+            a(href='http://docs.mongodb.org/manual/reference/mongos/', style='color: #FFF;text-decoration: underline;', target='_blank')
+              | How do you find the router?
+          li.strong
+            a(href='
+http://www.mongodb.org/display/DOCS/Configuring+Sharding', style='color: #FFF;text-decoration: underline;', target='_blank')
+              | Configuring Sharding
+
+
 if deployment.type === 'standalone'
   h1.page-header #{instance.name}
   .row
@@ -125,33 +152,6 @@ else
 
   if !instance.type
     hr
-
-    if deployment.maybe_sharded && deployment.type !== 'cluster'
-      .alert.alert-warning
-        .row
-          .col-md-3
-            p.lead
-              i.fa.fa-exclamation-triangle.fa-fw(style="padding-right: 10px")
-              | Check yourself!
-            p
-              a.btn.btn-default(href='#connect', style='color: #FFF;') Connect to a router
-
-          .col-md-4
-            p &nbsp;
-            p It seems you've connected directly to a shard but not through a router.
-            p You may not be getting the full picture of your deployment!
-
-          .col-md-4.col-md-push-1
-            h4 Help
-            ul
-              li.strong
-                a(href='http://docs.mongodb.org/manual/reference/mongos/', style='color: #FFF;text-decoration: underline;', target='_blank')
-                  | How do you find the router?
-              li.strong
-                a(href='
-http://www.mongodb.org/display/DOCS/Configuring+Sharding', style='color: #FFF;text-decoration: underline;', target='_blank')
-                  | Configuring Sharding
-
     .row
       .col-md-6
         +panel('Replication')
