@@ -123,17 +123,16 @@ else
                     .pull-left: i.fa.fa-angle-right.fa-fw
                     .list-group-item-heading #{instance.name}
 
-  if deployment.type === 'replicaset'
+  if !instance.type
     hr
 
-    if deployment.maybe_sharded
+    if deployment.maybe_sharded && deployment.type !== 'cluster'
       .warning
         p
           | you may not be getting the full picture here.  it seems you've connected
           | directly to a shard but not through a router.  please yadaya to
           | make sure you're seeing the full deatils.
 
-    - oplog = deployment.replication.oplog || {}
     .row
       .col-md-6
         +panel('Replication')

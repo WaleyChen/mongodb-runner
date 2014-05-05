@@ -45,8 +45,10 @@ var Home = Backbone.View.extend({
     }));
 
     if(models.context.deployment.getType() !== 'standalone'){
-      this.replication.enter();
-      this.instances.enter();
+      if(!models.context.instance.type){
+        this.replication.enter();
+        this.instances.enter();
+      }
     }
   }
 });
