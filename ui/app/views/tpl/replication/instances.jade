@@ -5,7 +5,7 @@
       if replication.primary.id === context.instance_id
         .pull-right: span.label.label-success currently connected
       .pull-left: i.fa.fa-angle-right.fa-fw
-      .list-group-item-heading #{instance.name}
+      .list-group-item-heading #{replication.primary.name}
 
     .list-group-label Secondaries
     each instance in replication.secondaries

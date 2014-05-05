@@ -523,10 +523,10 @@ var Replication = Model.extend({
 
     attrs.members.map(function(member){
       var instance = deployment.getInstance(member.instance_id).toJSON();
-      if(instance.state === 'primary'){
+      if(member.state === 'PRIMARY'){
         attrs.primary = _.extend(member, instance);
       }
-      else if(instance.state === 'arbiter'){
+      else if(member.state === 'ARBITER'){
         attrs.arbiters.push(_.extend(member, instance));
       }
       else{

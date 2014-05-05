@@ -159,12 +159,13 @@ else
         +panel('Instances')
           .instances
 
- hr
-.row
-  .col-md-6
-    .panel.panel-default
-      .panel-heading: .panel-title currentop
-      .ops
+if instance.type !== 'router'
+  hr
+  .row
+    .col-md-12
+      .panel.panel-default
+        .panel-heading: .panel-title currentop
+        .ops
 hr
 .row
   .col-md-12
