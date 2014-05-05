@@ -1,17 +1,19 @@
 .list-group
   .list-group-body
     .list-group-label Primary
-    .list-group-item
-      .list-group-item-heading #{replication.primary.name}
+    a.list-group-item(href="#connect/#{context.deployment_id}/#{replication.primary.id}")
       if replication.primary.id === context.instance_id
-        .label.label-success currently connected
+        .pull-right: span.label.label-success currently connected
+      .pull-left: i.fa.fa-angle-right.fa-fw
+      .list-group-item-heading #{instance.name}
 
     .list-group-label Secondaries
-
     each instance in replication.secondaries
-      .list-group-item
-        .list-group-item-heading #{instance.name}
+      a.list-group-item(href="#connect/#{context.deployment_id}/#{instance.id}")
         if instance.id === context.instance_id
-          .label.label-success currently connected
-        .list-group-item-text lag: replication #{instance.lag_replication}ms /
+          .pull-right: span.label.label-success currently connected
+        .pull-left: i.fa.fa-angle-right.fa-fw
+        .list-group-item-heading #{instance.name}
+        .list-group-item-text.small
+          | lag: replication #{instance.lag_replication}ms /
           | operational #{instance.lag_operational}ms

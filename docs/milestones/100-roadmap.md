@@ -28,13 +28,13 @@
     - [x] log
     - [ ] top
     - [x] list of databases
-    - [ ] connection stream
-    - [ ] currentop stream
+    - [x] connection stream
+    - [x] currentop stream
     - [ ] index build progressbar
     - [ ] map reduce job progressbar
   - database
-    - [ ] dbStats
-    - [ ] list of collections
+    - [x] dbStats
+    - [x] list of collections
   - collection
     - [x] collStats
     - [x] list of indexes

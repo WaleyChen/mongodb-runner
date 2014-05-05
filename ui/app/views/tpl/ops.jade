@@ -1,18 +1,21 @@
-table.table
-  thead
-    tr
-      th id
-      th op
-      th ns
-      th seconds
-      th query
-      th client
-  tbody
-    each op in ops
+if ops.length === 0
+  .panel-body: h4.subtle No current activity
+else
+  table.table
+    thead
       tr
-        td #{op.opid}
-        td #{op.op}
-        td #{op.ns}
-        td #{op.secs_running}
-        td #{JSON.stringify(op.query)}
-        td #{op.client}
+        th id
+        th op
+        th ns
+        th seconds
+        th query
+        th client
+    tbody
+      each op in ops
+        tr
+          td #{op.opid}
+          td #{op.op}
+          td #{op.ns}
+          td #{op.secs_running}
+          td #{op.client}
+          td #{JSON.stringify(op.query)}
