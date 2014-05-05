@@ -8,7 +8,7 @@
           td.key #{key}
           td.value
             if typeof value === 'object'
-              pre(style='padding: 0; border: 0; color: initial; background-color: initial;'): code
+              pre: code
                 | #{JSON.stringify(value, null, 2).replace(/","/g, '\n').replace(/"/g, '').replace(/\{|\}/g, '')}
             else
               | #{value}

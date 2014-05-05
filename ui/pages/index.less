@@ -79,6 +79,19 @@
   }
   .value {
     background-color: @base-background-color;
+
+    pre {
+      padding: 0;
+      border: 0;
+      color: @text-color;
+      background-color: initial;
+      font-family: @font-family;
+      font-size: @font-size-base;
+      code {
+        font-family: @font-family;
+        font-size: @font-size-base;
+      }
+    }
   }
 }
 
@@ -188,6 +201,8 @@ article {
 body {
   margin: 0;
   // background-color: @base-background-color;
+  // background: @tab-background-color;
+  // background: @tab-background-color;
   background-color: @inset-panel-background-color;
 }
 
