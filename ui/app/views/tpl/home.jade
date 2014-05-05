@@ -67,7 +67,7 @@ mixin instance_detail()
 ol.breadcrumb
   unless context.deployment.type === 'standalone'
     li: a(href='#mongodb/#{context.deployment_id}') #{context.deployment.name}
-  li #{context.instance.id}
+  li #{context.instance.name}
 
 if deployment.maybe_sharded && deployment.type !== 'cluster'
   .alert.alert-warning

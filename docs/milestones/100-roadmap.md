@@ -27,7 +27,7 @@
     - [x] build detail
     - [x] log
     - [ ] top
-    - [ ] list of databases
+    - [x] list of databases
     - [ ] connection stream
     - [ ] currentop stream
     - [ ] index build progressbar
@@ -36,10 +36,10 @@
     - [ ] dbStats
     - [ ] list of collections
   - collection
-    - [ ] collStats
-    - [ ] list of indexes
+    - [x] collStats
+    - [x] list of indexes
   - index
-    - [ ] index spec
+    - [x] index spec
 - project
   - [ ] deployment setup
   - [ ] ground-work for qa and documentation
@@ -65,6 +65,7 @@
   - [X] Replicaset view
   - [X] instance id in URL instead of just home for copy and paste/bookmarkability
   - [X] oplog details on instance home
+  - [ ] handle [empty collections](http://localhost:29017/#lucass-macbook-pro.local:27017/database/test)
 - project
   - [x] jira
   - [ ] roadmap
