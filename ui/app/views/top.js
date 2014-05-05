@@ -56,7 +56,7 @@ var Top = Backbone.View.extend({
         }], {el: spark.get(0)});
       }
       else {
-        self.sparks[k].add({
+        self.sparks[k].write({
           date: Date.now(),
           value: models.top.get('deltas')[k] || 0
         });

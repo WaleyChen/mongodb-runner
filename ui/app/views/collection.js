@@ -18,7 +18,7 @@ var Collection = Backbone.View.extend({
       collection: this.collection
     });
   },
-  enter: function(database, name){
+  enter: function(instanceId, database, name){
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);
     debug('enter', database, name);

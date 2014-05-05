@@ -9,6 +9,8 @@ var gulp = require('gulp'),
   server,
   notifier = new Notification({});
 
+if(!process.env.NODE_ENV) process.env.NODE_ENV = 'development';
+
 gulp.task('dev', ['ui', 'server', 'watch']);
 gulp.task('ui', ['pages', 'assets', 'js', 'less', 'manifest']);
 gulp.task('default', ['dev']);
@@ -39,18 +41,22 @@ gulp.task('watch', function(){
   gulp.watch(['ui/{img,fonts}/*'], ['assets']);
 });
 
+function browserifyError(err){
+  var path = (err.annotated || err.message).replace(__dirname + '/', '').split('\n')[1],
+    title = 'err: ' + path;
+  notifier.notify({title: title || 'js error', message: err.annotated || err.message});
+  console.error('js error', err);
+}
+
 gulp.task('js', function(){
-  browserify({entries: ['./ui/app/index.js']})
-    .transform(require('jadeify'))
-    .bundle({debug: false})
-    .on('error', function(err){
-      var path = (err.annotated || err.message).replace(__dirname + '/', '').split('\n')[1],
-        title = 'err: ' + path;
-      notifier.notify({title: title || 'js error', message: err.annotated || err.message});
-      console.error('js error', err);
-    })
-    .pipe(source('index.js'))
-    .pipe(gulp.dest('static/'));
+  ['index.js', 'styleguide.js'].map(function(entrypoint){
+    browserify({entries: ['./ui/app/' + entrypoint]})
+      .transform(require('jadeify'))
+      .bundle({debug: (process.env.NODE_ENV === 'development')})
+      .on('error', browserifyError)
+      .pipe(source(entrypoint))
+      .pipe(gulp.dest('static/'));
+  });
 });
 
 gulp.task('assets', function(){

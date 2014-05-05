@@ -14,7 +14,7 @@ var Database = Backbone.View.extend({
     this.summary = new Summary();
     this.database = this.summary.database.on('sync', this.render, this);
   },
-  enter: function(name){
+  enter: function(instanceId, name){
     debug('enter', name);
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);

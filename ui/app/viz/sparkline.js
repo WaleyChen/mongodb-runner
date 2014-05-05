@@ -22,7 +22,7 @@ module.exports = function(data, opts){
       line: null,
       circle: null,
       window: opts.window || 60,
-      add: function(item){
+      write: function(item){
         data.unshift(item);
         if(data.length === chart.window){
           data.pop();

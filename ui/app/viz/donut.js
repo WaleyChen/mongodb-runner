@@ -57,14 +57,14 @@ module.exports = function(el, data, opts){
         x = calc[0],
         y = calc[1];
       if(d.data.name === 'Documents'){
-        x += 110;
+        x += 70;
       }
       else {
-        x -= 110;
+        x -= 70;
       }
       return "translate(" + [x, y] + ")";
     })
-    .attr("dy", ".25em")
+    // .attr("dy", ".25em")
     .style("text-anchor", "middle")
     .text(function(d) {
       return d.data.name + ' ' + bytes(d.data.size);

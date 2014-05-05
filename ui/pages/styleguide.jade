@@ -91,6 +91,7 @@ html(lang='en')
           li: button.btn.btn-default .btn-default
           li: button.btn.btn-default.btn-success .btn-success
           li: button.btn.btn-default.btn-warning .btn-warning
+          li: button.btn.btn-default.btn-danger .btn-danger
           li: button.btn.btn-link .btn-link
 
         h3: code .active
@@ -99,6 +100,7 @@ html(lang='en')
           li: button.btn.btn-default.active .btn-default.active
           li: button.btn.btn-success.active .btn-success.active
           li: button.btn.btn-warning.active .btn-warning.active
+          li: button.btn.btn-danger.active .btn-danger.active
           li: button.btn.btn-link.active .btn-link.active
 
         h3: code .disabled
@@ -107,6 +109,7 @@ html(lang='en')
           li: button.btn.btn-default.disabled .btn-default.disabled
           li: button.btn.btn-success.disabled .btn-success.disabled
           li: button.btn.btn-warning.disabled .btn-warning.disabled
+          li: button.btn.btn-danger.disabled .btn-danger.disabled
           li: button.btn.btn-link.disabled .btn-link.disabled
 
         h3: code .btn-block
@@ -115,6 +118,7 @@ html(lang='en')
           li: button.btn.btn-default.btn-block .btn-default.btn-block
           li: button.btn.btn-default.btn-success.btn-block .btn-success.btn-block
           li: button.btn.btn-default.btn-warning.btn-block .btn-warning.btn-block
+          li: button.btn.btn-default.btn-danger.btn-block .btn-danger.btn-block
           li: button.btn.btn-link.btn-block .btn-link.btn-block
 
         //- h3 Button Groups
@@ -292,34 +296,158 @@ html(lang='en')
                 .list-group-item-heading localhost:33003
 
         h3 icons
-        .panel.panel-default
-          .list-group
-            a.list-group-item(href='#')
-              .pull-right: i.fa.fa-circle-o.fa-fw.fa-2x(style='padding-top: 10px;')
-              .list-group-item-heading
-                | Icons
-              small.list-group-item-text
-                | .pull-right: i.fa.fa-circle-o.fa-fw.fa-2x(style='padding-top: 10px;')
-            a.list-group-item(href='#')
-              .pull-right: i.fa.fa-angle-double-right.fa-fw.fa-2x(style='padding-top: 10px;')
-              .list-group-item-heading
-                | Disclosure
-              small.list-group-item-text
-                | .pull-right: i.fa.fa-angle-double-right.fa-fw.fa-2x(style='padding-top: 10px;')
-            a.list-group-item(href='#')
-              .list-group-item-heading
-                i.fa.fa-plus.fa-fw
-                | As item status
-              i.fa.fa-fw.h4
-              small.list-group-item-text
-                | i.fa.fa-fw.h4 after h4 for spacing
-            a.list-group-item(href='#')
-              .list-group-item-heading
-                i.fa.fa-star.fa-fw
-                | As item status
-              i.fa.fa-fw.h4
-              small.list-group-item-text
-                | i.fa.fa-fw.h4 after h4 for spacing
+        .example
+          .rendered
+            .panel.panel-default
+              .list-group
+                a.list-group-item(href='#')
+                  .pull-right: i.fa.fa-circle-o.fa-fw.fa-2x
+                  .list-group-item-heading Icons
+                  .list-group-item-text.small &nbsp;
+                a.list-group-item(href='#')
+                  .pull-right: i.fa.fa-angle-double-right.fa-fw.fa-2x
+                  .list-group-item-heading Disclosure
+                  .list-group-item-text.small
+                    | good for any in page menu, like a db list
+                a.list-group-item(href='#')
+                  .list-group-item-heading
+                    i.fa.fa-plus.fa-fw
+                    | As item status
+                  .list-group-item-text.small
+                    i.fa.fa-fw.h4
+                    | a context message
+                a.list-group-item(href='#')
+                  .list-group-item-heading
+                    i.fa.fa-star.fa-fw
+                    | As item status
+                  .list-group-item-text.small
+                    i.fa.fa-fw.h4
+                    | a context message
+          .code
+            :markdown
+              ```jade
+              .panel.panel-default
+                .list-group
+                  a.list-group-item(href='#')
+                    .pull-right: i.fa.fa-circle-o.fa-fw.fa-2x
+                    .list-group-item-heading Icons
+                    .list-group-item-text.small &nbsp;
+                  a.list-group-item(href='#')
+                    .pull-right: i.fa.fa-angle-double-right.fa-fw.fa-2x
+                    .list-group-item-heading Disclosure
+                    .list-group-item-text.small
+                      | good for any in page menu, like a db list
+                  a.list-group-item(href='#')
+                    .list-group-item-heading
+                      i.fa.fa-plus.fa-fw
+                      | As item status
+                    .list-group-item-text.small
+                      i.fa.fa-fw.h4
+                      | a context message
+                  a.list-group-item(href='#')
+                    .list-group-item-heading
+                      i.fa.fa-star.fa-fw
+                      | As item status
+                    .list-group-item-text.small
+                      i.fa.fa-fw.h4
+                      | a context message
+              ```
 
         h2 visualization
-        blockquote @todo: perhaps once these have settled a bit?
+
+        h3 donut
+
+        .example
+          .rendered
+            #donut-example-1.donut
+
+          .code
+            :markdown
+              ```javascript
+              require('./viz/donut')('#donut-example-1',
+                [{
+                  name: 'Documents',
+                  size: 16384,
+                  count: 100,
+                  className: 'documents'
+                },
+                {
+                  name: 'Indexes',
+                  size: 8192,
+                  count: 1,
+                  className: 'indexes'
+                }], {title: ''});
+              ```
+
+            :markdown
+              ```jade
+              .donut
+              ```
+
+        h3 sparkline
+        .example
+          .rendered
+            p
+              | update as
+              span#sparkline-streaming.sparkline
+              | a stream
+            p
+              | or just
+              span#sparkline-static.sparkline
+              | a static set
+
+          .code
+            :markdown
+              ```javascript
+              var d3 = require('d3'),
+                rand = d3.random.normal(),
+                sparkline = require('./viz/sparkline'),
+                streaming = sparkline([], {
+                  el: '#sparkline-streaming', window: 20, height: 18
+                });
+
+              setInterval(function(){
+                streaming.write({date: Date.now(), value: rand()});
+              }, 500);
+
+              var data = d3.range(20).map(function(i){
+                return {date: Date.now() - (1000* i), value: rand()};
+              });
+              sparkline(data, {el: '#sparkline-static', height: 18});
+              ```
+
+            :markdown
+              ```jade
+                p
+                  | update as
+                  span#sparkline-streaming.sparkline
+                  | a stream
+                p
+                  | or just
+                  span#sparkline-static.sparkline
+                  | a static set
+              ```
+
+        h2 keyboard shortcuts
+        h3
+          kbd ⌘⇧P
+
+
+//- &#8984; . . . . . ⌘ . . . Command, Cmd, Clover, (formerly) Apple
+//- &#8963; . . . . . ⌃ . . . Control, Ctl, Ctrl
+//- &#8997; . . . . . ⌥ . . . Option, Opt, (Windows) Alt
+//- &#8679; . . . . . ⇧ . . . Shift
+//- &#9166; . . . . . ⏎ . . . Return, Carriage Return
+//- &#9003; . . . . . ⌫ . . . Delete, Backspace
+//- &#8594; &rarr; .. → . . . Right arrow
+//- &#8592; &larr; .. ← . . . Left arrow
+//- &#8593; &uarr; .. ↑ . . . Up arrow
+//- &#8595; &darr; .. ↓ . . . Down arrow
+//- &#8677; . . . . . ⇥ . . . Tab, Tab Right, Horizontal Tab
+//- &#9251; . . . . . ␣ . .. . Space, Blank
+
+
+
+
+
+script(src='styleguide.js')
