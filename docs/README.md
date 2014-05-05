@@ -25,9 +25,8 @@ the project.
 |  ✔︎ | `/ops`               | `db.currentOp`                                   |  ✔︎ |
 |  ✔︎ | `/log`               | `getLog`                                         |  ✔︎ |
 |  ✔︎ | `/top`               | `top`                                            |  ✔︎ |
-|  ✔︎ | `/replication`       | `rs.printReplicationInfo` + `rs.conf`            |     |
+|  ✔︎ | `/replication`       | `rs.printReplicationInfo` + `rs.conf`            |  ✔︎ |
 |  ✔︎ | `/replication/oplog` | `oplog.rs.find`                                  |  ✔︎ |
-|  ✔︎ | `/replication/watch` | no equivalent                                    |  ✔︎ |
 
 ### `/api/v1/:instance_id/:database_name`
 
