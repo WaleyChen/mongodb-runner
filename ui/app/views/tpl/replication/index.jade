@@ -5,7 +5,7 @@ ul.list-group
     | Replica Set Name: #{replication._id}
 
   li.list-group-item
-    span.badge #{replication.oplog.count}
+    span.badge #{replication.oplog.opcount}
     | Operations
   li.list-group-item
     span.badge #{moment(replication.oplog.window[0]).from(replication.oplog.window[1], true)}
