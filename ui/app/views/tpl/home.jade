@@ -127,11 +127,14 @@ else
     hr
 
     if deployment.maybe_sharded && deployment.type !== 'cluster'
-      .warning
-        p
-          | you may not be getting the full picture here.  it seems you've connected
-          | directly to a shard but not through a router.  please yadaya to
-          | make sure you're seeing the full deatils.
+      .alert.alert-warning
+        .row
+          .col-md-3: h3 Check yourself!
+          .col-md-9
+            p It seems you've connected directly to a shard but not through a router.
+            p You may not be getting the full picture of your deployment!
+            p
+              a.btn.btn-default(href='#connect', style='color: #FFF;') Connect to a router
 
     .row
       .col-md-6
@@ -141,9 +144,6 @@ else
       .col-md-6
         +panel('Instances')
           .instances
-
-      //- .col-md-4: +panel('Live')
-      //-   p @todo: stream in from /oplog
 
 hr
 .row
