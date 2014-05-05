@@ -8,9 +8,9 @@ include ../mixins/bytes
 
 ol.breadcrumb
   unless context.deployment.type === 'standalone'
-    li: a(href='#home') #{context.deployment.id}
+    li: a(href='#mongodb/#{context.deployment.id}') #{context.deployment.name}
   li
-    a(href='#home') #{context.instance.id}
+    a(href='#mongdb/#{context.instance.id}') #{context.instance.name}
   li database: #{database.name}
 
 .panel.panel-default
@@ -25,7 +25,7 @@ hr
       .panel-heading: .panel-title Collections
       .list-group
         for collection_name in database.collection_names
-          a.list-group-item(href='#collection/#{database.name}/#{collection_name}')
+          a.list-group-item(href='##{context.instance.id}/collection/#{database.name}/#{collection_name}')
             .pull-left: i.fa.fa-angle-right.fa-fw
             .list-group-item-heading #{collection_name}
 

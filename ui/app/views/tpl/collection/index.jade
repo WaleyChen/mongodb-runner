@@ -8,9 +8,9 @@ include ../mixins/nf
 
 ol.breadcrumb
   unless context.deployment.type === 'standalone'
-    li: a(href='#home') #{context.deployment.id}
-  li: a(href='#home') #{context.instance.id}
-  li: a(href='#database/#{collection.database}') #{collection.database}
+    li: a(href='#mongodb/#{context.deployment.id}') #{context.deployment.name}
+  li: a(href='#mongodb/#{context.instance.id}') #{context.instance.name}
+  li: a(href='##{context.instance.id}/database/#{collection.database}') #{collection.database}
   li #{collection.name}
 
 .row

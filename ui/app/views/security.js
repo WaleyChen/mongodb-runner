@@ -77,9 +77,9 @@ var DetailView = Backbone.View.extend({
 });
 
 var Security = Backbone.View.extend({
-  events: {
-    'click .list-group a': 'markSelected'
-  },
+  // events: {
+  //   'click .list-group a': 'markSelected'
+  // },
   tpl: require('./tpl/security/index.jade'),
   initialize: function(){
     this.$el = $('#mongoscope');

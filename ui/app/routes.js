@@ -32,21 +32,17 @@ module.exports = function(opts){
 
   return create()
     .add('authenticate', require('./views/auth'))
-    .add('mongodb', 'mongodb/:instance_id', require('./views/home'), null)
-    .add('log', require('./views/log'))
-    .add('top', require('./views/top'))
     .add('connect', require('./views/connect').create)
+    .add('mongodb', 'mongodb/:instance_id', require('./views/home'), null)
     .add('switch_instance', 'connect/:deployment_id/:instance_id', require('./views/connect').instance, null)
     .add('switch_deployment', 'connect/:deployment_id', require('./views/connect').deployment, null)
-    .add('security', require('./views/security'), function(add){
-      add('user', '/users/:database/:username', 'userDetail');
-      add('role', '/roles/:database/:role', 'roleDetail');
-    })
-    .add('collection', '/collection/:database_name/:collection_name', require('./views/collection'), function(add){
+    .add('log', ':instance_id/log', require('./views/log'), null)
+    .add('top', ':instance_id/top', require('./views/top'), null)
+    .add('collection', ':instance_id/collection/:database_name/:collection_name', require('./views/collection'), function(add){
       add('explore', '/explore/:skip', 'activateExplorer');
     })
-    .add('createcollection', 'database/:database_name/collection', require('./views/database').createCollection, null)
-    .add('database', 'database/:database_name', require('./views/database'), null)
+    .add('createcollection', ':instance_id/database/:database_name/collection', require('./views/database').createCollection, null)
+    .add('database', ':instance_id/database/:database_name', require('./views/database'), null)
     .default('authenticate')
     .go(opts.auth ? 'authenticate' : '');
 };

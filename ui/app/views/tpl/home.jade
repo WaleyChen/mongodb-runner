@@ -65,7 +65,7 @@ mixin instance_detail()
 
 ol.breadcrumb
   unless context.deployment.type === 'standalone'
-    li: a(href='#home') #{context.deployment.name}
+    li: a(href='#mongodb/#{context.deployment_id}') #{context.deployment.name}
   li #{context.instance.id}
 
 if deployment.maybe_sharded && deployment.type !== 'cluster'
@@ -87,12 +87,9 @@ if deployment.maybe_sharded && deployment.type !== 'cluster'
         h4 Help
         ul
           li.strong
-            a(href='http://docs.mongodb.org/manual/reference/mongos/', style='color: #FFF;text-decoration: underline;', target='_blank')
-              | How do you find the router?
+            a(href='http://docs.mongodb.org/manual/reference/mongos/', style='color: #FFF;text-decoration: underline;', target='_blank') How do you find the router?
           li.strong
-            a(href='
-http://www.mongodb.org/display/DOCS/Configuring+Sharding', style='color: #FFF;text-decoration: underline;', target='_blank')
-              | Configuring Sharding
+            a(href='http://www.mongodb.org/display/DOCS/Configuring+Sharding', style='color: #FFF;text-decoration: underline;', target='_blank') Configuring Sharding
 
 
 if deployment.type === 'standalone'
@@ -101,7 +98,7 @@ if deployment.type === 'standalone'
     .col-md-6
       +navpanel('Databases')
         each db in instance.database_names
-          a.list-group-item(href="#database/#{db}")
+          a.list-group-item(href="##{context.instance_id}/database/#{db}")
             .pull-left: i.fa.fa-angle-right.fa-fw
             .list-group-item-heading #{db}
 
@@ -116,7 +113,7 @@ else
       .col-md-6
         +navpanel('Databases')
           each db in instance.database_names
-            a.list-group-item(href="#database/#{db}")
+            a.list-group-item(href="##{context.instance_id}/database/#{db}")
               .pull-left: i.fa.fa-angle-right.fa-fw
               .list-group-item-heading #{db}
       .col-md-6
