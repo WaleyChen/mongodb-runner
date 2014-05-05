@@ -1,7 +1,15 @@
 h4 service_requests.#{sample._id}
 - delete sample._id
+
+
 //- @todo: arrow keys/swipe to navigate
-dl.dl-horizontal
- - for value, key in sample
-  dt(style="margin-right: 20px;") #{key}
-  dd(style="display: block; clear: right;") #{value}
+table.table
+  for value, key in sample
+    tr
+      td.key #{key}
+      td.value
+        if typeof value === 'object'
+          pre(style='padding: 0; border: 0; color: initial; background-color: initial;'): code
+            | #{JSON.stringify(value, null, 2).replace(/","/g, '\n').replace(/"/g, '').replace(/\{|\}/g, '')}
+        else
+          | #{value}

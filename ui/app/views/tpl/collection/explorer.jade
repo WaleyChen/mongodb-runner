@@ -1,28 +1,33 @@
-if active
-  //- .btn-group
-  //-   a.btn.btn-default
-  //-     span.glyphicon.glyphicon-list-alt
-  //-   a.btn.btn-default
-  //-     span.glyphicon.glyphicon-align-center
-  //-   a.btn.btn-default
-  //-     span.glyphicon.glyphicon-asterisk
-  //- @todo: a nice datagrid perhaps?
-  //- http://exacttarget.github.io/fuelux/#datagrid
-  .table-responsive
-    table.table
-      thead
-        tr
-        for key in schema.keys
-          th #{key}
-      tfoot
-        tr
-          td(colspan="#{schema.keys.length}", style="text-align: center;")
-            | #{skip} - #{skip+samples.length}
-      tbody
-      each doc, i in samples
-        tr(data-index='#{i}')
-         - for key in schema.keys
-          td #{doc[key]}
+
+//- .btn-group
+//-   a.btn.btn-default
+//-     span.glyphicon.glyphicon-list-alt
+//-   a.btn.btn-default
+//-     span.glyphicon.glyphicon-align-center
+//-   a.btn.btn-default
+//-     span.glyphicon.glyphicon-asterisk
+//- @todo: a nice datagrid perhaps?
+//- http://exacttarget.github.io/fuelux/#datagrid
+
+table.table.small.table-condensed.table-responsive
+  thead
+    tr
+    for key in schema.keys
+      th #{key}
+  tfoot
+    tr
+      td(colspan="#{schema.keys.length}", style="text-align: center;")
+        | #{skip} - #{skip+samples.length}
+  tbody
+  each doc, i in samples
+    tr(data-index='#{i}')
+     - for key in schema.keys
+      td
+        if typeof doc[key] === 'object'
+          | {&hellip;}
+        else
+          | #{doc[key]}
+.row
   .col-md-12
     .col-md-5
     .col-md-2
@@ -32,71 +37,3 @@ if active
         li.next
           a next
     .col-md-5
-
-
-else
-  .table-responsive(style="opacity: 0.3; padding-right: 10px;")
-      table.table()
-        thead
-          tr
-            th _id
-            th page
-            th delta
-            th comment
-
-        tbody
-          tr
-            td 1394477260230
-            td User talk:Walter Görlitz
-            td 361
-            td /* Murdoch Mysteries */ new section
-          tr
-            td 1394477261207
-            td ARA Hercules (D-1)
-            td 102
-            td create and redirect
-          tr
-            td 1394477263011
-            td User talk:81.156.170.145
-            td 870
-            td Caution: Unconstructive editing on [[Pine]]. ([[WP:TW|TW]])
-          tr
-            td 1394477263015
-            td User talk:Polypompholyx
-            td 1
-            td /* 2014 Science Communication project */
-          tr
-            td 1394477263118
-            td Hydropower in the Mekong River Basin
-            td 0
-            td /* Planned hydropower infrastructure in Vietnam */
-          tr
-            td 1394477263292
-            td Bryan Clarke
-            td 36
-            td details of apostatic selection
-          tr
-            td 1394477263367
-            td Lee Selby
-            td 33
-            td adding birth template to infobox using [[Project:AWB|AWB]]
-          tr
-            td 1394477278138
-            td Mukachevo (air base)
-            td 44
-            td Link "see also"
-          tr
-            td 1394477279055
-            td Netherlands in the Eurovision Song Contest
-            td 6
-            td /* Contestants */
-          tr
-            td 1394477279591
-            td Blu-ray Disc
-            td 71
-            td Add hd and 1080 to lede
-
-    div(style="position:absolute;width: 100%;margin-top: -200px;")
-      a.btn.btn-primary.btn-lg.activate(style="margin-left: 40%;")
-        span.glyphicon.glyphicon-list-alt
-        | &nbsp;Explore Documents

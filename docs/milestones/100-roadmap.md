@@ -4,39 +4,72 @@
 
 ## Deliverables
 
-- [x] server: cr-based authentication
-- [x] server: complete, web-friendly read-only rest api
-- [ ] ui: deployments: connect to deployment
-- [ ] ui: deployments: view details (replication and sharding status
-- [ ] ui: deployments: easily view details for any instance
-- [ ] ui: deployments: connect to another deployment
-- [ ] ui: instance: view host and build details
-- [ ] ui: instance: view log
-- [ ] ui: instance: view top
-- [ ] ui: instance: view databases w/ high-level stats
-- [ ] ui: instance: view collections w/ high-level stats
-- [ ] project: deployment setup
-- [ ] project: ground-work for qa and documentation
+- server
+  - [x] cr-based authentication
+  - [x] complete, web-friendly read-only rest api
+  - [ ] test coverage at ?%
+- ui
+  - deployment
+    - [x] connect
+    - [x] connect to another deployment
+    - [x] replicaset details
+    - [ ] connect to any instance
+  - replicaset
+    - [ ] oplog stream
+    - [ ] replication sync progressbar
+    - [ ] topology viz from mms
+  - cluster
+    - [ ] shards
+    - [ ] chunks
+    - [ ] balancer running viz
+  - instance
+    - [x] host detail
+    - [x] build detail
+    - [x] log
+    - [ ] top
+    - [ ] list of databases
+    - [ ] connection stream
+    - [ ] currentop stream
+    - [ ] index build progressbar
+    - [ ] map reduce job progressbar
+  - database
+    - [ ] dbStats
+    - [ ] list of collections
+  - collection
+    - [ ] collStats
+    - [ ] list of indexes
+  - index
+    - [ ] index spec
+- project
+  - [ ] deployment setup
+  - [ ] ground-work for qa and documentation
 
 ## Punchlist
 
-- [x] server: url vs. id vs. name cleanup
-- [x] server: dns disambiguation
-- [ ] server: connecting automatically figures out the right deployment you want instead of creating a new one
-- [ ] server: connect to rs that is actually a cluster -> connect to cluster -> merges the two deployments
+- server
+  - [x] url vs. id vs. name cleanup
+  - [x] dns disambiguation
+  - [X] replication: instance ids and names not using deployment level info
+  - [X] clean up replication and move to monger
+  - [X] include config instances in cluster deployment
+  - [X] auto namer improvements
+  - [ ] connecting automatically figures out the right deployment
+    you want instead of creating a new one (needs test)
+  - [ ] connect to rs that is actually a cluster -> connect to
+    cluster -> merges the two deployments (have test, need server business)
+  - [ ] progress bars
 - ui
-  - [ ] dumb down ui even further
-  - [ ] starting view for cluster
-  - [ ] starting view for replica set
-  - [ ] starting view for standalone
   - [x] bug: instance list stomped when switching in ui
+  - [X] Bug: instance type not cleared on home
+  - [X] Bug: top should just start at 0 instead of having loading state
+  - [X] Replicaset view
+  - [X] instance id in URL instead of just home for copy and paste/bookmarkability
+  - [X] oplog details on instance home
 - project
   - [x] jira
   - [ ] roadmap
   - [ ] setup mci project
   - [ ] automated build deploy for windows, nix, and osx
-
-
-## Stretch
-
-- [ ] server: when a replicaset membership event happens, update the deployment
+  - [ ] making the server handle deployment level events (eg new
+    instance in rs -> update store -> broadcast to clients) need to be
+    their own release

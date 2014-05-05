@@ -64,13 +64,50 @@
 }
 
 .list-group-body {
-  max-height: 400px;
+  max-height: 100%;
   height: 100%;
   overflow-y: auto;
 }
 
 .navbar-brand:hover {
   color: @text-color;
+}
+.table {
+  .key {
+    .small;
+    padding-left: 0;
+  }
+  .value {
+    background-color: @base-background-color;
+  }
+}
+
+.h-list {
+  overflow:hidden;
+  padding:0;
+  position:relative;
+  width:auto;
+  ul {
+    -moz-box-orient:horizontal;
+    -ms-box-orient:horizontal;
+    -webkit-box-orient:horizontal;
+    -o-box-orient:horizontal;
+    box-orient:horizontal;
+
+    display:-moz-box;
+    display:-ms-box;
+    display:-webkit-box;
+    display:-o-box;
+    display:box;
+
+    list-style-type:none;
+    margin:0;
+    padding:0;
+    li {
+      margin-right: @component-padding*2;
+      width:200px;
+    }
+  }
 }
 
 // HD

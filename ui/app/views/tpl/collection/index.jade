@@ -16,19 +16,35 @@ ol.breadcrumb
 .row
   .col-md-12
     h1.page-header #{collection.database}.#{collection.name}
-      ul.list-unstyled.list-inline.lead
-        li
-          +nf(collection.stats.document_count)
-        li
-          +bytes(collection.stats.document_size)
-        li.subtle.small documents
 
-  //- .col-md-3
-  //-   h3 Indexes
-  //-   ul.list-unstyled
-  //-     each index in collection.indexes
-  //-       li #{index.name}
-  //-         +bytes(index.size)
+.row
+  .col-md-3
+   .panel.panel-default
+      .panel-heading: .panel-title Stats
+      .panel-body
+        ul.list-unstyled.list-inline.lead
+          li
+            +nf(collection.stats.document_count)
+          li.small documents
+          li.small (
+            +bytes(collection.stats.document_size)
+            | )
+  .col-md-9
+    .panel.panel-default
+      .panel-heading: .panel-title Indexes
+      .panel-body
+        .h-list
+          ul
+            each index in collection.indexes
+              li.lead
+                span(style='margin-right: 10px;')
+                  | #{JSON.stringify(index.key).replace(/"|\{|\}/g, '')}
+                span.small (
+                  +bytes(index.size)
+                  | )
+
+hr
+
 .row
   .col-md-12
     .explorer
