@@ -11,7 +11,7 @@ ul.list-group
     span.badge #{moment(replication.oplog.window[0]).from(replication.oplog.window[1], true)}
     | Window
   li.list-group-item
-    span.badge: +bytes(replication.options.size)
+    span.badge: +bytes(replication.oplog.collection.size)
     | Size
 
   li.list-group-item

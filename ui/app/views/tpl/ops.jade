@@ -1,0 +1,18 @@
+table.table
+  thead
+    tr
+      th id
+      th op
+      th ns
+      th seconds
+      th query
+      th client
+  tbody
+    each op in ops
+      tr
+        td #{op.opid}
+        td #{op.op}
+        td #{op.ns}
+        td #{op.secs_running}
+        td #{JSON.stringify(op.query)}
+        td #{op.client}

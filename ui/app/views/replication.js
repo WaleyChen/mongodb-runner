@@ -17,10 +17,11 @@ var Replication = Backbone.View.extend({
   },
   exit: function(){},
   render: function(){
+    var rs = this.replication.toJSON();
     debug('render', this.replication.toJSON());
     this.$el.html(this.tpl({
       moment: moment,
-      replication: this.replication.toJSON(),
+      replication: rs,
       context: models.context.toJSON()
     }));
   }

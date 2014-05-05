@@ -5,7 +5,7 @@ var Backbone = require('backbone'),
   debug = require('debug')('mongoscope:models');
 
 // containers
-var service, settings, deployments, deployment, instance, topHolder, context;
+var service, settings, deployments, deployment, instance, topHolder, context, ops;
 
 function getContext(){
   if(context) return context;
@@ -16,6 +16,7 @@ function getContext(){
   deployment = new Deployment();
   deployments = new DeploymentList();
   topHolder = new Top({});
+  ops = new Ops({});
 
   context = new Context();
   return context;
@@ -396,6 +397,14 @@ var Top = module.exports.Top = ProducerModel.extend({
   uri: '/top'
 });
 
+var Ops = module.exports.Ops = ProducerList.extend({
+  model: Backbone.Model.extend({}),
+  service: function(){
+    return {name: 'ops', args: instance.id};
+  },
+  uri: '/ops'
+});
+
 module.exports.Log = ProducerList.extend({
   model: Backbone.Model.extend({}),
   service: function(){
@@ -505,6 +514,26 @@ var Sharding = Model.extend({
 var Replication = Model.extend({
   service: function(){
     return {name: 'replication', args: [instance.id]};
+  },
+  toJSON: function(){
+    var attrs = this.__data__();
+    attrs.primary = {};
+    attrs.secondaries = [];
+    attrs.arbiters = [];
+
+    attrs.members.map(function(member){
+      var instance = deployment.getInstance(member.instance_id).toJSON();
+      if(instance.state === 'primary'){
+        attrs.primary = _.extend(member, instance);
+      }
+      else if(instance.state === 'arbiter'){
+        attrs.arbiters.push(_.extend(member, instance));
+      }
+      else{
+        attrs.secondaries.push(_.extend(member, instance));
+      }
+    });
+    return attrs;
   }
 });
 
@@ -535,6 +564,11 @@ module.exports.Security.Role = Role;
 // @todo: these should just be limited to `context`.
 Object.defineProperty(module.exports, 'context', {get: function(){
   return getContext();
+}});
+
+Object.defineProperty(module.exports, 'ops', {get: function(){
+  getContext();
+  return ops;
 }});
 
 Object.defineProperty(module.exports, 'instance', {get: function(){

@@ -124,6 +124,10 @@ Service.prototype.top = function(instance_id, fn){
   this.get(instance_id, '/top', {}, fn);
 };
 
+Service.prototype.ops = function(instance_id, fn){
+  this.get(instance_id, '/ops', {}, fn);
+};
+
 Service.prototype.instance = function(instance_id, fn){
   this.get(instance_id, '', {}, fn);
 };

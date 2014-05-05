@@ -3,6 +3,7 @@ var Backbone = require('backbone'),
   models = require('../models'),
   debug = require('debug')('mongoscope:home'),
   log = require('./log'),
+  ops = require('./ops'),
   replication = require('./replication');
 
 var Home = Backbone.View.extend({
@@ -11,6 +12,7 @@ var Home = Backbone.View.extend({
     this.$el = $('#mongoscope');
     this.el = this.$el.get(0);
     this.log = log();
+    this.ops = ops();
     this.replication = replication();
     this.instances = replication.instances();
   },
@@ -19,6 +21,7 @@ var Home = Backbone.View.extend({
     if(models.context.instance){
       this.render();
       this.log.enter();
+      this.ops.enter();
     }
     else {
       debug('waiting for context to get an instance');
@@ -27,6 +30,7 @@ var Home = Backbone.View.extend({
   exit: function(){
     models.context.off('change', this.change, this);
     this.log.exit();
+    this.ops.exit();
 
     this.replication.exit();
     this.instances.exit();
