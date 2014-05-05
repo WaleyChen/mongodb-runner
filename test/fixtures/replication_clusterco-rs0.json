@@ -1,0 +1,92 @@
+{
+  "_id": "clusterco-rs0",
+  "members": [
+    {
+      "instance_id": "lucass-macbook-pro.local:31100",
+      "is_healthy": true,
+      "state": "PRIMARY",
+      "state_id": 1,
+      "uptime": 578199,
+      "optime": "2014-04-29T00:15:43.000Z",
+      "votes": 1,
+      "slave_delay": 0,
+      "tags": {},
+      "priority": 1,
+      "hidden": false,
+      "build_indexes": true,
+      "lag_operational": null,
+      "lag_replication": 0
+    },
+    {
+      "instance_id": "lucass-macbook-pro.local:31101",
+      "is_healthy": true,
+      "state": "SECONDARY",
+      "state_id": 2,
+      "uptime": 9092,
+      "optime": "2014-04-29T00:15:43.000Z",
+      "heartbeat": "2014-05-05T16:51:41.000Z",
+      "heartbeat_previous": "2014-05-05T16:51:41.000Z",
+      "ping": 0,
+      "votes": 1,
+      "slave_delay": 0,
+      "tags": {},
+      "priority": 1,
+      "hidden": false,
+      "build_indexes": true,
+      "lag_operational": 0,
+      "lag_replication": 0
+    },
+    {
+      "instance_id": "lucass-macbook-pro.local:31102",
+      "is_healthy": true,
+      "state": "SECONDARY",
+      "state_id": 2,
+      "uptime": 9092,
+      "optime": "2014-04-29T00:15:43.000Z",
+      "heartbeat": "2014-05-05T16:51:41.000Z",
+      "heartbeat_previous": "2014-05-05T16:51:41.000Z",
+      "ping": 0,
+      "votes": 1,
+      "slave_delay": 0,
+      "tags": {},
+      "priority": 1,
+      "hidden": false,
+      "build_indexes": true,
+      "lag_operational": 0,
+      "lag_replication": 0
+    }
+  ],
+  "oplog": {
+    "head": {
+      "ts": "2014-04-29T00:15:02.000Z",
+      "h": 0,
+      "v": 2,
+      "op": "n",
+      "ns": "",
+      "o": {
+        "msg": "initiating set"
+      }
+    },
+    "tail": {
+      "ts": "2014-04-29T00:15:43.000Z",
+      "h": "-8552931494534840303",
+      "v": 2,
+      "op": "i",
+      "ns": "admin.foo",
+      "o": {
+        "_id": "535eef2fe70865bcdd0b53ef",
+        "x": 1
+      }
+    },
+    "opcount": 2,
+    "collection": {
+      "capped": true,
+      "size": 10485760,
+      "autoIndexId": false
+    },
+    "window": [
+      "2014-04-29T00:15:02.000Z",
+      "2014-04-29T00:15:43.000Z"
+    ]
+  }
+}
