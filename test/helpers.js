@@ -28,10 +28,10 @@ var defaults = {
 exports = {
   collections: {},
   get: function(path){
-    return supertest(app).get(path);
+    return supertest(app).get(path).accept('json');
   },
   post: function(path){
-    return supertest(app).post(path);
+    return supertest(app).post(path).accept('json');
   },
   beforeWith: function(context){
     return function(done){

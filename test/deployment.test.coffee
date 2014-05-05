@@ -51,14 +51,14 @@ describe 'When connecting to the router of a cluster deployment', ->
     assert.equal instance.type, 'router'
 
   it 'should discover all instances in the cluster', ->
-    assert.equal cluster.instances.length, 7
+    assert.equal cluster.instances.length, 8
 
 
   it 'should disambiguate localhost', ->
     assert.equal cluster.seed, router_id
 
   it 'should name the cluster using the seed', ->
-    assert.equal cluster.name, "cluster on #{hostname}"
+    assert.equal cluster.name.indexOf("cluster on"), 0
 
   it 'should not create more than one deployment @todo'
   it 'should upgrade an existing replicaset deployment to a cluster @todo'
@@ -66,6 +66,7 @@ describe 'When connecting to the router of a cluster deployment', ->
 
 describe 'When connecting directly to a cluster shard', ->
   replicaset = null
+  cluster = null
   before (done) ->
     Deployment.create 'mongodb://localhost:31200', (err, deployment) ->
       return done(err) if(err)
@@ -84,3 +85,17 @@ describe 'When connecting directly to a cluster shard', ->
 
   it 'should discover all replicaset members', ->
       assert.equal replicaset.instances.length, 3
+
+  describe 'If you then connect to a router', ->
+    before (done) ->
+      Deployment.create 'mongodb://localhost:30999', (err, deployment) ->
+        return done(err) if(err)
+        cluster = deployment
+        done()
+
+    it 'should have removed the old deployment', (done)->
+      Deployment.get "#{hostname}:31200", (err, deployment) ->
+        return done(err) if err
+        return done(new Error('Deployment not squashed!')) if deployment
+        done()
+
