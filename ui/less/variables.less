@@ -658,14 +658,14 @@
 //##
 
 //** Background color on `.list-group-item`
-@list-group-bg:                 transparent;
+@list-group-bg:                 @base-background-color;
 //** `.list-group-item` border color
 @list-group-border:             @base-border-color;
 //** List group border radius
 @list-group-border-radius:      @border-radius-base;
 
 //** Background color of single list items on hover
-@list-group-hover-bg:           #f5f5f5;
+@list-group-hover-bg:           @tool-panel-background-color;
 //** Text color of active list items
 @list-group-active-color:       @component-active-color;
 //** Background color of active list items
@@ -673,18 +673,18 @@
 //** Border color of active list elements
 @list-group-active-border:      @list-group-active-bg;
 //** Text color for content within active list items
-@list-group-active-text-color:  lighten(@list-group-active-bg, 40%);
+@list-group-active-text-color:  @component-active-color;
 
 //** Text color of disabled list items
-@list-group-disabled-color:      @gray-light;
+@list-group-disabled-color:      @text-color-subtle;
 //** Background color of disabled list items
 @list-group-disabled-bg:         @gray-lighter;
 //** Text color for content within disabled list items
 @list-group-disabled-text-color: @list-group-disabled-color;
 
-@list-group-link-color:         #555;
+@list-group-link-color:         @text-color;
 @list-group-link-hover-color:   @list-group-link-color;
-@list-group-link-heading-color: #333;
+@list-group-link-heading-color: @text-color;
 
 
 //== Panels
@@ -779,7 +779,7 @@
 @breadcrumb-padding-vertical:   8px;
 @breadcrumb-padding-horizontal: 15px;
 //** Breadcrumb background color
-@breadcrumb-bg:                 @base-background-color;
+@breadcrumb-bg:                 @tab-bar-background-color;
 //** Breadcrumb text color
 @breadcrumb-color:              @text-color-subtle;
 //** Text color of current page in the breadcrumb
@@ -810,8 +810,8 @@
 //##
 
 @close-font-weight:           bold;
-@close-color:                 #000;
-@close-text-shadow:           0 1px 0 #fff;
+@close-color:                 @text-color;
+@close-text-shadow:           0;
 
 
 //== Code

@@ -68,38 +68,10 @@
   height: 100%;
   overflow-y: auto;
 }
-.list-group-body > *:first-child {
-  // margin-top: 0;
-  // padding-top: 0;
-}
+
 .navbar-brand:hover {
   color: @text-color;
 }
-//
-// Breadcrumbs
-// --------------------------------------------------
-.breadcrumb {
-  padding: @breadcrumb-padding-vertical @breadcrumb-padding-horizontal;
-  margin-bottom: @line-height-computed;
-  list-style: none;
-  background-color: @breadcrumb-bg;
-  border-radius: @border-radius-base;
-
-  > li {
-    display: inline-block;
-
-    + li:before {
-      content: "@{breadcrumb-separator}\00a0"; // Unicode space added since inline-block means non-collapsing white-space
-      padding: 0 5px;
-      color: @breadcrumb-color;
-    }
-  }
-
-  > .active {
-    color: @breadcrumb-active-color;
-  }
-}
-
 
 // HD
 @screen-xl: (@screen-md * @line-height-base);

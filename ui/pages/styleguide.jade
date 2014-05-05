@@ -24,7 +24,7 @@ html(lang='en')
 
         ul.list-unstyled.list-inline
           li.text-color @text-color
-          li.text-color-subtle @text-color
+          li.text-color-subtle @text-color-subtle
 
         ul.list-unstyled.list-inline
           li.text-color-info @text-color-info
@@ -243,8 +243,17 @@ html(lang='en')
               .list-group-item-heading .select-list in atom
               small.list-group-item-text .list-group-item-(heading|text) is the same as .primary and .secondary
             a.list-group-item.list-group-item-warning(href='#')
-              .list-group-item-heading Do not use ul.list-group!
-              small.list-group-item-text It's half-assed and doesn't do what you expect.
+              .list-group-item-heading Oh hey!
+              small.list-group-item-text You should pay attention to this!
+            a.list-group-item.list-group-item-danger(href='#')
+              .list-group-item-heading Oh no's!
+              small.list-group-item-text Now we're in danger land.
+            a.list-group-item.disabled(href='#')
+              .list-group-item-heading I'm disabled
+              small.list-group-item-text Perhaps this thing will be revived?
+            a.list-group-item.list-group-item-success(href='#')
+              .list-group-item-heading Whew!
+              small.list-group-item-text All good now.
 
         h3 filterable and groupable
 
@@ -433,21 +442,42 @@ html(lang='en')
           kbd ⌘⇧P
 
 
-//- &#8984; . . . . . ⌘ . . . Command, Cmd, Clover, (formerly) Apple
-//- &#8963; . . . . . ⌃ . . . Control, Ctl, Ctrl
-//- &#8997; . . . . . ⌥ . . . Option, Opt, (Windows) Alt
-//- &#8679; . . . . . ⇧ . . . Shift
-//- &#9166; . . . . . ⏎ . . . Return, Carriage Return
-//- &#9003; . . . . . ⌫ . . . Delete, Backspace
-//- &#8594; &rarr; .. → . . . Right arrow
-//- &#8592; &larr; .. ← . . . Left arrow
-//- &#8593; &uarr; .. ↑ . . . Up arrow
-//- &#8595; &darr; .. ↓ . . . Down arrow
-//- &#8677; . . . . . ⇥ . . . Tab, Tab Right, Horizontal Tab
-//- &#9251; . . . . . ␣ . .. . Space, Blank
+          //- &#8984; . . . . . ⌘ . . . Command, Cmd, Clover, (formerly) Apple
+          //- &#8963; . . . . . ⌃ . . . Control, Ctl, Ctrl
+          //- &#8997; . . . . . ⌥ . . . Option, Opt, (Windows) Alt
+          //- &#8679; . . . . . ⇧ . . . Shift
+          //- &#9166; . . . . . ⏎ . . . Return, Carriage Return
+          //- &#9003; . . . . . ⌫ . . . Delete, Backspace
+          //- &#8594; &rarr; .. → . . . Right arrow
+          //- &#8592; &larr; .. ← . . . Left arrow
+          //- &#8593; &uarr; .. ↑ . . . Up arrow
+          //- &#8595; &darr; .. ↓ . . . Down arrow
+          //- &#8677; . . . . . ⇥ . . . Tab, Tab Right, Horizontal Tab
+          //- &#9251; . . . . . ␣ . .. . Space, Blank
 
+        h2 navigation
 
+        h3 breadcrumbs
+        ol.breadcrumb
+          li: a(href='#') my cluster
+          li: a(href='#') mongos1
+          li: a(href='#') config
+          li locks
 
+        h3 sidebar
+        ul.nav.nav-pills.nav-stacked.nav-sidebar
+          li
+            a(href="#connect")
+              i.fa.fa-plus.fa-fw
+              | &nbsp;Connect Deployment&hellip;
+          li.divider
+          li.active
+            a(href="#") I am active
+          li
+            a(href="#") I am not
+          li.disabled
+            a(href="#") I am disabled
+          li
+            a(href="#") I am last
 
-
-script(src='styleguide.js')
+    script(src='styleguide.js')
