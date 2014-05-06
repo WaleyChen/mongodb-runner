@@ -1,0 +1,14 @@
+{
+  "name": "mongoscope-stats",
+  "version": "0.0.0",
+  "description": "stuff",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/10gen/mongoscope.git"
+  },
+  "dependencies": {
+    "mongo-statsd-backend": "0.0.6",
+    "statsd": "^0.7.1",
+    "statsd-node": "^0.2.2"
+  }
+}

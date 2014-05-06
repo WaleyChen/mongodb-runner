@@ -3,7 +3,7 @@
   "description": "Wouldn't it be great if monogo just had this stuff builtin instead of rolling it yourself?",
   "version": "0.0.3",
   "scripts": {
-    "start": "NODE_ENV=development DEBUG=* gulp dev",
+    "start": "NODE_ENV=development DEBUG=mon* gulp dev",
     "dist": "./bin/dist.sh",
     "test": "mocha",
     "up": "git pull --rebase && npm install && cd ui && npm install && cd ../ && NODE_ENV=production ./node_modules/.bin/gulp ui;",
@@ -73,7 +73,8 @@
     "mongodb-ns": "0.0.2",
     "keepup": "0.0.1",
     "lodash": "^2.4.1",
-    "titlecase": "^1.0.2"
+    "titlecase": "^1.0.2",
+    "lynx": "^0.1.1"
   },
   "devDependencies": {
     "gulp": "^3.5.6",
