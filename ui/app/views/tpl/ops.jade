@@ -4,18 +4,19 @@ else
   table.table
     thead
       tr
-        th id
-        th op
-        th ns
-        th seconds
-        th query
-        th client
+        th.id id
+        th.client client
+        th.op op
+        th.seconds secs
+        th.ns ns
+        th.query query
     tbody
       each op in ops
-        tr
-          td #{op.opid}
-          td #{op.op}
-          td #{op.ns}
-          td #{op.secs_running}
-          td #{op.client}
-          td #{JSON.stringify(op.query)}
+        - kls = op.secs_running >= 3 && op.op !== 'getmore' ? 'warning' : ''
+        tr(class=kls)
+          td.id #{op.opid}
+          td.client #{op.client}
+          td.op #{op.op}
+          td.seconds #{op.secs_running}
+          td.ns #{op.ns}
+          td.query #{JSON.stringify(op.query)}

@@ -10,21 +10,10 @@ mixin panel(title)
     .panel-body
       block
 
-mixin navpanel(title)
-  .panel.panel-default
-    .panel-heading: .panel-title #{title}
-    .list-group
-      block
-
-mixin splitpanel(title)
-  .panel.panel-default
-    .panel-heading: .panel-title #{title}
-    block
-
 mixin deet(key)
   tr
     td.key #{key}
-    td.value
+    td.value.small
       block
 
 mixin log_panel()
@@ -37,32 +26,43 @@ mixin log_panel()
     .panel-body
       .log-container
 
+mixin ops_panel()
+  .panel.panel-default
+    .panel-heading: .panel-title operations
+    .panel-body: .ops
+
 mixin instance_detail()
   - build = instance.build
   - host = instance.host
 
-  +panel('Server')
-    table.table
-      +deet('Hostname')
-        | #{instance.id}
-      +deet('MongoDB')
-        | #{build.version}
-      +deet('Deployment')
-        | #{deployment.type}
-      +deet('Instance')
-        | #{instance.type || 'mongod'}
+  .panel.panel-default
+    .panel-heading
+      //- .pull-right
+      //-   a(href='#copy').btn.btn-default.btn-xs
+      //-     i.fa.fa-files-o.fa-fw
+      .panel-title Instance
+    .panel-body
+      table.table
+        +deet('Hostname')
+          | #{instance.id}
+        +deet('MongoDB')
+          | #{build.version}
+        +deet('Deployment')
+          | #{deployment.type}
+        +deet('Instance')
+          | #{instance.type || 'mongod'}
 
-      if instance.state
-        +deet('State') #{instance.state}
+        if instance.state
+          +deet('State') #{instance.state}
 
-      +deet('Platform')
-        | #{host.os} #{host.cpu_bits}bit
-      +deet('Real RAM')
-        +bytes(host.memory_bits)
-      +deet('CPU Detail')
-        | #{host.cpu_string}
-      +deet('Host Time')
-        | #{host.system_time}
+        +deet('Platform')
+          | #{host.os} #{host.cpu_bits}bit
+        +deet('Real RAM')
+          +bytes(host.memory_bits)
+        +deet('CPU Detail')
+          | #{host.cpu_string}
+        +deet('Host Time')
+          | #{host.system_time}
 
 ol.breadcrumb
   unless context.deployment.type === 'standalone'
@@ -92,80 +92,33 @@ if deployment.maybe_sharded && deployment.type !== 'cluster'
           li.strong
             a(href='http://www.mongodb.org/display/DOCS/Configuring+Sharding', style='color: #FFF;text-decoration: underline;', target='_blank') Configuring Sharding
 
-
 if deployment.type === 'standalone'
   h1.page-header #{instance.name}
-  .row
-    .col-md-6
-      +navpanel('Databases')
-        each db in instance.database_names
-          a.list-group-item(href="##{context.instance_id}/database/#{db}")
-            .pull-left: i.fa.fa-angle-right.fa-fw
-            .list-group-item-heading #{db}
-
-    .col-md-6
-      +instance_detail()
-
 else
   h1.page-header #{deployment.name}
-      p.lead.subtle via #{instance.name}
+    p.lead.subtle via #{instance.name}
 
-    .row
-      .col-md-6
-        +navpanel('Databases')
-          each db in instance.database_names
-            a.list-group-item(href="##{context.instance_id}/database/#{db}")
-              .pull-left: i.fa.fa-angle-right.fa-fw
-              .list-group-item-heading #{db}
-      .col-md-6
-        +instance_detail()
 
-  if deployment.type === 'cluster'
-    hr
-    .row
-      .col-md-6
-        .panel.panel-default
-          .panel-heading: .panel-title cluster instances
-          .list-group
-            .list-group-header(style='display: none;')
-              .icon.fa-search
-              input(placeholder='filter instances')
-            .list-group-body
-              .list-group-label routers
-              each instance in deployment.routers
-                a.list-group-item(href="#connect/#{deployment.id}/#{instance.id}")
-                  .pull-left: i.fa.fa-angle-right.fa-fw
-                  .list-group-item-heading #{instance.name}
-              .list-group-label configs
-              each instance in deployment.configs
-                a.list-group-item(href="#connect/#{deployment.id}/#{instance.id}")
-                  .pull-left: i.fa.fa-angle-right.fa-fw
-                  .list-group-item-heading #{instance.name}
-              each shard in deployment.shards
-                .list-group-label shard #{shard.name}
-                each instance in shard.instances
-                  a.list-group-item(href="#connect/#{deployment.id}/#{instance.id}")
-                    .pull-left: i.fa.fa-angle-right.fa-fw
-                    .list-group-item-heading #{instance.name}
+.row
+  .col-md-6
+    //- @todo: if router, should balancer/lock event stream?
+    if instance.type !== 'router'
+      +ops_panel()
+  .col-md-6
+    +instance_detail()
 
-  if !instance.type
-    hr
-    .row
-      .col-md-6
-        +panel('Replication')
-          .replication
 
-      .col-md-6
-        +panel('Instances')
-          .instances
-
-if instance.type !== 'router'
+if !instance.type && (deployment.type === 'cluster' || deployment.type === 'replicaset')
   hr
   .row
-    .col-md-12
-      .panel.panel-default
-        .panel-heading: .panel-title currentop
-        .ops
+    .col-md-6
+      +panel('Replication')
+        .replication
+
+    .col-md-6
+      +panel('Instances')
+        .instances
+
 hr
 .row
   .col-md-12

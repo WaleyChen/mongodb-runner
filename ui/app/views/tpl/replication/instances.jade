@@ -3,7 +3,7 @@
     .list-group-label Primary
     a.list-group-item(href="#connect/#{context.deployment_id}/#{replication.primary.id}")
       if replication.primary.id === context.instance_id
-        .pull-right: span.label.label-success currently connected
+        .pull-right: span.label.label-success connected
       .pull-left: i.fa.fa-angle-right.fa-fw
       .list-group-item-heading #{replication.primary.name}
 
@@ -11,7 +11,7 @@
     each instance in replication.secondaries
       a.list-group-item(href="#connect/#{context.deployment_id}/#{instance.id}")
         if instance.id === context.instance_id
-          .pull-right: span.label.label-success currently connected
+          .pull-right: span.label.label-success connected
         .pull-left: i.fa.fa-angle-right.fa-fw
         .list-group-item-heading #{instance.name}
         .list-group-item-text.small

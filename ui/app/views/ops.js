@@ -16,7 +16,6 @@ var Ops = Backbone.View.extend({
   },
   update: function(){
     this.$el = Backbone.$('.ops');
-    debug('rendering', models.ops.toJSON());
     this.$el.html(this.tpl({ops: models.ops.toJSON()}));
   },
   insert: function(){
