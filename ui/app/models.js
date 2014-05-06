@@ -56,6 +56,7 @@ module.exports.connect = function(deploymentId, instanceId, fn){
     return service.setCredentials(deploymentId, function(err, res){
       if(err) return fn(err);
       deployments.fetch({success: function(){
+        debug('deployments loaded.  loading instance');
         loadInstance(res.deployment_id, res.instance_id, fn);
       }});
     });
@@ -76,8 +77,9 @@ module.exports.connect = function(deploymentId, instanceId, fn){
 function loadInstance(deploymentId, instanceId, fn){
   var i = deployments.getInstance(instanceId);
   if(!i) return fn(new Error('Could not find instance `'+instanceId+'`'));
-  i.fetch({error: fn, success: function(){
-    context.switch(deploymentId, instanceId);
+  i.fetch({error: fn, success: function(freshInstance){
+    debug('loaded instance', arguments);
+    context.switch(deploymentId, instanceId, freshInstance);
     fn(null, {instance: instance, deployment: deployment});
   }});
 }
@@ -89,7 +91,7 @@ var Settings = Backbone.Model.extend({
     defaults: {},
     deployment: null,
     instance: null,
-    switch: function(deploymentId, instanceId){
+    switch: function(deploymentId, instanceId, freshInstance){
       var sets = {};
 
       if(deploymentId !== this.get('deployment_id')){
@@ -113,10 +115,7 @@ var Settings = Backbone.Model.extend({
 
       if(instanceId !== this.get('instance_id')){
         sets.instance_id = instanceId;
-        var incoming = _.clone(deployment.getSeedInstance(instanceId).attributes);
-        if(!incoming.database_names){
-          incoming.database_names = [];
-        }
+        var incoming = _.clone(freshInstance.attributes);
 
         ['rs', 'type', 'state', 'shard'].map(function(k){
           if(!incoming[k]){
