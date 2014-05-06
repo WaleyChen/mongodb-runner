@@ -84,11 +84,13 @@ curl -X GET -H "Accept: text/event-stream" -H "Authorization: Bearer $TOKEN" "ht
 # on your instance and watch your terminal dance.  Hit ctrl+c to continue.
 #
 #
-# YOU can do this for just about any of the scope api calls.  Say we want to
+# You can do this for just about any of the scope api calls.  How about
+# `db.currentOp()`?
+curl -X GET -H "Accept: text/event-stream" -H "Authorization: Bearer $TOKEN" "http://localhost:29017/api/v1/localhost:27017/ops";
+
+Say we want to
 # nom nom all oplog events nom nom, a blow by blow of all writes to a replica set
 # if you're not familiar with the jargon.
-#
-# @todo: there is a ticket to actually wire this up to sse.  sorry :(
 curl -X GET -H "Accept: text/event-stream" -H "Authorization: Bearer $TOKEN" "http://localhost:29017/api/v1/localhost:27017/replication/oplog";
 
 # That's cool but what if you wanted to write a little script that made your
@@ -102,5 +104,5 @@ curl -X GET -H "Accept: text/event-stream" -H "Authorization: Bearer $TOKEN" "ht
 # Wouldn't it be event better if now that you have your terminal BELL script,
 # you could get notified when instances in your replica set get the blues?
 # You can watch for replication events like reconnects, joins, and leaves:
-curl -X GET -H "Accept: text/event-stream" -H "Authorization: Bearer $TOKEN" "http://localhost:29017/api/v1/localhost:27017/replication/watch";
+curl -X GET -H "Accept: text/event-stream" -H "Authorization: Bearer $TOKEN" "http://localhost:29017/api/v1/localhost:27017/replication";
 ```

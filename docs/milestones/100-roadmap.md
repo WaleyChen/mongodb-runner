@@ -13,7 +13,7 @@
     - [x] connect
     - [x] connect to another deployment
     - [x] replicaset details
-    - [ ] connect to any instance
+    - [x] connect to any instance
   - replicaset
     - [ ] oplog stream
     - [ ] replication sync progressbar
@@ -26,10 +26,10 @@
     - [x] host detail
     - [x] build detail
     - [x] log
-    - [ ] top
     - [x] list of databases
     - [x] connection stream
     - [x] currentop stream
+    - [ ] top
     - [ ] index build progressbar
     - [ ] map reduce job progressbar
   - database
