@@ -15,13 +15,13 @@ var Home = Backbone.View.extend({
     this.ops = ops();
     this.replication = replication();
     this.instances = replication.instances();
+    debug('home initialized');
   },
   enter: function(){
     models.context.on('change', this.change, this);
     if(models.context.instance){
       this.render();
       this.log.enter();
-      this.ops.enter();
     }
     else {
       debug('waiting for context to get an instance');
@@ -48,8 +48,11 @@ var Home = Backbone.View.extend({
       all: models.deployments.toJSON()
     }));
 
-    if(models.context.deployment.getType() !== 'standalone'){
-      if(!models.context.instance.type){
+    if(models.context.instance.get('type') === undefined){ 
+      this.ops.enter();
+      if(models.context.deployment.getType() !== 'standalone'){
+        debug('getting replication details', models.context.instance.get('type'), 
+          models.context.deployment.getType());
         this.replication.enter();
         this.instances.enter();
       }
