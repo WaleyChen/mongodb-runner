@@ -8,12 +8,11 @@
 
 
 body {
-  overflow: auto !important;
   // background-color: #fff;
 }
 
 .styleguide {
-  overflow: auto;
+  overflow-x: hidden;
   padding: 20px;
   // background: @app-background-color;
 
@@ -80,19 +79,16 @@ body {
 }
 
 .example {
-  display: -webkit-flex;
   border: 1px solid @tool-panel-border-color;
   border-radius: @component-border-radius;
-  margin: @component-padding 0;
-
-  > * { width: 50%; }
-
   .rendered {
-    position: relative;
     padding: @component-padding;
     // background: #fff;
     border-radius: @component-border-radius 0 0 @component-border-radius;
     border-right: 1px solid @base-border-color;
+    @media (max-width: @screen-sm-min) {
+      border-bottom: 1px solid @base-border-color;
+    }
 
     .ui-site-1, .ui-site-2, .ui-site-3, .ui-site-4, .ui-site-5 {
       height: 10px;

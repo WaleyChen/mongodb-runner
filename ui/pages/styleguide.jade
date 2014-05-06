@@ -2,6 +2,7 @@ doctype html
 html(lang='en')
   head
     title styleguide
+    meta(name='viewport', content='initial-scale=1')
     link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400,400italic,600')
     link(rel='stylesheet', href='css/styleguide.css')
 
@@ -163,26 +164,26 @@ html(lang='en')
       section.bordered(data-name='panels')
         h2 Panels
 
-        h3: code .panel: .panel-body
+        h3 basic
         .panel.panel-default: .panel-body: p all your contents
 
-        h3: code .panel-heading: .panel-title Titles
+        h3 titles
         .panel.panel-default
           .panel-heading: .panel-title Titles
           .panel-body: p all your contents
 
-        h3: code .panel-footer
+        h3 footers
         .panel.panel-default
           .panel-heading: .panel-title Thing
           .panel-body: p all your contents
           .panel-footer
             small the small prints
 
-        h3: code .panel-inset
+        h3 inset
         .panel-inset.panel-default
           .panel-body: blockquote: em all your contents
 
-        h3 <code>.panel</code> with context menu
+        h3 with context menu
         .panel.panel-default
           .panel-heading
             .pull-right
@@ -201,7 +202,7 @@ html(lang='en')
           .panel-footer
             small the small prints
 
-        h3 <code>.panel</code> with <code>.list-group</code>
+        h3 with <code>.list-group</code>
         .panel.panel-default(style='max-width: 600px;')
           .panel-heading: .panel-title Databases
           .list-group
@@ -394,8 +395,9 @@ html(lang='en')
               ```
 
         h3 sparkline
-        .example
-          .rendered
+        .example:.row
+
+          .rendered.col-md-6
             p
               | update as
               span#sparkline-streaming.sparkline
@@ -405,7 +407,7 @@ html(lang='en')
               span#sparkline-static.sparkline
               | a static set
 
-          .code
+          .code.col-md-6
             :markdown
               ```javascript
               var d3 = require('d3'),
