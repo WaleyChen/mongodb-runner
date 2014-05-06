@@ -70,7 +70,7 @@ var Auth = Backbone.View.extend({
   show: function(){
     this.$modal = $('#modal');
     this.$modal.modal({backdrop: 'static', keyboard: false});
-    this.render({url: (instance && instance.id) || this.url});
+    this.render({url: (instance && instance.id) || this.url || 'localhost:27017'});
     this.delegateInputEvents();
     this.visible = true;
   },
