@@ -19,6 +19,7 @@ window.jQuery = require('backbone').$ = require('jquery');
 require('bootstrap/js/tooltip.js');
 require('bootstrap/js/popover.js');
 require('bootstrap/js/dropdown.js');
+require('bootstrap/js/collapse.js');
 require('bootstrap/js/modal.js');
 
 var routes = require('./routes'),

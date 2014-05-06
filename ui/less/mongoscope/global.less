@@ -24,16 +24,19 @@ body {
 }
 
 .logo {
+  display: none;
   .transition(all 250ms ease);
   background-image: none;
   color:  @text-color-subtle;
 
 
   svg{
+    height: 32px;
+    width: 32px;
     path {
       stroke-width: 1;
-      stroke: @text-color-subtle;
-      fill: @text-color-subtle;
+      // stroke: @text-color-subtle;
+      fill: @base-border-color;
     }
   }
 }

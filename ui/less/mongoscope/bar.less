@@ -1,8 +1,56 @@
+.navbar-default {
+  border: 0;
+}
+
+@media (max-width: @screen-sm-min) {
+  #mongoscope{
+    ol.breadcrumb {
+        box-shadow: none;
+        -webkit-box-shadow: none;
+    }
+  }
+  nav.navbar {
+    min-height: 44px;
+    margin-bottom: 0;
+  }
+  .logo {
+    display: block;
+  }
+
+  .log {
+    .name, .second {
+      width: initial !important;
+    }
+  }
+  .log > .line {
+    white-space: pre-line !important;
+
+    .message {
+      clear: left;
+      max-height: initial !important;
+    }
+  }
+}
+
+.navbar-collapse {
+  border: 0;
+  box-shadow: none;
+}
+
+.navbar-collapse.in {
+  max-height: 100%;
+}
+
+.navbar-default .navbar-toggle{
+  border: 0;
+  margin-top: 10px;
+}
+
+
 #sidebar {
   background-color: @base-background-color;
   padding-top: @component-padding;
   border-right: 1px solid fadeout(@base-border-color, 20%);
-  position: fixed;
   height: 100%;
   overflow-y: auto;
   max-height: 100%;
@@ -10,13 +58,19 @@
   padding-left: 0;
   padding-right: 0;
 
+  @media (max-width: @screen-sm-min) {
+    height: auto;
+    border-right: 0;
+    max-height: none;
+  }
+
   h4 {
     padding: 10px;
     margin: 0;
     text-transform: lowercase;
     .small;
     .subtle;
-    border-top: 1px solid fadeout(@base-border-color, 80%);
+    // border-top: 1px solid fadeout(@base-border-color, 80%);
   }
   .nav-sidebar {
     margin-bottom: 20px;
