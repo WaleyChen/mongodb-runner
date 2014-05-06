@@ -6,49 +6,37 @@ include ../mixins/nf
 - stats.document_size_average = (stats.document_size/stats.document_count);
 - stats.index_size_per_document = (stats.index_size/stats.document_count);
 
-ol.breadcrumb
+ol.breadcrumb(style='margin-bottom: 0;')
   unless context.deployment.type === 'standalone'
     li: a(href='#mongodb/#{context.deployment.id}') #{context.deployment.name}
   li: a(href='#mongodb/#{context.instance.id}') #{context.instance.name}
   li: a(href='##{context.instance.id}/database/#{collection.database}') #{collection.database}
   li #{collection.name}
 
-.row
-  .col-md-12
+.row(style='height: 100%;')
+  .col-md-10
     h1.page-header #{collection.database}.#{collection.name}
 
-.row
-  .col-md-3
-   .panel.panel-default
-      .panel-heading: .panel-title Stats
-      .panel-body
-        ul.list-unstyled.list-inline.lead
-          li
-            +nf(collection.stats.document_count)
-          li.small documents
-          li.small (
-            +bytes(collection.stats.document_size)
-            | )
-  .col-md-9
-    .panel.panel-default
-      .panel-heading: .panel-title Indexes
-      .panel-body
-        .h-list
-          ul
-            each index in collection.indexes
-              li.lead
-                span(style='margin-right: 10px;')
-                  | #{JSON.stringify(index.key).replace(/"|\{|\}/g, '')}
-                span.small (
-                  +bytes(index.size)
-                  | )
+    .explorer(style='max-width: 100%; overflow-x: auto;')
 
-hr
-
-.row
-  .col-md-12
-    .explorer
-
-.row
-  .col-md-12
     .detail
+  #contextbar.col-md-2(style='height: 100%;')
+    h4 statistics
+    ul.list-group
+      li.list-group-item.two-sided
+        span.value
+          +nf(collection.stats.document_count)
+        span.key documents
+        span.value (
+          +bytes(collection.stats.document_size)
+          | )
+
+    h4 indexes
+    ul.list-group
+      each index in collection.indexes
+        li.list-group-item
+          span.key
+            | #{JSON.stringify(index.key).replace(/"|\{|\}/g, '')}
+          span.value (
+            +bytes(index.size)
+            | )
