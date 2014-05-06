@@ -1,6 +1,7 @@
 Deployment = require('../lib/deployment')
 assert = require('assert')
 hostname = require('os').hostname().toLowerCase()
+debug = require('debug')('mongoscope:test:deployment')
 
 describe 'When connecting to a standalone deployment', ->
   standalone = null
@@ -96,6 +97,7 @@ describe 'When connecting directly to a cluster shard', ->
     it 'should have removed the old deployment', (done)->
       Deployment.get "#{hostname}:31200", (err, deployment) ->
         return done(err) if err
-        return done(new Error('Deployment not squashed!')) if deployment
+        debug 'deployment.get returned', deployment
+        assert.equal deployment._id, "#{hostname}:30999"
         done()
 
