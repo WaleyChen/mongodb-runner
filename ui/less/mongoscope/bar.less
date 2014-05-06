@@ -1,0 +1,58 @@
+#sidebar {
+  background-color: @base-background-color;
+  padding-top: @component-padding;
+  border-right: 1px solid fadeout(@base-border-color, 20%);
+  position: fixed;
+  height: 100%;
+  overflow-y: auto;
+  max-height: 100%;
+  padding-top: 0;
+  padding-left: 0;
+  padding-right: 0;
+
+  h4 {
+    padding: 10px;
+    margin: 0;
+    text-transform: lowercase;
+    .small;
+    .subtle;
+    border-top: 1px solid fadeout(@base-border-color, 80%);
+  }
+  .nav-sidebar {
+    margin-bottom: 20px;
+    border-top: 1px solid fadeout(@base-border-color, 80%);
+
+    li {
+      a {
+        padding-right: 10px;
+        padding-left: 10px;
+        text-transform: lowercase;
+        .small;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}
+
+#contextbar {
+  border-left: 1px solid fadeout(@base-border-color, 20%);
+  height: 100%;
+  padding: 0;
+  h4 {
+    padding: 10px;
+    margin: 0;
+    text-transform: lowercase;
+    .small;
+    .subtle;
+    border-top: 1px solid fadeout(@base-border-color, 80%);
+  }
+
+  .two-sided {
+    .key {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+}

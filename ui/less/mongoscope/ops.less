@@ -1,0 +1,37 @@
+@op-column-width: 60px;
+// currentOp table
+.ops {
+  .small;
+  .table>tbody>tr.warning>td {
+    background-color: fadeout(@brand-warning, 40%);
+  }
+  .id {
+    width: @op-column-width;
+    max-width: @op-column-width;
+    .nowrap;
+  }
+  .op {
+    width: @op-column-width*1.5;
+    max-width: @op-column-width*1.5;
+    .nowrap;
+  }
+  .client {
+    width: @op-column-width*2;
+    max-width: @op-column-width*2;
+    .nowrap;
+  }
+  .ns {
+    width: @op-column-width*2;
+    max-width: @op-column-width*2;
+    .nowrap;
+  }
+  .query {
+    .nowrap;
+  }
+
+  .seconds {
+    width: @op-column-width*.8;
+    max-width: @op-column-width*.8;
+    .nowrap;
+  }
+}

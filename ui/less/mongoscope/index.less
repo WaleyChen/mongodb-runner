@@ -1,5 +1,29 @@
-@import "./mongoscope/log.less";
-@import "./mongoscope/auth.less";
-@import "./mongoscope/charts.less";
-@import "./mongoscope/collections.less";
+// ## Deps
+@import "font-awesome";
+@import "bootstrap";
 
+// ## Default Themes
+@import "../themes/soda-light";
+@import "./mongoscope/variables";
+
+@mongo-green: #6ba442;
+
+@import "./mongoscope/global";
+@import "./mongoscope/type";
+@import "./mongoscope/xl";
+
+// ## Components
+@import "./mongoscope/bar";
+@import "./mongoscope/charts";
+@import "./mongoscope/list-group";
+@import "./mongoscope/modal";
+@import "./mongoscope/navbar";
+@import "./mongoscope/table";
+
+// ## Pages / biz objects
+@import "./mongoscope/auth";
+@import "./mongoscope/database";
+@import "./mongoscope/log";
+@import "./mongoscope/ops";
+
+@import "../themes/no-borders";

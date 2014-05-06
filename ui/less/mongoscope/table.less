@@ -1,0 +1,25 @@
+.table {
+  .key {
+    .small;
+    padding-left: 0;
+  }
+  .value {
+    background-color: @base-background-color;
+    pre {
+      padding: 0;
+      border: 0;
+      color: @text-color;
+      background-color: initial;
+      font-family: @font-family;
+      font-size: @font-size-base;
+      code {
+        font-family: @font-family;
+        font-size: @font-size-base;
+      }
+    }
+  }
+}
+.table-responsive {
+  max-width: 100%;
+  overflow-y: auto;
+}

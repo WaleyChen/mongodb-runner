@@ -1,0 +1,39 @@
+html, body, #mongoscope{
+  height: 100%;
+}
+
+::-webkit-scrollbar {
+    width: 7px;
+}
+
+::-webkit-scrollbar-track {
+    background: @tool-panel-background-color;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: @tab-background-color;
+}
+
+body {
+  margin: 0;
+  // background-color: @base-background-color;
+  // background: @tab-background-color;
+  // background: @tab-background-color;
+  background-color: @inset-panel-background-color;
+}
+
+.logo {
+  .transition(all 250ms ease);
+  background-image: none;
+  color:  @text-color-subtle;
+
+
+  svg{
+    path {
+      stroke-width: 1;
+      stroke: @text-color-subtle;
+      fill: @text-color-subtle;
+    }
+  }
+}
