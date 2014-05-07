@@ -19,20 +19,27 @@ module.exports = function(percent, opts){
       .attr('class', 'pie')
     .append('g')
       .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
-
-  var path = svg.datum(pie([percent, 100-percent]))
+  // pie([percent, 100-percent])
+  var path = svg.datum([1, 1])
     .selectAll('path').data(pie);
+
+  function arcTween(a) {
+    var i = d3.interpolate(this._current, a);
+    this._current = i(0);
+    return function(t) {
+      return arc(i(t));
+    };
+  }
 
   var chart = {
     update: function(p){
-      console.log(p);
       pie.value(function(d, i){
         return (i === 0) ? p : 100-p;
       });
       path = path.data(pie);
-
+      path.transition().duration(750).attrTween("d", arcTween);
       // path.transition().duration(250).ease('linear')
-      path.attr('d', arc);
+      // path.attr('d', arc);
       return chart;
     },
     draw: function(){
@@ -41,17 +48,12 @@ module.exports = function(percent, opts){
           .attr('class', function(d, i){
             return (i === 0) ? 'occupied slice' : 'free slice';
           })
-          .attr('d', arc);
+          .attr('d', arc)
+          .each(function(d) { this._current = d; }); // store the initial angles
       path.exit().remove();
       return chart;
     }
   };
-  // var next = 1;
-
-  // setInterval(function(){
-  //   chart.update( (next > 0) ? percent * 2 : percent);
-  //   next *= -1;
-  // }, 500);
   chart.draw();
   return chart.update(percent);
 };

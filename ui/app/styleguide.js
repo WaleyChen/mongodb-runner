@@ -51,7 +51,47 @@ pie(32, {el: '#pie-2'});
 pie(10, {el: '#pie-3'});
 pie(20, {el: '#pie-4'});
 pie(30, {el: '#pie-5'});
-pie(40, {el: '#pie-6', height: 200, width: 200});
+
+var opts = {el: '#pie-7', height: 200, width: 200};
+pie(0, opts);
+pie(10, opts);
+pie(20, opts);
+pie(30, opts);
+pie(40, opts);
+pie(50, opts);
+pie(60, opts);
+pie(70, opts);
+pie(80, opts);
+pie(90, opts);
+pie(100, opts);
+
+function updater(i, max, min){
+  var pieChart = pie(min, {el: '#pie-updating-' + i, height: 200, width: 200});
+  pieChart.next = 1;
+  setInterval(function(){
+    pieChart.update( (pieChart.next > 0) ? max : min);
+    pieChart.next *= -1;
+  }, 1000);
+}
+
+updater(1, 75, 35);
+updater(2, 100, 20);
+updater(3, 40, 0);
+updater(4, 1, 0);
+updater(5, 100, 99);
+updater(6, 100, 0);
+
+var charts = [];
+for(var i=0; i< 10; i++){
+    var c = pie(0, {el: '#pie-update-shares-' + i, height: 200, width: 200});
+    c.next = 1;
+    charts.push(c);
+    setInterval(function(){
+      c.update((charts[i].next > 0) ? 10*(i+1) : 10*i);
+      charts[i].next *= -1;
+    }, 1500);
+}
+
 
 var d3 = require('d3'),
   rand = d3.random.normal(),
