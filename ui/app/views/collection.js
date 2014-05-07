@@ -66,7 +66,7 @@ var ExplorerView = Backbone.View.extend({
     'click .next:not(.disabled)': 'next',
     'click .previous:not(.disabled)': 'prev',
     'click .activate': 'enter',
-    'dblclick tr': 'details'
+    'click tr': 'details'
   },
   initialize: function(opts){
     this.active = false;
@@ -75,6 +75,8 @@ var ExplorerView = Backbone.View.extend({
     }).on('sync', this.render, this);
   },
   details: function(evt){
+    this.$table.find('tr.active').removeClass('active');
+    $(evt.currentTarget).addClass('active');
     var index = evt.currentTarget.dataset.index;
     return new DocumentView({
       sample: this.samples.at(index)
@@ -104,14 +106,13 @@ var ExplorerView = Backbone.View.extend({
       active: this.active
     }));
 
-    if(this.active){
-      Backbone.$('#mongoscope').addClass('exploring');
-      if(!this.samples.hasMore){
-        this.$el.find('.next').addClass('disabled');
-      }
-      if(!this.samples.hasPrev){
-        this.$el.find('.previous').addClass('disabled');
-      }
+    this.$table = this.$el.find('table');
+
+    if(!this.samples.hasMore){
+      this.$el.find('.next').addClass('disabled');
+    }
+    if(!this.samples.hasPrev){
+      this.$el.find('.previous').addClass('disabled');
     }
     this.delegateEvents(this.events);
     debug('delegate explorer events');

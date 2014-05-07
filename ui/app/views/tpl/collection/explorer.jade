@@ -13,12 +13,12 @@
 
   .btn-group
     a.btn.btn-default.previous
-      i.fa.fa-backward.fa-fw
+      i.fa.fa-arrow-circle-o-left.fa-fw.fa-2x
     a.btn.btn-default.next
-      i.fa.fa-forward.fa-fw
+      i.fa.fa-arrow-circle-o-right.fa-fw.fa-2x
 
 
-table.table.small.table-condensed.table-responsive(style='max-width: 100%; overflow-x: auto;')
+table.table.small.table-condensed.table-responsive.table-hover(style='max-width: 100%; overflow-x: auto;')
   thead
     tr
     for key in schema.keys
