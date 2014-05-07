@@ -66,19 +66,9 @@ mixin instance_detail()
         +deet('Host Time')
           | #{host.system_time}
 
-ol.breadcrumb
-  unless context.deployment.type === 'standalone'
-    li: a(href='#mongodb/#{context.deployment_id}') #{context.deployment.name}
-  li #{context.instance.name}
-
-.content
-    if deployment.type === 'standalone'
-      h1.page-header #{instance.name}
-    else
-      h1.page-header #{deployment.name}
-        p.lead.subtle via #{instance.name}
+mixin maybe_sharded_alert()
     if deployment.maybe_sharded && deployment.type !== 'cluster'
-      .alert.alert-warning
+      .alert.alert-warning.row(style='margin-top: 31px;')
         .col-md-3
           p.lead
             i.fa.fa-exclamation-triangle.fa-fw(style="padding-right: 10px")
@@ -97,12 +87,32 @@ ol.breadcrumb
               a(href='http://docs.mongodb.org/manual/reference/mongos/', style='color: #FFF;text-decoration: underline;', target='_blank') How do you find the router?
             li.strong
               a(href='http://www.mongodb.org/display/DOCS/Configuring+Sharding', style='color: #FFF;text-decoration: underline;', target='_blank') Configuring Sharding
+
+ol.breadcrumb
+  unless context.deployment.type === 'standalone'
+    li: a(href='#mongodb/#{context.deployment_id}') #{context.deployment.name}
+  li #{context.instance.name}
+
+.content
+    if deployment.maybe_sharded && deployment.type !== 'cluster'
+      +maybe_sharded_alert()
+
+    .col-md-12
+      if deployment.type === 'standalone'
+        h1.page-header #{instance.name}
+      else
+        h1.page-header #{deployment.name}
+          p.lead.subtle via #{instance.name}
+
     .col-md-6
       //- @todo: if router, should balancer/lock event stream?
       if instance.type !== 'router'
         +ops_panel()
     .col-md-6
       +instance_detail()
+
+
+
     if !instance.type && (deployment.type === 'cluster' || deployment.type === 'replicaset')
         .col-md-6
           +panel('Replication')
