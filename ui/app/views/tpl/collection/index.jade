@@ -15,7 +15,12 @@ ol.breadcrumb(style='margin-bottom: 0;')
 
 .row(style='height: 100%;')
   .col-md-10
-    h1.page-header #{collection.database}.#{collection.name}
+    h1.page-header #{collection.name}
+      small
+        if collection.stats.is_power_of_two
+          span.label.label-default PowerOf2
+        if collection.stats.capped
+          span.label.label-default Capped
 
     .explorer(style='max-width: 100%; overflow-x: auto;')
 
@@ -35,8 +40,18 @@ ol.breadcrumb(style='margin-bottom: 0;')
     ul.list-group
       each index in collection.indexes
         li.list-group-item
-          span.key
-            | #{JSON.stringify(index.key).replace(/"|\{|\}/g, '')}
-          span.value (
-            +bytes(index.size)
-            | )
+          table.table
+            tr
+              td.key #{JSON.stringify(index.key).replace(/"|\{|\}/g, '')}
+              td.value
+                +bytes(index.size)
+            if index.sparse
+              tr
+                td.key sparse
+                td.value true
+            tr
+              td.key raw
+              td.value: pre: code #{JSON.stringify(index, null, 2)}
+
+
+

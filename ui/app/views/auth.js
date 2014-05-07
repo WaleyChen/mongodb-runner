@@ -30,10 +30,16 @@ var Auth = Backbone.View.extend({
   visible: false,
   closeable: false,
   url: 'localhost:27017',
+  redirect: null,
   initialize: function(){
-    console.log(window.location.hash);
     if(window.location.hash.indexOf('#mongodb/') === 0){
       this.url = window.location.hash.replace('#mongodb/', '');
+    }
+    else {
+      this.redirect = window.location.hash.replace('#', '');
+      if(this.redirect === 'authenticate'){
+        this.redirect = null;
+      }
     }
     this.history = new History();
     this.history.cursor = 0;
@@ -103,7 +109,8 @@ var Auth = Backbone.View.extend({
   },
   success: function(instance_id){
     this.exit();
-    Backbone.history.navigate('mongodb/' + instance_id, {trigger: true});
+    debug('redirecting to', 'mongodb/' + instance_id);
+    Backbone.history.navigate(this.redirect || 'mongodb/' + instance_id, {trigger: true});
     return this;
   },
   process: function(instance_id, id){

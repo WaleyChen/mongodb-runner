@@ -2,6 +2,7 @@ var Backbone = require('backbone'),
   _ = require('underscore'),
   Model = require('./service').Model,
   List = require('./service').List,
+  types = {ns: require('mongodb-ns')},
   debug = require('debug')('mongoscope:models');
 
 // containers
@@ -79,6 +80,7 @@ function loadInstance(deploymentId, instanceId, fn){
   if(!i) return fn(new Error('Could not find instance `'+instanceId+'`'));
   i.fetch({error: fn, success: function(freshInstance){
     debug('loaded instance', arguments);
+    debug('deployments', deployments);
     context.switch(deploymentId, instanceId, freshInstance);
     fn(null, {instance: instance, deployment: deployment});
   }});
@@ -137,6 +139,7 @@ var Settings = Backbone.Model.extend({
       var attrs = this.__data__();
       attrs.instance = this.instance.toJSON();
       attrs.deployment = this.deployment.toJSON();
+      attrs.all = deployments.toJSON();
       return attrs;
     }
   }),
@@ -161,6 +164,10 @@ var Settings = Backbone.Model.extend({
   Instance = Model.extend({
     service: function(){
       return {name: 'instance', args: this.id};
+    },
+    parse: function(data){
+      types.ns.sort(data.database_names);
+      return data;
     }
   }),
   InstanceList = List.extend({

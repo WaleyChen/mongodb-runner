@@ -70,7 +70,7 @@
     "async": "^0.7.0",
     "mongo-query": "^0.5.2",
     "uuid": "^1.4.1",
-    "mongodb-ns": "0.0.2",
+    "mongodb-ns": "0.0.3",
     "keepup": "0.0.1",
     "lodash": "^2.4.1",
     "titlecase": "^1.0.2",

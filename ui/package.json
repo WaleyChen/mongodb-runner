@@ -24,6 +24,7 @@
     "numeral": "^1.5.3",
     "bootstrap": "https://github.com/twbs/bootstrap/archive/v3.1.1.tar.gz",
     "mousetrap": "0.0.1",
-    "font-awesome": "^4.0.3"
+    "font-awesome": "^4.0.3",
+    "mongodb-ns": "0.0.3"
   }
 }

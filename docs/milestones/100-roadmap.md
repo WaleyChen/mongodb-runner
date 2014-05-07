@@ -6,7 +6,8 @@
 
 - server
   - [x] cr-based authentication
-  - [x] complete, web-friendly read-only rest api
+  - [x] complete
+  web-friendly read-only rest api
   - [ ] test coverage at ?%
 - ui
   - deployment
@@ -15,13 +16,12 @@
     - [x] replicaset details
     - [x] connect to any instance
   - replicaset
+    - [x] oplog details
+    - [x] configuration details
     - [ ] oplog stream
     - [ ] replication sync progressbar
-    - [ ] topology viz from mms
   - cluster
-    - [ ] shards
-    - [ ] chunks
-    - [ ] balancer running viz
+    - [x] shards
   - instance
     - [x] host detail
     - [x] build detail
@@ -40,6 +40,15 @@
     - [x] list of indexes
   - index
     - [x] index spec
+    - [ ] handle single index
+    - [ ] handle compound index
+    - [ ] handle multikey index
+    - [ ] handle geo index
+    - [ ] handle text index
+    - [ ] handle hashed index
+    - [ ] handle ttl index
+    - [ ] handle unique index
+    - [ ] handle sparse index
 - project
   - [ ] deployment setup
   - [ ] ground-work for qa and documentation
@@ -55,9 +64,9 @@
   - [X] auto namer improvements
   - [ ] connecting automatically figures out the right deployment
     you want instead of creating a new one (needs test)
-  - [ ] connect to rs that is actually a cluster -> connect to
-    cluster -> merges the two deployments (have test, need server business)
-  - [ ] progress bars
+  - [x] connect to rs that is actually a cluster -> connect to
+    cluster -> merges the two deployments (have test
+    need server business)
 - ui
   - [x] bug: instance list stomped when switching in ui
   - [X] Bug: instance type not cleared on home
@@ -65,12 +74,9 @@
   - [X] Replicaset view
   - [X] instance id in URL instead of just home for copy and paste/bookmarkability
   - [X] oplog details on instance home
-  - [ ] handle [empty collections](http://localhost:29017/#lucass-macbook-pro.local:27017/database/test)
+  - [x] handle [empty databases](http://localhost:29017/#lucass-macbook-pro.local:27017/database/test)
 - project
   - [x] jira
   - [ ] roadmap
   - [ ] setup mci project
-  - [ ] automated build deploy for windows, nix, and osx
-  - [ ] making the server handle deployment level events (eg new
-    instance in rs -> update store -> broadcast to clients) need to be
-    their own release
+  - [ ] automated build deploy for windows, nix and osx

@@ -9,7 +9,7 @@ var Log = Backbone.View.extend({
   initialize: function(){
     this.log = new models.Log()
       .on('sync', this.update, this);
-    this.orientation = 'natural';
+    // this.orientation = 'natural';
   },
   enter: function(){
     this.$el = $('.log-container');
