@@ -8,16 +8,24 @@
 //-     span.glyphicon.glyphicon-asterisk
 //- @todo: a nice datagrid perhaps?
 //- http://exacttarget.github.io/fuelux/#datagrid
+.pull-right(style='margin-right: 10px;')
+  .small(style='display: inline-block; text-align: center; margin-top: 10px; margin-right:10px;') #{skip} - #{skip+samples.length}
 
-table.table.small.table-condensed.table-responsive
+  .btn-group
+    a.btn.btn-default.previous
+      i.fa.fa-backward.fa-fw
+    a.btn.btn-default.next
+      i.fa.fa-forward.fa-fw
+
+
+table.table.small.table-condensed.table-responsive(style='max-width: 100%; overflow-x: auto;')
   thead
     tr
     for key in schema.keys
       th #{key}
   tfoot
     tr
-      td(colspan="#{schema.keys.length}", style="text-align: center;")
-        | #{skip} - #{skip+samples.length}
+      td(colspan="#{schema.keys.length}")
   tbody
   each doc, i in samples
     tr(data-index='#{i}')
@@ -27,13 +35,3 @@ table.table.small.table-condensed.table-responsive
           | {&hellip;}
         else
           | #{doc[key]}
-.row
-  .col-md-12
-    .col-md-5
-    .col-md-2
-      .pager
-        li.previous
-          a prev
-        li.next
-          a next
-    .col-md-5

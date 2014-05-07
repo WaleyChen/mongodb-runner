@@ -13,45 +13,46 @@ ol.breadcrumb(style='margin-bottom: 0;')
   li: a(href='##{context.instance.id}/database/#{collection.database}') #{collection.database}
   li #{collection.name}
 
-.row(style='height: 100%;')
-  .col-md-10
+.col-md-10(style='height: 100%; padding-right: 0;')
+  .content
     h1.page-header #{collection.name}
-      small
-        if collection.stats.is_power_of_two
-          span.label.label-default PowerOf2
-        if collection.stats.capped
-          span.label.label-default Capped
 
-    .explorer(style='max-width: 100%; overflow-x: auto;')
+    .explorer
 
     .detail
-  #contextbar.col-md-2(style='height: 100%;')
-    h4 statistics
-    ul.list-group
-      li.list-group-item.two-sided
-        span.value
-          +nf(collection.stats.document_count)
-        span.key documents
-        span.value (
-          +bytes(collection.stats.document_size)
-          | )
+#contextbar.col-md-2(style='height: 100%;')
+  h4 statistics
+  ul.list-group
+    li.list-group-item.two-sided
+      span.value
+        +nf(collection.stats.document_count)
+      span.key documents
+      span.value (
+        +bytes(collection.stats.document_size)
+        | )
+    if collection.stats.is_power_of_two
+      li.list-group-item
+        span.label.label-default PowerOf2
 
-    h4 indexes
-    ul.list-group
-      each index in collection.indexes
-        li.list-group-item
-          table.table
+    if collection.stats.capped
+      li.list-group-item span.label.label-default Capped
+
+  h4 indexes
+  ul.list-group
+    each index in collection.indexes
+      li.list-group-item
+        table.table
+          tr
+            td.key #{JSON.stringify(index.key).replace(/"|\{|\}/g, '')}
+            td.value
+              +bytes(index.size)
+          if index.sparse
             tr
-              td.key #{JSON.stringify(index.key).replace(/"|\{|\}/g, '')}
-              td.value
-                +bytes(index.size)
-            if index.sparse
-              tr
-                td.key sparse
-                td.value true
-            tr
-              td.key raw
-              td.value: pre: code #{JSON.stringify(index, null, 2)}
+              td.key sparse
+              td.value true
+          tr
+            td.key raw
+            td.value: pre: code #{JSON.stringify(index, null, 2)}
 
 
 

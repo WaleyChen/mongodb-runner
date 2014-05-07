@@ -1,30 +1,28 @@
 include ../mixins/nf
 - stats = database.stats || {}
 
-.row
-  .col-md-12
-    h1.page-header #{database.name}
+.col-md-12
+  h1.page-header #{database.name}
 
-.row
-  .col-md-12
-    .col-md-4
-      .stats
-        .col-xs-3
-          .stat-value(data-stat="collection_count")
-            +nf(stats.collection_count || 0)
-          .stat-label collections
-        .col-xs-3
-          .stat-value(data-stat="index_count")
-            +nf(stats.index_count || 0)
-          .stat-label indexes
-        .col-xs-3
-          .stat-value(data-stat="document_count")
-            +nf(stats.document_count || 0)
-          .stat-label docs
-        .col-xs-3
-          .metric-value 0
-          .metric-label #{metric.label}
+.col-md-12
+  .col-md-4
+    .stats
+      .col-xs-3
+        .stat-value(data-stat="collection_count")
+          +nf(stats.collection_count || 0)
+        .stat-label collections
+      .col-xs-3
+        .stat-value(data-stat="index_count")
+          +nf(stats.index_count || 0)
+        .stat-label indexes
+      .col-xs-3
+        .stat-value(data-stat="document_count")
+          +nf(stats.document_count || 0)
+        .stat-label docs
+      .col-xs-3
+        .metric-value 0
+        .metric-label #{metric.label}
 
-    .col-md-8
-      .graph(id='graph-#{cid}')
+  .col-md-8
+    .graph(id='graph-#{cid}')
 

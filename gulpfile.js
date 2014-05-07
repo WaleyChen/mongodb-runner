@@ -60,20 +60,23 @@ gulp.task('js', function(){
 });
 
 gulp.task('assets', function(){
-  gulp.src(['ui/{img,fonts}/*'])
+  gulp.src(['ui/{img,fonts,less}/*'])
     .pipe(gulp.dest('static/'));
   gulp.src(['ui/node_modules/font-awesome/{img,fonts}/*'])
     .pipe(gulp.dest('static/'));
 });
 
 gulp.task('less', function () {
-  var lessPaths = [
-    'ui/less',
-    'ui/node_modules/font-awesome/less',
-    'ui/node_modules/bootstrap/less'
-  ],
+  var opts = {
+    sourceMap: (process.env.NODE_ENV === 'development'),
+    paths: [
+        'ui/less',
+        'ui/node_modules/font-awesome/less',
+        'ui/node_modules/bootstrap/less'
+      ]
+    },
   less = function(){
-    return require('gulp-less')({paths: lessPaths}).on('error', function(err){
+    return require('gulp-less')(opts).on('error', function(err){
       var filename = err.fileName.replace(__dirname + '/', ''),
         title = 'err: ' + filename,
         message = err.lineNumber + ': ' + err.message.split(' in file ')[0].replace(/`/g, '"');

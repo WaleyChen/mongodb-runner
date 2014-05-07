@@ -13,13 +13,14 @@ ol.breadcrumb
     a(href='#mongodb/#{context.instance.id}') #{context.instance.name}
   li database: #{database.name}
 
-.panel.panel-default
-  .panel-body
-    .databases: .summary
 
-hr
+.content
+  .panel.panel-default
+    .panel-body
+      .databases: .summary
 
-.row
+  hr
+
   .col-md-4
     .panel.panel-default
       .panel-heading: .panel-title Collections

@@ -63,8 +63,8 @@ var Collection = Backbone.View.extend({
 var ExplorerView = Backbone.View.extend({
   tpl: require('./tpl/collection/explorer.jade'),
   events: {
-    'click .next:not(.disabled) a': 'next',
-    'click .previous:not(.disabled) a': 'prev',
+    'click .next:not(.disabled)': 'next',
+    'click .previous:not(.disabled)': 'prev',
     'click .activate': 'enter',
     'dblclick tr': 'details'
   },
