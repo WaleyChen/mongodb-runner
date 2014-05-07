@@ -68,7 +68,7 @@ gulp.task('assets', function(){
 
 gulp.task('less', function () {
   var opts = {
-    sourceMap: (process.env.NODE_ENV === 'development'),
+    // sourceMap: (process.env.NODE_ENV === 'development'),
     paths: [
         'ui/less',
         'ui/node_modules/font-awesome/less',

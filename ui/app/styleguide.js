@@ -2,9 +2,11 @@ require('debug').enable('*');
 
 var $ = window.jQuery = require('jquery');
 
+require('bootstrap/js/dropdown.js');
+
+$('.dropdown').dropdown();
+
 var donut = require('./viz/donut');
-
-
 donut('.donut', [
     {
       name: 'Documents',
@@ -40,6 +42,16 @@ donut('#donut-example-2',
     count: 1000,
     className: 'indexes'
   }], {title: ''});
+
+
+var pie = require('./viz/pie');
+
+pie(50, {el: '#pie-1'});
+pie(32, {el: '#pie-2'});
+pie(10, {el: '#pie-3'});
+pie(20, {el: '#pie-4'});
+pie(30, {el: '#pie-5'});
+pie(40, {el: '#pie-6', height: 200, width: 200});
 
 var d3 = require('d3'),
   rand = d3.random.normal(),

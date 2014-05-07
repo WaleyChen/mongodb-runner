@@ -32,6 +32,19 @@
   }
 }
 
+svg.pie {
+  .occupied {
+    stroke: @series-fill-1;
+    fill: @series-fill-1;
+    stroke-width: 2px;
+  }
+  .free {
+    fill: fadeout(@series-fill-1, 75%);
+    stroke: fadeout(@series-fill-1, 50%);
+    stroke-width: 0.5px;
+  }
+}
+
 .matrix {
   th {
     text-align: center;

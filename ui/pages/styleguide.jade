@@ -122,45 +122,6 @@ html(lang='en')
           li: button.btn.btn-default.btn-danger.btn-block .btn-danger.btn-block
           li: button.btn.btn-link.btn-block .btn-link.btn-block
 
-        //- h3 Button Groups
-        //- p
-        //-   .inline-block
-        //-     label .btn-group
-        //-     .btn-group
-        //-       button.btn One
-        //-       button.btn Two
-        //-       button.btn Three
-        //-   .inline-block
-        //-     label .btn-group-xs
-        //-     .btn-group.btn-group-xs
-        //-       button.btn.btn-default One
-        //-       button.btn.btn-default Two
-        //-       button.btn.btn-default Three
-        //-   .inline-block
-        //-     label .btn-group-sm
-        //-     .btn-group.btn-group-sm
-        //-       button.btn.btn-default One
-        //-       button.btn.btn-default Two
-        //-       button.btn.btn-default Three
-        //-   .inline-block
-        //-     label .btn-group-lg
-        //-     .btn-group.btn-group-lg
-        //-       button.btn.btn-default One
-        //-       button.btn.btn-default Two
-        //-       button.btn.btn-default Three
-
-
-        //- h3 Button Toolbars
-        //- .btn-toolbar
-        //-   .btn-group
-        //-     button.btn.btn-default One
-        //-     button.btn.btn-default Two
-        //-     button.btn.btn-default Three
-        //-   .btn-group
-        //-     button.btn.btn-default Four
-        //-     button.btn.btn-default Five
-        //-   button.btn.btn-default Six
-        //-   button.btn.btn-default Seven
       section.bordered(data-name='panels')
         h2 Panels
 
@@ -187,7 +148,7 @@ html(lang='en')
         .panel.panel-default
           .panel-heading
             .pull-right
-              .btn-grooup
+              .btn-group
                 .btn.btn-default Help
                 button.btn.btn-default.dropdown-toggle(data-toggle="dropdown") Settings
                   span.caret
@@ -395,9 +356,9 @@ html(lang='en')
               ```
 
         h3 sparkline
-        .example:.row
+        .example
 
-          .rendered.col-md-6
+          .rendered
             p
               | update as
               span#sparkline-streaming.sparkline
@@ -407,7 +368,7 @@ html(lang='en')
               span#sparkline-static.sparkline
               | a static set
 
-          .code.col-md-6
+          .code
             :markdown
               ```javascript
               var d3 = require('d3'),
@@ -438,7 +399,36 @@ html(lang='en')
                   span#sparkline-static.sparkline
                   | a static set
               ```
+                h3 sparkline
 
+        h3 pie
+        .example
+          .rendered
+            #pie-6
+
+        h3 pie list items
+        .example
+          .rendered
+            .panel.panel-default(style='max-width: 200px;')
+              .list-group
+                a.list-group-item(href='#')
+                  .pull-right: #pie-1
+                  .list-group-item-heading canadian-things
+                a.list-group-item(href='#')
+                  .pull-right: #pie-2
+                  .list-group-item-heading github
+                a.list-group-item(href='#')
+                  .pull-right: #pie-3
+                  .list-group-item-heading scope_stat
+                a.list-group-item(href='#')
+                  .pull-right: #pie-4
+                  .list-group-item-heading statsd
+                a.list-group-item(href='#')
+                  .pull-right: #pie-5
+                  .list-group-item-heading test
+          .code
+
+      section.bordered(data-name='keyboard')
         h2 keyboard shortcuts
         h3
           kbd ⌘⇧P
@@ -457,6 +447,7 @@ html(lang='en')
           //- &#8677; . . . . . ⇥ . . . Tab, Tab Right, Horizontal Tab
           //- &#9251; . . . . . ␣ . .. . Space, Blank
 
+      section.bordered(data-name='keyboard')
         h2 navigation
 
         h3 breadcrumbs

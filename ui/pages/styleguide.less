@@ -1,16 +1,5 @@
 @import "index";
 
-.sparkline {
-  display: inline-block;
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
-
-body {
-  // background-color: #fff;
-}
-
 .styleguide {
   overflow-x: hidden;
   padding: 20px;
@@ -76,6 +65,17 @@ body {
     top: @component-padding;
     z-index: 100;
   }
+
+  ol.breadcrumb {
+    position: relative !important;
+
+  }
+}
+
+.sparkline {
+  display: inline-block;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .example {
@@ -83,13 +83,6 @@ body {
   border-radius: @component-border-radius;
   .rendered {
     padding: @component-padding;
-    // background: #fff;
-    border-radius: @component-border-radius 0 0 @component-border-radius;
-    border-right: 1px solid @base-border-color;
-    @media (max-width: @screen-sm-min) {
-      border-bottom: 1px solid @base-border-color;
-    }
-
     .ui-site-1, .ui-site-2, .ui-site-3, .ui-site-4, .ui-site-5 {
       height: 10px;
       width: 100px;
@@ -97,7 +90,6 @@ body {
   }
 
   .code {
-    // box-shadow: inset 3px 0px 10px 0px #ddd;
     position: relative;
     height: 100%;
     padding: 0 @component-padding;
@@ -114,16 +106,6 @@ body {
       top: @component-padding;
       right: @component-padding;
       z-index: 10;
-    }
-
-    .editor {
-      background-color: transparent;
-      display: none;
-      border: none;
-      -webkit-user-select: text;
-      padding: @component-padding;
-      border-radius: 0 @component-border-radius @component-border-radius 0;
-      > div { line-height: 1.4; }
     }
   }
 }
