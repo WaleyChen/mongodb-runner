@@ -5,7 +5,7 @@ include ../mixins/bytes
   h1.page-header #{database.name}
 
   .statsbar
-    .col-md-3
+    .col-md-4.col-xs-3
       .statsbox
         .statsbox-name Documents
         .statsbox-count
@@ -14,7 +14,7 @@ include ../mixins/bytes
           +bytes(database.stats.document_size)
         .statsbox-average-size avg&nbsp;
           +bytes(database.stats.document_size/database.stats.document_count)
-    .col-md-3
+    .col-md-4.col-xs-3
       .statsbox
         .statsbox-name Indexes
         .statsbox-count
@@ -26,7 +26,7 @@ include ../mixins/bytes
             | 0 B
           else
             +bytes(database.stats.index_size/database.stats.index_count)
-    .col-md-3
+    .col-md-4.col-xs-6
       .statsbox
         .statsbox-name Index Storage Cost
         .statsbox-count
@@ -35,7 +35,6 @@ include ../mixins/bytes
         .statsbox-size
           +bytes(database.stats.index_size/database.stats.document_count)
         .statsbox-average-size per index/document
-    .col-md-3
 
 
 .col-md-12

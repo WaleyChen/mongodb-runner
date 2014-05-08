@@ -2,5 +2,5 @@ mixin bytes(num)
   - var exponent = Math.floor(Math.log(num) / Math.log(1024));
   - var unit = ['B', 'kB', 'MB', 'GB', 'TB', 'PB'][exponent];
   - var inUnits = (num / Math.pow(1024, exponent)).toFixed(0) * 1;
-  - var res = (num === 0 || !isNaN(num)) ? '0 B' : (num < 0 ? '-' : '') + inUnits + ' ' + unit;
+  - var res = (num < 0 ? '-' : '') + inUnits + ' ' + unit;
   | #{res}
