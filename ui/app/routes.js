@@ -35,6 +35,7 @@ module.exports = function(opts){
     .add('authenticate', require('./views/auth'))
     .add('connect', require('./views/connect').create)
     .add('mongodb', 'mongodb/:instance_id', require('./views/home'), null)
+    .add('mongodb_with_deployment', 'mongodb/:deployment_id/:instance_id', require('./views/home'), null)
     .add('switch_theme', 'theme/:theme', require('./views/theme'), null)
     .add('switch_instance', 'connect/:deployment_id/:instance_id', require('./views/connect').instance, null)
     .add('switch_deployment', 'connect/:deployment_id', require('./views/connect').deployment, null)

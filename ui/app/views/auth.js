@@ -49,7 +49,7 @@ var Auth = Backbone.View.extend({
     this.$body = $('body');
     var dep, instance;
     console.log('enter', this.redirect);
-    if(this.redirect && /\w+\:\d+\//.test(this.redirect)){
+    if(this.redirect && this.redirect.indexOf('connect') === -1 && /\w+\:\d+\//.test(this.redirect)){
       this.url = this.redirect.split('/')[0];
       this.jump = true;
     }
