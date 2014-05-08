@@ -29,7 +29,7 @@
     - [x] list of databases
     - [x] connection stream
     - [x] currentop stream
-    - [ ] top
+    - [x] top
     - [ ] index build progressbar
     - [ ] map reduce job progressbar
   - database
@@ -40,15 +40,15 @@
     - [x] list of indexes
   - index
     - [x] index spec
-    - [ ] handle single index
-    - [ ] handle compound index
-    - [ ] handle multikey index
-    - [ ] handle geo index
-    - [ ] handle text index
-    - [ ] handle hashed index
-    - [ ] handle ttl index
-    - [ ] handle unique index
-    - [ ] handle sparse index
+    - [x] handle single index
+    - [x] handle compound index
+    - [x] handle multikey index
+    - [x] handle geo index
+    - [x] handle text index
+    - [x] handle hashed index
+    - [x] handle ttl index
+    - [x] handle unique index
+    - [x] handle sparse index
 - project
   - [ ] deployment setup
   - [ ] ground-work for qa and documentation
@@ -62,8 +62,8 @@
   - [X] clean up replication and move to monger
   - [X] include config instances in cluster deployment
   - [X] auto namer improvements
-  - [ ] connecting automatically figures out the right deployment
-    you want instead of creating a new one (needs test)
+  - [x] connecting automatically figures out the right deployment
+    you want instead of creating a new one
   - [x] connect to rs that is actually a cluster -> connect to
     cluster -> merges the two deployments (have test
     need server business)
