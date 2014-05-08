@@ -52,7 +52,10 @@ ol.breadcrumb(style='margin-bottom: 0;')
             +nf(collection.stats.index_size/collection.stats.storage_size*100, 2)
             | %
           .statsbox-size
-            +bytes(collection.stats.index_size/collection.stats.document_count)
+            if collection.stats.index_size === 0
+              | 0 B
+            else
+              +bytes(collection.stats.index_size/collection.stats.document_count)
           .statsbox-average-size per index/document
       .col-md-3
         .statsbox

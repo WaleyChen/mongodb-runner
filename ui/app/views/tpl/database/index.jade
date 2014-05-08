@@ -21,20 +21,21 @@ ol.breadcrumb
 
   hr
 
-  .col-md-4
-    .panel.panel-default
-      .panel-heading: .panel-title Collections
-      .list-group
-        for collection_name in database.collection_names
-          a.list-group-item(href='##{context.instance.id}/collection/#{database.name}/#{collection_name}')
-            .pull-left: i.fa.fa-angle-right.fa-fw
-            .list-group-item-heading #{collection_name}
+  if database.collection_names.length > 0
+    .col-md-4
+      .panel.panel-default
+        .panel-heading: .panel-title Collections
+        .list-group
+          for collection_name in database.collection_names
+            a.list-group-item(href='##{context.instance.id}/collection/#{database.name}/#{collection_name}')
+              .pull-left: i.fa.fa-angle-right.fa-fw
+              .list-group-item-heading #{collection_name}
 
-  .col-md-4
-    .panel.panel-default
-      .panel-heading: .panel-title Storage
-      .panel-body
-        .donut
+    .col-md-4
+      .panel.panel-default
+        .panel-heading: .panel-title Storage
+        .panel-body
+          .donut
 
 
 
