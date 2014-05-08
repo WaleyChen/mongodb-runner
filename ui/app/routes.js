@@ -2,6 +2,7 @@ var Backbone = require('backbone'),
   debug = require('debug')('_mongoscope:routes'),
   _ = require('underscore'),
   service = require('./service'),
+  models = require('./models'),
   flash = require('./flash'),
   router, body,
   handlers = {},
@@ -74,6 +75,13 @@ function watchService(){
     if(err.status === 401){
       return Backbone.history.navigate('authenticate', {trigger: true});
     }
+    if(err.status === 403 && err.message.indexOf('expired') > -1){
+      debug('token expired.  reconnecting');
+      return models.reconnect(function(){
+        debug('reconnected', arguments);
+      });
+    }
+    console.warn('unhandled service error', err);
   })
   .on('disconnect', function(){
     flash.error('server disconnected');

@@ -37,6 +37,10 @@ module.exports = function(opts){
   }});
 };
 
+module.exports.reconnect = function(fn){
+  module.exports.connect(context.get('deployment_id'), context.get('instance_id'), fn);
+};
+
 module.exports.connect = function(deploymentId, instanceId, fn){
   var deployment, instance;
 
