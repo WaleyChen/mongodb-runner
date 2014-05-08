@@ -26,7 +26,7 @@ ol.breadcrumb(style='margin-bottom: 0;')
       if collection.is_ttl
         span.label.label-default TTL
 
-    div.clearfix(style='margin-bottom: 40px')
+    .statsbar
       .col-md-3
         .statsbox
           .statsbox-name Documents
@@ -43,7 +43,7 @@ ol.breadcrumb(style='margin-bottom: 0;')
             +nf(collection.stats.index_count)
           .statsbox-size
             +bytes(collection.stats.index_size)
-          .statsbox-average-size
+          .statsbox-average-size avg&nbsp;
             +bytes(collection.stats.index_size/collection.stats.index_count)
       .col-md-3
         .statsbox
