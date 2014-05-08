@@ -1,0 +1,109 @@
+{
+  "database": "foo",
+  "indexes": [
+    {
+      "v": 1,
+      "name": "_id_",
+      "key": {
+        "_id": 1
+      },
+      "ns": "foo.collection",
+      "size": 40880
+    },
+    {
+      "v": 1,
+      "key": {
+        "status": "hashed"
+      },
+      "name": "status_hashed",
+      "ns": "canadian-things.service_requests",
+      "size": 163520
+    },
+    {
+      "v": 1,
+      "key": {
+        "_fts": "text",
+        "_ftsx": 1
+      },
+      "name": "status_notes_text",
+      "ns": "canadian-things.service_requests",
+      "weights": {
+        "status_notes": 1
+      },
+      "default_language": "english",
+      "language_override": "language",
+      "textIndexVersion": 2,
+      "size": 523264
+    },
+    {
+      "v": 1,
+      "key": {
+        "x": 1,
+        "y": -1
+      },
+      "name": "x_1_y_-1",
+      "ns": "foo.collection",
+      "sparse": true,
+      "size": 40880
+    },
+    {
+      "v": 1,
+      "key": {
+        "loc": "2dsphere"
+      },
+      "name": "loc_2dsphere",
+      "ns": "foo.collection",
+      "2dsphereIndexVersion": 2,
+      "size": 8176
+    },
+    {
+      "v": 1,
+      "unique": true,
+      "key": {
+        "x": 1
+      },
+      "name": "Dan's Unique Party",
+      "ns": "foo.collection",
+      "size": 40880
+    },
+    {
+      "v": 1,
+      "key": {
+        "timestamp": 1
+      },
+      "name": "timestamp_1",
+      "ns": "foo.collection",
+      "expireAfterSeconds": 100,
+      "size": 32704
+    },
+    {
+      "v": 1,
+      "key": {
+        "x": 1,
+        "y": 1,
+        "z": 1,
+        "a": 1,
+        "b": -1,
+        "c": 1
+      },
+      "name": "x_1_y_1_z_1_a_1_b_-1_c_1",
+      "ns": "foo.collection",
+      "expireAfterSeconds": 100,
+      "size": 40880
+    }
+  ],
+  "stats": {
+    "document_count": 1000,
+    "document_size": 36020,
+    "storage_size": 86016,
+    "index_count": 6,
+    "index_size": 204400,
+    "padding_factor": 1,
+    "extent_count": 3,
+    "extent_last_size": 65536,
+    "flags_user": 1,
+    "flags_system": 0
+  },
+  "capped": false,
+  "max": 0
+}

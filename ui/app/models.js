@@ -316,10 +316,50 @@ module.exports.Database = Model.extend({
   }
 });
 
+// @todo: this logic should be in a public module!
+// See /test/fixtures/collection_all-indexes.json
+//
+// use canadian-things
+// db.service_requests.ensureIndex({status_notes: "text"});
+// db.service_requests.ensureIndex({status: "hashed"})
+function annotateIndex(stat){
+  var keys = Object.keys(stat.key),
+    values = keys.map(function(k){
+      return stat.key[k];
+    }), type;
+
+  if(keys.length === 0) throw new Error('Index has no keys!');
+
+  type = (keys.length === 1) ? 'single' : 'compound';
+
+  if(stat['2dsphereIndexVersion']) type += ' geo';
+
+  if(stat.expireAfterSeconds) type += ' ttl';
+
+  if(stat.unique) type += ' unique';
+  if(stat.sparse) type += ' sparse';
+
+  if(stat.textIndexVersion) type = 'text';
+  if(values.indexOf('hashed') > -1) type += ' hashed';
+
+  stat.annotations = {
+    type: type,
+    keys: keys,
+    values: values
+  };
+}
+
 module.exports.Collection = Model.extend({
   service: function(){
     return {name: 'collection', args: [instance.id,
       this.get('database'), this.get('name')]};
+  },
+  toJSON: function(){
+    var attrs = this.__data__();
+    attrs.indexes.map(function(index){
+      annotateIndex(index);
+    });
+    return attrs;
   }
 });
 

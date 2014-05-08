@@ -68,23 +68,34 @@ ol.breadcrumb(style='margin-bottom: 0;')
 
     .detail
 
+mixin simplify(obj)
+  | #{JSON.stringify(obj).replace(/"|\{|\}/g, '')}
+
 #contextbar.col-md-2(style='height: 100%;padding-top: 31px;')
-  h4 indexes
+  h4 Index Details
   ul.list-group
     each index in collection.indexes
       li.list-group-item
-        table.table
-          tr
-            td.key #{JSON.stringify(index.key).replace(/"|\{|\}/g, '')}
-            td.value
-              +bytes(index.size)
-          if index.sparse
-            tr
-              td.key sparse
-              td.value true
-          tr
-            td.key raw
-            td.value: pre: code #{JSON.stringify(index, null, 2)}
+        h5  #{index.name}
+        dl.index-details
+          dt size
+          dd
+            +bytes(index.size)
+          dt type
+          dd #{index.annotations.type}
+          dt key
+          dd
+            +simplify(index.key)
+          if index.annotations.type === 'text'
+            dt weights
+            dd
+              +simplify(index.weights)
+            dt default language
+            dd #{index.default_language}
+            dt language override
+            dd #{index.language_override}
+            dt text version
+            dd #{index.textIndexVersion}
 
 
 

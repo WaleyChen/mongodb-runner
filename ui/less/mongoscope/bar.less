@@ -62,6 +62,7 @@ ol.breadcrumb {
   }
 }
 
+
 #sidebar {
   background-color: @base-background-color;
   padding-top: @component-padding;
@@ -109,8 +110,13 @@ ol.breadcrumb {
   max-height: 100%;
   overflow-y: auto;
   padding: 0;
+  -webkit-box-shadow: inset 1px 0 6px .5px fadeout(@base-border-color, 70%);
+  box-shadow: inset 1px 0 6px .5px fadeout(@base-border-color, 70%);
   h4 {
-    padding: 10px;
+    padding-left: 20px;
+  }
+  h5 {
+    padding: 20px 0 0 0;
     margin: 0;
     text-transform: lowercase;
     .small;
@@ -118,10 +124,14 @@ ol.breadcrumb {
     border-top: 1px solid fadeout(@base-border-color, 80%);
   }
 
-  .two-sided {
-    .key {
-      padding-left: 10px;
-      padding-right: 10px;
+  .index-details {
+    padding-left: 10px;
+    dt {
+      .small;
+      margin-top: 10px;
+    }
+    dd {
+
     }
   }
 }
