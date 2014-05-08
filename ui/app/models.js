@@ -388,6 +388,8 @@ module.exports.Sample = List.extend({
     this.fetch({reset: true});
   },
   collectionChange: function(){
+    debug('collection changed.  updating internal state.');
+    this.skip = 0;
     this.database = this.collection.get('database');
     this.name = this.collection.get('name');
     this.fetch({reset: true});
