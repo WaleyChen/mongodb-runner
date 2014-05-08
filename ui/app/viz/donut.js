@@ -57,10 +57,10 @@ module.exports = function(el, data, opts){
         x = calc[0],
         y = calc[1];
       if(d.data.name === 'Documents'){
-        x += 70;
+        x += 100;
       }
       else {
-        x -= 70;
+        x -= 100;
       }
       return "translate(" + [x, y] + ")";
     })

@@ -108,6 +108,9 @@ ol.breadcrumb
       //- @todo: if router, should balancer/lock event stream?
       if instance.type !== 'router'
         +ops_panel()
+
+      a.btn.btn-primary(href='##{context.instance.id}/top') mongotop
+
     .col-md-6
       +instance_detail()
 

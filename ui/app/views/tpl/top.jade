@@ -1,11 +1,9 @@
 ol.breadcrumb
-  unless context.deployment.type === 'standalone'
+  if context.deployment.type !== 'standalone'
     li: a(href='#mongodb/#{context.deployment.id}') #{context.deployment.name}
   li: a(href='#mongodb/#{context.instance.id}') #{context.instance.name}
   li top
 
 .content
-  .row
-    .col-md-12
-      p sampling...
-      .matrix
+  p sampling...
+  .matrix(style='margin-top: 31px;')

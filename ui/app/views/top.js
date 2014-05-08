@@ -19,20 +19,21 @@ var Top = Backbone.View.extend({
     ]);
 
     this.sparks = {};
-    this.features = {sparkline: true};
+    this.features = {sparkline: false};
   },
   enter: function(){
     this.$el = Backbone.$('#mongoscope');
     this.el = this.$el.get(0);
 
     this.$el.html(this.tpl({
-      context: models.context
+      context: models.context.toJSON()
     }));
 
     models.top.fetch({success: this.insert.bind(this)});
   },
   exit: function(){
-    models.top.exit().off('sync', this.update, this);
+    clearInterval(this.interval);
+    // models.top.exit().off('sync', this.update, this);
   },
   update: function(){
     var self = this;
@@ -69,10 +70,15 @@ var Top = Backbone.View.extend({
     this.matrix = matrix(this.metrics.toJSON(),
       models.top.get('namespaces'), models.top.get('deltas'));
 
-    models.top.off('sync', this.insert, this)
-      .on('sync', this.update, this);
+    models.top.off('sync', this.insert, this);
+      // .on('sync', this.update, this);
 
     models.top.subscribe();
+
+    this.interval = setInterval(function(){
+      this.update();
+    }.bind(this), 1000);
+
     return this;
   }
 });

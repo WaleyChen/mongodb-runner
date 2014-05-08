@@ -41,17 +41,18 @@ var Auth = Backbone.View.extend({
         this.redirect = null;
       }
     }
+    this.$body = $('body');
     this.history = new History();
     this.history.cursor = 0;
     this.history.fetch();
   },
   enter: function(deploymentId, instanceId){
-    this.$body = $('body');
     var dep, instance;
     console.log('enter', this.redirect);
     if(this.redirect && this.redirect.indexOf('connect') === -1 && /\w+\:\d+\//.test(this.redirect)){
       this.url = this.redirect.split('/')[0];
       this.jump = true;
+      this.redirect = null;
     }
 
     if(deploymentId && (dep = models.deployments.get(deploymentId))){
@@ -118,6 +119,7 @@ var Auth = Backbone.View.extend({
     this.exit();
     debug('redirecting to', 'mongodb/' + instance_id);
     Backbone.history.navigate(this.redirect || 'mongodb/' + instance_id, {trigger: true});
+    this.redirect = null;
     return this;
   },
   process: function(instance_id, id){

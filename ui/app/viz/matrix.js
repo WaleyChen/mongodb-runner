@@ -8,15 +8,15 @@ module.exports = function(metrics, namespaces, data, opts){
     tbody = table.append('tbody');
 
   metrics.unshift({});
-  function draw(){
+  function draw(_d){
+    if(!_d) _d = data;
     var matrix = namespaces.map(function(ns){
       var res = [ns];
       metrics.map(function(metric){
         if(!metric.label) return;
-
         res.push({
           key: metric.key,
-          value: data[ns + '.' + metric.key]
+          value: _d[ns + '.' + metric.key] || 0
         });
       });
       return res;
@@ -46,7 +46,8 @@ module.exports = function(metrics, namespaces, data, opts){
       .data(function(d, i){return matrix[i];});
 
     tds.text(function(d){
-       return d.key ? ('') : d;
+      // console.log('set text on td', d);
+      return d.key ? (d.value || 0) : d;
     });
     tds.exit().remove();
     tr.exit().remove();
@@ -67,8 +68,7 @@ module.exports = function(metrics, namespaces, data, opts){
       draw();
     },
     update: function(data){
-      data = data;
-      draw();
+      draw(data);
     },
     add: function(){
       namespaces.unshift.apply(namespaces, Array.prototype.slice.call(arguments, 0));
